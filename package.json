@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev":"pnpm --recursive --parallel dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "pnpm --recursive --parallel dev",
+    "lint": "pnpm --recursive lint"
   },
   "keywords": [],
   "author": "",
