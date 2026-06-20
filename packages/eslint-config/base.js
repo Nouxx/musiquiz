@@ -7,6 +7,7 @@ import css from "@eslint/css";
 import { defineConfig } from "eslint/config";
 import typescriptEslintParser from '@typescript-eslint/parser';
 import unicorn from 'eslint-plugin-unicorn';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
 
 export default defineConfig([
   {
@@ -41,6 +42,15 @@ export default defineConfig([
       ...unicorn.configs.recommended.languageOptions,
       globals: globals.builtin,
       parser: typescriptEslintParser,
+    },
+    plugins: {
+      ...unicorn.configs.recommended.plugins,
+      "simple-import-sort": simpleImportSort,
+    },
+    rules: {
+      ...unicorn.configs.recommended.rules,
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
     },
   },
 ]);
