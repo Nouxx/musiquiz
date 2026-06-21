@@ -10,13 +10,17 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "lint": "eslint ."
+    "lint": "eslint . && pnpm lint:css",
+    "lint:css": "stylelint \"src/**/*.{css,astro}\""
   },
   "dependencies": {
     "astro": "^6.4.7"
   },
   "devDependencies": {
+    "eslint": "^10.5.0",
     "eslint-config": "workspace:*",
-    "eslint": "^10.5.0"
+    "postcss-html": "^1.8.1",
+    "stylelint": "^17.13.0",
+    "stylelint-value-no-unknown-custom-properties": "^6.1.1"
   }
 }
