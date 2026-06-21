@@ -5,10 +5,18 @@
   "main": "index.js",
   "scripts": {
     "dev": "pnpm --recursive --parallel dev",
+    "format:check": "prettier . --check",
+    "fc": "pnpm format:check",
+    "format:fix": "prettier . --write",
+    "ff": "pnpm format:fix",
     "lint": "pnpm --recursive lint"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.9.0"
+  "packageManager": "pnpm@10.9.0",
+  "devDependencies": {
+    "prettier": "^3.8.4",
+    "prettier-plugin-astro": "^0.14.1"
+  }
 }

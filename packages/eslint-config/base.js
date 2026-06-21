@@ -5,11 +5,16 @@ import json from "@eslint/json";
 import markdown from "@eslint/markdown";
 import css from "@eslint/css";
 import { defineConfig } from "eslint/config";
-import typescriptEslintParser from '@typescript-eslint/parser';
-import unicorn from 'eslint-plugin-unicorn';
-import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import typescriptEslintParser from "@typescript-eslint/parser";
+import unicorn from "eslint-plugin-unicorn";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
+import eslintConfigPrettier from "eslint-config-prettier";
+import eslintPluginAstro from "eslint-plugin-astro";
 
 export default defineConfig([
+  {
+    ignores: ["**/node_modules/**", "**/.astro/**", "**/dist/**"],
+  },
   {
     files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
     plugins: { js },
@@ -53,4 +58,8 @@ export default defineConfig([
       "simple-import-sort/exports": "error",
     },
   },
+  ...eslintPluginAstro.configs.recommended,
+  // disable formatting rules of ESLint
+  // so that only Prettier owns them
+  eslintConfigPrettier,
 ]);

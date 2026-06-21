@@ -1,0 +1,8 @@
+# inherits rules from .gitignore
+# "Prettier will also follow rules specified in the ".gitignore" file if it exists in the same directory from which it is run."
+# source: https://prettier.io/docs/ignore#ignoring-files-prettierignore
+
+# this file defines extra rules specific to Prettier
+pnpm-lock.yaml
+**/.claude
+**/.vscode

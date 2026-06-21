@@ -17,5 +17,8 @@
     "eslint-plugin-unicorn": "^68.0.0",
     "globals": "^17.6.0",
     "typescript-eslint": "^8.61.1"
+  },
+  "dependencies": {
+    "eslint-config-prettier": "^10.1.8"
   }
 }
