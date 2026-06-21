@@ -33,6 +33,12 @@ importers:
       stylelint:
         specifier: ^17.13.0
         version: 17.13.0(typescript@6.0.3)
+      stylelint-config-html:
+        specifier: ^1.1.0
+        version: 1.1.0(postcss-html@1.8.1)(stylelint@17.13.0(typescript@6.0.3))
+      stylelint-config-standard:
+        specifier: ^40.0.0
+        version: 40.0.0(stylelint@17.13.0(typescript@6.0.3))
       stylelint-value-no-unknown-custom-properties:
         specifier: ^6.1.1
         version: 6.1.1(stylelint@17.13.0(typescript@6.0.3))
@@ -2147,6 +2153,25 @@ packages:
   strip-indent@4.1.1:
     resolution: {integrity: sha512-SlyRoSkdh1dYP0PzclLE7r0M9sgbFKKMFXpFRUMNuKhQSbC6VQIGzq3E0qsfvGJaUFJPGv6Ws1NZ/haTAjfbMA==}
     engines: {node: '>=12'}
+
+  stylelint-config-html@1.1.0:
+    resolution: {integrity: sha512-IZv4IVESjKLumUGi+HWeb7skgO6/g4VMuAYrJdlqQFndgbj6WJAXPhaysvBiXefX79upBdQVumgYcdd17gCpjQ==}
+    engines: {node: ^12 || >=14}
+    peerDependencies:
+      postcss-html: ^1.0.0
+      stylelint: '>=14.0.0'
+
+  stylelint-config-recommended@18.0.0:
+    resolution: {integrity: sha512-mxgT2XY6YZ3HWWe3Di8umG6aBmWmHTblTgu/f10rqFXnyWxjKWwNdjSWkgkwCtxIKnqjSJzvFmPT5yabVIRxZg==}
+    engines: {node: '>=20.19.0'}
+    peerDependencies:
+      stylelint: ^17.0.0
+
+  stylelint-config-standard@40.0.0:
+    resolution: {integrity: sha512-EznGJxOUhtWck2r6dJpbgAdPATIzvpLdK9+i5qPd4Lx70es66TkBPljSg4wN3Qnc6c4h2n+WbUrUynQ3fanjHw==}
+    engines: {node: '>=20.19.0'}
+    peerDependencies:
+      stylelint: ^17.0.0
 
   stylelint-value-no-unknown-custom-properties@6.1.1:
     resolution: {integrity: sha512-eQ1zidKD5t9zMEaskjGUY4W47lH76qMlmsDSmCAPEwtaGzB4Ls7ORTfysC1D6hamp2zFC+vN1vpQ+GFz3Tw3lw==}
@@ -4824,6 +4849,20 @@ snapshots:
       ansi-regex: 6.2.2
 
   strip-indent@4.1.1: {}
+
+  stylelint-config-html@1.1.0(postcss-html@1.8.1)(stylelint@17.13.0(typescript@6.0.3)):
+    dependencies:
+      postcss-html: 1.8.1
+      stylelint: 17.13.0(typescript@6.0.3)
+
+  stylelint-config-recommended@18.0.0(stylelint@17.13.0(typescript@6.0.3)):
+    dependencies:
+      stylelint: 17.13.0(typescript@6.0.3)
+
+  stylelint-config-standard@40.0.0(stylelint@17.13.0(typescript@6.0.3)):
+    dependencies:
+      stylelint: 17.13.0(typescript@6.0.3)
+      stylelint-config-recommended: 18.0.0(stylelint@17.13.0(typescript@6.0.3))
 
   stylelint-value-no-unknown-custom-properties@6.1.1(stylelint@17.13.0(typescript@6.0.3)):
     dependencies:
