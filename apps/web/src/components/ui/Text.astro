@@ -2,14 +2,12 @@
 // Presentational typography primitive. Maps a `variant` to a --text-* semantic
 // token; `as` picks the HTML tag, decoupling semantics from visual scale.
 // See docs/adr/0002-css-strategy.md
-type Variant = "display" | "title" | "heading" | "body" | "caption"; // todo: check eslint error
+type Variant = "display" | "title" | "heading" | "body" | "caption";
 
 interface Props {
   as?: keyof HTMLElementTagNameMap;
   variant?: Variant;
 }
-
-const toto = null;
 
 const { as: Tag = "p", variant = "body", ...rest } = Astro.props;
 ---
