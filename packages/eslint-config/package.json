@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./base": "./base.js"
+    ".": "./eslint.config.js"
   },
   "devDependencies": {
     "@eslint/css": "^1.3.0",
