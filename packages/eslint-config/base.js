@@ -59,7 +59,27 @@ export default defineConfig([
     },
   },
   ...eslintPluginAstro.configs.recommended,
+  // UI components must not import Feature components.
+  // See docs/adr/0001-component-layering.md
+  {
+    files: ["**/components/ui/**/*.{ts,mts,cts,js,mjs,cjs,astro}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["**/features", "**/features/*", "**/features/**"],
+              message:
+                "UI components must not import Feature components (one-way dependency: features -> ui). See docs/adr/0001-component-layering.md",
+            },
+          ],
+        },
+      ],
+    },
+  },
   // disable formatting rules of ESLint
   // so that only Prettier owns them
+  // MUST BE LAST to overrides all previous rules
   eslintConfigPrettier,
 ]);
