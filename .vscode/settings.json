@@ -2,7 +2,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "eslint.workingDirectories": ["./apps/web"],
+  "eslint.workingDirectories": ["apps/web"],
   "eslint.validate": [
     "javascript",
     "javascriptreact",
