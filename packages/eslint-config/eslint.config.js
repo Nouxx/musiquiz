@@ -59,7 +59,37 @@ export default defineConfig([
     },
   },
   ...eslintPluginAstro.configs.recommended,
+  // Pin the TS parser for Astro frontmatter explicitly. Otherwise
+  // astro-eslint-parser tries to auto-resolve @typescript-eslint/parser from
+  // the linted file's package (apps/web), where pnpm does not expose it, so the
+  // ESLint VS Code extension (Node API path) falls back to espree and reports
+  // "Parsing error: Unexpected token" on TS frontmatter. The CLI happens to
+  // resolve it, the extension does not — pinning fixes both.
+  {
+    files: ["**/*.astro"],
+    languageOptions: { parserOptions: { parser: typescriptEslintParser } },
+  },
+  // UI components must not import Feature components.
+  // See docs/adr/0001-component-layering.md
+  {
+    files: ["**/components/ui/**/*.{ts,mts,cts,js,mjs,cjs,astro}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["**/features", "**/features/*", "**/features/**"],
+              message:
+                "UI components must not import Feature components (one-way dependency: features -> ui). See docs/adr/0001-component-layering.md",
+            },
+          ],
+        },
+      ],
+    },
+  },
   // disable formatting rules of ESLint
   // so that only Prettier owns them
+  // MUST BE LAST to overrides all previous rules
   eslintConfigPrettier,
 ]);
