@@ -2,6 +2,8 @@
 
 A music quiz web app. This glossary fixes the vocabulary of the `apps/web` design system: the kinds of components, layouts, and styling tokens, and how they relate.
 
+Musiquiz is a entertainment business that operates in France and provide various activites around music. Its a physical business with real places and this project is just the website to advertise about it and let users reserve their sessions.
+
 ## Components
 
 **UI Component**:

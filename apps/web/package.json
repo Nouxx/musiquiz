@@ -1,13 +1,16 @@
 {
   "name": "web",
   "type": "module",
-  "version": "0.0.1",
+  "private": true,
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "dev:static": "dotenvx run -f ../../.env.local -f ../../.env -- astro dev --port 4321",
+    "dev:preview": "dotenvx run -f ../../.env.local -f ../../.env --env PREVIEW=true -- astro dev --port 4322",
+    "dev": "concurrently -n preview,static -c green,blue \"pnpm dev:preview\" \"pnpm dev:static\"",
+    "build:static": "dotenvx run -f ../../.env -- astro build",
+    "build:preview": "dotenvx run -f ../../.env -- astro build",
     "preview": "astro preview",
     "deploy": "wrangler deploy",
     "astro": "astro",
@@ -16,9 +19,17 @@
   },
   "dependencies": {
     "astro": "^6.4.7",
-    "wrangler": "^4.104.0"
+    "wrangler": "^4.104.0",
+    "@repo/services": "workspace:*",
+    "@repo/utils": "workspace:*",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-is": "^19.2.7",
+    "styled-components": "^6.4.2"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "catalog:",
+    "concurrently": "^10.0.4",
     "eslint": "^10.5.0",
     "eslint-config": "workspace:*",
     "postcss-html": "^1.8.1",

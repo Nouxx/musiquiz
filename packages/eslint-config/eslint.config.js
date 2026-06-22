@@ -1,15 +1,15 @@
+import css from "@eslint/css";
 import js from "@eslint/js";
-import globals from "globals";
-import tseslint from "typescript-eslint";
 import json from "@eslint/json";
 import markdown from "@eslint/markdown";
-import css from "@eslint/css";
-import { defineConfig } from "eslint/config";
 import typescriptEslintParser from "@typescript-eslint/parser";
-import unicorn from "eslint-plugin-unicorn";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
+import { defineConfig } from "eslint/config";
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginAstro from "eslint-plugin-astro";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
+import unicorn from "eslint-plugin-unicorn";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default defineConfig([
   {
@@ -41,7 +41,7 @@ export default defineConfig([
     extends: ["css/recommended"],
   },
   {
-    files: ["**/*.ts"],
+    files: ["**/*.{js,ts,mjs}"],
     ...unicorn.configs.recommended,
     languageOptions: {
       ...unicorn.configs.recommended.languageOptions,
@@ -56,6 +56,7 @@ export default defineConfig([
       ...unicorn.configs.recommended.rules,
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
+      "unicorn/filename-case": "off",
     },
   },
   ...eslintPluginAstro.configs.recommended,
