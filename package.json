@@ -7,6 +7,7 @@
     "dev": "pnpm --recursive --parallel dev",
     "build": "pnpm --recursive --parallel build",
     "build:web": "pnpm --filter web build",
+    "deploy:web": "pnpm --filter web run deploy",
     "format:check": "prettier . --check",
     "fc": "pnpm format:check",
     "format:fix": "prettier . --write",
