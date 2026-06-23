@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "pnpm --recursive --parallel dev",
+    "build": "pnpm --recursive --parallel build",
+    "build:web": "pnpm --filter web build",
     "format:check": "prettier . --check",
     "fc": "pnpm format:check",
     "format:fix": "prettier . --write",
