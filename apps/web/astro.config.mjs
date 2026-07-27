@@ -21,7 +21,6 @@ export default defineConfig({
       subsets: ["latin"],
     },
   ],
-
   // doc: https://docs.astro.build/en/guides/environment-variables/#variable-types
   env: {
     schema: {
@@ -51,7 +50,6 @@ export default defineConfig({
       }),
     },
   },
-
   i18n: {
     locales: ["fr", "en"],
     defaultLocale: "fr",
