@@ -1,4 +1,5 @@
 // @ts-check
+import cloudflare from "@astrojs/cloudflare";
 import { defineConfig, envField, fontProviders } from "astro/config";
 
 // WARNING: process.env reads variables set by the CLI
@@ -7,7 +8,7 @@ const isPreview = process.env.PREVIEW === "true";
 
 export default defineConfig({
   output: isPreview ? "server" : "static",
-  // adapter: isPreview ? cloudflare() : undefined,
+  adapter: isPreview ? cloudflare() : undefined,
   fonts: [
     {
       provider: fontProviders.google(),
@@ -18,6 +19,7 @@ export default defineConfig({
       subsets: ["latin"],
     },
   ],
+
   // doc: https://docs.astro.build/en/guides/environment-variables/#variable-types
   env: {
     schema: {
@@ -47,6 +49,7 @@ export default defineConfig({
       }),
     },
   },
+
   i18n: {
     locales: ["fr", "en"],
     defaultLocale: "fr",
