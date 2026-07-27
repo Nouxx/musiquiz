@@ -1,0 +1,37 @@
+{
+  "name": "sanity",
+  "private": true,
+  "version": "1.0.0",
+  "main": "package.json",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "dotenvx run -f ../../.env -- sanity build",
+    "deploy": "dotenvx run -f ../../.env -- sanity deploy",
+    "dev": "dotenvx run -f ../../.env.local -f ../../.env -- sanity dev",
+    "start": "sanity start",
+    "typegen": "sanity schema extract && sanity typegen generate",
+    "validate": "sanity documents validate -y",
+    "migration:new": "sanity migration create",
+    "migration:list": "sanity migration list",
+    "migration:run": "sanity migration run",
+    "backup": "sanity dataset export production",
+    "import": "sanity dataset import production.tar.gz dev --replace"
+  },
+  "dependencies": {
+    "@sanity/ui": "^3.4.5",
+    "@sanity/vision": "^6.6.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "sanity": "^6.6.0",
+    "sanity-plugin-internationalized-array": "^5.1.22",
+    "styled-components": "^6.1.18"
+  },
+  "devDependencies": {
+    "@dotenvx/dotenvx": "catalog:",
+    "@sanity/eslint-config-studio": "^6.0.0",
+    "@types/react": "^19.2.14",
+    "eslint": "^9.28",
+    "prettier": "^3.5",
+    "typescript": "^5.8"
+  }
+}

@@ -1,18 +1,21 @@
 {
   "name": "musiquiz",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "dev": "pnpm --recursive --parallel dev",
+    "clean": "pnpm --recursive --parallel clean",
     "build": "pnpm --recursive --parallel build",
-    "build:web": "pnpm --filter web build",
+    "build:web:static": "pnpm --filter web build:static",
+    "build:web:preview": "pnpm --filter web build:preview",
     "deploy:web": "pnpm --filter web run deploy",
     "format:check": "prettier . --check",
     "fc": "pnpm format:check",
     "format:fix": "prettier . --write",
     "ff": "pnpm format:fix",
-    "lint": "pnpm --recursive lint"
+    "lint": "pnpm --recursive lint",
+    "tsc": "pnpm --recursive tsc",
+    "typegen": "pnpm --filter sanity typegen"
   },
   "keywords": [],
   "author": "",
