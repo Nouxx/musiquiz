@@ -14,7 +14,7 @@
     "build:preview": "dotenvx run -f ../../.env --env PREVIEW=true --env CLOUDFLARE_ENV=preview -- astro build",
     "build": "pnpm build:static && pnpm build:preview",
     "preview": "astro preview",
-    "deploy": "wrangler deploy -c ./wrangler.jsonc --env production",
+    "deploy:static": "wrangler deploy -c ./wrangler.jsonc --env production",
     "deploy:preview": "wrangler deploy -c ./dist/preview/server/wrangler.json",
     "astro": "astro",
     "lint": "eslint . && pnpm lint:css",
