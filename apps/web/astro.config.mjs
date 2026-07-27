@@ -1,4 +1,5 @@
 // @ts-check
+import cloudflare from "@astrojs/cloudflare";
 import { defineConfig, envField, fontProviders } from "astro/config";
 
 // WARNING: process.env reads variables set by the CLI
@@ -7,7 +8,9 @@ const isPreview = process.env.PREVIEW === "true";
 
 export default defineConfig({
   output: isPreview ? "server" : "static",
-  // adapter: isPreview ? cloudflare() : undefined,
+  // output directory differs to prevent a build erasing the other
+  outDir: isPreview ? "./dist/preview" : "./dist/static",
+  adapter: isPreview ? cloudflare({ imageService: "passthrough" }) : undefined,
   fonts: [
     {
       provider: fontProviders.google(),
