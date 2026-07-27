@@ -2,7 +2,7 @@
   "name": "musiquiz",
   "compatibility_date": "2026-06-23",
   "assets": {
-    "directory": "./dist/static",
+    "directory": "./dist/static"
   },
   "env": {
     // triggered by CLOUDFLARE_ENV at build time
