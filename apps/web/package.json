@@ -13,7 +13,7 @@
     "build:static": "dotenvx run -f ../../.env -- astro build",
     "build:preview": "dotenvx run -f ../../.env --env PREVIEW=true --env CLOUDFLARE_ENV=preview -- astro build",
     "build": "pnpm build:static && pnpm build:preview",
-    "preview": "astro preview",
+    "preview:static": "astro preview --outDir dist/static",
     "deploy:static": "wrangler deploy -c ./wrangler.jsonc --env production",
     "deploy:preview": "wrangler deploy -c ./dist/preview/server/wrangler.json --env preview",
     "astro": "astro",
