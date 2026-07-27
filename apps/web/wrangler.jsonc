@@ -1,7 +1,17 @@
 {
-  "name": "web",
+  "name": "musiquiz",
   "compatibility_date": "2026-06-23",
   "assets": {
-    "directory": "./dist",
+    "directory": "./dist/static",
   },
+  "env": {
+    // triggered by CLOUDFLARE_ENV at build time
+    // https://developers.cloudflare.com/workers/wrangler/environments/
+    "preview": {
+      "name": "musiquiz-preview"
+    },
+    "production": {
+      "name": "musiquiz"
+    }
+  }
 }
