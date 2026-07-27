@@ -10,7 +10,7 @@
     "dev:preview": "dotenvx run -f ../../.env.local -f ../../.env --env PREVIEW=true -- astro dev --port 4322",
     "dev": "concurrently -n preview,static -c green,blue \"pnpm dev:preview\" \"pnpm dev:static\"",
     "build:static": "dotenvx run -f ../../.env -- astro build",
-    "build:preview": "dotenvx run -f ../../.env -- astro build",
+    "build:preview": "dotenvx run -f ../../.env --env PREVIEW=true -- astro build",
     "preview": "astro preview",
     "deploy": "wrangler deploy",
     "astro": "astro",
