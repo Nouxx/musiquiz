@@ -11,7 +11,7 @@
       "name": "musiquiz-preview"
     },
     "production": {
-      "name": "musiquiz"
+      "name": "musiquiz-production"
     }
   }
 }

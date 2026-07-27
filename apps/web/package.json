@@ -15,7 +15,7 @@
     "build": "pnpm build:static && pnpm build:preview",
     "preview": "astro preview",
     "deploy:static": "wrangler deploy -c ./wrangler.jsonc --env production",
-    "deploy:preview": "wrangler deploy -c ./dist/preview/server/wrangler.json",
+    "deploy:preview": "wrangler deploy -c ./dist/preview/server/wrangler.json --env preview",
     "astro": "astro",
     "lint": "eslint . && pnpm lint:css",
     "lint:css": "stylelint \"./src/**/*.{css,astro}\"",
