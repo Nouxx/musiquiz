@@ -6,7 +6,8 @@ import { SanityVenuesResponseSchema } from "./schema";
 
 function fetchVenuesQuery() {
   return defineQuery(`*[_type == "venue"]{
-  "title": title
+  "title": title,
+  "slug": slug.current
 }`);
 }
 

@@ -1,0 +1,27 @@
+---
+import { getVenueSlugs } from "@repo/services/cms/getVenueSlugs";
+
+import {
+  SANITY_STUDIO_PROJECT_ID,
+  SANITY_STUDIO_DATASET,
+  PREVIEW,
+  SANITY_API_READ_TOKEN,
+} from "astro:env/server";
+
+export async function getStaticPaths() {
+  const venueSlugs = await getVenueSlugs({
+    lang: "fr",
+    dataset: SANITY_STUDIO_DATASET,
+    projectId: SANITY_STUDIO_PROJECT_ID,
+    token: SANITY_API_READ_TOKEN,
+    draft: PREVIEW,
+  });
+
+  return venueSlugs.map((slug) => ({ params: { venue: slug } }));
+}
+
+const { venue } = Astro.params;
+// todo: copy in "en"
+---
+
+<h1>Venue slug: {venue}</h1>

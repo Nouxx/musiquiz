@@ -1,6 +1,7 @@
 ---
 import { getHomepageData } from "@repo/services/cms/getHomepageData";
 import type { Lang } from "@repo/utils/lang";
+import { getRelativeLocaleUrl } from "astro:i18n";
 
 interface Props {
   lang: Lang;
@@ -25,5 +26,11 @@ const { venues } = await getHomepageData({
 ---
 
 <ul>
-  {venues.map((venue) => <li>{venue.title}</li>)}
+  {
+    venues.map((venue) => (
+      <a href={getRelativeLocaleUrl(lang, `/${venue.slug}`)}>
+        <li>{venue.title}</li>
+      </a>
+    ))
+  }
 </ul>

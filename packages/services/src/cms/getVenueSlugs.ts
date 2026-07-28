@@ -1,18 +1,8 @@
 import { getSanityClient } from "@repo/api/sanity/client";
 import { fetchVenuesData } from "@repo/api/sanity/fetchVenues";
-import { type SanityVenue } from "@repo/api/sanity/types";
-import { type Lang } from "@repo/utils/lang";
+import type { Lang } from "@repo/utils/lang";
 
-import type { Venue } from "./types";
-
-function adaptVenue(data: SanityVenue): Venue {
-  return {
-    title: data.title,
-    slug: data.slug
-  };
-}
-
-export async function getHomepageData({
+export async function getVenueSlugs({
   lang,
   projectId,
   dataset,
@@ -28,8 +18,9 @@ export async function getHomepageData({
   const sanityClient = getSanityClient({ projectId, dataset, draft, token });
 
   const venues = await fetchVenuesData({ lang, sanityClient });
+  console.log("venues", venues);
 
   // todo: throw if empty array
 
-  return { venues: venues.map((venue) => adaptVenue(venue)) };
+  return venues.map((venue) => venue.slug);
 }
