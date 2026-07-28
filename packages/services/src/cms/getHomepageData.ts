@@ -1,13 +1,13 @@
 import { getSanityClient } from "@repo/api/sanity/client";
-import { fetchHomepageData } from "@repo/api/sanity/fetchHomepageData";
-import { type SanityHomepage } from "@repo/api/sanity/types";
+import { fetchVenuesData } from "@repo/api/sanity/fetchVenues";
+import { type SanityVenue } from "@repo/api/sanity/types";
 import { type Lang } from "@repo/utils/lang";
 
-import { type Homepage } from "./types";
+import type { Venue } from "./types";
 
-function adaptHomepage(data: SanityHomepage): Homepage {
+function adaptVenue(data: SanityVenue): Venue {
   return {
-    heading: data.heading,
+    title: data.title,
   };
 }
 
@@ -26,7 +26,9 @@ export async function getHomepageData({
 }) {
   const sanityClient = getSanityClient({ projectId, dataset, draft, token });
 
-  const sanityHomepage = await fetchHomepageData({ lang, sanityClient });
+  const venues = await fetchVenuesData({ lang, sanityClient });
 
-  return adaptHomepage(sanityHomepage);
+  // todo: throw if empty array
+
+  return { venues: venues.map((venue) => adaptVenue(venue)) };
 }

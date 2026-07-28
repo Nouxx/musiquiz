@@ -1,3 +1,7 @@
+export type Venue = {
+  title: string;
+};
+
 export type Homepage = {
-  heading: string;
+  venues: Venue[];
 };

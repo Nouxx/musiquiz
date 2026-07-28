@@ -1,5 +1,6 @@
 import type { z } from "zod";
 
-import type { SanityHomepageSchema } from "./schema";
+import type { SanityVenueSchema, SanityVenuesResponseSchema } from "./schema";
 
-export type SanityHomepage = z.infer<typeof SanityHomepageSchema>;
+export type SanityVenue = z.infer<typeof SanityVenueSchema>;
+export type SanityVenuesResponse = z.infer<typeof SanityVenuesResponseSchema>;

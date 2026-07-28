@@ -1,5 +1,5 @@
 ---
-import Welcome from "../components/features/Welcome.astro";
+import VenuesList from "../components/features/VenuesList.astro";
 import Layout from "../layouts/Layout.astro";
 
 import { getRelativeLocaleUrl } from "astro:i18n";
@@ -9,5 +9,5 @@ const homeEnUrl = getRelativeLocaleUrl("en", "/");
 
 <Layout>
   <a href={homeEnUrl}>Switch to EN</a>
-  <Welcome lang="fr" />
+  <VenuesList lang="fr" />
 </Layout>

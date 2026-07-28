@@ -1,0 +1,29 @@
+---
+import { getHomepageData } from "@repo/services/cms/getHomepageData";
+import type { Lang } from "@repo/utils/lang";
+
+interface Props {
+  lang: Lang;
+}
+
+import {
+  SANITY_STUDIO_PROJECT_ID,
+  SANITY_STUDIO_DATASET,
+  PREVIEW,
+  SANITY_API_READ_TOKEN,
+} from "astro:env/server";
+
+const { lang } = Astro.props;
+
+const { venues } = await getHomepageData({
+  lang,
+  projectId: SANITY_STUDIO_PROJECT_ID,
+  dataset: SANITY_STUDIO_DATASET,
+  draft: PREVIEW,
+  token: SANITY_API_READ_TOKEN,
+});
+---
+
+<ul>
+  {venues.map((venue) => <li>{venue.title}</li>)}
+</ul>
