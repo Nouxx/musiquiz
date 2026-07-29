@@ -6,3 +6,13 @@ export const SanityVenueSchema = z.strictObject({
 });
 
 export const SanityVenuesResponseSchema = z.array(SanityVenueSchema);
+
+export const SanityHeaderSchema = z.strictObject({
+  logo: z.string().min(1),
+});
+
+export const SanityHomepageSchema = z.strictObject({
+  logo: z.string().min(1),
+  badge: z.string().min(1),
+  heading: z.string().min(1),
+});

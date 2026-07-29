@@ -1,0 +1,37 @@
+---
+import type { Lang } from "@repo/utils/lang";
+import { getHomepageData } from "@repo/services/cms/getHomepageData";
+import HomepageCover from "../features/HomepageCover.astro";
+import VenuesList from "../features/VenuesList.astro";
+
+interface Props {
+  lang: Lang;
+  projectId: string;
+  dataset: string;
+  draft: boolean;
+  token?: string;
+}
+
+const { lang, projectId, dataset, draft, token } = Astro.props;
+
+const data = await getHomepageData({
+  lang,
+  projectId,
+  dataset,
+  draft,
+  token,
+});
+---
+
+<HomepageCover
+  logo={data.logo}
+  badgeLabel={data.badgeLabel}
+  heading={data.heading}
+/>
+
+<div style={{ border: "1px solid black", margin: "2px" }}>
+  <p>TODO: PageComponent[]</p>
+</div>
+
+
+<VenuesList venues={data.venues} />

@@ -1,0 +1,46 @@
+---
+import SiteHeader from "@repo/ui/SiteHeader";
+import { getHeaderData } from "@repo/services/cms/getHeaderData";
+
+import {
+  SANITY_STUDIO_PROJECT_ID,
+  SANITY_STUDIO_DATASET,
+  PREVIEW,
+  SANITY_API_READ_TOKEN,
+} from "astro:env/server";
+import type { Lang } from "@repo/utils/lang";
+import { getRoutesForLang } from "../../routing/routes";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const { logo } = await getHeaderData({
+  projectId: SANITY_STUDIO_PROJECT_ID,
+  dataset: SANITY_STUDIO_DATASET,
+  draft: PREVIEW,
+  token: SANITY_API_READ_TOKEN,
+});
+
+const routes = getRoutesForLang(lang);
+
+const dummyLinks = [
+  {
+    label: "Accueil",
+    url: routes.home,
+  },
+  {
+    label: "Offrir une partie",
+    url: routes.gifting,
+  },
+];
+
+const cta = {
+  label: "Réserver",
+  url: routes.book,
+};
+---
+
+<SiteHeader logo={logo} links={dummyLinks} cta={cta} />

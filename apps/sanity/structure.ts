@@ -11,7 +11,11 @@ export const myStructure: StructureResolver = (S: StructureBuilder) =>
         .title("Homepage")
         .id("homepage")
         .child(S.document().schemaType("homepage").documentId("homepage")),
+      S.listItem()
+        .title("Header")
+        .id("header")
+        .child(S.document().schemaType("header").documentId("header")),
       ...S.documentTypeListItems().filter(
-        (listItem) => !["homepage"].includes(listItem.getId() ?? ""),
+        (listItem) => !["homepage", "header"].includes(listItem.getId() ?? ""),
       ),
     ]);

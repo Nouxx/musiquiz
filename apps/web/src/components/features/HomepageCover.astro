@@ -1,0 +1,20 @@
+---
+import PageCover from "@repo/ui/PageCover";
+
+interface Props {
+  logo: string;
+  badgeLabel: string;
+  heading: string;
+}
+
+const { logo, badgeLabel, heading } = Astro.props;
+---
+
+<PageCover>
+  <div style={{ border: "1px solid black", margin: "2px" }}>
+    <p>HomepageCover</p>
+    <p>logo: {logo}</p>
+    <p>badgeLabel: {badgeLabel}</p>
+    <p>heading: {heading}</p>
+  </div>
+</PageCover>

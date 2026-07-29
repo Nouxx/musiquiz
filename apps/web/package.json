@@ -25,6 +25,7 @@
     "@astrojs/cloudflare": "^14.1.4",
     "@repo/services": "workspace:*",
     "@repo/utils": "workspace:*",
+    "@repo/ui": "workspace:*",
     "astro": "^7.1.3",
     "wrangler": "^4.114.0"
   },

@@ -6,11 +6,17 @@ export const homepageType = defineType({
   type: "document",
   fields: [
     defineField({
-      name: "heading",
+      name: "logo",
+      description: "WIP",
+      type: "string",
+    }),
+    defineField({
+      name: "badge",
+      title: "Badge label",
       type: "internationalizedArrayString",
     }),
     defineField({
-      name: "subtitle",
+      name: "heading",
       type: "internationalizedArrayString",
     }),
   ],

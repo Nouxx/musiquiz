@@ -1,13 +1,25 @@
 ---
-import VenuesList from "../components/features/VenuesList.astro";
+import type { Lang } from "@repo/utils/lang";
 import Layout from "../layouts/Layout.astro";
 
-import { getRelativeLocaleUrl } from "astro:i18n";
+import Homepage from "../components/pages/Homepage.astro";
 
-const homeEnUrl = getRelativeLocaleUrl("en", "/");
+const lang: Lang = "fr";
+
+import {
+  SANITY_STUDIO_PROJECT_ID,
+  SANITY_STUDIO_DATASET,
+  PREVIEW,
+  SANITY_API_READ_TOKEN,
+} from "astro:env/server";
 ---
 
 <Layout>
-  <a href={homeEnUrl}>Switch to EN</a>
-  <VenuesList lang="fr" />
+  <Homepage
+    lang={lang}
+    projectId={SANITY_STUDIO_PROJECT_ID}
+    dataset={SANITY_STUDIO_DATASET}
+    draft={PREVIEW}
+    token={SANITY_API_READ_TOKEN}
+  />
 </Layout>

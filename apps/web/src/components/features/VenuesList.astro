@@ -1,36 +1,22 @@
 ---
-import { getHomepageData } from "@repo/services/cms/getHomepageData";
-import type { Lang } from "@repo/utils/lang";
-import { getRelativeLocaleUrl } from "astro:i18n";
+import type { Venue } from "@repo/services/cms/types";
 
 interface Props {
-  lang: Lang;
+  venues: Venue[];
 }
 
-import {
-  SANITY_STUDIO_PROJECT_ID,
-  SANITY_STUDIO_DATASET,
-  PREVIEW,
-  SANITY_API_READ_TOKEN,
-} from "astro:env/server";
-
-const { lang } = Astro.props;
-
-const { venues } = await getHomepageData({
-  lang,
-  projectId: SANITY_STUDIO_PROJECT_ID,
-  dataset: SANITY_STUDIO_DATASET,
-  draft: PREVIEW,
-  token: SANITY_API_READ_TOKEN,
-});
+const { venues } = Astro.props;
 ---
 
-<ul>
-  {
-    venues.map((venue) => (
-      <a href={getRelativeLocaleUrl(lang, `/${venue.slug}`)}>
-        <li>{venue.title}</li>
-      </a>
-    ))
-  }
-</ul>
+<div style={{ border: "1px solid black", margin: "2px" }}>
+  <p>VenuesList</p>
+  <ul>
+    {
+      venues.map((venue) => (
+        <a href={venue.slug}>
+          <li>{venue.title}</li>
+        </a>
+      ))
+    }
+  </ul>
+</div>

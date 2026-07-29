@@ -1,0 +1,32 @@
+---
+// note: Header name seems to collide with native Astro types
+interface Props {
+  logo: string; // todo: handle image
+  links: {
+    label: string;
+    url: string;
+  }[];
+  cta: {
+    label: string;
+    url: string;
+  };
+}
+
+const { links, cta } = Astro.props;
+---
+
+<header style={{ border: "1px solid black", margin: "2px" }}>
+  <p>SiteHeader</p>
+  <ul>
+    {
+      links.map((link) => (
+        <a href={link.url}>
+          <li>{link.label}</li>
+        </a>
+      ))
+    }
+    <a href={cta.url}>
+      <li>{cta.label}</li>
+    </a>
+  </ul>
+</header>
