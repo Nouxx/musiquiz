@@ -1,9 +1,11 @@
 import { defineField, defineType } from "sanity";
+import { JoystickIcon } from "@sanity/icons/Joystick";
 
 export const gameFormatType = defineType({
   name: "gameFormat",
   title: "Game format",
   type: "document",
+  icon: JoystickIcon,
   fields: [
     defineField({
       name: "name",

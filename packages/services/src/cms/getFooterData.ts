@@ -1,12 +1,12 @@
 import { fetchSanityData } from "@repo/api/sanity/fetchData";
-import { fetchGlobalFooterQuery } from "@repo/api/sanity/queries";
-import { SanityGlobalFooterSchema } from "@repo/api/sanity/schema";
-import { type SanityGlobalFooter } from "@repo/api/sanity/types";
+import { fetchFooterQuery } from "@repo/api/sanity/queries";
+import { SanityFooterSchema } from "@repo/api/sanity/schema";
+import { type SanityFooter } from "@repo/api/sanity/types";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { Footer } from "./types";
 
-function adaptGlobalFooter(data: SanityGlobalFooter): Footer {
+function adaptFooter(data: SanityFooter): Footer {
   const {
     footerLogo,
     facebookUrl,
@@ -41,10 +41,10 @@ function adaptGlobalFooter(data: SanityGlobalFooter): Footer {
 
 export async function getFooterData({ config }: { config: SanityConfig }) {
   const data = await fetchSanityData({
-    query: fetchGlobalFooterQuery(),
-    schema: SanityGlobalFooterSchema,
+    query: fetchFooterQuery(),
+    schema: SanityFooterSchema,
     config,
   });
 
-  return adaptGlobalFooter(data);
+  return adaptFooter(data);
 }

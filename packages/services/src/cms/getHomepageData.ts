@@ -1,29 +1,26 @@
-import { getSanityClient } from "@repo/api/sanity/client";
-import { fetchHomepageData } from "@repo/api/sanity/fetchHomepage";
-import { fetchVenuesData } from "@repo/api/sanity/fetchVenues";
-import { type SanityHomepage, type SanityVenue } from "@repo/api/sanity/types";
+import { fetchSanityData } from "@repo/api/sanity/fetchData";
+import { fetchHomepageQuery } from "@repo/api/sanity/queries";
+import { SanityHomepageSchema } from "@repo/api/sanity/schema";
+import { type SanityHomepage } from "@repo/api/sanity/types";
 import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { Homepage, Venue } from "./types";
 
-function adaptVenue(data: SanityVenue): Venue {
+function adaptVenue(data: SanityHomepage["venues"][number]): Venue {
   return {
     title: data.title,
     slug: data.slug,
   };
 }
 
-function adaptHomepage(
-  data: SanityHomepage,
-  venuesData: SanityVenue[],
-): Homepage {
-  const { logo, badge, heading } = data;
+function adaptHomepage(data: SanityHomepage): Homepage {
+  const { logo, badge, heading } = data.homepage;
   return {
     logo,
     badgeLabel: badge,
     heading,
-    venues: venuesData.map((venue) => adaptVenue(venue)),
+    venues: data.venues.map((venue) => adaptVenue(venue)),
   };
 }
 
@@ -34,14 +31,11 @@ export async function getHomepageData({
   lang: Lang;
   config: SanityConfig;
 }) {
-  const sanityClient = getSanityClient({ config });
-
-  const homepageData = await fetchHomepageData({
-    lang,
-    sanityClient,
+  const data = await fetchSanityData({
+    query: fetchHomepageQuery(lang),
+    schema: SanityHomepageSchema,
+    config,
   });
 
-  const venuesData = await fetchVenuesData({ lang, sanityClient });
-
-  return adaptHomepage(homepageData, venuesData);
+  return adaptHomepage(data);
 }
