@@ -13,10 +13,11 @@ const { lang } = Astro.props;
 const sanityConfig = getSanityConfigFromEnvironment();
 
 const footerData = await getFooterData({
+  lang,
   config: sanityConfig,
 });
 
-const { logo, socials, contact, gamesFormatsLinks } = footerData;
+const { logo, socials, contact, gamesFormatsLinks, languageLink } = footerData;
 ---
 
 <div style={{ border: "1px solid black", margin: "2px" }}>
@@ -25,8 +26,8 @@ const { logo, socials, contact, gamesFormatsLinks } = footerData;
     logo={logo}
     socials={socials}
     contact={contact}
-    languageLink={lang}
     newsletter
     gamesLink={gamesFormatsLinks}
+    languageLink={languageLink}
   />
 </div>

@@ -1,3 +1,5 @@
+import type { Lang } from "@repo/utils/lang";
+
 export type Venue = {
   title: string;
   slug: string;
@@ -34,4 +36,9 @@ export type Footer = {
   };
   gamesFormatsLinks: GameFormatLinks[];
   newsletter: boolean;
+  languageLink: {
+    label: string;
+    url: string;
+    lang: Lang;
+  };
 };

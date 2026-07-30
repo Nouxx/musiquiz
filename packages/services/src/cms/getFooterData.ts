@@ -2,11 +2,24 @@ import { fetchSanityData } from "@repo/api/sanity/fetchData";
 import { fetchFooterQuery } from "@repo/api/sanity/queries";
 import { SanityFooterSchema } from "@repo/api/sanity/schema";
 import { type SanityFooter } from "@repo/api/sanity/types";
+import type { Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { Footer } from "./types";
 
-function adaptFooter(data: SanityFooter): Footer {
+function getLanguageLinkForLang(lang: Lang): Footer["languageLink"] {
+  return lang === "fr"
+    ? { lang: "en", label: "English", url: `en/` }
+    : { lang: "fr", label: "Français", url: `/` };
+}
+
+function adaptFooter({
+  data,
+  lang,
+}: {
+  data: SanityFooter;
+  lang: Lang;
+}): Footer {
   const {
     footerLogo,
     facebookUrl,
@@ -36,15 +49,22 @@ function adaptFooter(data: SanityFooter): Footer {
       label: format.name,
       url: format.slug,
     })),
+    languageLink: getLanguageLinkForLang(lang),
   };
 }
 
-export async function getFooterData({ config }: { config: SanityConfig }) {
+export async function getFooterData({
+  lang,
+  config,
+}: {
+  lang: Lang;
+  config: SanityConfig;
+}) {
   const data = await fetchSanityData({
     query: fetchFooterQuery(),
     schema: SanityFooterSchema,
     config,
   });
 
-  return adaptFooter(data);
+  return adaptFooter({ data, lang });
 }

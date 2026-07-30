@@ -3,7 +3,7 @@ import type { Lang } from "@repo/utils/lang";
 import { getHomepageData } from "@repo/services/cms/getHomepageData";
 import HomepageCover from "../features/HomepageCover.astro";
 import VenuesList from "../features/VenuesList.astro";
-import GlobalFooter from "../features/GlobalFooter.astro";
+import Footer from "../features/Footer.astro";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 
 interface Props {
@@ -32,4 +32,4 @@ const pageData = await getHomepageData({
 
 <VenuesList venues={pageData.venues} />
 
-<GlobalFooter lang={lang} />
+<Footer lang={lang} />
