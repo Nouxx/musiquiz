@@ -3,6 +3,7 @@ import Footer from "@repo/ui/Footer";
 import type { Lang } from "@repo/utils/lang";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getFooterData } from "@repo/services/cms/getFooterData";
+import { getRoutesForLang } from "../../routing/routes";
 
 interface Props {
   lang: Lang;
@@ -17,7 +18,43 @@ const footerData = await getFooterData({
   config: sanityConfig,
 });
 
-const { logo, socials, contact, gamesFormatsLinks, languageLink } = footerData;
+const { logo, socials, contact, gamesFormatsLinks, venuesLink, languageLink } =
+  footerData;
+
+function getMiscellaneousLinksForLang(lang: Lang) {
+  const routes = getRoutesForLang(lang);
+
+  return lang === "fr"
+    ? [
+        { label: "FAQ", url: routes.faq },
+        { label: "Contact", url: routes.contact },
+        { label: "Blog", url: routes.blog! },
+        { label: "Presse", url: routes.press },
+        { label: "Ouvrez votre salle Musi'quiz", url: routes.franchise },
+      ]
+    : [
+        { label: "FAQ", url: routes.faq },
+        { label: "Contact", url: routes.contact },
+        { label: "Press", url: routes.press },
+        { label: "Open your Musi'quiz franchise", url: routes.franchise },
+      ];
+}
+
+function getBottomLinksForLang(lang: Lang) {
+  const routes = getRoutesForLang(lang);
+
+  return lang === "fr"
+    ? [
+        { label: "CGV", url: routes.termsAndConditions },
+        { label: "RGPD", url: routes.gdpr },
+        { label: "Mentions légales", url: routes.legalsNotice },
+      ]
+    : [
+        { label: "T&C", url: routes.termsAndConditions },
+        { label: "GDPR", url: routes.gdpr },
+        { label: "Legal Notices", url: routes.legalsNotice },
+      ];
+}
 ---
 
 <div style={{ border: "1px solid black", margin: "2px" }}>
@@ -29,5 +66,8 @@ const { logo, socials, contact, gamesFormatsLinks, languageLink } = footerData;
     newsletter
     gamesLink={gamesFormatsLinks}
     languageLink={languageLink}
+    venuesLink={venuesLink}
+    miscellaneousLinks={getMiscellaneousLinksForLang(lang)}
+    bottomLinks={getBottomLinksForLang(lang)}
   />
 </div>

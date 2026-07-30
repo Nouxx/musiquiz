@@ -17,6 +17,10 @@ export function fetchFooterQuery() {
     "gameFormats": *[_type == "gameFormat"]{
       name,
       "slug": slug.current
+    },
+    "venues": *[_type == "venue"]{
+      title,
+      "slug": slug.current
     }
     }`);
 }

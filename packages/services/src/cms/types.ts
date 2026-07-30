@@ -41,4 +41,5 @@ export type Footer = {
     url: string;
     lang: Lang;
   };
+  venuesLink: { label: string; url: string }[];
 };

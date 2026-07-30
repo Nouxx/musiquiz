@@ -29,13 +29,21 @@ interface Props {
     label: string;
     url: string;
   }[];
+  venuesLink: {
+    label: string;
+    url: string;
+  }[];
   // todo: required
-  otherLinks?: {
+  miscellaneousLinks?: {
+    label: string;
+    url: string;
+  }[];
+  bottomLinks: {
     label: string;
     url: string;
   }[];
   // optional because blog is not translated
-  languageLink: {
+  languageLink?: {
     lang: Lang;
     label: string;
     url: string;
@@ -49,8 +57,10 @@ const {
   schedule,
   contact,
   gamesLink,
-  otherLinks,
+  venuesLink,
+  miscellaneousLinks,
   languageLink,
+  bottomLinks,
 } = Astro.props;
 ---
 
@@ -104,10 +114,10 @@ const {
     }
   </ul>
 
-  <p>otherLinks:</p>
+  <p>venuesLink:</p>
   <ul>
     {
-      otherLinks?.map((link) => (
+      venuesLink.map((link) => (
         <li>
           <a href={link.url}>{link.label}</a>
         </li>
@@ -115,7 +125,33 @@ const {
     }
   </ul>
 
-  <a href={languageLink.url}>
-    {languageLink.label} ({languageLink.lang === "fr" ? "FR" : "EN"})
-  </a>
+  <p>miscellaneousLinks:</p>
+  <ul>
+    {
+      miscellaneousLinks?.map((link) => (
+        <li>
+          <a href={link.url}>{link.label}</a>
+        </li>
+      ))
+    }
+  </ul>
+
+  {
+    languageLink && (
+      <a href={languageLink.url}>
+        {languageLink.label} ({languageLink.lang === "fr" ? "FR" : "EN"})
+      </a>
+    )
+  }
+
+  <p>bottomLinks:</p>
+  <ul>
+    {
+      bottomLinks.map((link) => (
+        <li>
+          <a href={link.url}>{link.label}</a>
+        </li>
+      ))
+    }
+  </ul>
 </footer>

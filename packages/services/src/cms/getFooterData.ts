@@ -49,6 +49,10 @@ function adaptFooter({
       label: format.name,
       url: format.slug,
     })),
+    venuesLink: data.venues.map((venue) => ({
+      label: venue.title,
+      url: venue.slug,
+    })),
     languageLink: getLanguageLinkForLang(lang),
   };
 }

@@ -4,20 +4,43 @@ type Routes = {
   home: string;
   book: string;
   gifting: string;
+  faq: string;
+  contact: string;
+  blog?: string; // blog is not translated
+  press: string;
+  franchise: string;
+  termsAndConditions: string;
+  gdpr: string;
+  legalsNotice: string;
 };
 
-export const frenchRoute = {
+const frenchRoutes: Routes = {
   home: "/",
   book: "reserver",
   gifting: "offrir",
-} satisfies Routes;
+  faq: "faq",
+  contact: "contact",
+  blog: "blog",
+  press: "presse",
+  franchise: "franchise",
+  termsAndConditions: "cgv",
+  gdpr: "rgpd",
+  legalsNotice: "mentions-legales",
+};
 
-export const englishRoute = {
+const englishRoutes: Routes = {
   home: "/",
   book: "book",
   gifting: "gift",
-} satisfies Routes;
+  faq: "faq",
+  contact: "contact",
+  press: "press",
+  franchise: "franchise",
+  termsAndConditions: "terms",
+  gdpr: "gdpr",
+  legalsNotice: "legals-notice",
+};
 
 export function getRoutesForLang(lang: Lang) {
-  return lang === "fr" ? frenchRoute : englishRoute;
+  return lang === "fr" ? frenchRoutes : englishRoutes;
 }

@@ -18,12 +18,6 @@ export const SanityHomepageSchema = z.strictObject({
 });
 
 export const SanityFooterSchema = z.strictObject({
-  gameFormats: z.array(
-    z.strictObject({
-      name: z.string().min(1),
-      slug: z.string().min(1),
-    }),
-  ),
   siteSettings: z.strictObject({
     facebookUrl: z.url(),
     footerLogo: z.string(),
@@ -34,4 +28,16 @@ export const SanityFooterSchema = z.strictObject({
     tiktokUrl: z.url(),
     youtubeUrl: z.url(),
   }),
+  gameFormats: z.array(
+    z.strictObject({
+      name: z.string().min(1),
+      slug: z.string().min(1),
+    }),
+  ),
+  venues: z.array(
+    z.strictObject({
+      title: z.string(),
+      slug: z.string(),
+    }),
+  ),
 });
