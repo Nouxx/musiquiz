@@ -1,6 +1,7 @@
 import type { z } from "zod";
 
 import type {
+  SanityGlobalFooterSchema,
   SanityHeaderSchema,
   SanityHomepageSchema,
   SanitySiteSettingsSchema,
@@ -16,3 +17,5 @@ export type SanityHeader = z.infer<typeof SanityHeaderSchema>;
 export type SanityHomepage = z.infer<typeof SanityHomepageSchema>;
 
 export type SanitySiteSettings = z.infer<typeof SanitySiteSettingsSchema>;
+
+export type SanityGlobalFooter = z.infer<typeof SanityGlobalFooterSchema>;

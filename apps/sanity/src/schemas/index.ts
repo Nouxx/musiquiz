@@ -1,3 +1,4 @@
+import { gameFormatType } from "./gameFormat";
 import { headerType } from "./header";
 import { homepageType } from "./homepage";
 import { siteSettingsType } from "./siteSettings";
@@ -8,4 +9,5 @@ export const schemaTypes = [
   venueType,
   headerType,
   siteSettingsType,
+  gameFormatType
 ];

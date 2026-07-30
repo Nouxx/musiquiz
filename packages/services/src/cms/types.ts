@@ -14,6 +14,11 @@ export type Header = {
   logo: string;
 };
 
+export type GameFormatLinks = {
+  label: string;
+  url: string;
+};
+
 export type Footer = {
   logo: string;
   socials: {
@@ -27,5 +32,6 @@ export type Footer = {
     mail: string;
     phone: string;
   };
+  gamesFormatsLinks: GameFormatLinks[];
   newsletter: boolean;
 };

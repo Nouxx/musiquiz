@@ -5,30 +5,19 @@ import { getFooterData } from "@repo/services/cms/getFooterData";
 import HomepageCover from "../features/HomepageCover.astro";
 import VenuesList from "../features/VenuesList.astro";
 import GlobalFooter from "../features/GlobalFooter.astro";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 
 interface Props {
   lang: Lang;
-  projectId: string;
-  dataset: string;
-  draft: boolean;
-  token?: string;
 }
 
-const { lang, projectId, dataset, draft, token } = Astro.props;
+const sanityConfig = getSanityConfigFromEnvironment();
+
+const { lang } = Astro.props;
 
 const pageData = await getHomepageData({
   lang,
-  projectId,
-  dataset,
-  draft,
-  token,
-});
-
-const footerData = await getFooterData({
-  projectId,
-  dataset,
-  draft,
-  token,
+  config: sanityConfig,
 });
 ---
 
@@ -44,4 +33,4 @@ const footerData = await getFooterData({
 
 <VenuesList venues={pageData.venues} />
 
-<GlobalFooter data={footerData} lang={lang} />
+<GlobalFooter lang={lang} />

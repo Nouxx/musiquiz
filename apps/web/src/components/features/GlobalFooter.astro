@@ -1,18 +1,32 @@
 ---
-import type { Footer as FooterData } from "@repo/services/cms/types";
 import Footer from "@repo/ui/Footer";
 import type { Lang } from "@repo/utils/lang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getFooterData } from "@repo/services/cms/getFooterData";
 
 interface Props {
-  data: FooterData;
   lang: Lang;
 }
 
-const { logo, socials, contact } = Astro.props.data;
 const { lang } = Astro.props;
+
+const sanityConfig = getSanityConfigFromEnvironment();
+
+const footerData = await getFooterData({
+  config: sanityConfig,
+});
+
+const { logo, socials, contact, gamesFormatsLinks } = footerData;
 ---
 
 <div style={{ border: "1px solid black", margin: "2px" }}>
   <p>GlobalFooter</p>
-  <Footer logo={logo} socials={socials} contact={contact} languageLink={lang} newsletter />
+  <Footer
+    logo={logo}
+    socials={socials}
+    contact={contact}
+    languageLink={lang}
+    newsletter
+    gamesLink={gamesFormatsLinks}
+  />
 </div>

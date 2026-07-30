@@ -3,6 +3,7 @@ import { fetchHomepageData } from "@repo/api/sanity/fetchHomepage";
 import { fetchVenuesData } from "@repo/api/sanity/fetchVenues";
 import { type SanityHomepage, type SanityVenue } from "@repo/api/sanity/types";
 import { type Lang } from "@repo/utils/lang";
+import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { Homepage, Venue } from "./types";
 
@@ -28,18 +29,12 @@ function adaptHomepage(
 
 export async function getHomepageData({
   lang,
-  projectId,
-  dataset,
-  draft,
-  token,
+  config,
 }: {
   lang: Lang;
-  projectId: string;
-  dataset: string;
-  draft: boolean;
-  token?: string;
+  config: SanityConfig;
 }) {
-  const sanityClient = getSanityClient({ projectId, dataset, draft, token });
+  const sanityClient = getSanityClient({ config });
 
   const homepageData = await fetchHomepageData({
     lang,

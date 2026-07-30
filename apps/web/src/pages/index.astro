@@ -5,21 +5,8 @@ import Layout from "../layouts/Layout.astro";
 import Homepage from "../components/pages/Homepage.astro";
 
 const lang: Lang = "fr";
-
-import {
-  SANITY_STUDIO_PROJECT_ID,
-  SANITY_STUDIO_DATASET,
-  PREVIEW,
-  SANITY_API_READ_TOKEN,
-} from "astro:env/server";
 ---
 
 <Layout>
-  <Homepage
-    lang={lang}
-    projectId={SANITY_STUDIO_PROJECT_ID}
-    dataset={SANITY_STUDIO_DATASET}
-    draft={PREVIEW}
-    token={SANITY_API_READ_TOKEN}
-  />
+  <Homepage lang={lang} />
 </Layout>

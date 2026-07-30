@@ -1,10 +1,12 @@
-import { getSanityClient } from "@repo/api/sanity/client";
-import { fetchSiteSettingsData } from "@repo/api/sanity/fetchSiteSettings";
-import { type SanitySiteSettings } from "@repo/api/sanity/types";
+import { fetchSanityData } from "@repo/api/sanity/fetchData";
+import { fetchGlobalFooterQuery } from "@repo/api/sanity/queries";
+import { SanityGlobalFooterSchema } from "@repo/api/sanity/schema";
+import { type SanityGlobalFooter } from "@repo/api/sanity/types";
+import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { Footer } from "./types";
 
-function adaptFooter(siteSettings: SanitySiteSettings): Footer {
+function adaptGlobalFooter(data: SanityGlobalFooter): Footer {
   const {
     footerLogo,
     facebookUrl,
@@ -14,7 +16,8 @@ function adaptFooter(siteSettings: SanitySiteSettings): Footer {
     youtubeUrl,
     mainEmail,
     mainPhone,
-  } = siteSettings;
+  } = data.siteSettings;
+
   return {
     logo: footerLogo,
     socials: {
@@ -29,23 +32,19 @@ function adaptFooter(siteSettings: SanitySiteSettings): Footer {
       phone: mainPhone,
     },
     newsletter: false,
+    gamesFormatsLinks: data.gameFormats.map((format) => ({
+      label: format.name,
+      url: format.slug,
+    })),
   };
 }
 
-export async function getFooterData({
-  projectId,
-  dataset,
-  draft,
-  token,
-}: {
-  projectId: string;
-  dataset: string;
-  draft?: boolean;
-  token?: string;
-}) {
-  const sanityClient = getSanityClient({ projectId, dataset, draft, token });
+export async function getFooterData({ config }: { config: SanityConfig }) {
+  const data = await fetchSanityData({
+    query: fetchGlobalFooterQuery(),
+    schema: SanityGlobalFooterSchema,
+    config,
+  });
 
-  const siteSettingsData = await fetchSiteSettingsData({ sanityClient });
-
-  return adaptFooter(siteSettingsData);
+  return adaptGlobalFooter(data);
 }
