@@ -8,7 +8,9 @@ import { dataset, projectId } from "./src/environments";
 
 const singletonActions = new Set(["publish", "discardChanges", "restore"]);
 
-const singletonTypes = new Set(["homepage", "header"]);
+export const singletonIds = ["homepage", "header", "siteSettings"];
+
+const singletonTypes = new Set(singletonIds);
 
 export default defineConfig({
   name: "default",

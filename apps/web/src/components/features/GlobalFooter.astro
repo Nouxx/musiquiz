@@ -1,0 +1,18 @@
+---
+import type { Footer as FooterData } from "@repo/services/cms/types";
+import Footer from "@repo/ui/Footer";
+import type { Lang } from "@repo/utils/lang";
+
+interface Props {
+  data: FooterData;
+  lang: Lang;
+}
+
+const { logo, socials, contact } = Astro.props.data;
+const { lang } = Astro.props;
+---
+
+<div style={{ border: "1px solid black", margin: "2px" }}>
+  <p>GlobalFooter</p>
+  <Footer logo={logo} socials={socials} contact={contact} languageLink={lang} newsletter />
+</div>

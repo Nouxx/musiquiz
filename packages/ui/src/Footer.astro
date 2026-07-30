@@ -1,0 +1,116 @@
+---
+import type { Lang } from "@repo/utils/lang";
+
+interface Props {
+  logo: string; // todo: use Image
+  socials: {
+    tiktokUrl?: string;
+    youtubeUrl?: string;
+    instagramUrl?: string;
+    facebookUrl?: string;
+    linkedinUrl?: string;
+  };
+  newsletter: boolean;
+  schedule?: {
+    monday: string;
+    tuesday: string;
+    wednesday: string;
+    thursday: string;
+    friday: string;
+    saturday: string;
+    sunday: string;
+  };
+  contact: {
+    phone: string;
+    mail: string;
+    map?: string;
+  };
+// todo: required
+  gamesLink?: {
+    label: string;
+    url: string;
+  }[];
+  // todo: required
+  otherLinks?: {
+    label: string;
+    url: string;
+  }[];
+  // optional because blog is not translated
+  languageLink: Lang;
+}
+
+const {
+  logo,
+  socials,
+  newsletter,
+  schedule,
+  contact,
+  gamesLink,
+  otherLinks,
+  languageLink,
+} = Astro.props;
+---
+
+<footer style={{ border: "1px solid black", margin: "2px" }}>
+  <p>Footer</p>
+  <p>logo: {logo}</p>
+
+  <p>socials:</p>
+  <ul>
+    <li>tiktok: {socials.tiktokUrl}</li>
+    <li>youtube: {socials.youtubeUrl}</li>
+    <li>instagram: {socials.instagramUrl}</li>
+    <li>facebook: {socials.facebookUrl}</li>
+    <li>linkedin: {socials.linkedinUrl}</li>
+  </ul>
+
+  <p>newsletter: {newsletter ? "yes" : "no"}</p>
+
+  {
+    schedule && (
+      <>
+        <p>schedule:</p>
+        <ul>
+          <li>monday: {schedule.monday}</li>
+          <li>tuesday: {schedule.tuesday}</li>
+          <li>wednesday: {schedule.wednesday}</li>
+          <li>thursday: {schedule.thursday}</li>
+          <li>friday: {schedule.friday}</li>
+          <li>saturday: {schedule.saturday}</li>
+          <li>sunday: {schedule.sunday}</li>
+        </ul>
+      </>
+    )
+  }
+
+  <p>contact:</p>
+  <ul>
+    <li>phone: <a href={`tel:${contact.phone}`}>{contact.phone}</a></li>
+    <li>mail: <a href={`mailto:${contact.mail}`}>{contact.mail}</a></li>
+    {contact.map && <li>map: {contact.map}</li>}
+  </ul>
+
+  <p>gamesLink:</p>
+  <ul>
+    {
+      gamesLink?.map((link) => (
+        <li>
+          <a href={link.url}>{link.label}</a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p>otherLinks:</p>
+  <ul>
+    {
+      otherLinks?.map((link) => (
+        <li>
+          <a href={link.url}>{link.label}</a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p>languageLink: {languageLink}</p>
+</footer>

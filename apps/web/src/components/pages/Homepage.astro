@@ -1,8 +1,10 @@
 ---
 import type { Lang } from "@repo/utils/lang";
 import { getHomepageData } from "@repo/services/cms/getHomepageData";
+import { getFooterData } from "@repo/services/cms/getFooterData";
 import HomepageCover from "../features/HomepageCover.astro";
 import VenuesList from "../features/VenuesList.astro";
+import GlobalFooter from "../features/GlobalFooter.astro";
 
 interface Props {
   lang: Lang;
@@ -14,8 +16,15 @@ interface Props {
 
 const { lang, projectId, dataset, draft, token } = Astro.props;
 
-const data = await getHomepageData({
+const pageData = await getHomepageData({
   lang,
+  projectId,
+  dataset,
+  draft,
+  token,
+});
+
+const footerData = await getFooterData({
   projectId,
   dataset,
   draft,
@@ -24,14 +33,15 @@ const data = await getHomepageData({
 ---
 
 <HomepageCover
-  logo={data.logo}
-  badgeLabel={data.badgeLabel}
-  heading={data.heading}
+  logo={pageData.logo}
+  badgeLabel={pageData.badgeLabel}
+  heading={pageData.heading}
 />
 
 <div style={{ border: "1px solid black", margin: "2px" }}>
   <p>TODO: PageComponent[]</p>
 </div>
 
+<VenuesList venues={pageData.venues} />
 
-<VenuesList venues={data.venues} />
+<GlobalFooter data={footerData} lang={lang} />

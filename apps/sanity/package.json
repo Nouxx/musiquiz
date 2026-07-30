@@ -24,12 +24,12 @@
     "react-dom": "^19.2.4",
     "sanity": "^6.6.0",
     "sanity-plugin-internationalized-array": "^5.1.22",
+    "@sanity/icons": "^5.2.1",
     "styled-components": "^6.1.18"
   },
   "devDependencies": {
     "@dotenvx/dotenvx": "catalog:",
     "@sanity/eslint-config-studio": "^6.0.0",
-    "@sanity/icons": "^5.2.1",
     "@types/react": "^19.2.14",
     "eslint": "^9.28",
     "prettier": "^3.5",
