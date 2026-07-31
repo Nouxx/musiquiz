@@ -42,3 +42,11 @@ export function fetchHomepageQuery(lang: Lang) {
     }
 }`);
 }
+
+export function fetchVenuesSlug() {
+  return defineQuery(`
+    *[_type == "venue"]{
+      "slug": slug.current
+    }
+  `);
+}

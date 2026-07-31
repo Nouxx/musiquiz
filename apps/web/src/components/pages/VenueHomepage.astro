@@ -1,0 +1,14 @@
+---
+import type { Lang } from "@repo/utils/lang";
+
+interface Props {
+  lang: Lang;
+  venueSlug: string;
+}
+
+const { lang, venueSlug } = Astro.props;
+---
+
+<div style={{ border: "1px solid black", margin: "2px" }}>
+  <p>VenueHomepage, lang: {lang}, venueSlug: {venueSlug}</p>
+</div>

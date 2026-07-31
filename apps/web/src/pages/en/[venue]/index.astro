@@ -1,0 +1,13 @@
+---
+import VenueHomepage from "../../../components/pages/VenueHomepage.astro";
+import { getVenuesSlugParameters } from "../../../routing/getVenuesSlugParameters";
+
+export async function getStaticPaths() {
+  const params = await getVenuesSlugParameters();
+  return params;
+}
+
+const { venue } = Astro.params;
+---
+
+<VenueHomepage lang="en" venueSlug={venue} />
