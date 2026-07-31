@@ -2,7 +2,7 @@ import type { Lang } from "@repo/utils/lang";
 import { defineQuery } from "groq";
 
 // todo: why not colocate query + schema + type?
-export function fetchFooterQuery() {
+export function fetchFooterQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
     "siteSettings": *[_type == "siteSettings"][0]{
           footerLogo,
@@ -13,6 +13,10 @@ export function fetchFooterQuery() {
           youtubeUrl,
           mainPhone,
           mainEmail,
+          "acceptedPaymentMethods": acceptedPaymentMethods[]{
+            image,
+            "imageAlt": imageAlt[language == "${lang}"][0].value
+          }
       },
     "gameFormats": *[_type == "gameFormat"]{
       name,

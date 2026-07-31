@@ -27,6 +27,12 @@ export const SanityFooterSchema = z.strictObject({
     mainPhone: z.string(),
     tiktokUrl: z.url(),
     youtubeUrl: z.url(),
+    acceptedPaymentMethods: z.array(
+      z.strictObject({
+        image: z.string(),
+        imageAlt: z.string(),
+      }),
+    ),
   }),
   gameFormats: z.array(
     z.strictObject({

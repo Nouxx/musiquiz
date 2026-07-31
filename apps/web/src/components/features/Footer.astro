@@ -18,7 +18,7 @@ const footerData = await getFooterData({
   config: sanityConfig,
 });
 
-const { logo, socials, contact, gamesFormatsLinks, venuesLink, languageLink } =
+const { logo, socials, contact, gamesFormatsLinks, venuesLink, languageLink, paymentMethods } =
   footerData;
 
 function getMiscellaneousLinksForLang(lang: Lang) {
@@ -69,5 +69,6 @@ function getBottomLinksForLang(lang: Lang) {
     venuesLink={venuesLink}
     miscellaneousLinks={getMiscellaneousLinksForLang(lang)}
     bottomLinks={getBottomLinksForLang(lang)}
+    bottomIcons={paymentMethods}
   />
 </div>

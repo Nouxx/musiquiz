@@ -42,4 +42,5 @@ export type Footer = {
     lang: Lang;
   };
   venuesLink: { label: string; url: string }[];
+  paymentMethods: { image: string; alt: string }[];
 };

@@ -8,6 +8,7 @@ export const siteSettingsType = defineType({
     { name: "branding", title: "Branding", default: true },
     { name: "social", title: "Social" },
     { name: "contact", title: "Contact" },
+    { name: "payment", title: "Payment" }, // todo: find a better name later
   ],
   fields: [
     defineField({
@@ -67,6 +68,31 @@ export const siteSettingsType = defineType({
       type: "string",
       validation: (rule) => rule.required(),
       group: "contact",
+    }),
+    defineField({
+      name: "acceptedPaymentMethods",
+      title: "Accepted payment methods",
+      description: "Re-order items to decide the order of appearance",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "inline",
+          fields: [
+            {
+              type: "string", // todo: use image
+              name: "image",
+              validation: (rule) => rule.required(),
+            },
+            {
+              type: "internationalizedArrayString",
+              name: "imageAlt",
+              validation: (rule) => rule.required(),
+            },
+          ],
+        },
+      ],
+      group: "payment",
     }),
   ],
   preview: {

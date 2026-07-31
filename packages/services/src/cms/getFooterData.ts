@@ -29,6 +29,7 @@ function adaptFooter({
     youtubeUrl,
     mainEmail,
     mainPhone,
+    acceptedPaymentMethods,
   } = data.siteSettings;
 
   return {
@@ -54,6 +55,10 @@ function adaptFooter({
       url: venue.slug,
     })),
     languageLink: getLanguageLinkForLang(lang),
+    paymentMethods: acceptedPaymentMethods.map((method) => ({
+      image: method.image,
+      alt: method.imageAlt,
+    })),
   };
 }
 
@@ -65,7 +70,7 @@ export async function getFooterData({
   config: SanityConfig;
 }) {
   const data = await fetchSanityData({
-    query: fetchFooterQuery(),
+    query: fetchFooterQuery({ lang }),
     schema: SanityFooterSchema,
     config,
   });

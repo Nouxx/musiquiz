@@ -42,6 +42,10 @@ interface Props {
     label: string;
     url: string;
   }[];
+  bottomIcons: {
+    image: string;
+    alt: string;
+  }[];
   // optional because blog is not translated
   languageLink?: {
     lang: Lang;
@@ -61,6 +65,7 @@ const {
   miscellaneousLinks,
   languageLink,
   bottomLinks,
+  bottomIcons
 } = Astro.props;
 ---
 
@@ -154,4 +159,13 @@ const {
       ))
     }
   </ul>
+
+  {
+      bottomIcons.map((icon) => (
+        <li>
+          <p>{icon.image}</p>
+          <p>{icon.alt}</p>
+        </li>
+      ))
+    }
 </footer>
