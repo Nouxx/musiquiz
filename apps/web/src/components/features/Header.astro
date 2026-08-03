@@ -3,14 +3,18 @@ import Header from "@repo/ui/Header";
 import { getHeaderData } from "@repo/services/cms/getHeaderData";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getRoutesForLang } from "../../routing/routes";
-import type { Lang } from "@repo/utils/lang";
+import { getT } from "../../libs/i18n";
+import { getLang } from "../../libs/getLang";
 
 interface Props {
   venueSlug: string;
-  lang: Lang;
 }
 
-const { lang, venueSlug } = Astro.props;
+const { venueSlug } = Astro.props;
+
+const lang = getLang(Astro);
+
+const t = getT(lang);
 
 const sanityConfig = getSanityConfigFromEnvironment();
 
@@ -18,13 +22,13 @@ const data = await getHeaderData({ config: sanityConfig });
 
 const routes = getRoutesForLang(lang);
 
-const frenchMainLinks = [
+const mainLinks = [
   {
-    label: "Accueil",
+    label: t("header.home"),
     url: routes.venueHome(venueSlug),
   },
   {
-    label: "Nos expériences",
+    label: t("header.experiences"),
     links: data.experiences.map((experience) => ({
       label: experience.label,
       url: routes.venueGame(venueSlug, experience.slug),
@@ -35,32 +39,15 @@ const frenchMainLinks = [
     url: "#todo",
   },
   {
-    label: lang === "fr" ? "Offrir une partie" : "Offer a game",
+    label: t("header.offerAGame"),
     url: routes.venueGifting(venueSlug, lang),
   },
 ];
 
-const englishMainLinks = [
-  {
-    label: "Home",
-    url: routes.venueHome(venueSlug),
-  },
-];
-
-const cta =
-  lang === "fr"
-    ? {
-        label: "Réserver", // encoding issue
-        url: routes.venueBook(venueSlug, "fr"),
-      }
-    : {
-        label: "Book",
-        url: routes.venueBook(venueSlug, "en"),
-      };
+const cta = {
+  label: t("header.book"),
+  url: routes.venueBook(venueSlug, lang),
+};
 ---
 
-<Header
-  logo={data.logo}
-  linksTree={lang === "fr" ? frenchMainLinks : englishMainLinks}
-  cta={cta}
-/>
+<Header logo={data.logo} linksTree={mainLinks} cta={cta} />
