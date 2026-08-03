@@ -4,7 +4,8 @@ type Routes = {
   home: string;
   venueHome: (venue: string) => string;
   venueBook: (venue: string, lang: Lang) => string;
-  gifting: string;
+  venueGame: (venue: string, game: string) => string;
+  venueGifting: (venue: string, lang: Lang) => string;
   faq: string;
   contact: string;
   blog?: string; // blog is not translated
@@ -23,11 +24,20 @@ function venueBook(venue: string, lang: Lang) {
   return lang === "fr" ? `/${venue}/reserver` : `/${venue}/book`;
 }
 
+function venueGame(venue: string, game: string) {
+  return `/${venue}/${game}`;
+}
+
+function venueGifting(venue: string, lang: Lang) {
+  return lang === "fr" ? `/${venue}/offrir` : `/${venue}/gift`;
+}
+
 const frenchRoutes: Routes = {
   home: "/",
   venueHome: venueHome,
   venueBook: venueBook,
-  gifting: "offrir",
+  venueGame: venueGame,
+  venueGifting: venueGifting,
   faq: "faq",
   contact: "contact",
   blog: "blog",
@@ -42,7 +52,8 @@ const englishRoutes: Routes = {
   home: "/",
   venueHome: venueHome,
   venueBook: venueBook,
-  gifting: "gift",
+  venueGame: venueGame,
+  venueGifting: venueGifting,
   faq: "faq",
   contact: "contact",
   press: "press",

@@ -53,9 +53,15 @@ export function fetchVenuesSlugQuery() {
 
 export function fetchHeaderQuery() {
   return defineQuery(`
-  
-    *[_type == "siteSettings"][0]{
-      headerLogo
+    {
+      "siteSettings":   
+        *[_type == "siteSettings"][0]{
+          headerLogo
+        },
+      "gameFormats": *[_type == "gameFormat"]{
+        name,
+        "slug": slug.current
+      },
     }
   `);
 }

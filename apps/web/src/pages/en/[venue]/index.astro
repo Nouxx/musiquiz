@@ -1,5 +1,6 @@
 ---
 import VenueHomepage from "../../../components/pages/VenueHomepage.astro";
+import VenueLayout from "../../../layouts/VenueLayout.astro";
 import { getVenuesSlugParameters } from "../../../routing/getVenuesSlugParameters";
 
 export async function getStaticPaths() {
@@ -9,5 +10,7 @@ export async function getStaticPaths() {
 
 const { venue } = Astro.params;
 ---
+<VenueLayout lang="en" venueSlug={venue}>
+  <VenueHomepage lang="en" venueSlug={venue} />
+</VenueLayout>
 
-<VenueHomepage lang="en" venueSlug={venue} />

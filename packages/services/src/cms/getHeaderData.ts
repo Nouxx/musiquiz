@@ -8,7 +8,11 @@ import type { Header } from "./types";
 
 function adaptHeader(data: SanityHeader): Header {
   return {
-    logo: data.headerLogo,
+    logo: data.siteSettings.headerLogo,
+    experiences: data.gameFormats.map((format) => ({
+      label: format.name,
+      slug: format.slug,
+    })),
   };
 }
 

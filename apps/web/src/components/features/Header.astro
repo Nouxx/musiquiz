@@ -25,9 +25,18 @@ const frenchMainLinks = [
   },
   {
     label: "Nos expériences",
-    links: [
-      {}
-    ]
+    links: data.experiences.map((experience) => ({
+      label: experience.label,
+      url: routes.venueGame(venueSlug, experience.slug),
+    })),
+  },
+  {
+    label: "Occasions (TODO)",
+    url: "#todo",
+  },
+  {
+    label: lang === "fr" ? "Offrir une partie" : "Offer a game",
+    url: routes.venueGifting(venueSlug, lang),
   },
 ];
 

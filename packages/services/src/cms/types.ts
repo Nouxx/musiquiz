@@ -14,6 +14,10 @@ export type Homepage = {
 
 export type Header = {
   logo: string;
+  experiences: {
+    label: string;
+    slug: string;
+  }[];
 };
 
 export type GameFormatLinks = {
