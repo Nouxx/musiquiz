@@ -1,46 +1,57 @@
 ---
-import SiteHeader from "@repo/ui/SiteHeader";
+import Header from "@repo/ui/Header";
 import { getHeaderData } from "@repo/services/cms/getHeaderData";
-
-import {
-  SANITY_STUDIO_PROJECT_ID,
-  SANITY_STUDIO_DATASET,
-  PREVIEW,
-  SANITY_API_READ_TOKEN,
-} from "astro:env/server";
-import type { Lang } from "@repo/utils/lang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getRoutesForLang } from "../../routing/routes";
+import type { Lang } from "@repo/utils/lang";
 
 interface Props {
+  venueSlug: string;
   lang: Lang;
 }
 
-const { lang } = Astro.props;
+const { lang, venueSlug } = Astro.props;
 
-const { logo } = await getHeaderData({
-  projectId: SANITY_STUDIO_PROJECT_ID,
-  dataset: SANITY_STUDIO_DATASET,
-  draft: PREVIEW,
-  token: SANITY_API_READ_TOKEN,
-});
+const sanityConfig = getSanityConfigFromEnvironment();
+
+const data = await getHeaderData({ config: sanityConfig });
 
 const routes = getRoutesForLang(lang);
 
-const dummyLinks = [
+const frenchMainLinks = [
   {
     label: "Accueil",
-    url: routes.home,
+    url: routes.venueHome(venueSlug),
   },
   {
-    label: "Offrir une partie",
-    url: routes.gifting,
+    label: "Nos expériences",
+    links: [
+      {}
+    ]
   },
 ];
 
-const cta = {
-  label: "Réserver",
-  url: routes.book,
-};
+const englishMainLinks = [
+  {
+    label: "Home",
+    url: routes.venueHome(venueSlug),
+  },
+];
+
+const cta =
+  lang === "fr"
+    ? {
+        label: "Réserver", // encoding issue
+        url: routes.venueBook(venueSlug, "fr"),
+      }
+    : {
+        label: "Book",
+        url: routes.venueBook(venueSlug, "en"),
+      };
 ---
 
-<SiteHeader logo={logo} links={dummyLinks} cta={cta} />
+<Header
+  logo={data.logo}
+  linksTree={lang === "fr" ? frenchMainLinks : englishMainLinks}
+  cta={cta}
+/>

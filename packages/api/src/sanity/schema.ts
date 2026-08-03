@@ -51,3 +51,5 @@ export const SanityFooterSchema = z.strictObject({
 export const SanityVenuesSlugSchema = z.array(
   z.strictObject({ slug: z.string() }),
 );
+
+export const SanityHeaderSchema = z.strictObject({ headerLogo: z.string() });

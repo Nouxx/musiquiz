@@ -1,0 +1,15 @@
+---
+import type { Lang } from "@repo/utils/lang";
+import Header from "../components/features/Header.astro";
+
+interface Props {
+  venueSlug: string;
+  lang: Lang;
+}
+
+const { lang, venueSlug } = Astro.props;
+---
+
+<Header lang={lang} venueSlug={venueSlug} />
+
+<slot />

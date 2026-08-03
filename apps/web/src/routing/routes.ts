@@ -2,7 +2,8 @@ import type { Lang } from "@repo/utils/lang";
 
 type Routes = {
   home: string;
-  book: string;
+  venueHome: (venue: string) => string;
+  venueBook: (venue: string, lang: Lang) => string;
   gifting: string;
   faq: string;
   contact: string;
@@ -14,9 +15,18 @@ type Routes = {
   legalsNotice: string;
 };
 
+function venueHome(venue: string) {
+  return `/${venue}/`;
+}
+
+function venueBook(venue: string, lang: Lang) {
+  return lang === "fr" ? `/${venue}/reserver` : `/${venue}/book`;
+}
+
 const frenchRoutes: Routes = {
   home: "/",
-  book: "reserver",
+  venueHome: venueHome,
+  venueBook: venueBook,
   gifting: "offrir",
   faq: "faq",
   contact: "contact",
@@ -30,7 +40,8 @@ const frenchRoutes: Routes = {
 
 const englishRoutes: Routes = {
   home: "/",
-  book: "book",
+  venueHome: venueHome,
+  venueBook: venueBook,
   gifting: "gift",
   faq: "faq",
   contact: "contact",
