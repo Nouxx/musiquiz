@@ -9,5 +9,15 @@ import { isLang } from "./i18n";
  * https://docs.astro.build/en/reference/api-reference/#astro-global
  */
 export function getLang(astro: { currentLocale: string | undefined }): Lang {
-  return isLang(astro.currentLocale) ? astro.currentLocale : "fr";
+  if (!astro.currentLocale) {
+    throw new Error(
+      "Astro was not able to compute the locale, no fallback are set up",
+    );
+  }
+
+  if (!isLang(astro.currentLocale)) {
+    throw new Error("Locale ${astro.currentLocale} could not be processed");
+  }
+
+  return astro.currentLocale;
 }

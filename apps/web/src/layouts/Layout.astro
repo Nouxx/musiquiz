@@ -1,11 +1,14 @@
 ---
 import { Font } from "astro:assets";
 
+import { getLang } from "../libs/getLang";
 import "../styles/tokens.css";
+
+const lang = getLang(Astro);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />

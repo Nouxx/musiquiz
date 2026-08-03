@@ -11,6 +11,6 @@ export async function getStaticPaths() {
 const { venue } = Astro.params;
 ---
 
-<VenueLayout lang="fr" venueSlug={venue}>
+<VenueLayout venueSlug={venue}>
   <VenueHomepage lang="fr" venueSlug={venue} />
 </VenueLayout>

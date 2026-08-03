@@ -1,18 +1,14 @@
 ---
-import type { Lang } from "@repo/utils/lang";
 import { getHomepageData } from "@repo/services/cms/getHomepageData";
 import HomepageCover from "../features/HomepageCover.astro";
 import VenuesList from "../features/VenuesList.astro";
 import Footer from "../features/Footer.astro";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
-
-interface Props {
-  lang: Lang;
-}
+import { getLang } from "../../libs/getLang";
 
 const sanityConfig = getSanityConfigFromEnvironment();
 
-const { lang } = Astro.props;
+const lang = getLang(Astro);
 
 const pageData = await getHomepageData({
   lang,
@@ -32,4 +28,4 @@ const pageData = await getHomepageData({
 
 <VenuesList venues={pageData.venues} />
 
-<Footer lang={lang} />
+<Footer />

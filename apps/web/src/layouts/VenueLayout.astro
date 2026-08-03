@@ -1,5 +1,6 @@
 ---
 import Header from "../components/features/Header.astro";
+import Layout from "./Layout.astro";
 
 interface Props {
   venueSlug: string;
@@ -8,6 +9,8 @@ interface Props {
 const { venueSlug } = Astro.props;
 ---
 
-<Header venueSlug={venueSlug} />
+<Layout>
+  <Header venueSlug={venueSlug} />
 
-<slot />
+  <slot />
+</Layout>

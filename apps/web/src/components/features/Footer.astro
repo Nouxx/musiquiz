@@ -1,15 +1,14 @@
 ---
 import Footer from "@repo/ui/Footer";
-import type { Lang } from "@repo/utils/lang";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getFooterData } from "@repo/services/cms/getFooterData";
 import { getRoutesForLang } from "../../routing/routes";
+import { getT } from "../../libs/i18n";
+import { getLang } from "../../libs/getLang";
 
-interface Props {
-  lang: Lang;
-}
+const lang = getLang(Astro);
 
-const { lang } = Astro.props;
+const t = getT(lang);
 
 const sanityConfig = getSanityConfigFromEnvironment();
 
@@ -21,40 +20,22 @@ const footerData = await getFooterData({
 const { logo, socials, contact, gamesFormatsLinks, venuesLink, languageLink, paymentMethods } =
   footerData;
 
-function getMiscellaneousLinksForLang(lang: Lang) {
-  const routes = getRoutesForLang(lang);
+const routes = getRoutesForLang(lang);
 
-  return lang === "fr"
-    ? [
-        { label: "FAQ", url: routes.faq },
-        { label: "Contact", url: routes.contact },
-        { label: "Blog", url: routes.blog! },
-        { label: "Presse", url: routes.press },
-        { label: "Ouvrez votre salle Musi'quiz", url: routes.franchise },
-      ]
-    : [
-        { label: "FAQ", url: routes.faq },
-        { label: "Contact", url: routes.contact },
-        { label: "Press", url: routes.press },
-        { label: "Open your Musi'quiz franchise", url: routes.franchise },
-      ];
-}
+const miscellaneousLinks = [
+  { label: t("footer.faq"), url: routes.faq },
+  { label: t("footer.contact"), url: routes.contact },
+  // blog is not translated and only exists for FR
+  ...(routes.blog ? [{ label: t("footer.blog"), url: routes.blog }] : []),
+  { label: t("footer.press"), url: routes.press },
+  { label: t("footer.franchise"), url: routes.franchise },
+];
 
-function getBottomLinksForLang(lang: Lang) {
-  const routes = getRoutesForLang(lang);
-
-  return lang === "fr"
-    ? [
-        { label: "CGV", url: routes.termsAndConditions },
-        { label: "RGPD", url: routes.gdpr },
-        { label: "Mentions légales", url: routes.legalsNotice },
-      ]
-    : [
-        { label: "T&C", url: routes.termsAndConditions },
-        { label: "GDPR", url: routes.gdpr },
-        { label: "Legal Notices", url: routes.legalsNotice },
-      ];
-}
+const bottomLinks = [
+  { label: t("footer.termsAndConditions"), url: routes.termsAndConditions },
+  { label: t("footer.gdpr"), url: routes.gdpr },
+  { label: t("footer.legalsNotice"), url: routes.legalsNotice },
+];
 ---
 
 <div style={{ border: "1px solid black", margin: "2px" }}>
@@ -67,8 +48,8 @@ function getBottomLinksForLang(lang: Lang) {
     gamesLink={gamesFormatsLinks}
     languageLink={languageLink}
     venuesLink={venuesLink}
-    miscellaneousLinks={getMiscellaneousLinksForLang(lang)}
-    bottomLinks={getBottomLinksForLang(lang)}
+    miscellaneousLinks={miscellaneousLinks}
+    bottomLinks={bottomLinks}
     bottomIcons={paymentMethods}
   />
 </div>

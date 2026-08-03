@@ -9,10 +9,9 @@ export async function getStaticPaths() {
 }
 
 const { venue } = Astro.params;
-const lang = Astro.currentLocale
 ---
-<VenueLayout lang={lang} venueSlug={venue}>
-  <VenueHomepage lang={lang} venueSlug={venue} />
-</VenueLayout>
 
+<VenueLayout venueSlug={venue}>
+  <VenueHomepage lang="en" venueSlug={venue} />
+</VenueLayout>
 
