@@ -26,11 +26,13 @@ export function fetchFooterQuery({ lang }: { lang: Lang }) {
       title,
       "slug": slug.current
     }
-    }`);
+    }
+  `);
 }
 
 export function fetchHomepageQuery(lang: Lang) {
-  return defineQuery(`{
+  return defineQuery(`
+  {
     "homepage": *[_type == "homepage"][0]{
       logo,
       "badge": badge[language == "${lang}"][0].value,
@@ -40,7 +42,8 @@ export function fetchHomepageQuery(lang: Lang) {
       "title": title,
       "slug": slug.current
     }
-}`);
+  }
+  `);
 }
 
 export function fetchVenuesSlugQuery() {
@@ -51,17 +54,18 @@ export function fetchVenuesSlugQuery() {
   `);
 }
 
-export function fetchHeaderQuery() {
+export function fetchHeaderQuery(venueSlug: string) {
   return defineQuery(`
     {
-      "siteSettings":   
-        *[_type == "siteSettings"][0]{
+      "siteSettings": *[_type == "siteSettings"][0]{
           headerLogo
-        },
-      "gameFormats": *[_type == "gameFormat"]{
-        name,
-        "slug": slug.current
       },
+      "gameFormats": *[_type == "venue" && slug.current == "${venueSlug}"][0].offerings[]{
+          "game": game->{ 
+            name,
+            "slug": slug.current
+          }
+      }
     }
   `);
 }

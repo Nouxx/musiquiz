@@ -1,4 +1,12 @@
+import JoystickIcon from "@sanity/icons/Joystick";
 import { defineField, defineType } from "sanity";
+import type { Path, Reference } from "sanity";
+
+type Offering = {
+  _key: string;
+  game?: Reference;
+  price?: number;
+};
 
 export const venueType = defineType({
   name: "venue",
@@ -27,6 +35,71 @@ export const venueType = defineType({
       options: {
         source: "title",
       },
+    }),
+    defineField({
+      name: 'offerings',
+      title: 'Offerings',
+      type: 'array',
+      validation: (rule) =>
+        rule.custom((offerings?: Offering[]) => {
+          if (!offerings) return true;
+
+          const seen = new Map<string, number>();
+          const duplicatePaths: Path[] = [];
+
+          offerings.forEach((offering, index) => {
+            const ref = offering?.game?._ref;
+            if (!ref) return;
+
+            if (seen.has(ref)) {
+              duplicatePaths.push([{ _key: offering._key }, 'game']);
+            } else {
+              seen.set(ref, index);
+            }
+          });
+
+          if (duplicatePaths.length === 0) return true;
+
+          return {
+            message: 'This game has already been selected for this venue',
+            paths: duplicatePaths,
+          };
+        }),
+      of: [
+        defineField({
+          name: 'offering',
+          title: 'Offering',
+          type: 'object',
+          icon: JoystickIcon,
+          fields: [
+            defineField({
+              name: 'game',
+              title: 'Game',
+              type: 'reference',
+              to: [{ type: 'gameFormat' }],
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: 'price',
+              title: 'Price',
+              type: 'number',
+              validation: (rule) => rule.required().min(0),
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'game.name',
+              subtitle: 'price',
+            },
+            prepare({ title, subtitle }) {
+              return {
+                title: title ?? 'No game selected',
+                subtitle: subtitle != null ? `${subtitle}€` : 'No price',
+              }
+            },
+          },
+        }),
+      ],
     }),
   ],
 });

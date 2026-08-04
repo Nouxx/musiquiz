@@ -58,8 +58,10 @@ export const SanityHeaderSchema = z.strictObject({
   }),
   gameFormats: z.array(
     z.strictObject({
-      name: z.string(),
-      slug: z.string(),
+      game: z.strictObject({
+        name: z.string(),
+        slug: z.string(),
+      }),
     }),
   ),
 });

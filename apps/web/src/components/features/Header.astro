@@ -18,7 +18,7 @@ const t = getT(lang);
 
 const sanityConfig = getSanityConfigFromEnvironment();
 
-const data = await getHeaderData({ config: sanityConfig });
+const data = await getHeaderData({ config: sanityConfig, venueSlug });
 
 const routes = getRoutesForLang(lang);
 

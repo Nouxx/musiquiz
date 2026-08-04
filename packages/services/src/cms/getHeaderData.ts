@@ -10,15 +10,21 @@ function adaptHeader(data: SanityHeader): Header {
   return {
     logo: data.siteSettings.headerLogo,
     experiences: data.gameFormats.map((format) => ({
-      label: format.name,
-      slug: format.slug,
+      label: format.game.name,
+      slug: format.game.slug,
     })),
   };
 }
 
-export async function getHeaderData({ config }: { config: SanityConfig }) {
+export async function getHeaderData({
+  config,
+  venueSlug,
+}: {
+  config: SanityConfig;
+  venueSlug: string;
+}) {
   const data = await fetchSanityData({
-    query: fetchHeaderQuery(),
+    query: fetchHeaderQuery(venueSlug),
     schema: SanityHeaderSchema,
     config,
   });
