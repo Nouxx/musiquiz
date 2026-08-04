@@ -16,5 +16,6 @@ export const en: typeof fr = {
     termsAndConditions: "T&C",
     gdpr: "GDPR",
     legalsNotice: "Legal Notices",
+    "changeVenue": "Switch venue"
   },
 };

@@ -14,5 +14,6 @@ export const fr = {
     termsAndConditions: "CGV",
     gdpr: "RGPD",
     legalsNotice: "Mentions légales",
+    "changeVenue": "Changez de ville"
   },
 };

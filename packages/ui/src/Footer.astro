@@ -29,15 +29,21 @@ interface Props {
     label: string;
     url: string;
   }[];
-  venuesLink: {
+  switchVenuesSection: {
     label: string;
-    url: string;
-  }[];
+    links: {
+      label: string;
+      url: string;
+    }[];
+  };
   // todo: required
   miscellaneousLinks?: {
-    label: string;
-    url: string;
-  }[];
+    title: string;
+    links: {
+      label: string;
+      url: string;
+    }[];
+  };
   bottomLinks: {
     label: string;
     url: string;
@@ -61,11 +67,11 @@ const {
   schedule,
   contact,
   gamesLink,
-  venuesLink,
+  switchVenuesSection,
   miscellaneousLinks,
   languageLink,
   bottomLinks,
-  bottomIcons
+  bottomIcons,
 } = Astro.props;
 ---
 
@@ -119,10 +125,11 @@ const {
     }
   </ul>
 
-  <p>venuesLink:</p>
+  <p>switchVenuesSection:</p>
+  <p>label: {switchVenuesSection.label}</p>
   <ul>
     {
-      venuesLink.map((link) => (
+      switchVenuesSection.links.map((link) => (
         <li>
           <a href={link.url}>{link.label}</a>
         </li>
@@ -133,7 +140,7 @@ const {
   <p>miscellaneousLinks:</p>
   <ul>
     {
-      miscellaneousLinks?.map((link) => (
+      miscellaneousLinks?.links.map((link) => (
         <li>
           <a href={link.url}>{link.label}</a>
         </li>
@@ -161,11 +168,11 @@ const {
   </ul>
 
   {
-      bottomIcons.map((icon) => (
-        <li>
-          <p>{icon.image}</p>
-          <p>{icon.alt}</p>
-        </li>
-      ))
-    }
+    bottomIcons.map((icon) => (
+      <li>
+        <p>{icon.image}</p>
+        <p>{icon.alt}</p>
+      </li>
+    ))
+  }
 </footer>

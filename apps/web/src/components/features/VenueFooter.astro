@@ -1,0 +1,101 @@
+---
+import Footer from "@repo/ui/Footer";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getVenueFooterData } from "@repo/services/cms/getVenueFooterData";
+import { getRoutesForLang } from "../../routing/routes";
+import { getT } from "../../libs/i18n";
+import { getLang } from "../../libs/getLang";
+import type { Lang } from "@repo/utils/lang";
+
+const lang = getLang(Astro);
+
+const t = getT(lang);
+
+interface Props {
+  venueSlug: string;
+}
+
+const { venueSlug } = Astro.props;
+
+const footerData = await getVenueFooterData({
+  venueSlug,
+  lang,
+  config: getSanityConfigFromEnvironment(),
+});
+
+const {
+  logo,
+  socials,
+  contact,
+  openHours,
+  games,
+  paymentMethods,
+  otherVenues,
+} = footerData;
+
+const routes = getRoutesForLang(lang);
+
+const miscellaneousLinks = {
+  title: "Info gene",
+  links: [
+    { label: t("footer.faq"), url: routes.faq },
+    { label: t("footer.contact"), url: routes.contact },
+    { label: t("footer.franchise"), url: routes.franchise },
+    // blog is not translated and only exists for FR
+    ...(routes.blog ? [{ label: t("footer.blog"), url: routes.blog }] : []),
+    { label: t("footer.press"), url: routes.press },
+  ],
+};
+
+const bottomLinks = [
+  { label: t("footer.termsAndConditions"), url: routes.termsAndConditions },
+  { label: t("footer.gdpr"), url: routes.gdpr },
+  { label: t("footer.legalsNotice"), url: routes.legalsNotice },
+];
+
+const languageLink =
+  lang === "fr"
+    ? {
+        lang: "en" as Lang,
+        label: "English",
+        url: routes.home,
+      }
+    : {
+        lang: "fr" as Lang,
+        label: "Français",
+        url: routes.home,
+      };
+
+const switchVenueSection = {
+  label: t("footer.changeVenue"),
+  links: otherVenues.map((venue) => ({
+    label: venue.title,
+    url: routes.venueHome(venue.slug),
+  })),
+};
+---
+
+<div style={{ border: "1px solid black", margin: "2px" }}>
+  <p>VenueFooter</p>
+  <Footer
+    logo={logo}
+    socials={socials}
+    newsletter
+    schedule={{
+      monday: openHours.monday,
+      tuesday: openHours.tuesday,
+      wednesday: openHours.wednesday,
+      thursday: openHours.thursday,
+      friday: openHours.friday,
+      saturday: openHours.saturday,
+      sunday: openHours.sunday,
+    }}
+    contact={contact}
+    gamesLink={games}
+    switchVenuesSection={switchVenueSection}
+    miscellaneousLinks={miscellaneousLinks}
+    languageLink={languageLink}
+    bottomLinks={bottomLinks}
+    bottomIcons={paymentMethods}
+  />
+</div>

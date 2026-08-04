@@ -30,6 +30,54 @@ export function fetchFooterQuery({ lang }: { lang: Lang }) {
   `);
 }
 
+export function fetchVenueFooterQuery({
+  lang,
+  venueSlug,
+}: {
+  lang: Lang;
+  venueSlug: string;
+}) {
+  return defineQuery(`
+    {
+      "siteSettings": *[_type == "siteSettings"][0]{
+        footerLogo,
+        facebookUrl,
+        instagramUrl,
+        linkedinUrl,
+        tiktokUrl,
+        youtubeUrl,
+        "acceptedPaymentMethods": acceptedPaymentMethods[]{
+          image,
+          "imageAlt": imageAlt[language == "${lang}"][0].value
+        }
+      },
+      "venue": *[_type == "venue" && slug.current == "${venueSlug}"][0]{
+        title,
+        mondayOpeningHours,
+        tuesdayOpeningHours,
+        wednesdayOpeningHours,
+        thursdayOpeningHours,
+        fridayOpeningHours,
+        saturdayOpeningHours,
+        sundayOpeningHours,
+        mail,
+        phone,
+        googleMapsLink,
+        "offerings": offerings[]{
+          "game": game->{ 
+            name,
+            "slug": slug.current
+          }
+        }
+      },
+      "otherVenues": *[_type == "venue" && slug.current != "${venueSlug}"]{
+        title,
+        "slug": slug.current
+      }
+    }
+  `);
+}
+
 export function fetchHomepageQuery(lang: Lang) {
   return defineQuery(`
   {

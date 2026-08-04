@@ -58,3 +58,37 @@ export type Footer = {
   venuesLink: { label: string; url: string }[];
   paymentMethods: { image: string; alt: string }[];
 };
+
+export type VenueFooter = {
+  logo: string;
+  socials: {
+    tiktokUrl?: string;
+    youtubeUrl?: string;
+    instagramUrl?: string;
+    facebookUrl?: string;
+    linkedinUrl?: string;
+  };
+  newsletter: boolean;
+  venueTitle: string;
+  openHours: {
+    monday: string;
+    tuesday: string;
+    wednesday: string;
+    thursday: string;
+    friday: string;
+    saturday: string;
+    sunday: string;
+  };
+  contact: {
+    mail: string;
+    phone: string;
+    mapsLink?: string;
+  };
+  games: GameFormatLinks[];
+  otherVenuesCount: number;
+  otherVenues: {
+    title: string;
+    slug: string;
+  }[];
+  paymentMethods: { image: string; alt: string }[];
+};

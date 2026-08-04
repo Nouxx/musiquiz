@@ -2,6 +2,7 @@
 import { getLang } from "../../libs/getLang";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getRoutesForLang } from "../../routing/routes";
+import VenueFooter from "../features/VenueFooter.astro";
 import VenueHomepageCover from "../features/VenueHomepageCover.astro";
 import { getVenueHomepageData } from "@repo/services/cms/getVenueHomepageData";
 
@@ -34,3 +35,5 @@ const pageData = await getVenueHomepageData({
       }
     : undefined}
 />
+
+<VenueFooter venueSlug={venueSlug} />

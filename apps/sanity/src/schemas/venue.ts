@@ -1,6 +1,9 @@
+import ClockIcon from "@sanity/icons/Clock";
+import EnvelopeIcon from "@sanity/icons/Envelope";
+import ImageIcon from "@sanity/icons/Image";
 import JoystickIcon from "@sanity/icons/Joystick";
 import { defineField, defineType } from "sanity";
-import type { Path, Reference } from "sanity";
+import type { Path, Reference, StringRule } from "sanity";
 
 type Offering = {
   _key: string;
@@ -8,10 +11,24 @@ type Offering = {
   price?: number;
 };
 
+function openingTimeValidation(rule: StringRule) {
+  return [
+    rule.required().error("Opening hours are required"),
+    rule
+      .regex(/^([01]\d|2[0-3]):[0-5]\d - ([01]\d|2[0-3]):[0-5]\d$/)
+      .error('Must match the format "HH:mm - HH:mm"'),
+  ];
+}
+
 export const venueType = defineType({
   name: "venue",
   title: "Venues",
   type: "document",
+  groups: [
+    { name: "pageCover", title: "Page Cover", icon: ImageIcon },
+    { name: "contact", title: "Contact", icon: EnvelopeIcon },
+    { name: "openHours", title: "Open Hours", icon: ClockIcon },
+  ],
   fields: [
     defineField({
       name: "title",
@@ -105,28 +122,112 @@ export const venueType = defineType({
       name: "pageCoverMedia",
       title: "Page Cover Media",
       type: "string",
+      group: "pageCover",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "pageCoverHeading",
       title: "Page Cover Heading",
       type: "internationalizedArrayString",
+      group: "pageCover",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "pageCoverSubHeading",
       title: "Page Cover Sub Heading",
       type: "internationalizedArrayString",
+      group: "pageCover",
     }),
     defineField({
       name: "pageCoverBadge",
       title: "Page Cover Badge",
       type: "internationalizedArrayString",
+      group: "pageCover",
     }),
     defineField({
       name: "pageCoverCtaLabel",
       title: "Page Cover CTA Label",
       type: "internationalizedArrayString",
+      group: "pageCover",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "mondayOpeningHours",
+      title: "Monday opening hours",
+      description: 'Opening hours on Mondays. Example: "09:30 - 20:00"',
+      type: "string",
+      group: "openHours",
+      validation: (rule) => openingTimeValidation(rule),
+    }),
+    defineField({
+      name: "tuesdayOpeningHours",
+      title: "Tuesday opening hours",
+      description: 'Opening hours on Tuesdays. Example: "09:30 - 20:00"',
+      type: "string",
+      group: "openHours",
+      validation: (rule) => openingTimeValidation(rule),
+    }),
+    defineField({
+      name: "wednesdayOpeningHours",
+      title: "Wednesday opening hours",
+      description: 'Opening hours on Wednesdays. Example: "09:30 - 20:00"',
+      type: "string",
+      group: "openHours",
+      validation: (rule) => openingTimeValidation(rule),
+    }),
+    defineField({
+      name: "thursdayOpeningHours",
+      title: "Thursday opening hours",
+      description: 'Opening hours on Thursdays. Example: "09:30 - 20:00"',
+      type: "string",
+      group: "openHours",
+      validation: (rule) => openingTimeValidation(rule),
+    }),
+    defineField({
+      name: "fridayOpeningHours",
+      title: "Friday opening hours",
+      description: 'Opening hours on Fridays. Example: "09:30 - 20:00"',
+      type: "string",
+      group: "openHours",
+      validation: (rule) => openingTimeValidation(rule),
+    }),
+    defineField({
+      name: "saturdayOpeningHours",
+      title: "Saturday opening hours",
+      description: 'Opening hours on Saturdays. Example: "09:30 - 20:00"',
+      type: "string",
+      group: "openHours",
+      validation: (rule) => openingTimeValidation(rule),
+    }),
+    defineField({
+      name: "sundayOpeningHours",
+      title: "Sunday opening hours",
+      description: 'Opening hours on Sundays. Example: "09:30 - 20:00"',
+      type: "string",
+      group: "openHours",
+      validation: (rule) => openingTimeValidation(rule),
+    }),
+    defineField({
+      name: "phone",
+      title: "Phone number",
+      type: "string",
+      validation: (rule) => rule.required(), // todo: phone validation
+      group: "contact",
+    }),
+    defineField({
+      name: "mail",
+      title: "Email",
+      type: "email",
+      validation: (rule) => rule.required(),
+      group: "contact",
+    }),
+    defineField({
+      name: "googleMapsLink",
+      title: "Google Maps Link",
+      type: "string",
+      description:
+        "Paste it from Google Maps, example: https://share.google/pfpYwPnyAXvmLJ1Su",
+      group: "contact",
     }),
   ],
 });
