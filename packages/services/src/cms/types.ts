@@ -12,6 +12,16 @@ export type Homepage = {
   venues: Venue[];
 };
 
+export type VenueHomepage = {
+  pageCover: {
+    media: string;
+    badge: string | undefined;
+    heading: string;
+    subHeading: string;
+    ctaLabel: string;
+  };
+};
+
 export type Header = {
   logo: string;
   experiences: {

@@ -1,11 +1,36 @@
 ---
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getRoutesForLang } from "../../routing/routes";
+import VenueHomepageCover from "../features/VenueHomepageCover.astro";
+import { getVenueHomepageData } from "@repo/services/cms/getVenueHomepageData";
+
 interface Props {
   venueSlug: string;
 }
 
 const { venueSlug } = Astro.props;
+
+const lang = getLang(Astro);
+
+const routes = getRoutesForLang(lang);
+
+const pageData = await getVenueHomepageData({
+  lang,
+  venueSlug,
+  config: getSanityConfigFromEnvironment(),
+});
 ---
 
-<div style={{ border: "1px solid black", margin: "2px" }}>
-  <p>VenueHomepage, venueSlug: {venueSlug}</p>
-</div>
+<VenueHomepageCover
+  media={pageData.pageCover.media}
+  badgeLabel={pageData.pageCover.badge}
+  heading={pageData.pageCover.heading}
+  subHeading={pageData.pageCover.subHeading}
+  cta={pageData.pageCover.ctaLabel
+    ? {
+        label: pageData.pageCover.ctaLabel,
+        url: routes.venueBook(venueSlug, lang),
+      }
+    : undefined}
+/>

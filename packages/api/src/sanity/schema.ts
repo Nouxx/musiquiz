@@ -17,6 +17,16 @@ export const SanityHomepageSchema = z.strictObject({
   ),
 });
 
+export const SanityVenueHomepageSchema = z.strictObject({
+  pageCover: z.strictObject({
+    pageCoverMedia: z.string().min(1),
+    pageCoverBadge: z.string().min(1).nullable(),
+    pageCoverHeading: z.string().min(1),
+    pageCoverSubHeading: z.string().min(1),
+    pageCoverCtaLabel: z.string().min(1)
+  }),
+});
+
 export const SanityFooterSchema = z.strictObject({
   siteSettings: z.strictObject({
     facebookUrl: z.url(),

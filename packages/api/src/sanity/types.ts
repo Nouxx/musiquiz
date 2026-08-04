@@ -4,10 +4,12 @@ import type {
   SanityFooterSchema,
   SanityHeaderSchema,
   SanityHomepageSchema,
+  SanityVenueHomepageSchema,
   SanityVenuesSlugSchema,
 } from "./schema";
 
 export type SanityHomepage = z.infer<typeof SanityHomepageSchema>;
+export type SanityVenueHomepage = z.infer<typeof SanityVenueHomepageSchema>;
 
 export type SanityFooter = z.infer<typeof SanityFooterSchema>;
 

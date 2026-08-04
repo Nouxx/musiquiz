@@ -69,3 +69,23 @@ export function fetchHeaderQuery(venueSlug: string) {
     }
   `);
 }
+
+export function fetchVenueHomepageQuery({
+  venueSlug,
+  lang,
+}: {
+  venueSlug: string;
+  lang: Lang;
+}) {
+  return defineQuery(`
+    {
+      "pageCover": *[_type == "venue" && slug.current == "${venueSlug}"][0]{
+        pageCoverMedia,
+        "pageCoverHeading": pageCoverHeading[language == "${lang}"][0].value,
+        "pageCoverSubHeading": pageCoverSubHeading[language == "${lang}"][0].value,
+        "pageCoverBadge": pageCoverBadge[language == "${lang}"][0].value,
+        "pageCoverCtaLabel": pageCoverCtaLabel[language == "${lang}"][0].value,
+      }
+    }
+  `);
+}

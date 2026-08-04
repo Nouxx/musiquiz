@@ -1,0 +1,46 @@
+import { fetchSanityData } from "@repo/api/sanity/fetchData";
+import { fetchVenueHomepageQuery } from "@repo/api/sanity/queries";
+import { SanityVenueHomepageSchema } from "@repo/api/sanity/schema";
+import type { SanityVenueHomepage } from "@repo/api/sanity/types";
+import { type Lang } from "@repo/utils/lang";
+import type { SanityConfig } from "@repo/utils/sanityConfig";
+
+import type { VenueHomepage } from "./types";
+
+function adaptVenueHomepage(data: SanityVenueHomepage): VenueHomepage {
+  const {
+    pageCoverMedia,
+    pageCoverHeading,
+    pageCoverSubHeading,
+    pageCoverBadge,
+    pageCoverCtaLabel,
+  } = data.pageCover;
+
+  return {
+    pageCover: {
+      media: pageCoverMedia,
+      badge: pageCoverBadge ?? undefined,
+      heading: pageCoverHeading,
+      subHeading: pageCoverSubHeading,
+      ctaLabel: pageCoverCtaLabel,
+    },
+  };
+}
+
+export async function getVenueHomepageData({
+  venueSlug,
+  lang,
+  config,
+}: {
+  venueSlug: string;
+  lang: Lang;
+  config: SanityConfig;
+}) {
+  const data = await fetchSanityData({
+    query: fetchVenueHomepageQuery({ venueSlug, lang }),
+    schema: SanityVenueHomepageSchema,
+    config,
+  });
+
+  return adaptVenueHomepage(data);
+}
