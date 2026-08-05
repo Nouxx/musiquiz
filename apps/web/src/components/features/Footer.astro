@@ -5,6 +5,19 @@ import { getFooterData } from "@repo/services/cms/getFooterData";
 import { getRoutesForLang } from "../../routing/routes";
 import { getT } from "../../libs/i18n";
 import { getLang } from "../../libs/getLang";
+import FooterSection from "@repo/ui/footer/FooterSection";
+
+import FooterBottom from "@repo/ui/footer/FooterBottom";
+import Text from "@repo/ui/primitives/Text";
+import FooterBottomLinks from "./footer/FooterBottomLinks.astro";
+import FooterLogo from "./footer/FooterLogo.astro";
+import FooterSocials from "./footer/FooterSocials.astro";
+import FooterContact from "./footer/FooterContact.astro";
+import FooterGames from "./footer/FooterGames.astro";
+import FooterChooseVenue from "./footer/FooterChooseVenue.astro";
+import Flex from "@repo/ui/primitives/Flex";
+import FooterGeneralInformation from "./footer/FooterGeneralInformation.astro";
+import FooterChangeLang from "./footer/FooterChangeLang.astro";
 
 const lang = getLang(Astro);
 
@@ -17,8 +30,15 @@ const footerData = await getFooterData({
   config: sanityConfig,
 });
 
-const { logo, socials, contact, gamesFormatsLinks, venuesLink, languageLink, paymentMethods } =
-  footerData;
+const {
+  logo,
+  socials,
+  contact,
+  gamesFormatsLinks,
+  venuesLink, // todo: rename to venues
+  languageLink,
+  paymentMethods,
+} = footerData;
 
 const routes = getRoutesForLang(lang);
 
@@ -30,26 +50,28 @@ const miscellaneousLinks = [
   { label: t("footer.press"), url: routes.press },
   { label: t("footer.franchise"), url: routes.franchise },
 ];
-
-const bottomLinks = [
-  { label: t("footer.termsAndConditions"), url: routes.termsAndConditions },
-  { label: t("footer.gdpr"), url: routes.gdpr },
-  { label: t("footer.legalsNotice"), url: routes.legalsNotice },
-];
 ---
 
 <div style={{ border: "1px solid black", margin: "2px" }}>
-  <p>Footer</p>
-  <Footer
-    {logo}
-    {socials}
-    {contact}
-    newsletter
-    gamesLink={gamesFormatsLinks}
-    {languageLink}
-    {venuesLink}
-    {miscellaneousLinks}
-    {bottomLinks}
-    bottomIcons={paymentMethods}
-  />
+  <Footer>
+    <FooterSection>
+      <FooterLogo {logo} />
+      <FooterSocials {socials} />
+    </FooterSection>
+
+    <FooterSection>
+      <FooterContact {contact} />
+      <FooterGames games={gamesFormatsLinks}/>
+      <FooterChooseVenue venues={venuesLink}/>
+      <Flex direction="column">
+        <FooterGeneralInformation />
+        <FooterChangeLang />
+      </Flex>
+    </FooterSection>
+
+    <FooterBottom>
+      <Text slot="left">© Musi'Quiz 2026</Text>
+      <FooterBottomLinks slot="right" {paymentMethods} />
+    </FooterBottom>
+  </Footer>
 </div>

@@ -1,16 +1,18 @@
 ---
-import type { Footer } from "@repo/services/cms/types";
+import type { VenueFooter } from "@repo/services/cms/types";
 import Flex from "@repo/ui/primitives/Flex";
 import Text from "@repo/ui/primitives/Text";
 import Link from "@repo/ui/primitives/Link";
 import { getLang } from "../../../libs/getLang";
 import { getT } from "../../../libs/i18n";
+import { getRoutesForLang } from "../../../routing/routes";
 
 interface Props {
-  games: Footer["gamesFormatsLinks"]; // todo: rename games
+  venueSlug: string;
+  games: VenueFooter["games"];
 }
 
-const { games } = Astro.props;
+const { venueSlug, games } = Astro.props;
 
 const lang = getLang(Astro);
 
@@ -18,13 +20,13 @@ const t = getT(lang);
 
 const gamesWithLink = games.map((game) => ({
   ...game,
-  url: "#todo", // open question: are these page supposed to exists?
+  url: getRoutesForLang(lang).venueGame(venueSlug, game.slug),
 }));
 ---
 
 <Flex direction="column">
   <Text bold>
-    {t("footer.ourGames")}
+    {t("footer.ourVenueGames")}
   </Text>
   {
     gamesWithLink.length > 0 &&

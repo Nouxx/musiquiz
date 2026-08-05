@@ -2,19 +2,14 @@
 import Footer from "@repo/ui/Footer";
 import Text from "@repo/ui/primitives/Text";
 import Flex from "@repo/ui/primitives/Flex";
-import Link from "@repo/ui/primitives/Link";
-import Icon from "@repo/ui/primitives/Icon";
 import FooterBottom from "@repo/ui/footer/FooterBottom";
 import FooterSection from "@repo/ui/footer/FooterSection";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getVenueFooterData } from "@repo/services/cms/getVenueFooterData";
-import { getRoutesForLang } from "../../routing/routes";
-import { getT } from "../../libs/i18n";
 import { getLang } from "../../libs/getLang";
-import type { Lang } from "@repo/utils/lang";
 import FooterOpenHours from "./footer/FooterOpenHours.astro";
 import FooterContact from "./footer/FooterContact.astro";
-import FooterGames from "./footer/FooterGames.astro";
+import FooterVenueGames from "./footer/FooterVenueGames.astro";
 import FooterChangeVenue from "./footer/FooterChangeVenue.astro";
 import FooterGeneralInformation from "./footer/FooterGeneralInformation.astro";
 import FooterChangeLang from "./footer/FooterChangeLang.astro";
@@ -24,8 +19,6 @@ import FooterSocials from "./footer/FooterSocials.astro";
 import FooterNewsletter from "./footer/FooterNewsletter.astro";
 
 const lang = getLang(Astro);
-
-const t = getT(lang);
 
 interface Props {
   venueSlug: string;
@@ -62,7 +55,7 @@ const {
     <FooterSection>
       <FooterOpenHours {venueTitle} {openHours} />
       <FooterContact {contact} />
-      <FooterGames {venueSlug} {games} />
+      <FooterVenueGames {venueSlug} {games} />
       <FooterChangeVenue {otherVenues} />
       <Flex direction="column">
         <FooterGeneralInformation />

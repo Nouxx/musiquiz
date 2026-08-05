@@ -55,7 +55,7 @@ export type Footer = {
     url: string;
     lang: Lang;
   };
-  venuesLink: { label: string; url: string }[];
+  venuesLink: { label: string; slug: string }[];
   paymentMethods: { image: string; alt: string }[];
 };
 

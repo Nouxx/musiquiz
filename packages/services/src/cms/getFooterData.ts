@@ -48,11 +48,11 @@ function adaptFooter({
     newsletter: false,
     gamesFormatsLinks: data.gameFormats.map((format) => ({
       label: format.name,
-      url: format.slug,
+      slug: format.slug,
     })),
     venuesLink: data.venues.map((venue) => ({
       label: venue.title,
-      url: venue.slug,
+      slug: venue.slug,
     })),
     languageLink: getLanguageLinkForLang(lang),
     paymentMethods: acceptedPaymentMethods.map((method) => ({
