@@ -15,4 +15,11 @@
   --text-heading: 600 1.25rem/1.3 var(--font-sans);
   --text-body: 400 1rem/1.5 var(--font-sans);
   --text-caption: 400 0.875rem/1.4 var(--font-sans);
+
+  /* Spacing scale. The only source of gaps/paddings — `Flex`'s `gap`
+     prop maps its union members onto these names. */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 2rem;
 }

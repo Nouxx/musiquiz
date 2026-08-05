@@ -1,0 +1,50 @@
+---
+import type { VenueFooter } from "@repo/services/cms/types";
+import Flex from "@repo/ui/primitives/Flex";
+import Text from "@repo/ui/primitives/Text";
+import Link from "@repo/ui/primitives/Link";
+import { getLang } from "../../../libs/getLang";
+import { getT } from "../../../libs/i18n";
+import { getRoutesForLang } from "../../../routing/routes";
+
+interface Props {
+  otherVenues: VenueFooter["otherVenues"];
+}
+
+const { otherVenues } = Astro.props;
+
+const otherVenuesCount = otherVenues.length;
+
+const lang = getLang(Astro);
+
+const t = getT(lang);
+
+const VISIBLE_VENUES_COUNT = 3;
+const routes = getRoutesForLang(lang);
+
+const venuesWithLink = otherVenues
+  .slice(0, VISIBLE_VENUES_COUNT)
+  .map((venue) => ({
+    ...venue,
+    url: routes.venueHome(venue.slug, lang),
+  }));
+
+const remainingVenuesCount = Math.max(
+  otherVenuesCount - VISIBLE_VENUES_COUNT,
+  0,
+);
+---
+
+<Flex direction="column">
+  <Text bold>
+    {t("footer.changeVenue")}
+  </Text>
+  {venuesWithLink.map((venue) => <Link url={venue.url}>{venue.title}</Link>)}
+  {
+    remainingVenuesCount > 0 && (
+      <Link url={routes.home}>
+        {t("footer.moreVenues", { count: remainingVenuesCount })}
+      </Link>
+    )
+  }
+</Flex>

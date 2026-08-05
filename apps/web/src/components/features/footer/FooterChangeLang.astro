@@ -1,0 +1,22 @@
+---
+import { getLang } from "../../../libs/getLang";
+import { getRoutesForLang } from "../../../routing/routes";
+import Link from "@repo/ui/primitives/Link";
+
+const currentLang = getLang(Astro);
+const otherLang = currentLang === "fr" ? "en" : "fr";
+
+interface Props {
+  venueSlug?: string;
+}
+
+const { venueSlug } = Astro.props;
+
+const routes = getRoutesForLang(otherLang);
+
+const route = venueSlug ? routes.venueHome(venueSlug, otherLang) : routes.home;
+---
+
+<Link url={route}>
+  {otherLang === "en" ? "🇬🇧 English" : "🇫🇷 Français"}
+</Link>

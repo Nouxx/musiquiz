@@ -15,8 +15,8 @@ function openingTimeValidation(rule: StringRule) {
   return [
     rule.required().error("Opening hours are required"),
     rule
-      .regex(/^([01]\d|2[0-3]):[0-5]\d - ([01]\d|2[0-3]):[0-5]\d$/)
-      .error('Must match the format "HH:mm - HH:mm"'),
+      .regex(/^(Fermé|([01]\d|2[0-3]):[0-5]\d - ([01]\d|2[0-3]):[0-5]\d)$/)
+      .error('Must match the format "HH:mm - HH:mm" or "Fermé"'),
   ];
 }
 

@@ -1,0 +1,17 @@
+---
+interface Props {
+  logo: string; // todo: use image later
+  alt?: string;
+}
+
+const { alt } = Astro.props;
+---
+
+<img class="image" alt={alt ?? ""}/>
+
+<style>
+  .image {
+    height: 24px;
+    width: 35px;
+  }
+</style>

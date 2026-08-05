@@ -1,0 +1,17 @@
+---
+interface Props {
+  bold?: boolean;
+}
+
+const { bold = false } = Astro.props;
+---
+
+<span class:list={{ bold }}>
+  <slot />
+</span>
+
+<style>
+  .bold {
+    font-weight: bold;
+  }
+</style>

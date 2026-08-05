@@ -1,0 +1,44 @@
+---
+import type { VenueFooter } from "@repo/services/cms/types";
+import Flex from "@repo/ui/primitives/Flex";
+import Text from "@repo/ui/primitives/Text";
+import { getLang } from "../../../libs/getLang";
+import { getT } from "../../../libs/i18n";
+
+interface Props {
+  venueTitle: string;
+  openHours: VenueFooter["openHours"];
+}
+
+const { venueTitle, openHours } = Astro.props;
+
+const t = getT(getLang(Astro));
+
+const openHoursByDay = (
+  [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+  ] as const
+).map((day) => ({
+  label: t(`days.${day}`),
+  hours: openHours[day],
+}));
+---
+
+<Flex direction="column">
+  <Text bold>
+    {t("footer.venueOpenHours", { venue: venueTitle })}
+  </Text>
+  {
+    openHoursByDay.map(({ label, hours }) => (
+      <Text>
+        {label} - {hours}
+      </Text>
+    ))
+  }
+</Flex>

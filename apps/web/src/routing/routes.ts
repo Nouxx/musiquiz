@@ -1,27 +1,11 @@
 import type { Lang } from "@repo/utils/lang";
 
-type Routes = {
-  home: string;
-  venueHome: (venue: string) => string;
-  venueBook: (venue: string, lang: Lang) => string;
-  venueGame: (venue: string, game: string) => string;
-  venueGifting: (venue: string, lang: Lang) => string;
-  faq: string;
-  contact: string;
-  blog?: string; // blog is not translated
-  press: string;
-  franchise: string;
-  termsAndConditions: string;
-  gdpr: string;
-  legalsNotice: string;
-};
-
-function venueHome(venue: string) {
-  return `/${venue}/`;
+function venueHome(venue: string, lang: Lang) {
+  return lang === "fr" ? `/${venue}/` : `/en/${venue}/`;
 }
 
 function venueBook(venue: string, lang: Lang) {
-  return lang === "fr" ? `/${venue}/reserver` : `/${venue}/book`;
+  return lang === "fr" ? `/${venue}/reserver` : `/en/${venue}/book`;
 }
 
 function venueGame(venue: string, game: string) {
@@ -32,7 +16,7 @@ function venueGifting(venue: string, lang: Lang) {
   return lang === "fr" ? `/${venue}/offrir` : `/${venue}/gift`;
 }
 
-const frenchRoutes: Routes = {
+const frenchRoutes = {
   home: "/",
   venueHome: venueHome,
   venueBook: venueBook,
@@ -48,14 +32,15 @@ const frenchRoutes: Routes = {
   legalsNotice: "mentions-legales",
 };
 
-const englishRoutes: Routes = {
-  home: "/",
+const englishRoutes: typeof frenchRoutes = {
+  home: "/en/",
   venueHome: venueHome,
   venueBook: venueBook,
   venueGame: venueGame,
   venueGifting: venueGifting,
   faq: "faq",
   contact: "contact",
+  blog: "blog",
   press: "press",
   franchise: "franchise",
   termsAndConditions: "terms",

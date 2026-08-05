@@ -5,7 +5,7 @@ export default {
   rules: {
     "csstools/value-no-unknown-custom-properties": [
       true,
-      { importFrom: ["src/styles/tokens.css"] },
+      { importFrom: ["../../packages/ui/src/styles/tokens.css"] },
     ],
   },
 };

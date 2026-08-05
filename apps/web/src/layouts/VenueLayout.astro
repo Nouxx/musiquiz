@@ -10,7 +10,7 @@ const { venueSlug } = Astro.props;
 ---
 
 <Layout>
-  <Header venueSlug={venueSlug} />
+  <Header {venueSlug} />
 
   <slot />
 </Layout>

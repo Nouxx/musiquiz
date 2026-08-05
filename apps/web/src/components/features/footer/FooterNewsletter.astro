@@ -1,0 +1,31 @@
+---
+import { getLang } from "../../../libs/getLang";
+import { getT } from "../../../libs/i18n";
+import Text from "@repo/ui/primitives/Text";
+import Flex from "@repo/ui/primitives/Flex";
+
+const lang = getLang(Astro);
+
+const t = getT(lang);
+---
+
+<form>
+  <Flex direction="column">
+    <Text bold>{t("footer.subscribe")}</Text>
+    <label for="newsletter-mail">{t("footer.mailAddress")}</label>
+    <input
+      id="newsletter-mail"
+      type="email"
+      name="mail"
+      placeholder={t("footer.mailPlaceholder")}
+      required
+    />
+
+    <Flex>
+      <input id="newsletter-consent" type="checkbox" name="consent" required />
+      <label for="newsletter-consent">{t("footer.newsletterConsent")}</label>
+    </Flex>
+
+    <button type="submit">{t("footer.subscribe")}</button>
+  </Flex>
+</form>

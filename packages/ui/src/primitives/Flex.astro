@@ -1,0 +1,47 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends Omit<HTMLAttributes<"div">, "class"> {
+  as?: "div" | "ul" | "nav";
+  direction?: "row" | "column";
+  gap?: "xs" | "sm" | "md" | "lg";
+  align?: "start" | "center" | "end" | "stretch";
+  justify?: "start" | "center" | "end" | "between";
+  class?: string;
+}
+
+const {
+  as: Tag = "div",
+  direction = "row",
+  gap = "xs",
+  align,
+  justify,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const justifyContent = justify === "between" ? "space-between" : justify;
+---
+
+<Tag
+  {...rest}
+  class:list={["flex", className]}
+  style={{
+    "--flex-direction": direction,
+    "--flex-gap": gap && `var(--space-${gap})`,
+    "--flex-align": align,
+    "--flex-justify": justifyContent,
+  }}
+>
+  <slot />
+</Tag>
+
+<style>
+  .flex {
+    display: flex;
+    flex-direction: var(--flex-direction);
+    gap: var(--flex-gap, 0);
+    align-items: var(--flex-align, stretch);
+    justify-content: var(--flex-justify, flex-start);
+  }
+</style>

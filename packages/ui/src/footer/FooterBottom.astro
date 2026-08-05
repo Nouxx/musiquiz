@@ -1,0 +1,12 @@
+---
+import Flex from "../primitives/Flex.astro";
+---
+
+<Flex class="footer-bottom" justify="between" align="center" gap="md">
+  <div class="footer-bottom__left">
+    <slot name="left" />
+  </div>
+  <div class="footer-bottom__right">
+    <slot name="right" />
+  </div>
+</Flex>

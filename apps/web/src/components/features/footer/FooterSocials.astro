@@ -1,0 +1,66 @@
+---
+import type { VenueFooter } from "@repo/services/cms/types";
+import Flex from "@repo/ui/primitives/Flex";
+import Text from "@repo/ui/primitives/Text";
+import Link from "@repo/ui/primitives/Link";
+import Icon from "@repo/ui/primitives/Icon";
+import { getLang } from "../../../libs/getLang";
+import { getT } from "../../../libs/i18n";
+
+interface Props {
+  socials: VenueFooter["socials"];
+}
+
+const { socials } = Astro.props;
+
+const { tiktokUrl, youtubeUrl, instagramUrl, facebookUrl, linkedinUrl } =
+  socials;
+
+const t = getT(getLang(Astro));
+---
+
+<Flex>
+  <Text bold>
+    {t("footer.socials")}
+  </Text>
+  {
+    tiktokUrl && (
+      <Link url={tiktokUrl}>
+        <Icon />
+        Tiktok
+      </Link>
+    )
+  }
+  {
+    youtubeUrl && (
+      <Link url={youtubeUrl}>
+        <Icon />
+        Youtube
+      </Link>
+    )
+  }
+  {
+    instagramUrl && (
+      <Link url={instagramUrl}>
+        <Icon />
+        Instagram
+      </Link>
+    )
+  }
+  {
+    facebookUrl && (
+      <Link url={facebookUrl}>
+        <Icon />
+        Facebook
+      </Link>
+    )
+  }
+  {
+    linkedinUrl && (
+      <Link url={linkedinUrl}>
+        <Icon />
+        LinkedIn
+      </Link>
+    )
+  }
+</Flex>

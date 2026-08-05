@@ -1,0 +1,34 @@
+---
+import Link from "@repo/ui/primitives/Link";
+import Icon from "@repo/ui/primitives/Icon";
+import Flex from "@repo/ui/primitives/Flex";
+import Text from "@repo/ui/primitives/Text";
+import { getLang } from "../../../libs/getLang";
+import { getT } from "../../../libs/i18n";
+import { getRoutesForLang } from "../../../routing/routes";
+import type { VenueFooter } from "@repo/services/cms/types";
+
+const lang = getLang(Astro);
+
+const t = getT(lang);
+
+const routes = getRoutesForLang(lang);
+
+interface Props {
+  paymentMethods: VenueFooter["paymentMethods"]; // todo: use image later
+}
+
+const { paymentMethods } = Astro.props;
+---
+
+<Flex>
+  <Link url={routes.gdpr}>{t("footer.gdpr")}</Link>
+  <Link url={routes.legalsNotice}>{t("footer.legalsNotice")}</Link>
+  <Text>{t("footer.paymentMethods")}</Text>
+</Flex>
+<Flex>
+  {
+    paymentMethods.length > 0 &&
+      paymentMethods.map((logo) => <Icon logo={logo.image} alt={logo.alt} />)
+  }
+</Flex>

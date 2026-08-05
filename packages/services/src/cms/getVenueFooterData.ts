@@ -60,7 +60,7 @@ function adaptVenueFooter(data: SanityVenueFooter): VenueFooter {
     },
     games: offerings.map((offer) => ({
       label: offer.game.name,
-      url: offer.game.slug,
+      slug: offer.game.slug,
     })),
     otherVenues: data.otherVenues.map((venue) => ({
       title: venue.title,

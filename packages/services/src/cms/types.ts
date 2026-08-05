@@ -32,7 +32,7 @@ export type Header = {
 
 export type GameFormatLinks = {
   label: string;
-  url: string;
+  slug: string;
 };
 
 export type Footer = {

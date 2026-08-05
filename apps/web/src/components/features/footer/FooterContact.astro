@@ -1,0 +1,33 @@
+---
+import type { VenueFooter } from "@repo/services/cms/types";
+import Flex from "@repo/ui/primitives/Flex";
+import Text from "@repo/ui/primitives/Text";
+import Link from "@repo/ui/primitives/Link";
+import { getLang } from "../../../libs/getLang";
+import { getT } from "../../../libs/i18n";
+
+interface Props {
+  contact: VenueFooter["contact"];
+}
+
+const { contact } = Astro.props;
+
+const t = getT(getLang(Astro));
+---
+
+<Flex direction="column">
+  <Text bold>
+    {t("footer.contact")}
+  </Text>
+  <Text>
+    {t("footer.phone")} - {contact.phone}
+  </Text>
+  <Text>
+    {t("footer.mail")} - {contact.mail}
+  </Text>
+  {
+    contact.mapsLink && (
+      <Link url={contact.mapsLink}>{t("footer.directions")}</Link>
+    )
+  }
+</Flex>
