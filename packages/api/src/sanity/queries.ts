@@ -23,10 +23,7 @@ export function fetchFooterQuery({ lang }: { lang: Lang }) {
           youtubeUrl,
           mainPhone,
           mainEmail,
-          "acceptedPaymentMethods": acceptedPaymentMethods[]{
-            image,
-            "imageAlt": imageAlt[language == "${lang}"][0].value
-          }
+          "acceptedPaymentMethods": acceptedPaymentMethods[] ${imageProjection({ lang })}
       },
     "gameFormats": *[_type == "gameFormat"]{
       name,
@@ -56,10 +53,7 @@ export function fetchVenueFooterQuery({
         linkedinUrl,
         tiktokUrl,
         youtubeUrl,
-        "acceptedPaymentMethods": acceptedPaymentMethods[]{
-          image,
-          "imageAlt": imageAlt[language == "${lang}"][0].value
-        }
+        "acceptedPaymentMethods": acceptedPaymentMethods[] ${imageProjection({ lang })}
       },
       "venue": *[_type == "venue" && slug.current == "${venueSlug}"][0]{
         title,

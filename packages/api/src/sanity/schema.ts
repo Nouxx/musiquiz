@@ -47,12 +47,7 @@ export const SanityFooterSchema = z.strictObject({
     mainPhone: z.string(),
     tiktokUrl: z.url(),
     youtubeUrl: z.url(),
-    acceptedPaymentMethods: z.array(
-      z.strictObject({
-        image: z.string(),
-        imageAlt: z.string(),
-      }),
-    ),
+    acceptedPaymentMethods: z.array(SanityImageSchema),
   }),
   gameFormats: z.array(
     z.strictObject({
@@ -76,12 +71,7 @@ export const SanityVenueFooterSchema = z.strictObject({
     linkedinUrl: z.url(),
     tiktokUrl: z.url(),
     youtubeUrl: z.url(),
-    acceptedPaymentMethods: z.array(
-      z.strictObject({
-        image: z.string(),
-        imageAlt: z.string(),
-      }),
-    ),
+    acceptedPaymentMethods: z.array(SanityImageSchema),
   }),
   venue: z.strictObject({
     title: z.string(),

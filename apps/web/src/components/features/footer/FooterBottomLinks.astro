@@ -1,6 +1,6 @@
 ---
 import Link from "@repo/ui/primitives/Link";
-import Icon from "@repo/ui/primitives/Icon";
+import RemoteImage from "@repo/ui/primitives/RemoteImage";
 import Flex from "@repo/ui/primitives/Flex";
 import Text from "@repo/ui/primitives/Text";
 import { getLang } from "../../../libs/getLang";
@@ -15,7 +15,7 @@ const t = getT(lang);
 const routes = getRoutesForLang(lang);
 
 interface Props {
-  paymentMethods: VenueFooter["paymentMethods"]; // todo: use image later
+  paymentMethods: VenueFooter["paymentMethods"];
 }
 
 const { paymentMethods } = Astro.props;
@@ -28,7 +28,8 @@ const { paymentMethods } = Astro.props;
 </Flex>
 <Flex>
   {
-    paymentMethods.length > 0 &&
-      paymentMethods.map((logo) => <Icon logo={logo.image} alt={logo.alt} />)
+    paymentMethods.map((paymentMethod) => (
+      <RemoteImage image={paymentMethod} variant="payment-icon" />
+    ))
   }
 </Flex>

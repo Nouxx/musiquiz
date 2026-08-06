@@ -68,10 +68,7 @@ function adaptVenueFooter(data: SanityVenueFooter): VenueFooter {
       slug: venue.slug,
     })),
     otherVenuesCount: data.otherVenues.length,
-    paymentMethods: acceptedPaymentMethods.map((method) => ({
-      image: method.image,
-      alt: method.imageAlt,
-    })),
+    paymentMethods: acceptedPaymentMethods.map((method) => toCmsImage(method)),
   };
 }
 

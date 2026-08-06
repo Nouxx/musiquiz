@@ -59,7 +59,7 @@ export type Footer = {
   gamesFormatsLinks: GameFormatLinks[];
   newsletter: boolean;
   venuesLink: { label: string; slug: string }[];
-  paymentMethods: { image: string; alt: string }[];
+  paymentMethods: CmsImage[];
 };
 
 export type VenueFooter = {
@@ -93,5 +93,5 @@ export type VenueFooter = {
     title: string;
     slug: string;
   }[];
-  paymentMethods: { image: string; alt: string }[];
+  paymentMethods: CmsImage[];
 };

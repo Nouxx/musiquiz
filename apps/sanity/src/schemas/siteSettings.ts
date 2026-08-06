@@ -74,24 +74,7 @@ export const siteSettingsType = defineType({
       title: "Accepted payment methods",
       description: "Re-order items to decide the order of appearance",
       type: "array",
-      of: [
-        {
-          type: "object",
-          name: "inline",
-          fields: [
-            {
-              type: "string", // todo: use image
-              name: "image",
-              validation: (rule) => rule.required(),
-            },
-            {
-              type: "internationalizedArrayString",
-              name: "imageAlt",
-              validation: (rule) => rule.required(),
-            },
-          ],
-        },
-      ],
+      of: [{ type: "imageWithAlt" }],
       group: "payment",
     }),
   ],

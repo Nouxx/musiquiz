@@ -43,10 +43,7 @@ function adaptFooter({ data }: { data: SanityFooter }): Footer {
       label: venue.title,
       slug: venue.slug,
     })),
-    paymentMethods: acceptedPaymentMethods.map((method) => ({
-      image: method.image,
-      alt: method.imageAlt,
-    })),
+    paymentMethods: acceptedPaymentMethods.map((method) => toCmsImage(method)),
   };
 }
 
