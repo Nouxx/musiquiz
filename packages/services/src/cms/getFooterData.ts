@@ -7,19 +7,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { Footer } from "./types";
 
-function getLanguageLinkForLang(lang: Lang): Footer["languageLink"] {
-  return lang === "fr"
-    ? { lang: "en", label: "English", url: `en/` }
-    : { lang: "fr", label: "Français", url: `/` };
-}
-
-function adaptFooter({
-  data,
-  lang,
-}: {
-  data: SanityFooter;
-  lang: Lang;
-}): Footer {
+function adaptFooter({ data }: { data: SanityFooter }): Footer {
   const {
     footerLogo,
     facebookUrl,
@@ -54,7 +42,6 @@ function adaptFooter({
       label: venue.title,
       slug: venue.slug,
     })),
-    languageLink: getLanguageLinkForLang(lang),
     paymentMethods: acceptedPaymentMethods.map((method) => ({
       image: method.image,
       alt: method.imageAlt,
@@ -75,5 +62,5 @@ export async function getFooterData({
     config,
   });
 
-  return adaptFooter({ data, lang });
+  return adaptFooter({ data });
 }
