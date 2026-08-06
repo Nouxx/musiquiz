@@ -121,7 +121,7 @@ export const venueType = defineType({
     defineField({
       name: "pageCoverMedia",
       title: "Page Cover Media",
-      type: "string",
+      type: "imageWithAlt",
       group: "pageCover",
       validation: (rule) => rule.required(),
     }),

@@ -6,6 +6,7 @@ import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { VenueHomepage } from "./types";
+import { toCmsImage } from "./utils/toCmsImage";
 
 function adaptVenueHomepage(data: SanityVenueHomepage): VenueHomepage {
   const {
@@ -18,7 +19,7 @@ function adaptVenueHomepage(data: SanityVenueHomepage): VenueHomepage {
 
   return {
     pageCover: {
-      media: pageCoverMedia,
+      media: toCmsImage(pageCoverMedia),
       badge: pageCoverBadge ?? undefined,
       heading: pageCoverHeading,
       subHeading: pageCoverSubHeading,

@@ -140,7 +140,7 @@ export function fetchVenueHomepageQuery({
   return defineQuery(`
     {
       "pageCover": *[_type == "venue" && slug.current == "${venueSlug}"][0]{
-        pageCoverMedia,
+        pageCoverMedia ${imageProjection({ lang })},
         "pageCoverHeading": pageCoverHeading[language == "${lang}"][0].value,
         "pageCoverSubHeading": pageCoverSubHeading[language == "${lang}"][0].value,
         "pageCoverBadge": pageCoverBadge[language == "${lang}"][0].value,

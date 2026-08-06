@@ -22,7 +22,7 @@ export type Homepage = {
 
 export type VenueHomepage = {
   pageCover: {
-    media: string;
+    media: CmsImage;
     badge: string | undefined;
     heading: string;
     subHeading: string;

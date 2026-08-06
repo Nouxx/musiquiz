@@ -29,7 +29,7 @@ export const SanityHomepageSchema = z.strictObject({
 
 export const SanityVenueHomepageSchema = z.strictObject({
   pageCover: z.strictObject({
-    pageCoverMedia: z.string().min(1),
+    pageCoverMedia: SanityImageSchema,
     pageCoverBadge: z.string().min(1).nullable(),
     pageCoverHeading: z.string().min(1),
     pageCoverSubHeading: z.string().min(1),
