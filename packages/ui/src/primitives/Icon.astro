@@ -1,13 +1,14 @@
 ---
+// placeholder: only the social links use this, and they have no artwork yet.
+// images that come from the cms go through RemoteImage instead
 interface Props {
-  logo: string; // todo: use image later
   alt?: string;
 }
 
 const { alt } = Astro.props;
 ---
 
-<img class="image" alt={alt ?? ""}/>
+<img class="image" alt={alt ?? ""} />
 
 <style>
   .image {

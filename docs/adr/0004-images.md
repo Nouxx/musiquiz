@@ -12,7 +12,7 @@ Explicit dimensions are not an optimization: Astro's `verifyOptions` throws `Mis
 
 The **Source Image** — the one rendition the build pulls and treats as master — is capped at `?w=2560&fit=max`. 2560 covers a 1280px slot at 2× DPR; beyond that nobody can see the difference, and uncapped originals hit the "un-optimised image" billing path Sanity warns about, on every cold CI build.
 
-Call sites choose a closed **Image Variant** (`cover`, `logo`, `card`), never a raw `sizes` string. A `sizes` value is only correct if it matches the CSS that sizes the container, and that CSS lives in `packages/ui` — passing `sizes` from a Feature Component puts the value in the one place that cannot see what makes it true, where it drifts silently and ships wrong-sized bytes forever. This is ADR 0002's "markup stays free of styling strings" applied to responsive images.
+Call sites choose a closed **Image Variant** (`logo`, `payment-icon`, `cover`), never a raw `sizes` string. A `sizes` value is only correct if it matches the CSS that sizes the container, and that CSS lives in `packages/ui` — passing `sizes` from a Feature Component puts the value in the one place that cannot see what makes it true, where it drifts silently and ships wrong-sized bytes forever. This is ADR 0002's "markup stays free of styling strings" applied to responsive images.
 
 ## Consequences
 
