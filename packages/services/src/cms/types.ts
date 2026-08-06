@@ -1,3 +1,13 @@
+export type CmsImage = {
+  url: string;
+  // `width` and `height` are the dimensions of the image the `url` points at,
+  // not the size it will be rendered at.
+  width: number;
+  height: number;
+  mimeType: string;
+  alt: string;
+};
+
 export type Venue = {
   title: string;
   slug: string;
@@ -34,7 +44,7 @@ export type GameFormatLinks = {
 };
 
 export type Footer = {
-  logo: string;
+  logo: CmsImage;
   socials: {
     tiktokUrl?: string;
     youtubeUrl?: string;
@@ -53,7 +63,7 @@ export type Footer = {
 };
 
 export type VenueFooter = {
-  logo: string;
+  logo: CmsImage;
   socials: {
     tiktokUrl?: string;
     youtubeUrl?: string;

@@ -5,6 +5,7 @@ import type { SanityVenueFooter } from "@repo/api/sanity/types";
 import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
+import { toCmsImage } from "./utils/toCmsImage";
 import type { VenueFooter } from "./types";
 
 function adaptVenueFooter(data: SanityVenueFooter): VenueFooter {
@@ -34,7 +35,7 @@ function adaptVenueFooter(data: SanityVenueFooter): VenueFooter {
   } = data.venue;
 
   return {
-    logo: footerLogo,
+    logo: toCmsImage(footerLogo),
     socials: {
       facebookUrl,
       instagramUrl,

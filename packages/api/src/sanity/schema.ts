@@ -3,6 +3,14 @@
 
 import { z } from "zod";
 
+export const SanityImageSchema = z.strictObject({
+  url: z.url(),
+  width: z.number().int().positive(),
+  height: z.number().int().positive(),
+  mimeType: z.string().min(1),
+  alt: z.string().min(1).nullable(),
+});
+
 export const SanityHomepageSchema = z.strictObject({
   homepage: z.strictObject({
     logo: z.string().min(1),
@@ -30,7 +38,7 @@ export const SanityVenueHomepageSchema = z.strictObject({
 export const SanityFooterSchema = z.strictObject({
   siteSettings: z.strictObject({
     facebookUrl: z.url(),
-    footerLogo: z.string(),
+    footerLogo: SanityImageSchema,
     instagramUrl: z.url(),
     linkedinUrl: z.url(),
     mainEmail: z.email(),
@@ -61,7 +69,7 @@ export const SanityFooterSchema = z.strictObject({
 export const SanityVenueFooterSchema = z.strictObject({
   siteSettings: z.strictObject({
     facebookUrl: z.url(),
-    footerLogo: z.string(),
+    footerLogo: SanityImageSchema,
     instagramUrl: z.url(),
     linkedinUrl: z.url(),
     tiktokUrl: z.url(),

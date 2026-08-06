@@ -5,6 +5,7 @@ import { type SanityFooter } from "@repo/api/sanity/types";
 import type { Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
+import { toCmsImage } from "./utils/toCmsImage";
 import type { Footer } from "./types";
 
 function adaptFooter({ data }: { data: SanityFooter }): Footer {
@@ -21,7 +22,7 @@ function adaptFooter({ data }: { data: SanityFooter }): Footer {
   } = data.siteSettings;
 
   return {
-    logo: footerLogo,
+    logo: toCmsImage(footerLogo),
     socials: {
       facebookUrl,
       instagramUrl,
