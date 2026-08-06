@@ -5,8 +5,8 @@ import { type SanityFooter } from "@repo/api/sanity/types";
 import type { Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
-import { toCmsImage } from "./utils/toCmsImage";
 import type { Footer } from "./types";
+import { toCmsImage } from "./utils/toCmsImage";
 
 function adaptFooter({ data }: { data: SanityFooter }): Footer {
   const {

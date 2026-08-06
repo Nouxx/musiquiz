@@ -1,4 +1,7 @@
 ---
+import RemoteImage from "./primitives/RemoteImage.astro";
+import type { ImageSource } from "./types";
+
 type NavLink = {
   label: string;
   url: string;
@@ -9,9 +12,8 @@ type NavMenu = {
   links: NavLink[];
 };
 
-// note: Header name seems to collide with native Astro types
 interface Props {
-  logo: string; // todo: handle image
+  logo: ImageSource;
   linksTree: (NavLink | NavMenu)[];
   cta: {
     label: string;
@@ -19,11 +21,11 @@ interface Props {
   };
 }
 
-const { linksTree, cta } = Astro.props;
+const { logo, linksTree, cta } = Astro.props;
 ---
 
 <header style={{ border: "1px solid black", margin: "2px" }}>
-  <p>SiteHeader</p>
+  <RemoteImage image={logo} variant="logo" loading="eager" />
   <nav>
     <ul>
       {
@@ -45,7 +47,7 @@ const { linksTree, cta } = Astro.props;
             <li>
               <a href={item.url}>{item.label}</a>
             </li>
-          )
+          ),
         )
       }
       <li>

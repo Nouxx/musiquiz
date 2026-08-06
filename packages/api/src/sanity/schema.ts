@@ -116,7 +116,7 @@ export const SanityVenuesSlugSchema = z.array(
 
 export const SanityHeaderSchema = z.strictObject({
   siteSettings: z.strictObject({
-    headerLogo: z.string(),
+    headerLogo: SanityImageSchema,
   }),
   gameFormats: z.array(
     z.strictObject({

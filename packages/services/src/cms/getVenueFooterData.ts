@@ -5,8 +5,8 @@ import type { SanityVenueFooter } from "@repo/api/sanity/types";
 import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
-import { toCmsImage } from "./utils/toCmsImage";
 import type { VenueFooter } from "./types";
+import { toCmsImage } from "./utils/toCmsImage";
 
 function adaptVenueFooter(data: SanityVenueFooter): VenueFooter {
   const {

@@ -16,7 +16,7 @@ export const siteSettingsType = defineType({
       title: "Header logo",
       group: "branding",
       validation: (rule) => rule.required(),
-      type: "image",
+      type: "imageWithAlt",
     }),
     defineField({
       name: "footerLogo",

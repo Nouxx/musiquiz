@@ -31,7 +31,7 @@ export type VenueHomepage = {
 };
 
 export type Header = {
-  logo: string;
+  logo: CmsImage;
   experiences: {
     label: string;
     slug: string;

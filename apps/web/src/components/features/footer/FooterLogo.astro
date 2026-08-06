@@ -1,11 +1,12 @@
 ---
-import Icon from "@repo/ui/primitives/Icon";
+import RemoteImage from "@repo/ui/primitives/RemoteImage";
+import type { CmsImage } from "@repo/services/cms/types";
 
 interface Props {
-  logo: string; // todo: use image later
+  logo: CmsImage;
 }
 
 const { logo } = Astro.props;
 ---
 
-<Icon {logo} />
+<RemoteImage image={logo} variant="logo" />

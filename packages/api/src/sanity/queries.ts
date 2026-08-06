@@ -112,11 +112,17 @@ export function fetchVenuesSlugQuery() {
   `);
 }
 
-export function fetchHeaderQuery(venueSlug: string) {
+export function fetchHeaderQuery({
+  lang,
+  venueSlug,
+}: {
+  lang: Lang;
+  venueSlug: string;
+}) {
   return defineQuery(`
     {
       "siteSettings": *[_type == "siteSettings"][0]{
-          headerLogo
+          headerLogo ${imageProjection({ lang })}
       },
       "gameFormats": *[_type == "venue" && slug.current == "${venueSlug}"][0].offerings[]{
           "game": game->{ 
