@@ -10,7 +10,7 @@
     "dev:static": "dotenvx run -f ../../.env.local -f ../../.env -- astro dev --port 4321",
     "dev:preview": "dotenvx run -f ../../.env.local -f ../../.env --env PREVIEW=true --env CLOUDFLARE_ENV=preview -- astro dev --port 4322",
     "dev": "concurrently -n preview,static -c green,blue \"pnpm dev:preview\" \"pnpm dev:static\"",
-    "build:static": "dotenvx run -f ../../.env -- astro build",
+    "build:static": "dotenvx run -f ../../.env -- astro build && node ./scripts/assertBundledImages.js ./dist/static",
     "build:preview": "dotenvx run -f ../../.env --env PREVIEW=true --env CLOUDFLARE_ENV=preview -- astro build",
     "build": "pnpm build:static && pnpm build:preview",
     "preview:static": "astro preview --outDir dist/static",
