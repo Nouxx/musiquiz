@@ -7,7 +7,7 @@ Musiquiz is a entertainment business that operates in France and provide various
 ## Components
 
 **UI Component**:
-An agnostic, presentational component in `apps/web/src/components/ui/`. No business logic, no data fetching — props in, markup out. Composes only other UI Components. Example: `Text`, `Button`, `Card`.
+An agnostic, presentational component in `packages/ui/src/`. No business logic, no data fetching — props in, markup out. Composes only other UI Components. Example: `Text`, `Button`, `Card`.
 _Avoid_: primitive, atom, dumb component
 
 **Feature Component**:
@@ -27,6 +27,29 @@ A Layout that wraps BaseLayout and exposes content regions as named slots. The d
 
 **Page**:
 A route in `apps/web/src/pages/`. Pure composition: wraps a Layout and fills it with UI / Feature Components. A Page carries no scoped `<style>` and renders no styled raw markup.
+
+## Images
+
+**CMS Image**:
+An image authored in Sanity by an editor. Its bytes are pulled in at build time and shipped as part of the site, so a published site keeps rendering its images whether or not Sanity is reachable. Sanity is the source of an image, never its server.
+_Avoid_: remote image, Sanity image, CDN image
+
+**Local Asset**:
+An image committed to the repo alongside the code, not authored by an editor. Fixed for a given deploy; changing one is a code change, not a content change.
+_Avoid_: static image
+
+**Source Image**:
+The single rendition of a CMS Image that the build pulls from Sanity and treats as its master copy. Everything the site serves for that image is derived from it, so its resolution sets the ceiling on what any visitor can ever be served.
+
+**Remote Image**:
+The UI Component that renders an image whose bytes come from outside the repo. It knows nothing of Sanity — it is handed a plain description of an image and decides how to serve it. The counterpart for a Local Asset is Astro's own image component; Remote Image is not used for those.
+
+**Logo**:
+A brand mark of the business, owned by site settings and editable without a developer. There are exactly two — the **Header Logo** and the **Footer Logo** — and they are different artwork, not two copies of one mark. No other document owns a logo; a page that shows one shows one of these.
+
+**Image Variant**:
+A named rendering intent — `cover`, `logo`, `card` — that a call site picks when it uses a Remote Image. It says what role the image plays on the page, never what size it is. The variant is what binds an image to the layout that sizes it, so the set is closed and lives beside that layout.
+_Avoid_: image size, image preset
 
 ## Styling
 
