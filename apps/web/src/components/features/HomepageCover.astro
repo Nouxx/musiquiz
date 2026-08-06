@@ -1,8 +1,10 @@
 ---
 import PageCover from "@repo/ui/PageCover";
+import RemoteImage from "@repo/ui/primitives/RemoteImage";
+import type { CmsImage } from "@repo/services/cms/types";
 
 interface Props {
-  logo: string;
+  logo: CmsImage;
   badgeLabel: string;
   heading: string;
 }
@@ -13,7 +15,7 @@ const { logo, badgeLabel, heading } = Astro.props;
 <PageCover>
   <div style={{ border: "1px solid black", margin: "2px" }}>
     <p>HomepageCover</p>
-    <p>logo: {logo}</p>
+    <RemoteImage image={logo} variant="logo" loading="eager" />
     <p>badgeLabel: {badgeLabel}</p>
     <p>heading: {heading}</p>
   </div>

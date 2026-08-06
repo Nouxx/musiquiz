@@ -14,7 +14,7 @@ export type Venue = {
 };
 
 export type Homepage = {
-  logo: string;
+  logo: CmsImage;
   badgeLabel: string;
   heading: string;
   venues: Venue[];
