@@ -16,14 +16,14 @@ export const siteSettingsType = defineType({
       title: "Header logo",
       group: "branding",
       validation: (rule) => rule.required(),
-      type: "string", // todo: use image
+      type: "image",
     }),
     defineField({
       name: "footerLogo",
       title: "Footer logo",
       group: "branding",
       validation: (rule) => rule.required(),
-      type: "string", // todo: use image
+      type: "imageWithAlt",
     }),
     defineField({
       name: "facebookUrl",

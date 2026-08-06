@@ -1,3 +1,4 @@
+import { ImageWithAltType } from "./shared/imageWithAltType";
 import { gameFormatType } from "./gameFormat";
 import { homepageType } from "./homepage";
 import { siteSettingsType } from "./siteSettings";
@@ -7,5 +8,6 @@ export const schemaTypes = [
   homepageType,
   venueType,
   siteSettingsType,
-  gameFormatType
+  gameFormatType,
+  ImageWithAltType,
 ];

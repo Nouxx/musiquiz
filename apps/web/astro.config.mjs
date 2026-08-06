@@ -11,6 +11,11 @@ export default defineConfig({
   // output directory differs to prevent a build erasing the other
   outDir: isPreview ? "./dist/preview" : "./dist/static",
   adapter: isPreview ? cloudflare({ imageService: "passthrough" }) : undefined,
+  image: {
+    // domains allow list for image optimization
+    // only the static build needs it, preview build passthrough image service
+    domains: isPreview ? [] : ["cdn.sanity.io"],
+  },
   fonts: [
     {
       provider: fontProviders.google(),
