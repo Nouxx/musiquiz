@@ -26,6 +26,7 @@ export const en: typeof fr = {
     phone: "Phone",
     mail: "Mail",
     directions: "Directions",
+    ourGames: "Our games",
     ourVenueGames: "Our game in this venue",
     generalInformation: "General information",
     socials: "Follow us",
