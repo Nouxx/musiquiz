@@ -16,9 +16,9 @@ function adaptVenue(data: SanityHomepage["venues"][number]): Venue {
 }
 
 function adaptHomepage(data: SanityHomepage): Homepage {
-  const { badge, heading } = data.homepage;
+  const { badge, heading, logo } = data.homepage;
   return {
-    logo: toCmsImage(data.siteSettings.headerLogo),
+    logo: toCmsImage(logo),
     badgeLabel: badge,
     heading,
     venues: data.venues.map((venue) => adaptVenue(venue)),

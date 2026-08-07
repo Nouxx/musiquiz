@@ -12,12 +12,10 @@ export const SanityImageSchema = z.strictObject({
 });
 
 export const SanityHomepageSchema = z.strictObject({
-  siteSettings: z.strictObject({
-    headerLogo: SanityImageSchema,
-  }),
   homepage: z.strictObject({
     badge: z.string().min(1),
     heading: z.string().min(1),
+    logo: SanityImageSchema,
   }),
   venues: z.array(
     z.strictObject({

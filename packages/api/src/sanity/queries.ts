@@ -85,12 +85,10 @@ export function fetchVenueFooterQuery({
 export function fetchHomepageQuery(lang: Lang) {
   return defineQuery(`
   {
-    "siteSettings": *[_type == "siteSettings"][0]{
-      headerLogo ${imageProjection({ lang })}
-    },
     "homepage": *[_type == "homepage"][0]{
       "badge": badge[language == "${lang}"][0].value,
       "heading": heading[language == "${lang}"][0].value,
+      logo ${imageProjection({ lang })}
     },
     "venues": *[_type == "venue"]{
       "title": title,
