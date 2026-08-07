@@ -25,7 +25,7 @@ const routes = getRoutesForLang(lang);
 
 const venuesWithLink = venues.slice(0, VISIBLE_VENUES_COUNT).map((venue) => ({
   ...venue,
-  url: routes.venueHome(venue.slug, lang),
+  url: routes.venueHome(venue.slug),
 }));
 
 const remainingVenuesCount = Math.max(venuesCount - VISIBLE_VENUES_COUNT, 0);

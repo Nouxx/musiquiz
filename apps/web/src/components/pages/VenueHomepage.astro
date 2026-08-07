@@ -31,7 +31,7 @@ const pageData = await getVenueHomepageData({
   cta={pageData.pageCover.ctaLabel
     ? {
         label: pageData.pageCover.ctaLabel,
-        url: routes.venueBook(venueSlug, lang),
+        url: routes.venueBook(venueSlug),
       }
     : undefined}
 />

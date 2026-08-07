@@ -14,7 +14,7 @@ const { venueSlug } = Astro.props;
 
 const routes = getRoutesForLang(otherLang);
 
-const route = venueSlug ? routes.venueHome(venueSlug, otherLang) : routes.home;
+const route = venueSlug ? routes.venueHome(venueSlug) : routes.home;
 ---
 
 <Link url={route}>

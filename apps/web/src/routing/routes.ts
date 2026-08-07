@@ -1,27 +1,11 @@
 import type { Lang } from "@repo/utils/lang";
 
-function venueHome(venue: string, lang: Lang) {
-  return lang === "fr" ? `/${venue}/` : `/en/${venue}/`;
-}
-
-function venueBook(venue: string, lang: Lang) {
-  return lang === "fr" ? `/${venue}/reserver` : `/en/${venue}/book`;
-}
-
-function venueGame(venue: string, game: string) {
-  return `/${venue}/${game}`;
-}
-
-function venueGifting(venue: string, lang: Lang) {
-  return lang === "fr" ? `/${venue}/offrir` : `/${venue}/gift`;
-}
-
 const frenchRoutes = {
   home: "/",
-  venueHome: venueHome,
-  venueBook: venueBook,
-  venueGame: venueGame,
-  venueGifting: venueGifting,
+  venueHome: (venue: string) => `/${venue}/`,
+  venueBook: (venue: string) => `/${venue}/reserver`,
+  venueGame: (venue: string, game: string) => `/${venue}/${game}`,
+  venueGifting: (venue: string) => `/${venue}/offrir`,
   faq: "faq",
   contact: "contact",
   blog: "blog",
@@ -34,10 +18,10 @@ const frenchRoutes = {
 
 const englishRoutes: typeof frenchRoutes = {
   home: "/en/",
-  venueHome: venueHome,
-  venueBook: venueBook,
-  venueGame: venueGame,
-  venueGifting: venueGifting,
+  venueHome: (venue: string) => `/en/${venue}/`,
+  venueBook: (venue: string) => `/en/${venue}/book`,
+  venueGame: (venue: string, game: string) => `/en/${venue}/${game}`,
+  venueGifting: (venue: string) => `/en/${venue}/gift`,
   faq: "faq",
   contact: "contact",
   blog: "blog",

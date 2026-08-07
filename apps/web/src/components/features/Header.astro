@@ -25,7 +25,7 @@ const routes = getRoutesForLang(lang);
 const mainLinks = [
   {
     label: t("header.home"),
-    url: routes.venueHome(venueSlug, lang),
+    url: routes.venueHome(venueSlug),
   },
   {
     label: t("header.experiences"),
@@ -40,13 +40,13 @@ const mainLinks = [
   },
   {
     label: t("header.offerAGame"),
-    url: routes.venueGifting(venueSlug, lang),
+    url: routes.venueGifting(venueSlug),
   },
 ];
 
 const cta = {
   label: t("header.book"),
-  url: routes.venueBook(venueSlug, lang),
+  url: routes.venueBook(venueSlug),
 };
 ---
 
