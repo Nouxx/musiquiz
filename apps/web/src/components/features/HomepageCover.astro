@@ -5,16 +5,18 @@ import type { CmsImage } from "@repo/services/cms/types";
 
 interface Props {
   logo: CmsImage;
+  cover: CmsImage;
   badgeLabel: string;
   heading: string;
 }
 
-const { logo, badgeLabel, heading } = Astro.props;
+const { logo, cover, badgeLabel, heading } = Astro.props;
 ---
 
 <PageCover>
   <div style={{ border: "1px solid black", margin: "2px" }}>
     <p>HomepageCover</p>
+    <RemoteImage image={cover} variant="cover" loading="eager" />
     <RemoteImage image={logo} variant="logo" loading="eager" />
     <p>badgeLabel: {badgeLabel}</p>
     <p>heading: {heading}</p>

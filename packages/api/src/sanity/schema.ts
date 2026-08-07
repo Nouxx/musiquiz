@@ -16,6 +16,7 @@ export const SanityHomepageSchema = z.strictObject({
     badge: z.string().min(1),
     heading: z.string().min(1),
     logo: SanityImageSchema,
+    cover: SanityImageSchema,
   }),
   venues: z.array(
     z.strictObject({

@@ -11,6 +11,11 @@ export const homepageType = defineType({
       type: "imageWithAlt",
     }),
     defineField({
+      name: "cover",
+      title: "Homepage cover",
+      type: "imageWithAlt",
+    }),
+    defineField({
       name: "badge",
       title: "Badge label",
       type: "internationalizedArrayString",
