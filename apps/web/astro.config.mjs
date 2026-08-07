@@ -19,9 +19,18 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.google(),
-      name: "Inter",
-      cssVariable: "--font-inter",
-      weights: [400, 600, 700],
+      name: "Momo Trust Display",
+      cssVariable: "--font-momo-trust-display",
+      // google serves this face at 400 only
+      weights: [400],
+      styles: ["normal"],
+      subsets: ["latin"],
+    },
+    {
+      provider: fontProviders.google(),
+      name: "Funnel Display",
+      cssVariable: "--font-funnel-display",
+      weights: [400, 600],
       styles: ["normal"],
       subsets: ["latin"],
     },

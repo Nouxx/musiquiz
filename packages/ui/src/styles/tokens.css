@@ -1,25 +1,142 @@
-/* Design tokens — two-tier. See docs/adr/0002-css-strategy.md */
-
 :root {
-  /* ---- Primitive tokens ---- */
+  /* ============================================================
+     PRIMITIVE TOKENS
+     ============================================================ */
 
-  /* --font-inter is emitted by the Astro Fonts API at build time (see astro.config.mjs) */
-  /* stylelint-disable-next-line csstools/value-no-unknown-custom-properties */
-  --font-sans: var(--font-inter), system-ui, sans-serif;
+  /* font families are emitted by the Astro Fonts API at build time (astro.config.mjs) */
+  
+  /* stylelint-disable value-keyword-case, csstools/value-no-unknown-custom-properties */
+  --font-title: var(--font-momo-trust-display), system-ui, sans-serif;
+  --font-body: var(--font-funnel-display), system-ui, sans-serif;
+  /* stylelint-enable value-keyword-case, csstools/value-no-unknown-custom-properties */
 
-  /* ---- Semantic tokens ---- */
+  --black: #120500;
+  --white: #f7f3f0;
 
-  /* `font` shorthand = weight size/line-height family. */
-  --text-display: 700 2.5rem/1.1 var(--font-sans);
-  --text-title: 700 2rem/1.2 var(--font-sans);
-  --text-heading: 600 1.25rem/1.3 var(--font-sans);
-  --text-body: 400 1rem/1.5 var(--font-sans);
-  --text-caption: 400 0.875rem/1.4 var(--font-sans);
+  --red-900: #4c0514;
+  --red-500: #e4314b;
+  --red-100: #ffe4e4;
 
-  /* Spacing scale. The only source of gaps/paddings — `Flex`'s `gap`
-     prop maps its union members onto these names. */
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 2rem;
+  --green-900: #172d06;
+  --green-600: #84df1f;
+  --green-100: #e8facd;
+
+  --blue-900: #24194d;
+  --blue-600: #4e31b9;
+  --blue-100: #dfe1ff;
+
+  --yellow-900: #442404;
+  --yellow-600: #ffd200;
+  --yellow-100: #fffec1;
+
+  --grey-800: #3c302c;
+  --grey-600: #655c57;
+  --grey-400: #cdc8c4;
+  --grey-200: #e2ddda;
+  --grey-100: #efeae7;
+
+  --black-40: rgb(18 5 0 / 40%);
+  --black-20: rgb(18 5 0 / 20%);
+  --black-10: rgb(18 5 0 / 10%);
+  --white-80: rgb(247 243 240 / 80%);
+  --white-40: rgb(247 243 240 / 40%);
+  --white-20: rgb(247 243 240 / 20%);
+  --white-10: rgb(247 243 240 / 10%);
+  --blue-900-40: rgb(36 25 77 / 40%);
+
+  --gradient-red: linear-gradient(90deg, #d92363, #ff530a);
+  --gradient-green: linear-gradient(90deg, #12c54b, #a1e513);
+  --gradient-blue: linear-gradient(90deg, #5625bb, #2477b3);
+  --gradient-border: linear-gradient(90deg, #d92363, #ffd200, #12c54b, #5625bb);
+  --gradient-surface: linear-gradient(
+    90deg,
+    #d92363,
+    #ffd200,
+    #12c54b,
+    #5625bb
+  );
+
+  /* 60/72 */
+  --title-h1: 400 clamp(2rem, 1.384rem + 2.629vw, 3.75rem) / 1.2
+    var(--font-title);
+
+  /* 48/54 */
+  --title-h2: 400 clamp(1.75rem, 1.31rem + 1.878vw, 3rem) / 1.125
+    var(--font-title);
+
+  /* 36/44 -> 1.222 */
+  --title-h3: 400 clamp(1.5rem, 1.236rem + 1.127vw, 2.25rem) / 1.22
+    var(--font-title);
+
+  /* 30/38 -> 1.267 */
+  --title-h4: 400 clamp(1.375rem, 1.199rem + 0.751vw, 1.875rem) / 1.27
+    var(--font-title);
+
+  /* 24/30 */
+  --title-h5: 400 clamp(1.25rem, 1.162rem + 0.376vw, 1.5rem) / 1.25
+    var(--font-title);
+
+  /* 18/24 -> 1.333 */
+  --title-xl: 400 1.125rem/1.33 var(--font-title);
+
+  /* 16/22 */
+  --title-base: 400 1rem/1.375 var(--font-title);
+
+  /* 14/18 -> 1.286 */
+  --title-s: 400 0.875rem/1.29 var(--font-title);
+
+  /* 12/16 -> 1.333 */
+  --title-xs: 400 0.75rem/1.33 var(--font-title);
+
+  /* 18/24 -> 1.333 */
+  --paragraph-xl: 400 1.125rem/1.33 var(--font-body);
+  --paragraph-xl-sm: 600 1.125rem/1.33 var(--font-body);
+
+  /* 16/22 */
+  --paragraph-base: 400 1rem/1.375 var(--font-body);
+  --paragraph-base-sm: 600 1rem/1.375 var(--font-body);
+
+  /* 14/20 -> 1.429 */
+  --paragraph-s: 400 0.875rem/1.43 var(--font-body);
+  --paragraph-s-sm: 600 0.875rem/1.43 var(--font-body);
+
+  /* 12/18 */
+  --paragraph-xs: 400 0.75rem/1.5 var(--font-body);
+  --paragraph-xs-sm: 600 0.75rem/1.5 var(--font-body);
+
+  /* simply 4px steps */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* ============================================================
+     SEMANTIC TOKENS
+     ============================================================ */
+
+  --color-surface: var(--white);
+  --color-surface-inverse: var(--blue-900);
+  --color-surface-muted: var(--grey-100);
+
+  --color-overlay: var(--blue-900-40);
+
+  --color-text: var(--black);
+  --color-text-muted: var(--grey-600);
+  --color-text-inverse: var(--white);
+  --color-text-on-media: var(--white);
+
+  --color-accent: var(--red-500);
+  --color-accent-fill: var(--gradient-red);
+  --color-text-on-accent: var(--white);
+
+  --color-border: var(--grey-200);
+  --color-border-brand: var(--gradient-border);
 }

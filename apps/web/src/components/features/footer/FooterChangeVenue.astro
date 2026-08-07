@@ -36,7 +36,7 @@ const remainingVenuesCount = Math.max(
 ---
 
 <Flex direction="column">
-  <Text bold>
+  <Text variant="paragraph-base-sm">
     {t("footer.changeVenue")}
   </Text>
   {venuesWithLink.map((venue) => <Link url={venue.url}>{venue.title}</Link>)}

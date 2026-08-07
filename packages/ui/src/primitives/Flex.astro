@@ -4,7 +4,20 @@ import type { HTMLAttributes } from "astro/types";
 interface Props extends Omit<HTMLAttributes<"div">, "class"> {
   as?: "div" | "ul" | "nav";
   direction?: "row" | "column";
-  gap?: "xs" | "sm" | "md" | "lg";
+  // mirrors the --space-* scale; the number is the 4px step
+  gap?:
+    | "1"
+    | "2"
+    | "3"
+    | "4"
+    | "5"
+    | "6"
+    | "8"
+    | "10"
+    | "12"
+    | "16"
+    | "20"
+    | "24";
   align?: "start" | "center" | "end" | "stretch";
   justify?: "start" | "center" | "end" | "between";
   class?: string;
@@ -13,7 +26,7 @@ interface Props extends Omit<HTMLAttributes<"div">, "class"> {
 const {
   as: Tag = "div",
   direction = "row",
-  gap = "xs",
+  gap = "1",
   align,
   justify,
   class: className,

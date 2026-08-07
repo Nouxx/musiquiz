@@ -32,7 +32,7 @@ const remainingVenuesCount = Math.max(venuesCount - VISIBLE_VENUES_COUNT, 0);
 ---
 
 <Flex direction="column">
-  <Text bold>
+  <Text variant="paragraph-base-sm">
     {t("footer.chooseVenue")}
   </Text>
   {venuesWithLink.map((venue) => <Link url={venue.url}>{venue.label}</Link>)}

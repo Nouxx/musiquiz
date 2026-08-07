@@ -1,17 +1,105 @@
 ---
-interface Props {
-  bold?: boolean;
+export type TextVariant =
+  | "title-h1"
+  | "title-h2"
+  | "title-h3"
+  | "title-h4"
+  | "title-h5"
+  | "title-xl"
+  | "title-base"
+  | "title-s"
+  | "title-xs"
+  | "paragraph-xl"
+  | "paragraph-xl-sm"
+  | "paragraph-base"
+  | "paragraph-base-sm"
+  | "paragraph-s"
+  | "paragraph-s-sm"
+  | "paragraph-xs"
+  | "paragraph-xs-sm";
+
+// exported because rendering through a dynamic `<Tag>` leaves Astro's
+// generated types with no reference to `Props`, and `noUnusedLocals` then
+// reports it as unused
+export interface Props {
+  as?: "span" | "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  variant?: TextVariant;
 }
 
-const { bold = false } = Astro.props;
+const { as: Tag = "span", variant = "paragraph-base" } = Astro.props;
 ---
 
-<span class:list={{ bold }}>
+<Tag class:list={["text", variant]}>
   <slot />
-</span>
+</Tag>
 
 <style>
-  .bold {
-    font-weight: bold;
+  /* one static rule per step so the stylesheet stays hoisted (ADR 0002) */
+  .title-h1 {
+    font: var(--title-h1);
+  }
+
+  .title-h2 {
+    font: var(--title-h2);
+  }
+
+  .title-h3 {
+    font: var(--title-h3);
+  }
+
+  .title-h4 {
+    font: var(--title-h4);
+  }
+
+  .title-h5 {
+    font: var(--title-h5);
+  }
+
+  .title-xl {
+    font: var(--title-xl);
+  }
+
+  .title-base {
+    font: var(--title-base);
+  }
+
+  .title-s {
+    font: var(--title-s);
+  }
+
+  .title-xs {
+    font: var(--title-xs);
+  }
+
+  .paragraph-xl {
+    font: var(--paragraph-xl);
+  }
+
+  .paragraph-xl-sm {
+    font: var(--paragraph-xl-sm);
+  }
+
+  .paragraph-base {
+    font: var(--paragraph-base);
+  }
+
+  .paragraph-base-sm {
+    font: var(--paragraph-base-sm);
+  }
+
+  .paragraph-s {
+    font: var(--paragraph-s);
+  }
+
+  .paragraph-s-sm {
+    font: var(--paragraph-s-sm);
+  }
+
+  .paragraph-xs {
+    font: var(--paragraph-xs);
+  }
+
+  .paragraph-xs-sm {
+    font: var(--paragraph-xs-sm);
   }
 </style>
