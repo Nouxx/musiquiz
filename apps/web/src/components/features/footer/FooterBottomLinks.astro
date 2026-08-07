@@ -22,14 +22,16 @@ const { paymentMethods } = Astro.props;
 ---
 
 <Flex>
-  <Link url={routes.gdpr}>{t("footer.gdpr")}</Link>
-  <Link url={routes.legalsNotice}>{t("footer.legalsNotice")}</Link>
-  <Text>{t("footer.paymentMethods")}</Text>
-</Flex>
-<Flex>
-  {
-    paymentMethods.map((paymentMethod) => (
-      <RemoteImage image={paymentMethod} variant="payment-icon" />
-    ))
-  }
+  <Flex>
+    <Link url={routes.gdpr}>{t("footer.gdpr")}</Link>
+    <Link url={routes.legalsNotice}>{t("footer.legalsNotice")}</Link>
+    <Text>{t("footer.paymentMethods")}</Text>
+  </Flex>
+  <Flex>
+    {
+      paymentMethods.map((paymentMethod) => (
+        <RemoteImage image={paymentMethod} variant="payment-icon" />
+      ))
+    }
+  </Flex>
 </Flex>
