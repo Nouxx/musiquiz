@@ -88,7 +88,8 @@
   --title-xl: 400 1.125rem/1.33 var(--font-title);
 
   /* 16/22 @375 -> 18/24 @1440. */
-  --title-base-xl: 400 clamp(1rem, 0.956rem + 0.188vw, 1.125rem) / 1.35 var(--font-title);
+  --title-base-xl: 400 clamp(1rem, 0.956rem + 0.188vw, 1.125rem) / 1.35
+    var(--font-title);
 
   /* 16/22 */
   --title-base: 400 1rem/1.375 var(--font-title);
@@ -149,8 +150,13 @@
   --color-text-inverse: var(--white);
   --color-text-on-media: var(--white);
   --color-surface-on-media: var(--white-20);
+  --color-text-placeholder: var(--grey-400);
 
   --color-surface-brand: var(--gradient-blue);
+
+  --color-text-on-brand: var(--white);
+  --color-text-on-brand-muted: var(--blue-100);
+  --color-border-on-brand: var(--grey-400);
 
   --color-overlay-pressed: var(--black-10);
 
@@ -176,4 +182,8 @@
   --color-fill-light: var(--white);
   --color-border-light: var(--black);
   --color-text-on-light: var(--black);
+
+  --color-fill-dark: var(--black);
+  --color-border-dark: var(--white);
+  --color-text-on-dark: var(--white);
 }

@@ -1,10 +1,31 @@
-<footer>
-  <slot />
+<footer class="footer">
+  <div class="footer-content">
+    <slot />
+  </div>
 </footer>
 
 <style>
-  footer > :global(* + *) {
-    border-block-start: 1px solid orange;
-    padding: 5px 0;
+  .footer {
+    padding-block: var(--space-20) var(--space-3);
+    padding-inline: var(--space-6);
+    color: var(--color-text-on-brand);
+    background-image: var(--color-surface-brand);
+  }
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    max-inline-size: 78rem;
+    margin-inline: auto;
+  }
+
+  .footer-content > :global(* + *) {
+    padding-block-start: var(--space-10);
+    border-block-start: 1px solid var(--color-border-on-brand);
+  }
+
+  .footer-content > :global(:last-child) {
+    padding-block-start: var(--space-4);
   }
 </style>

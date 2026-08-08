@@ -1,0 +1,42 @@
+---
+import type { IconName } from "../primitives/Icon.astro";
+import IconChip from "../primitives/IconChip.astro";
+import Text from "../primitives/Text.astro";
+
+interface Props {
+  icon: IconName;
+  label: string;
+}
+
+const { icon, label } = Astro.props;
+---
+
+<div class="contact-item">
+  <IconChip name={icon} tone="light" size="s" />
+  <div class="contact-body">
+    <span class="contact-label">
+      <Text variant="paragraph-s">{label}</Text>
+    </span>
+    <slot />
+  </div>
+</div>
+
+<style>
+  .contact-item {
+    display: flex;
+    gap: var(--space-3);
+
+    /* the chip is 24px and the body 42px, so centring would float the icon against the value rather than the label it belongs to */
+    align-items: flex-start;
+  }
+
+  .contact-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .contact-label {
+    color: var(--color-text-on-brand-muted);
+  }
+</style>

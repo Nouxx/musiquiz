@@ -39,10 +39,6 @@ function adaptFooter({ data }: { data: SanityFooter }): Footer {
       label: format.name,
       slug: format.slug,
     })),
-    venuesLink: data.venues.map((venue) => ({
-      label: venue.title,
-      slug: venue.slug,
-    })),
     paymentMethods: acceptedPaymentMethods.map((method) => toCmsImage(method)),
   };
 }

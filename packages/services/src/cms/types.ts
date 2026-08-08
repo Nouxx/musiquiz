@@ -59,7 +59,6 @@ export type Footer = {
   };
   gamesFormatsLinks: GameFormatLinks[];
   newsletter: boolean;
-  venuesLink: { label: string; slug: string }[];
   paymentMethods: CmsImage[];
 };
 
@@ -89,10 +88,5 @@ export type VenueFooter = {
     mapsLink?: string;
   };
   games: GameFormatLinks[];
-  otherVenuesCount: number;
-  otherVenues: {
-    title: string;
-    slug: string;
-  }[];
   paymentMethods: CmsImage[];
 };

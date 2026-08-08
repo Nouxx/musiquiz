@@ -1,12 +1,44 @@
----
-import Flex from "../primitives/Flex.astro";
----
-
-<Flex class="footer-bottom" justify="between" align="center" gap="4">
-  <div class="footer-bottom__left">
-    <slot name="left" />
-  </div>
-  <div class="footer-bottom__right">
+<div class="footer-bottom">
+  <slot name="left" />
+  <ul class="footer-legal">
     <slot name="right" />
-  </div>
-</Flex>
+  </ul>
+</div>
+
+<style>
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-4);
+    align-items: center;
+    justify-content: space-between;
+    color: var(--color-text-on-brand-muted);
+    font: var(--paragraph-s);
+  }
+
+  .footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+  }
+
+  /* reached nested li so aligment is correct */
+  .footer-legal > :global(li) {
+    display: flex;
+    align-items: center;
+  }
+
+  /* the separator is an empty ::before shaped into a dot rather than a "•"
+     character, so it stays out of the accessibility tree and out of the
+     copied text */
+  .footer-legal > :global(li + li)::before {
+    flex: none;
+    inline-size: 0.25rem;
+    block-size: 0.25rem;
+    margin-inline-end: var(--space-3);
+    background: currentcolor;
+    border-radius: 50%;
+    content: "";
+  }
+</style>

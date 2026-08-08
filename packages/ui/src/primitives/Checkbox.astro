@@ -1,0 +1,53 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+import Text from "./Text.astro";
+
+interface Props extends Omit<HTMLAttributes<"input">, "class" | "id" | "type"> {
+  id: string;
+}
+
+const { id, ...rest } = Astro.props;
+---
+
+<label class="checkbox" for={id}>
+  <input {...rest} {id} class="checkbox-control" type="checkbox" />
+  <Text variant="paragraph-xs"><slot /></Text>
+</label>
+
+<style>
+  .checkbox {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .checkbox-control {
+    position: relative;
+    flex-shrink: 0;
+    inline-size: 0.875rem;
+    block-size: 0.875rem;
+    margin-block-end: 2px; /* reserves room for the shadow in the flex row */
+    appearance: none;
+    background: var(--color-fill-light);
+    border: 0.5px solid var(--color-border-light);
+    border-radius: 2px;
+    box-shadow: 0 2px 0 var(--color-border-light);
+  }
+
+  /* the checkmark */
+  .checkbox-control:checked::after {
+    position: absolute;
+    inset: 1px;
+    background: var(--color-text-on-light);
+    border-radius: 1px;
+    content: "";
+  }
+
+  .checkbox-control:focus-visible {
+    outline: 2px solid var(--color-border-on-brand);
+    outline-offset: 2px;
+  }
+</style>

@@ -1,9 +1,9 @@
 ---
 import type { VenueFooter } from "@repo/services/cms/types";
-import Flex from "@repo/ui/primitives/Flex";
-import Text from "@repo/ui/primitives/Text";
+import FooterColumn from "@repo/ui/footer/FooterColumn";
+import IconChip from "@repo/ui/primitives/IconChip";
 import Link from "@repo/ui/primitives/Link";
-import Icon from "@repo/ui/primitives/Icon";
+
 import { getLang } from "../../../libs/getLang";
 import { getT } from "../../../libs/i18n";
 
@@ -29,18 +29,17 @@ const networks = [
 ] as const;
 ---
 
-<Flex>
-  <Text variant="paragraph-base-sm">
-    {t("footer.socials")}
-  </Text>
+<FooterColumn heading={t("footer.socials")} as="ul" direction="row" gap="6">
   {
     networks.map(
       ({ url, icon, label }) =>
         url && (
-          <Link url={url} label={label}>
-            <Icon name={icon} />
-          </Link>
+          <li>
+            <Link {url} ariaLabel={label} target="_blank">
+              <IconChip name={icon} size="xl" />
+            </Link>
+          </li>
         ),
     )
   }
-</Flex>
+</FooterColumn>

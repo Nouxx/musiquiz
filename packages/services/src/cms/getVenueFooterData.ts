@@ -63,11 +63,6 @@ function adaptVenueFooter(data: SanityVenueFooter): VenueFooter {
       label: offer.game.name,
       slug: offer.game.slug,
     })),
-    otherVenues: data.otherVenues.map((venue) => ({
-      title: venue.title,
-      slug: venue.slug,
-    })),
-    otherVenuesCount: data.otherVenues.length,
     paymentMethods: acceptedPaymentMethods.map((method) => toCmsImage(method)),
   };
 }

@@ -1,8 +1,10 @@
 ---
 import type { VenueFooter } from "@repo/services/cms/types";
-import Flex from "@repo/ui/primitives/Flex";
-import Text from "@repo/ui/primitives/Text";
+import ContactItem from "@repo/ui/footer/ContactItem";
+import FooterColumn from "@repo/ui/footer/FooterColumn";
 import Link from "@repo/ui/primitives/Link";
+import Text from "@repo/ui/primitives/Text";
+
 import { getLang } from "../../../libs/getLang";
 import { getT } from "../../../libs/i18n";
 
@@ -13,21 +15,31 @@ interface Props {
 const { contact } = Astro.props;
 
 const t = getT(getLang(Astro));
+
+// todo: done by the service
+const sanitizedNumber = contact.phone.replaceAll(" ", "");
 ---
 
-<Flex direction="column">
-  <Text variant="paragraph-base-sm">
-    {t("footer.contact")}
-  </Text>
-  <Text>
-    {t("footer.phone")} - {contact.phone}
-  </Text>
-  <Text>
-    {t("footer.mail")} - {contact.mail}
-  </Text>
+<FooterColumn heading={t("footer.contact")}>
+  <ContactItem icon="phone" label={t("footer.phone")}>
+    <Link url={`tel:${sanitizedNumber}`} underline={false}>
+      <Text variant="title-s">{contact.phone}</Text>
+    </Link>
+  </ContactItem>
+
+  <ContactItem icon="mail" label={t("footer.mail")}>
+    <Link url={`mailto:${contact.mail}`} underline={false}>
+      <Text variant="title-s">{contact.mail}</Text>
+    </Link>
+  </ContactItem>
+
   {
     contact.mapsLink && (
-      <Link url={contact.mapsLink}>{t("footer.directions")}</Link>
+      <ContactItem icon="pin" label={t("footer.directions")}>
+        <Link url={contact.mapsLink} underline={false} target="_blank">
+          <Text variant="title-s">{t("footer.openDirections")}</Text>
+        </Link>
+      </ContactItem>
     )
   }
-</Flex>
+</FooterColumn>

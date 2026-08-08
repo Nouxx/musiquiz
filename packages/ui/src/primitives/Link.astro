@@ -1,18 +1,35 @@
 ---
-interface Props {
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends Omit<HTMLAttributes<"a">, "href" | "class"> {
   url: string;
   ariaLabel?: string;
+  underline?: boolean;
 }
 
-const { url, ariaLabel: label } = Astro.props;
+const { url, ariaLabel, underline = true, ...rest } = Astro.props;
+
+const rel =
+  rest.target === "_blank" ? (rest.rel ?? "noopener noreferrer") : rest.rel;
 ---
 
-<a class="link" href={url} aria-label={label}>
+<a
+  {...rest}
+  {rel}
+  class:list={["link", underline && "underlined"]}
+  href={url}
+  aria-label={ariaLabel}
+>
   <slot />
 </a>
 
 <style>
-  .link {
+  .underlined {
+    text-decoration: underline;
+  }
+
+  .link:hover,
+  .link:focus-visible {
     text-decoration: underline;
   }
 </style>

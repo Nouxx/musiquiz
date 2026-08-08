@@ -1,0 +1,72 @@
+---
+import type { ComponentProps } from "astro/types";
+
+import Flex from "../primitives/Flex.astro";
+import Text from "../primitives/Text.astro";
+
+// exported because the body renders through `<Flex {as}>`, which leaves Astro's
+// generated types with no reference to `Props`, and `noUnusedLocals` then
+// reports it as unused
+export interface Props {
+  heading: string;
+  as?: "div" | "ul";
+  direction?: "column" | "row";
+  gap?: ComponentProps<typeof Flex>["gap"];
+  tone?: "default" | "muted";
+}
+
+const hasBelow = Astro.slots.has("below");
+
+const {
+  heading,
+  as = "div",
+  direction = "column",
+  gap = "4",
+  tone = "default",
+} = Astro.props;
+---
+
+<div class="footer-column">
+  <Text as="h2" variant="title-xl">{heading}</Text>
+  <Flex
+    {as}
+    {direction}
+    {gap}
+    align="start"
+    class:list={[tone === "muted" && "muted"]}
+  >
+    <slot />
+  </Flex>
+  {
+    hasBelow && (
+      <div class="footer-column-below">
+        <slot name="below" />
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .footer-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-inline-size: 28rem;
+  }
+
+  .muted {
+    color: var(--color-text-on-brand-muted);
+  }
+
+  .footer-column-below {
+    margin-block-start: calc(var(--space-10) - var(--space-4)); /* include column row gap */
+  }
+
+  /* make sure 2 narrows sibling are not on the same row while others larger are on their own row */
+  @media (width < 60rem) {
+    .footer-column {
+      inline-size: 100%;
+      max-inline-size: none;
+    }
+  }
+</style>

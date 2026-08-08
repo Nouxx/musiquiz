@@ -28,10 +28,6 @@ export function fetchFooterQuery({ lang }: { lang: Lang }) {
     "gameFormats": *[_type == "gameFormat"]{
       name,
       "slug": slug.current
-    },
-    "venues": *[_type == "venue"]{
-      title,
-      "slug": slug.current
     }
     }
   `);
@@ -73,10 +69,6 @@ export function fetchVenueFooterQuery({
             "slug": slug.current
           }
         }
-      },
-      "otherVenues": *[_type == "venue" && slug.current != "${venueSlug}"]{
-        title,
-        "slug": slug.current
       }
     }
   `);

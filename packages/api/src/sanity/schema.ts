@@ -54,12 +54,6 @@ export const SanityFooterSchema = z.strictObject({
       slug: z.string().min(1),
     }),
   ),
-  venues: z.array(
-    z.strictObject({
-      title: z.string(),
-      slug: z.string(),
-    }),
-  ),
 });
 
 export const SanityVenueFooterSchema = z.strictObject({
@@ -93,12 +87,6 @@ export const SanityVenueFooterSchema = z.strictObject({
       }),
     ),
   }),
-  otherVenues: z.array(
-    z.strictObject({
-      title: z.string(),
-      slug: z.string(),
-    }),
-  ),
 });
 
 export const SanityVenuesSlugSchema = z.array(

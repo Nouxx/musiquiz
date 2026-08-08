@@ -1,31 +1,35 @@
 ---
+import FooterColumn from "@repo/ui/footer/FooterColumn";
+import Newsletter from "@repo/ui/footer/Newsletter";
+import Button from "@repo/ui/primitives/Button";
+import Checkbox from "@repo/ui/primitives/Checkbox";
+import TextField from "@repo/ui/primitives/TextField";
+
 import { getLang } from "../../../libs/getLang";
 import { getT } from "../../../libs/i18n";
-import Text from "@repo/ui/primitives/Text";
-import Flex from "@repo/ui/primitives/Flex";
 
-const lang = getLang(Astro);
-
-const t = getT(lang);
+const t = getT(getLang(Astro));
 ---
 
-<form>
-  <Flex direction="column">
-    <Text variant="paragraph-base-sm">{t("footer.subscribe")}</Text>
-    <label for="newsletter-mail">{t("footer.mailAddress")}</label>
-    <input
+{
+  /* the form is inert: `Newsletter` swallows the submit until a subscription
+    endpoint exists */
+}
+<FooterColumn heading={t("footer.subscribe")} gap="6">
+  <Newsletter>
+    <TextField
       id="newsletter-mail"
-      type="email"
       name="mail"
+      type="email"
+      label={t("footer.mailAddress")}
       placeholder={t("footer.mailPlaceholder")}
       required
     />
-
-    <Flex>
-      <input id="newsletter-consent" type="checkbox" name="consent" required />
-      <label for="newsletter-consent">{t("footer.newsletterConsent")}</label>
-    </Flex>
-
-    <button type="submit">{t("footer.subscribe")}</button>
-  </Flex>
-</form>
+    <Checkbox slot="consent" id="newsletter-consent" name="consent" required>
+      {t("footer.newsletterConsent")}
+    </Checkbox>
+    <Button slot="cta" type="submit" tone="red" size="m">
+      {t("footer.subscribeCta")}
+    </Button>
+  </Newsletter>
+</FooterColumn>

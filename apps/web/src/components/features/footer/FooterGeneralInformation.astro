@@ -1,10 +1,18 @@
 ---
-import Flex from "@repo/ui/primitives/Flex";
-import Text from "@repo/ui/primitives/Text";
+import FooterColumn from "@repo/ui/footer/FooterColumn";
 import Link from "@repo/ui/primitives/Link";
+import Text from "@repo/ui/primitives/Text";
+
 import { getLang } from "../../../libs/getLang";
 import { getT } from "../../../libs/i18n";
 import { getRoutesForLang } from "../../../routing/routes";
+import FooterChangeLang from "./FooterChangeLang.astro";
+
+interface Props {
+  venueSlug?: string;
+}
+
+const { venueSlug } = Astro.props;
 
 const lang = getLang(Astro);
 
@@ -22,9 +30,20 @@ const links = [
 ];
 ---
 
-<Flex direction="column">
-  <Text variant="paragraph-base-sm">
-    {t("footer.generalInformation")}
-  </Text>
-  {links.map((link) => <Link url={link.url}>{link.label}</Link>)}
-</Flex>
+<FooterColumn
+  heading={t("footer.generalInformation")}
+  as="ul"
+  gap="1"
+  tone="muted"
+>
+  {
+    links.map((link) => (
+      <li>
+        <Link url={link.url} underline={false}>
+          <Text variant="paragraph-s">{link.label}</Text>
+        </Link>
+      </li>
+    ))
+  }
+  <FooterChangeLang slot="below" {venueSlug} />
+</FooterColumn>

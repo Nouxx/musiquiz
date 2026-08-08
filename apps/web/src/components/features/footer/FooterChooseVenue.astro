@@ -1,46 +1,26 @@
 ---
-import type { Footer } from "@repo/services/cms/types";
-import Flex from "@repo/ui/primitives/Flex";
+import FooterColumn from "@repo/ui/footer/FooterColumn";
+import Button from "@repo/ui/primitives/Button";
 import Text from "@repo/ui/primitives/Text";
-import Link from "@repo/ui/primitives/Link";
+
 import { getLang } from "../../../libs/getLang";
 import { getT } from "../../../libs/i18n";
 import { getRoutesForLang } from "../../../routing/routes";
-
-interface Props {
-  venues: Footer["venuesLink"];
-}
-
-const { venues } = Astro.props;
-
-const venuesCount = venues.length;
 
 const lang = getLang(Astro);
 
 const t = getT(lang);
 
-const VISIBLE_VENUES_COUNT = 3;
-
 const routes = getRoutesForLang(lang);
-
-const venuesWithLink = venues.slice(0, VISIBLE_VENUES_COUNT).map((venue) => ({
-  ...venue,
-  url: routes.venueHome(venue.slug),
-}));
-
-const remainingVenuesCount = Math.max(venuesCount - VISIBLE_VENUES_COUNT, 0);
 ---
 
-<Flex direction="column">
-  <Text variant="paragraph-base-sm">
+{
+  /* the design draws this as a dropdown; it is a plain link to the venue
+    picker on the homepage, so it carries no chevron */
+}
+<FooterColumn heading={t("footer.changeVenue")}>
+  <Text variant="paragraph-s">{t("footer.changeVenueDescription")}</Text>
+  <Button as="a" href={routes.home} tone="light" size="s">
     {t("footer.chooseVenue")}
-  </Text>
-  {venuesWithLink.map((venue) => <Link url={venue.url}>{venue.label}</Link>)}
-  {
-    remainingVenuesCount > 0 && (
-      <Link url={routes.home}>
-        {t("footer.moreVenues", { count: remainingVenuesCount })}
-      </Link>
-    )
-  }
-</Flex>
+  </Button>
+</FooterColumn>

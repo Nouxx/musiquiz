@@ -1,0 +1,48 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+import Text from "./Text.astro";
+
+interface Props extends Omit<HTMLAttributes<"input">, "class" | "id"> {
+  id: string;
+  label: string;
+}
+
+const { id, label, ...rest } = Astro.props;
+---
+
+<div class="field">
+  <label for={id}>
+    <Text variant="title-s">{label}</Text>
+  </label>
+  <input {...rest} {id} class="input" />
+</div>
+
+<style>
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    inline-size: 100%;
+  }
+
+  .input {
+    padding-block: var(--space-2);
+    padding-inline: var(--space-4);
+    font: var(--paragraph-base);
+    color: var(--color-text-on-light);
+    background: var(--color-fill-light);
+    border: 1px solid var(--color-border-light);
+    border-block-end-width: 3px;
+    border-radius: 8px;
+  }
+
+  .input::placeholder {
+    color: var(--color-text-placeholder);
+  }
+
+  .input:focus-visible {
+    outline: 2px solid var(--color-border-on-brand);
+    outline-offset: 2px;
+  }
+</style>

@@ -1,8 +1,8 @@
 ---
 import type { Footer } from "@repo/services/cms/types";
-import Flex from "@repo/ui/primitives/Flex";
-import Text from "@repo/ui/primitives/Text";
-import Link from "@repo/ui/primitives/Link";
+import FooterColumn from "@repo/ui/footer/FooterColumn";
+import Button from "@repo/ui/primitives/Button";
+
 import { getLang } from "../../../libs/getLang";
 import { getT } from "../../../libs/i18n";
 
@@ -12,22 +12,24 @@ interface Props {
 
 const { games } = Astro.props;
 
-const lang = getLang(Astro);
-
-const t = getT(lang);
+const t = getT(getLang(Astro));
 
 const gamesWithLink = games.map((game) => ({
   ...game,
-  url: "#todo", // open question: are these page supposed to exists?
+  // there is no per-game page outside a venue yet, and inventing the route
+  // here would hide that. tracked in the footer handover.
+  url: "#todo",
 }));
 ---
 
-<Flex direction="column">
-  <Text variant="paragraph-base-sm">
-    {t("footer.ourGames")}
-  </Text>
+<FooterColumn heading={t("footer.ourGames")} as="ul">
   {
-    gamesWithLink.length > 0 &&
-      gamesWithLink.map((game) => <Link url={game.url}>{game.label}</Link>)
+    gamesWithLink.map((game) => (
+      <li>
+        <Button as="a" href={game.url} tone="light" size="s">
+          {game.label}
+        </Button>
+      </li>
+    ))
   }
-</Flex>
+</FooterColumn>

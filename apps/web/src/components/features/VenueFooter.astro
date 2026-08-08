@@ -1,22 +1,21 @@
 ---
+import { getVenueFooterData } from "@repo/services/cms/getVenueFooterData";
 import Footer from "@repo/ui/Footer";
-import Text from "@repo/ui/primitives/Text";
-import Flex from "@repo/ui/primitives/Flex";
 import FooterBottom from "@repo/ui/footer/FooterBottom";
 import FooterSection from "@repo/ui/footer/FooterSection";
-import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
-import { getVenueFooterData } from "@repo/services/cms/getVenueFooterData";
+import Text from "@repo/ui/primitives/Text";
+
 import { getLang } from "../../libs/getLang";
-import FooterOpenHours from "./footer/FooterOpenHours.astro";
-import FooterContact from "./footer/FooterContact.astro";
-import FooterVenueGames from "./footer/FooterVenueGames.astro";
-import FooterChangeVenue from "./footer/FooterChangeVenue.astro";
-import FooterGeneralInformation from "./footer/FooterGeneralInformation.astro";
-import FooterChangeLang from "./footer/FooterChangeLang.astro";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import FooterBottomLinks from "./footer/FooterBottomLinks.astro";
+import FooterChangeVenue from "./footer/FooterChangeVenue.astro";
+import FooterContact from "./footer/FooterContact.astro";
+import FooterGeneralInformation from "./footer/FooterGeneralInformation.astro";
 import FooterLogo from "./footer/FooterLogo.astro";
-import FooterSocials from "./footer/FooterSocials.astro";
 import FooterNewsletter from "./footer/FooterNewsletter.astro";
+import FooterOpenHours from "./footer/FooterOpenHours.astro";
+import FooterSocials from "./footer/FooterSocials.astro";
+import FooterVenueGames from "./footer/FooterVenueGames.astro";
 
 const lang = getLang(Astro);
 
@@ -32,40 +31,27 @@ const footerData = await getVenueFooterData({
   config: getSanityConfigFromEnvironment(),
 });
 
-const {
-  logo,
-  socials,
-  contact,
-  openHours,
-  games,
-  venueTitle,
-  otherVenues,
-  paymentMethods,
-} = footerData;
+const { logo, socials, contact, openHours, games, venueTitle, paymentMethods } =
+  footerData;
 ---
 
-<div style={{ border: "1px solid black", margin: "2px" }}>
-  <Footer>
-    <FooterSection>
-      <FooterLogo {logo} />
-      <FooterSocials {socials} />
-      <FooterNewsletter />
-    </FooterSection>
+<Footer>
+  <FooterSection align="end">
+    <FooterLogo {logo} />
+    <FooterSocials {socials} />
+    <FooterNewsletter />
+  </FooterSection>
 
-    <FooterSection>
-      <FooterOpenHours {venueTitle} {openHours} />
-      <FooterContact {contact} />
-      <FooterVenueGames {venueSlug} {games} />
-      <FooterChangeVenue {otherVenues} />
-      <Flex direction="column">
-        <FooterGeneralInformation />
-        <FooterChangeLang {venueSlug} />
-      </Flex>
-    </FooterSection>
+  <FooterSection>
+    <FooterOpenHours {venueTitle} {openHours} />
+    <FooterContact {contact} />
+    <FooterVenueGames {venueSlug} {games} />
+    <FooterChangeVenue {venueTitle} />
+    <FooterGeneralInformation {venueSlug} />
+  </FooterSection>
 
-    <FooterBottom>
-      <Text slot="left">© Musi'Quiz 2026</Text>
-      <FooterBottomLinks slot="right" {paymentMethods} />
-    </FooterBottom>
-  </Footer>
-</div>
+  <FooterBottom>
+    <Text slot="left" variant="paragraph-s-sm">© Musi'Quiz 2026</Text>
+    <FooterBottomLinks slot="right" {paymentMethods} />
+  </FooterBottom>
+</Footer>
