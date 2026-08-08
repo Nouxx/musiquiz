@@ -14,6 +14,8 @@ Type Tokens are **single-tier and named for the sheet's own steps** (`--title-h1
 
 Titles carry a `clamp()` between an invented mobile floor and the sheet's desktop value, so there are no typography media queries and no undrawn width behaves badly. Line-heights become unitless ratios (the sheet's `60/72` → `/1.2`) so they scale with the clamp; where rounding moved a ratio, it is noted at the token.
 
+**Amendment**: a Type Token may name a **range between two steps** rather than a single step, written `--title-<from>-<to>` (`--title-base-xl`). This is for a component the sheet draws at two different steps at two different widths — the menu button is `title-base` at its 34px size and `title-xl` at its 48px `Mobile` size. Neither step alone expresses it, and the alternatives were worse: a media query needs a breakpoint no sheet gives, and clamping inside the component puts a raw `px` range in scoped CSS, which is the thing this ADR exists to prevent. The rule that survives is the important one — the token still names what the sheet says, and no name is invented. A range token clamps over 375px → 1440px, the range recovered by solving `--title-h1`'s existing clamp for its endpoints; where the two steps disagree on line-height ratio, the settled ratio and its deviation at both ends are noted at the token.
+
 ## Colour
 
 Primitives mirror the sheet's palette translated to English (`Rouge 500` → `--red-500`) — the repo is English everywhere else, and the FR→EN mapping is written down once in `CONTEXT.md` rather than remembered.
