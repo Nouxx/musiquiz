@@ -21,6 +21,7 @@ export const en: typeof fr = {
     legalsNotice: "Legal Notices",
     chooseVenue: "Choose a venue",
     changeVenue: "Switch venue",
+    ourVenues: "Our venues",
     changeVenueDescription:
       "Musi'Quiz, the new generation of quiz venues for your bachelor/bachelorette parties, team building, and nights out with family or friends!",
     paymentMethods: "Payment methods",

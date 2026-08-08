@@ -6,12 +6,6 @@ import { getLang } from "../../../libs/getLang";
 import { getT } from "../../../libs/i18n";
 import { getRoutesForLang } from "../../../routing/routes";
 
-interface Props {
-  venueTitle: string;
-}
-
-const { venueTitle } = Astro.props;
-
 const lang = getLang(Astro);
 
 const t = getT(lang);
@@ -25,6 +19,6 @@ const routes = getRoutesForLang(lang);
 }
 <FooterColumn heading={t("footer.changeVenue")}>
   <Button as="a" href={routes.home} tone="light" size="s">
-    {venueTitle}
+    {t("footer.ourVenues")}
   </Button>
 </FooterColumn>

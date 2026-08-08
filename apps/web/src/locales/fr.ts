@@ -19,6 +19,7 @@ export const fr = {
     legalsNotice: "Mentions légales",
     chooseVenue: "Choisir un centre",
     changeVenue: "Changez de ville",
+    ourVenues: "Nos centres",
     changeVenueDescription:
       "Musi'Quiz, les salles de quiz nouvelle génération pour vos EVG/EVJF, team building, vos soirées en famille ou entre amis !",
     paymentMethods: "Méthodes de paiement",
