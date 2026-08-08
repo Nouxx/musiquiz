@@ -1,0 +1,72 @@
+---
+import Text from "./Text.astro";
+
+// exported because rendering through a dynamic `<Tag>` leaves Astro's
+// generated types with no reference to `Props`, and `noUnusedLocals` then
+// reports it as unused
+export interface Props {
+  as?: "button" | "a";
+  href?: string;
+  icon?: "chevron-down";
+}
+
+const { as: Tag = "button", href, icon } = Astro.props;
+
+const tagProps = Tag === "a" ? { href } : { type: "button" as const };
+---
+
+<Tag {...tagProps} class="button">
+  <Text variant="title-base"><slot /></Text>
+  {
+    icon === "chevron-down" && (
+      <svg
+        class="icon"
+        viewBox="0 0 12 8"
+        fill="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M1 1.5 6 6.5l5-5"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    )
+  }
+</Tag>
+
+<style>
+  .button {
+    position: relative;
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+    justify-content: center;
+
+    /* tighter on the icon side than the label side */
+    padding: var(--space-3) var(--space-6) var(--space-3) var(--space-8);
+    color: var(--color-text-on-accent);
+    text-align: center;
+    background-image: var(--color-accent-fill);
+
+    /* 999px because at 46px tall (button) the radius already exceeds half the height. Useful if the button has 2 lines of text */
+    border-radius: 999px;
+  }
+
+  .button::before {
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--color-border-accent);
+    border-block-end-width: 3px;
+    border-radius: inherit;
+    content: "";
+  }
+
+  .icon {
+    inline-size: 0.75rem;
+    block-size: auto;
+  }
+</style>

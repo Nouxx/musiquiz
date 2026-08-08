@@ -1,4 +1,88 @@
-<div style={{ border: "1px solid black", margin: "2px" }}>
-  <p>PageCover</p>
-  <slot />
-</div>
+<section class="page-cover">
+  <div class="media"><slot name="media" /></div>
+
+  <div class="logo"><slot name="logo" /></div>
+
+  <div class="stack">
+    <slot />
+    <div class="actions"><slot name="actions" /></div>
+  </div>
+</section>
+
+<style>
+  .page-cover {
+    position: relative;
+    display: grid;
+    place-items: center;
+
+    /* svh, not vh: on mobile the cover must fit the visible viewport rather
+       than sit partly under the browser chrome */
+    min-block-size: 100svh;
+    padding-block: var(--space-10);
+    padding-inline: var(--space-6);
+    overflow: hidden;
+  }
+
+  /* three layers, top to bottom: the scrim (`::after`), the photo (the media
+     slot), and the brand gradient below. The photo is opaque and covers, so
+     the gradient only surfaces while the image is still loading or if it never
+     arrives — the scrim stays over it either way, so that state degrades to
+     the same palette rather than to bare color. */
+  .media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: var(--color-surface-brand);
+  }
+
+  .media :global(picture),
+  .media :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .media::after {
+    position: absolute;
+    inset: 0;
+    background-image: var(--color-overlay);
+    content: "";
+  }
+
+  .logo {
+    position: absolute;
+    inset-block-start: var(--space-10);
+    z-index: 2;
+  }
+
+  .stack {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: center;
+
+    /* the cover frame's content width, 1036px */
+    max-inline-size: 64.75rem;
+    color: var(--color-text-on-media);
+    text-align: center;
+  }
+
+  .actions {
+    margin-block-start: var(--space-10);
+  }
+
+  /* the logo would collide with the stack once the viewport is short */
+  @media (height <= 40rem) {
+    .logo {
+      position: static;
+      margin-block-end: var(--space-6);
+    }
+
+    .page-cover {
+      place-content: center;
+    }
+  }
+</style>

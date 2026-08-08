@@ -1,4 +1,7 @@
 export const fr = {
+  cover: {
+    chooseVenue: "Choisir votre centre Musi'Quiz",
+  },
   header: {
     home: "Accueil",
     experiences: "Nos expériences",

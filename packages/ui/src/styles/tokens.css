@@ -4,7 +4,7 @@
      ============================================================ */
 
   /* font families are emitted by the Astro Fonts API at build time (astro.config.mjs) */
-  
+
   /* stylelint-disable value-keyword-case, csstools/value-no-unknown-custom-properties */
   --font-title: var(--font-momo-trust-display), system-ui, sans-serif;
   --font-body: var(--font-funnel-display), system-ui, sans-serif;
@@ -43,11 +43,19 @@
   --white-20: rgb(247 243 240 / 20%);
   --white-10: rgb(247 243 240 / 10%);
   --blue-900-40: rgb(36 25 77 / 40%);
+  --blue-900-0: rgb(36 25 77 / 0%);
 
   --gradient-red: linear-gradient(90deg, #d92363, #ff530a);
   --gradient-green: linear-gradient(90deg, #12c54b, #a1e513);
   --gradient-blue: linear-gradient(90deg, #5625bb, #2477b3);
-  --gradient-border: linear-gradient(90deg, #d92363, #ffd200, #12c54b, #5625bb);
+  --gradient-border: conic-gradient(
+    from 180deg at 50% 50%,
+    #d92363 0deg,
+    #ffd200 90deg,
+    #a1e513 180deg,
+    #5625bb 270deg,
+    #d92363 360deg
+  );
   --gradient-surface: linear-gradient(
     90deg,
     #d92363,
@@ -125,18 +133,27 @@
   --color-surface: var(--white);
   --color-surface-inverse: var(--blue-900);
   --color-surface-muted: var(--grey-100);
+  --color-surface-translucent: var(--black-40);
 
-  --color-overlay: var(--blue-900-40);
+  --color-overlay: linear-gradient(
+    180deg,
+    var(--blue-900) 0%,
+    var(--blue-900-0) 100%
+  );
 
   --color-text: var(--black);
   --color-text-muted: var(--grey-600);
   --color-text-inverse: var(--white);
   --color-text-on-media: var(--white);
+  
+  --color-surface-brand: var(--gradient-blue);
 
   --color-accent: var(--red-500);
   --color-accent-fill: var(--gradient-red);
   --color-text-on-accent: var(--white);
 
   --color-border: var(--grey-200);
+
+  --color-border-accent: var(--red-900);
   --color-border-brand: var(--gradient-border);
 }

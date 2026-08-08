@@ -1,6 +1,9 @@
 import type { fr } from "./fr";
 
 export const en: typeof fr = {
+  cover: {
+    chooseVenue: "Choose your Musi'Quiz venue",
+  },
   header: {
     home: "Accueil",
     experiences: "Our games",
