@@ -6,7 +6,7 @@ This is the whole point of the design, and it rules out the obvious path: `@sani
 
 ## How a CMS Image reaches the page
 
-A `cmsImage` object in Sanity (an `image` plus an optional localized `alt`) is projected in the service layer into a **descriptor** — `{ url, width, height, mimeType, alt }` — via a single `toCmsImage()` helper. `packages/ui`'s `RemoteImage` UI Component takes that descriptor and renders it. It contains no Sanity knowledge, so it stays a UI Component under ADR 0001 and can be used by `PageCover`, `Icon` and friends without an upward dependency.
+A `cmsImage` object in Sanity (an `image` plus an optional localized `alt`) is projected in the service layer into a **descriptor** — `{ url, width, height, mimeType, alt }` — via a single `toCmsImage()` helper. `packages/ui`'s `RemoteImage` UI Component takes that descriptor and renders it. It contains no Sanity knowledge, so it stays a UI Component under ADR 0001 and can be used by `PageCover` and friends without an upward dependency. It is not how icons are rendered — see [ADR 0007](./0007-icons.md), which covers repo-owned vector marks; `RemoteImage` handles editor-owned artwork only, including the footer's payment marks.
 
 Explicit dimensions are not an optimization: Astro's `verifyOptions` throws `MissingImageDimension` for any string `src`, so a bare URL cannot be rendered at all. They come from `asset->metadata.dimensions`, clamped to the source cap. The alternative, `inferSize: true`, costs a network round trip per image and is unavailable under the preview build's passthrough service.
 

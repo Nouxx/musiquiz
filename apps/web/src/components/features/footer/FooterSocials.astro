@@ -17,6 +17,16 @@ const { tiktokUrl, youtubeUrl, instagramUrl, facebookUrl, linkedinUrl } =
   socials;
 
 const t = getT(getLang(Astro));
+
+// the network name is the link's accessible name, not visible copy: the design
+// renders these as icon-only chips
+const networks = [
+  { url: tiktokUrl, icon: "tiktok", label: "TikTok" },
+  { url: youtubeUrl, icon: "youtube", label: "YouTube" },
+  { url: instagramUrl, icon: "instagram", label: "Instagram" },
+  { url: facebookUrl, icon: "facebook", label: "Facebook" },
+  { url: linkedinUrl, icon: "linkedin", label: "LinkedIn" },
+] as const;
 ---
 
 <Flex>
@@ -24,43 +34,13 @@ const t = getT(getLang(Astro));
     {t("footer.socials")}
   </Text>
   {
-    tiktokUrl && (
-      <Link url={tiktokUrl}>
-        <Icon />
-        Tiktok
-      </Link>
-    )
-  }
-  {
-    youtubeUrl && (
-      <Link url={youtubeUrl}>
-        <Icon />
-        Youtube
-      </Link>
-    )
-  }
-  {
-    instagramUrl && (
-      <Link url={instagramUrl}>
-        <Icon />
-        Instagram
-      </Link>
-    )
-  }
-  {
-    facebookUrl && (
-      <Link url={facebookUrl}>
-        <Icon />
-        Facebook
-      </Link>
-    )
-  }
-  {
-    linkedinUrl && (
-      <Link url={linkedinUrl}>
-        <Icon />
-        LinkedIn
-      </Link>
+    networks.map(
+      ({ url, icon, label }) =>
+        url && (
+          <Link url={url} label={label}>
+            <Icon name={icon} />
+          </Link>
+        ),
     )
   }
 </Flex>

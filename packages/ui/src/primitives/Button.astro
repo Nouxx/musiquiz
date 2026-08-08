@@ -1,5 +1,6 @@
 ---
 import Text from "./Text.astro";
+import Icon, { type IconName } from "./Icon.astro";
 
 // exported because rendering through a dynamic `<Tag>` leaves Astro's
 // generated types with no reference to `Props`, and `noUnusedLocals` then
@@ -7,7 +8,7 @@ import Text from "./Text.astro";
 export interface Props {
   as?: "button" | "a";
   href?: string;
-  icon?: "chevron-down";
+  icon?: IconName;
 }
 
 const { as: Tag = "button", href, icon } = Astro.props;
@@ -17,25 +18,7 @@ const tagProps = Tag === "a" ? { href } : { type: "button" as const };
 
 <Tag {...tagProps} class="button">
   <Text variant="title-base"><slot /></Text>
-  {
-    icon === "chevron-down" && (
-      <svg
-        class="icon"
-        viewBox="0 0 12 8"
-        fill="none"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path
-          d="M1 1.5 6 6.5l5-5"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    )
-  }
+  {icon && <Icon name={icon} size="m" />}
 </Tag>
 
 <style>
@@ -63,10 +46,5 @@ const tagProps = Tag === "a" ? { href } : { type: "button" as const };
     border-block-end-width: 3px;
     border-radius: inherit;
     content: "";
-  }
-
-  .icon {
-    inline-size: 0.75rem;
-    block-size: auto;
   }
 </style>

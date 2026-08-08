@@ -56,6 +56,10 @@ The UI Component that renders an image whose bytes come from outside the repo. I
 **Logo**:
 A brand mark of the business, owned by site settings and editable without a developer. There are exactly two — the **Header Logo** and the **Footer Logo** — and they are different artwork, not two copies of one mark. No other document owns a logo; a page that shows one shows one of these.
 
+**Icon**:
+A small vector mark committed to `packages/ui/src/icons/` and written into the page as inline SVG, so it takes its colour from whatever it sits in. Not a Local Asset: it never touches the image pipeline and never becomes an `<img>`. Icons are code, never content — anything an editor must be able to change is a CMS Image, which is why the footer's payment marks are not Icons despite looking like them.
+_Avoid_: glyph, symbol, pictogram, svg
+
 **Image Variant**:
 A named rendering intent — `logo`, `payment-icon`, `cover` — that a call site picks when it uses a Remote Image. It says what role the image plays on the page, never what size it is. The variant is what binds an image to the layout that sizes it, so the set is closed and lives beside that layout.
 _Avoid_: image size, image preset
