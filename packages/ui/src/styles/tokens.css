@@ -87,6 +87,9 @@
   /* 18/24 -> 1.333 */
   --title-xl: 400 1.125rem/1.33 var(--font-title);
 
+  /* 16/22 @375 -> 18/24 @1440. */
+  --title-base-xl: 400 clamp(1rem, 0.956rem + 0.188vw, 1.125rem) / 1.35 var(--font-title);
+
   /* 16/22 */
   --title-base: 400 1rem/1.375 var(--font-title);
 
@@ -145,15 +148,32 @@
   --color-text-muted: var(--grey-600);
   --color-text-inverse: var(--white);
   --color-text-on-media: var(--white);
-  
+  --color-surface-on-media: var(--white-20);
+
   --color-surface-brand: var(--gradient-blue);
 
+  --color-overlay-pressed: var(--black-10);
+
   --color-accent: var(--red-500);
-  --color-accent-fill: var(--gradient-red);
-  --color-text-on-accent: var(--white);
 
   --color-border: var(--grey-200);
-
-  --color-border-accent: var(--red-900);
   --color-border-brand: var(--gradient-border);
+
+  --color-fill-red: var(--gradient-red);
+
+  --color-border-red: var(--red-900);
+  --color-text-on-red: var(--white);
+
+  --color-fill-blue: var(--gradient-blue);
+  --color-border-blue: var(--blue-900);
+  --color-text-on-blue: var(--white);
+
+  --color-fill-green: var(--gradient-green);
+
+  --color-border-green: var(--green-900);
+  --color-text-on-green: var(--black);
+
+  --color-fill-light: var(--white);
+  --color-border-light: var(--black);
+  --color-text-on-light: var(--black);
 }

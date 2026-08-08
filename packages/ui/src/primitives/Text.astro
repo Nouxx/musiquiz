@@ -6,6 +6,7 @@ export type TextVariant =
   | "title-h4"
   | "title-h5"
   | "title-xl"
+  | "title-base-xl"
   | "title-base"
   | "title-s"
   | "title-xs"
@@ -57,6 +58,10 @@ const { as: Tag = "span", variant = "paragraph-base" } = Astro.props;
 
   .title-xl {
     font: var(--title-xl);
+  }
+
+  .title-base-xl {
+    font: var(--title-base-xl);
   }
 
   .title-base {

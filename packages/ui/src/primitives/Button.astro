@@ -1,50 +1,168 @@
 ---
+import type { HTMLAttributes } from "astro/types";
 import Text from "./Text.astro";
 import Icon, { type IconName } from "./Icon.astro";
+
+type Tone = "red" | "blue" | "green" | "light";
+
+type Size = "l" | "m" | "s";
+
+interface Options {
+  tone?: Tone;
+  size?: Size;
+  icon?: IconName;
+  iconPosition?: "leading" | "trailing";
+}
 
 // exported because rendering through a dynamic `<Tag>` leaves Astro's
 // generated types with no reference to `Props`, and `noUnusedLocals` then
 // reports it as unused
-export interface Props {
-  as?: "button" | "a";
-  href?: string;
-  icon?: IconName;
-}
+export type Props = Options &
+  (
+    | (HTMLAttributes<"button"> & { as?: "button" })
+    | (HTMLAttributes<"a"> & { as: "a"; href: string })
+  );
 
-const { as: Tag = "button", href, icon } = Astro.props;
+const {
+  as: Tag = "button",
+  tone = "red",
+  size = "l",
+  icon,
+  iconPosition = "trailing",
+  class: className,
+  ...rest
+} = Astro.props;
 
-const tagProps = Tag === "a" ? { href } : { type: "button" as const };
+// `type` first so a caller can still pass `type="submit"` through `rest`
+const attrs = {
+  ...(Tag === "button" ? { type: "button" } : {}),
+  ...rest,
+} as Record<string, unknown>;
+
+const iconSize = size === "l" ? "l" : "m";
+const textVariant = size === "s" ? "title-s" : "title-base";
 ---
 
-<Tag {...tagProps} class="button">
-  <Text variant="title-base"><slot /></Text>
-  {icon && <Icon name={icon} size="m" />}
+<Tag
+  {...attrs}
+  class:list={["button", tone, size, icon && iconPosition, className]}
+>
+  {icon && iconPosition === "leading" && <Icon name={icon} size={iconSize} />}
+  <Text variant={textVariant}><slot /></Text>
+  {icon && iconPosition === "trailing" && <Icon name={icon} size={iconSize} />}
 </Tag>
 
 <style>
   .button {
+    /* depth of the "key travel" effect when the button is hovered */
+    --lift: 2px; 
+
     position: relative;
     display: inline-flex;
     gap: var(--space-2);
     align-items: center;
     justify-content: center;
-
-    /* tighter on the icon side than the label side */
-    padding: var(--space-3) var(--space-6) var(--space-3) var(--space-8);
-    color: var(--color-text-on-accent);
+    color: var(--button-text);
     text-align: center;
-    background-image: var(--color-accent-fill);
+    background: var(--button-fill);
 
-    /* 999px because at 46px tall (button) the radius already exceeds half the height. Useful if the button has 2 lines of text */
+    /* 999px because at 46px tall (button) the radius already exceeds half the
+       height. Useful if the button has 2 lines of text */
     border-radius: 999px;
+    box-shadow: 0 var(--lift) 0 var(--button-border);
+    transform: translateY(calc(2px - var(--lift)));
+
+    transition:
+      transform 120ms ease-out,
+      box-shadow 120ms ease-out;
+  }
+
+  .button:hover,
+  .button:focus-visible {
+    --lift: 1px;
+  }
+
+  .button:active {
+    --lift: 0px;
+
+    background: linear-gradient(var(--color-overlay-pressed) 0 0),
+      var(--button-fill);
+    transition-duration: 0s;
   }
 
   .button::before {
     position: absolute;
     inset: 0;
-    border: 1px solid var(--color-border-accent);
-    border-block-end-width: 3px;
+    padding: 1px; /* the ring's thickness */
+    background: var(--button-border);
     border-radius: inherit;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
     content: "";
+  }
+
+  .light:active::before {
+    background: var(--color-border-brand);
+  }
+
+  /* Contrast: white on `--gradient-red` measures 4.35:1 at #d92363 and only
+     2.93:1 at #ff530a. The label is `title-base` — 16px regular, which WCAG
+     counts as normal text and wants 4.5:1, so the orange end fails AA at both
+     the normal and the large threshold. `blue` is 4.36:1 at its light end and
+     fails normal too. Built as drawn: the fix is a palette change and belongs
+     to the design sheet, not to this component. Raised with design 2026-08-08. */
+  .red {
+    --button-fill: var(--color-fill-red);
+    --button-border: var(--color-border-red);
+    --button-text: var(--color-text-on-red);
+  }
+
+  .blue {
+    --button-fill: var(--color-fill-blue);
+    --button-border: var(--color-border-blue);
+    --button-text: var(--color-text-on-blue);
+  }
+
+  .green {
+    --button-fill: var(--color-fill-green);
+    --button-border: var(--color-border-green);
+    --button-text: var(--color-text-on-green);
+  }
+
+  .light {
+    --button-fill: var(--color-fill-light);
+    --button-border: var(--color-border-light);
+    --button-text: var(--color-text-on-light);
+  }
+
+  .l {
+    padding-block: var(--space-3);
+    padding-inline: var(--space-8);
+  }
+
+  .m,
+  .s {
+    padding-block: var(--space-2);
+    padding-inline: var(--space-6);
+  }
+
+  .l.trailing {
+    padding-inline-end: var(--space-6);
+  }
+
+  .l.leading {
+    padding-inline-start: var(--space-6);
+  }
+
+  .m.trailing,
+  .s.trailing {
+    padding-inline-end: var(--space-5);
+  }
+
+  .m.leading,
+  .s.leading {
+    padding-inline-start: var(--space-5);
   }
 </style>
