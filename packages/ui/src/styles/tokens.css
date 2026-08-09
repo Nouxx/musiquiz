@@ -64,6 +64,13 @@
     #5625bb
   );
 
+  --gradient-vivid:
+    radial-gradient(40% 30% at 100% 0%, #120500, rgb(18 5 0 / 0%)),
+    radial-gradient(70% 75% at 100% 100%, #ff0 32%, rgb(255 255 0 / 0%)),
+    radial-gradient(140% 50% at 0% 100%, #2404b2 20%, rgb(36 4 178 / 0%)),
+    radial-gradient(72% 122% at 79% 75%, #d10a68 27%, rgb(209 10 104 / 0%)),
+    linear-gradient(#120500 0 0);
+
   /* 60/72 */
   --title-h1: 400 clamp(2rem, 1.384rem + 2.629vw, 3.75rem) / 1.2
     var(--font-title);
@@ -130,9 +137,14 @@
   --space-20: 5rem;
   --space-24: 6rem;
 
+  --space-section-m: clamp(2.5rem, 1.62rem + 3.756vw, 5rem);
+  --space-section-l: clamp(4rem, 2.768rem + 5.258vw, 7.5rem);
+
   /* ============================================================
      SEMANTIC TOKENS
      ============================================================ */
+
+  --size-content: 78rem;
 
   --color-surface: var(--white);
   --color-surface-inverse: var(--blue-900);
@@ -153,6 +165,7 @@
   --color-text-placeholder: var(--grey-400);
 
   --color-surface-brand: var(--gradient-blue);
+  --color-surface-vivid: var(--gradient-vivid);
 
   --color-text-on-brand: var(--white);
   --color-text-on-brand-muted: var(--blue-100);

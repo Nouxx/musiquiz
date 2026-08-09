@@ -1,0 +1,53 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import type { SpaceScale } from "../types";
+
+interface Props extends Omit<HTMLAttributes<"div">, "class"> {
+  as?: "div" | "ul" | "ol";
+  min?: string; // the intrinsic minimum of a single column;
+  cap?: number; // optional ceiling on the column count
+  gap?: SpaceScale;
+  class?: string;
+}
+
+const {
+  as: Tag = "div",
+  min = "8rem",
+  cap,
+  gap = "1",
+  class: className,
+  ...rest
+} = Astro.props;
+
+// `auto-fill` never creates more columns than the track minimum allows, so
+// capping the count is a matter of raising that minimum
+const trackMin = cap
+  ? `max(var(--grid-min), (100% - (${cap} - 1) * var(--grid-gap)) / ${cap})`
+  : "var(--grid-min)";
+---
+
+<Tag
+  {...rest}
+  class:list={["grid", className]}
+  style={{
+    "--grid-min": min,
+    "--grid-gap": `var(--space-${gap})`,
+    "--grid-track-min": trackMin,
+  }}
+>
+  <slot />
+</Tag>
+
+<style>
+  .grid {
+    display: grid;
+    /* `auto-fill` rather than `auto-fit`: empty tracks are kept, so a row that
+       holds fewer items than the cap leaves gaps instead of stretching the
+       items across the whole row. */
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(var(--grid-track-min), 1fr)
+    );
+    gap: var(--grid-gap, 0);
+  }
+</style>

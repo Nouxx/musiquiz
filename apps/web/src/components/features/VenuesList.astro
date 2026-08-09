@@ -1,22 +1,44 @@
 ---
 import type { Venue } from "@repo/services/cms/types";
+import Section from "@repo/ui/Section";
+import Flex from "@repo/ui/primitives/Flex";
+import Grid from "@repo/ui/primitives/Grid";
+import Badge from "@repo/ui/Badge";
+import Text from "@repo/ui/primitives/Text";
 
-interface Props {
+export interface Props {
   venues: Venue[];
 }
 
-const { venues } = Astro.props;
+const stubVenues = Array.from({ length: 21 }, () => ({
+  label: "AVIGNON",
+  url: "/paris",
+  detail: "84",
+}));
 ---
 
-<div style={{ border: "1px solid black", margin: "2px" }}>
-  <p>VenuesList</p>
-  <ul>
-    {
-      venues.map((venue) => (
-        <a href={venue.slug}>
-          <li>{venue.title}</li>
-        </a>
-      ))
-    }
-  </ul>
-</div>
+<Section surface="vivid">
+  <Flex direction="column" gap="12">
+    <Flex direction="column" gap="3">
+      <Badge>Nos centres</Badge>
+      <Text as="h2" variant="title-h2">
+        Retrouvez nos centres Musi'Quiz près de chez vous !
+      </Text>
+    </Flex>
+
+    <Grid as="ul" min="10rem" cap={3} gap="5">
+      {
+        stubVenues.map((venue) => (
+          <li>
+            <a href={venue.url}>
+              <Flex gap="1">
+                <Text variant="title-xl">{venue.label}</Text>
+                <Text variant="paragraph-base">({venue.detail})</Text>
+              </Flex>
+            </a>
+          </li>
+        ))
+      }
+    </Grid>
+  </Flex>
+</Section>

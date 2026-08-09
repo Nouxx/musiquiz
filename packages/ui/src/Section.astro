@@ -1,0 +1,32 @@
+---
+interface Props {
+  surface?: "default" | "vivid";
+  spacing?: "l" | "m";
+}
+
+const { surface = "default", spacing = "l" } = Astro.props;
+---
+
+<section
+  class:list={["section", surface]}
+  style={{ "--section-spacing": `var(--space-section-${spacing})` }}
+>
+  <div class="content"><slot /></div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--section-spacing);
+    padding-inline: var(--space-6);
+  }
+
+  .content {
+    max-inline-size: var(--size-content);
+    margin-inline: auto;
+  }
+
+  .vivid {
+    color: var(--color-text-on-brand);
+    background-image: var(--color-surface-vivid);
+  }
+</style>
