@@ -1,116 +1,80 @@
 ---
 // THROWAWAY QA route — delete before merging.
 import Layout from "../layouts/Layout.astro";
-import Button from "@repo/ui/primitives/Button";
-import MenuButton from "@repo/ui/primitives/MenuButton";
+import RollingBanner from "@repo/ui/RollingBanner";
+import Section from "@repo/ui/Section";
 
-const tones = ["red", "blue", "green", "light"] as const;
-const sizes = ["l", "m", "s"] as const;
+// the real homepage message
+const realMessage = "Il fait chaud ! Toutes nos salles sont climatisées";
 
-// the real homepage CTA — the longest label the app actually ships
-const longLabel = "Choisir votre centre Musi'Quiz";
+// the case the build-time width estimate is most likely to get wrong: short
+// enough that a wide viewport needs many copies to stay filled
+const shortMessage = "Soldes !";
+
+const longMessage =
+  "Il fait chaud ! Toutes nos salles sont climatisées, et nos équipes vous accueillent sept jours sur sept pour un quiz musical entre amis";
 ---
 
 <Layout>
-  <!-- 1. NAV BAR — MenuButton in its real home: a row on a dark surface.
-       Shrink the viewport to watch the clamp run 34px -> 48px. -->
-  <nav class="bar">
-    <MenuButton href="/">Accueil</MenuButton>
-    <MenuButton href="/" current>Page courante</MenuButton>
-    <details>
-      <MenuButton as="summary" icon="angle-down">Nos centres</MenuButton>
-      <a href="/" class="drop">Un lien</a>
-    </details>
-    <MenuButton as="button" icon="angle-down">Bouton</MenuButton>
-  </nav>
+  <!-- 1. THE REAL CASE — the homepage message, full bleed, flush against
+       whatever sits above and below it. Watch for: a seamless loop (no jump
+       when the track restarts), and no page-level horizontal scrollbar. -->
+  <Section spacing="m">
+    <p class="hint">Above the banner — the strip should sit flush, no margin</p>
+  </Section>
 
-  <!-- 2. PAGE COVER CTA — the PageCover case: one centred button in a padded
-       column. This is where a too-long label overflows now that it cannot
-       wrap; narrow the viewport past ~380px to see it. -->
-  <section class="cover">
-    <p class="hint">Centred CTA, container padding 1.5rem</p>
-    <Button icon="angle-down">{longLabel}</Button>
-  </section>
+  <RollingBanner message={realMessage} />
 
-  <!-- 3. ACTION ROW — two buttons side by side, the common real pairing.
-       Wraps to a column rather than squeezing. -->
-  <section class="panel">
-    <p class="hint">Action row, wraps</p>
-    <div class="actions">
-      <Button icon="arrow-right">Continuer</Button>
-      <Button tone="light">Annuler</Button>
-    </div>
-  </section>
+  <Section spacing="m">
+    <p class="hint">Below the banner</p>
+  </Section>
 
-  <!-- 4. REFERENCE MATRIX — not a real layout. Every tone x size, wrapping so
-       the grid never lies about the buttons' size. -->
-  <section class="panel">
-    <p class="hint">Reference matrix — every tone x size</p>
-    {
-      tones.map((tone) => (
-        <div class="row">
-          {sizes.map((size) => (
-            <Button tone={tone} size={size} icon="arrow-right">
-              Bouton {size}
-            </Button>
-          ))}
-          <Button tone={tone}>Sans icone</Button>
-          <Button tone={tone} icon="pin" iconPosition="leading">
-            Leading
-          </Button>
-          <Button as="a" href="/" tone={tone} size="m" icon="arrow-right">
-            Lien
-          </Button>
-        </div>
-      ))
-    }
-  </section>
+  <!-- 2. SHORT MESSAGE — the fill estimator's hard case. Widen the viewport as
+       far as it goes: a gap must never open between copies. -->
+  <RollingBanner message={shortMessage} />
+
+  <Section spacing="m">
+    <p class="hint">
+      Short message above — 8 characters. Any hole in the strip at any width is
+      the estimator under-provisioning.
+    </p>
+  </Section>
+
+  <!-- 3. LONG MESSAGE — the other end. Speed should read the same as case 1
+       despite the message being ~3x longer; that is the point of deriving the
+       duration from the estimated width. -->
+  <RollingBanner message={longMessage} />
+
+  <Section spacing="m">
+    <p class="hint">
+      Long message above — compare its speed against the first banner. They
+      should look identical, both ~90px/s.
+    </p>
+  </Section>
+
+  <!-- 4. NARROW — shrink to 375px. Text steps down 24px -> 20px on the h5
+       clamp, the 80px gap stays put, the strip keeps its 24px block padding. -->
+  <RollingBanner message={realMessage} />
+
+  <Section spacing="m">
+    <p class="hint">
+      Drag to 375px: type clamps to 20px, gap stays 80px, height ~70px.
+    </p>
+    <p class="hint">
+      Then turn on Reduce Motion (System Settings &gt; Accessibility &gt;
+      Display): every banner should stop dead and stay legible, not blank and
+      not mid-jump.
+    </p>
+  </Section>
 </Layout>
 
 <style>
-  .bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    align-items: center;
-    padding: var(--space-4) var(--space-6);
-    background-color: var(--color-surface-inverse);
-  }
-
-  .drop {
-    display: block;
-    padding: var(--space-2) var(--space-6);
-    color: var(--color-text-on-media);
-  }
-
-  .cover {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    align-items: center;
-    padding: var(--space-12) var(--space-6);
-  }
-
-  .panel {
-    padding: var(--space-8) var(--space-6);
-    border-block-start: 1px solid var(--color-border);
-  }
-
-  .actions,
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-4);
-    align-items: center;
-  }
-
-  .row + .row {
-    margin-block-start: var(--space-4);
-  }
-
   .hint {
-    margin-block-end: var(--space-4);
     font: var(--paragraph-s);
     color: var(--color-text-muted);
+  }
+
+  .hint + .hint {
+    margin-block-start: var(--space-4);
   }
 </style>

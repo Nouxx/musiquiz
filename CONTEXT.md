@@ -20,6 +20,10 @@ _Avoid_: primitive, atom, dumb component
 A business-oriented component in `apps/web/src/components/features/`. Holds business logic / data and composes UI Components to render a domain concept. Example: `QuizCard`, `ScoreBoard`. It carries no `<style>` of its own — everything it renders is a UI Component.
 _Avoid_: business component, smart component, container, block, domain component
 
+**Rolling Banner**:
+A full-bleed strip holding one short message, repeated as many times as the width needs and scrolled horizontally without end. The repetition is a layout mechanic, never content — every copy says the same thing, which is why only the first is readable to assistive tech. How the copy count is decided is [ADR 0008](./docs/adr/0008-rolling-banner-fill-strategy.md).
+_Avoid_: marquee, ticker, carousel, news bar
+
 **Site Chrome**:
 The one kind of Feature Component that fetches its own data instead of receiving it from a Page — `Header`, `Footer`. Its content is site-wide settings, so it belongs to no single page and threading it through every Page would be noise. Any other Feature Component takes its data as props.
 

@@ -183,6 +183,8 @@
   --color-border-red: var(--red-900);
   --color-text-on-red: var(--white);
 
+  --color-text-on-red-muted: var(--red-100);
+
   --color-fill-blue: var(--gradient-blue);
   --color-border-blue: var(--blue-900);
   --color-text-on-blue: var(--white);

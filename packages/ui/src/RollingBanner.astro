@@ -1,0 +1,116 @@
+---
+import Text from "./primitives/Text.astro";
+
+export interface Props {
+  message: string;
+}
+
+const { message } = Astro.props;
+
+/*
+ * How many copies to render is a question CSS cannot answer, so the width of
+ * one copy is *estimated* here at build time and the count derived from it.
+ * The alternative — measuring the real width on the client and cloning — is
+ * written up in docs/adr/0008-rolling-banner-fill-strategy.md.
+ *
+ */
+
+// how fast the strip moves. Only feeds the duration, never the copy count.
+// Deriving the duration from the track width is what keeps a short message and
+// a long one moving at the same visual speed. Pure taste, no sheet says a word
+// about motion — tune by eye.
+const SCROLL_SPEED_PX_PER_SEC = 90;
+
+// the estimate itself: assumed mean glyph advance for Momo Trust Display, so
+// one character is reckoned at 0.45 * 24px. The face really runs ~0.48 (Figma
+// draws the 50-character homepage message at 575px), and under-shooting is the
+// point: too low renders surplus copies, which are clipped and cost nothing,
+// and runs the scroll a few percent fast. Too high renders too few copies and
+// opens a visible hole in the strip. A hole is a bug; slightly fast is not.
+const AVG_GLYPH_WIDTH_EM = 0.45;
+
+// the widest screen the fill has to survive. One half of the track must cover
+// the viewport by itself or the seam shows when the loop restarts, so this sets
+// the copy count. 4K rather than 2560 because copies are text spans — nine of
+// them for the homepage message — and the margin is close to free.
+const WIDEST_VIEWPORT_PX = 3840;
+
+// flat margin on top of the ceiling division, for when the glyph estimate
+// under-shoots by less than expected and a half lands a hair short. Arbitrary,
+// and the cheapest insurance here.
+const EXTRA_COPIES = 2;
+
+// the two values the estimate needs from the token layer, in px:
+// `--title-h5` tops out at 24px, and the gap below is `--space-20`
+const FONT_SIZE_PX = 24;
+const GAP_PX = 80;
+
+const copyWidth = message.length * AVG_GLYPH_WIDTH_EM * FONT_SIZE_PX + GAP_PX;
+
+// the track is two identical halves and scrolls by exactly one of them, so a
+// half must cover the widest viewport on its own for the loop to look seamless
+const copiesPerHalf = Math.ceil(WIDEST_VIEWPORT_PX / copyWidth) + EXTRA_COPIES;
+
+const durationSeconds = (copiesPerHalf * copyWidth) / SCROLL_SPEED_PX_PER_SEC;
+
+const copies = Array.from({ length: copiesPerHalf * 2 });
+---
+
+<div class="banner">
+  <div
+    class="track"
+    style={{ "--rolling-banner-duration": `${durationSeconds}s` }}
+  >
+    {
+      copies.map((_, index) => (
+        // every copy says the same thing, so only the first is left readable
+        <span class="copy" aria-hidden={index === 0 ? undefined : "true"}>
+          <Text variant="title-h5">{message}</Text>
+        </span>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .banner {
+    padding-block: var(--space-6);
+    overflow: hidden;
+    color: var(--color-text-on-red-muted);
+    background-image: var(--color-fill-red);
+  }
+
+  .track {
+    display: flex;
+    inline-size: max-content;
+    animation: scroll var(--rolling-banner-duration) linear infinite;
+  }
+
+  .banner:hover .track,
+  .banner:focus-within .track {
+    animation-play-state: paused;
+  }
+
+  .copy {
+    /* the gap lives on the copy, not on the flex container: every copy is then
+       exactly the same width, which is what makes translating by half the
+       track land on an identical frame */
+    padding-inline-end: var(--space-20);
+    white-space: nowrap;
+  }
+
+  @keyframes scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* the global reset already neuters animations, but it does it by collapsing
+     the duration — which only looks right here because the two halves are
+     identical. Say it outright so a future edit cannot break that quietly. */
+  @media (prefers-reduced-motion: reduce) {
+    .track {
+      animation: none;
+    }
+  }
+</style>
