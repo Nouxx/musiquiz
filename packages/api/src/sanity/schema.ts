@@ -22,6 +22,7 @@ export const SanityHomepageSchema = z.strictObject({
     z.strictObject({
       title: z.string(),
       slug: z.string(),
+      regionCode: z.string(),
     }),
   ),
 });

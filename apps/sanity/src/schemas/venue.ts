@@ -4,6 +4,7 @@ import ImageIcon from "@sanity/icons/Image";
 import JoystickIcon from "@sanity/icons/Joystick";
 import { defineField, defineType } from "sanity";
 import type { Path, Reference, StringRule } from "sanity";
+import { HomeIcon } from "@sanity/icons/Home";
 
 type Offering = {
   _key: string;
@@ -24,6 +25,7 @@ export const venueType = defineType({
   name: "venue",
   title: "Venues",
   type: "document",
+  icon: HomeIcon,
   groups: [
     { name: "pageCover", title: "Page Cover", icon: ImageIcon },
     { name: "contact", title: "Contact", icon: EnvelopeIcon },
@@ -228,6 +230,14 @@ export const venueType = defineType({
       description:
         "Paste it from Google Maps, example: https://share.google/pfpYwPnyAXvmLJ1Su",
       group: "contact",
+    }),
+    defineField({
+      name: "regionCode",
+      title: "Google Maps Link",
+      type: "string",
+      description: "Example: '59' for Lille",
+      group: "contact",
+      validation: (rule) => rule.required(),
     }),
   ],
 });

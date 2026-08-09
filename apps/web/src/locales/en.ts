@@ -4,6 +4,10 @@ export const en: typeof fr = {
   cover: {
     chooseVenue: "Choose your Musi'Quiz venue",
   },
+  venues: {
+    badge: "Our venues",
+    heading: "Find a Musi'Quiz venue near you!",
+  },
   header: {
     home: "Accueil",
     experiences: "Our games",

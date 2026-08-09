@@ -8,17 +8,16 @@ export type CmsImage = {
   alt: string;
 };
 
-export type Venue = {
-  title: string;
-  slug: string;
-};
-
 export type Homepage = {
   logo: CmsImage;
   cover: CmsImage;
   badgeLabel: string;
   heading: string;
-  venues: Venue[];
+  venues: {
+    title: string;
+    slug: string;
+    detail: string;
+  }[];
 };
 
 export type VenueHomepage = {

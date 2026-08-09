@@ -5,13 +5,16 @@ import { type SanityHomepage } from "@repo/api/sanity/types";
 import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
-import type { Homepage, Venue } from "./types";
+import type { Homepage } from "./types";
 import { toCmsImage } from "./utils/toCmsImage";
 
-function adaptVenue(data: SanityHomepage["venues"][number]): Venue {
+function adaptVenue(
+  data: SanityHomepage["venues"][number],
+): Homepage["venues"][number] {
   return {
     title: data.title,
     slug: data.slug,
+    detail: data.regionCode,
   };
 }
 

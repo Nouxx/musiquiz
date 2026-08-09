@@ -1,38 +1,41 @@
 ---
-import type { Venue } from "@repo/services/cms/types";
+import type { Homepage } from "@repo/services/cms/types";
 import Section from "@repo/ui/Section";
 import Flex from "@repo/ui/primitives/Flex";
 import Grid from "@repo/ui/primitives/Grid";
 import Badge from "@repo/ui/Badge";
 import Text from "@repo/ui/primitives/Text";
+import { getLang } from "../../libs/getLang";
+import { getT } from "../../libs/i18n";
+import { getRoutesForLang } from "../../routing/routes";
 
 export interface Props {
-  venues: Venue[];
+  venues: Homepage["venues"];
 }
 
-const stubVenues = Array.from({ length: 21 }, () => ({
-  label: "AVIGNON",
-  url: "/paris",
-  detail: "84",
-}));
+const { venues } = Astro.props;
+
+const lang = getLang(Astro);
+
+const routes = getRoutesForLang(lang);
+
+const t = getT(lang);
 ---
 
 <Section surface="vivid">
   <Flex direction="column" gap="12">
     <Flex direction="column" gap="3">
-      <Badge>Nos centres</Badge>
-      <Text as="h2" variant="title-h2">
-        Retrouvez nos centres Musi'Quiz près de chez vous !
-      </Text>
+      <Badge>{t("venues.badge")}</Badge>
+      <Text as="h2" variant="title-h2">{t("venues.heading")}</Text>
     </Flex>
 
     <Grid as="ul" min="10rem" cap={3} gap="5">
       {
-        stubVenues.map((venue) => (
+        venues.map((venue) => (
           <li>
-            <a href={venue.url}>
+            <a href={routes.venueHome(venue.slug)}>
               <Flex gap="1">
-                <Text variant="title-xl">{venue.label}</Text>
+                <Text variant="title-xl">{venue.title}</Text>
                 <Text variant="paragraph-base">({venue.detail})</Text>
               </Flex>
             </a>

@@ -2,6 +2,10 @@ export const fr = {
   cover: {
     chooseVenue: "Choisir votre centre Musi'Quiz",
   },
+  venues: {
+    badge: "Nos centres",
+    heading: "Retrouvez nos centres Musi'Quiz près de chez vous !",
+  },
   header: {
     home: "Accueil",
     experiences: "Nos expériences",

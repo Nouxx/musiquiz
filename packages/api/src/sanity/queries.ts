@@ -85,7 +85,8 @@ export function fetchHomepageQuery(lang: Lang) {
     },
     "venues": *[_type == "venue"]{
       "title": title,
-      "slug": slug.current
+      "slug": slug.current,
+      regionCode
     }
   }
   `);
