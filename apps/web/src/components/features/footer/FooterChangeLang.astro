@@ -17,22 +17,15 @@ const routes = getRoutesForLang(otherLang);
 
 const route = venueSlug ? routes.venueHome(venueSlug) : routes.home;
 
-// endonyms, so they are readable to whoever the destination is for and stay
-// out of the translation files
 const label = otherLang === "en" ? "English" : "Français";
 ---
 
-{
-  /* the label names the language you land on, not the one you are reading:
-    without a dropdown to open, the button has to describe its destination.
-    todo: `flag-france` stands in for both until design supplies a UK flag. */
-}
 <Button
   as="a"
   href={route}
   tone="light"
   size="s"
-  icon="flag-france"
+  icon={otherLang === "en" ? "flag-uk" : "flag-france"}
   iconPosition="leading"
 >
   {label}
