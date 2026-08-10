@@ -6,47 +6,6 @@ import { pageComponentsProjection } from "./shared/pageComponents";
 
 // todo: why not colocate query + schema + type?
 
-export function fetchVenueFooterQuery({
-  lang,
-  venueSlug,
-}: {
-  lang: Lang;
-  venueSlug: string;
-}) {
-  return defineQuery(`
-    {
-      "siteSettings": *[_type == "siteSettings"][0]{
-        footerLogo ${imageProjection({ lang })},
-        facebookUrl,
-        instagramUrl,
-        linkedinUrl,
-        tiktokUrl,
-        youtubeUrl,
-        "acceptedPaymentMethods": acceptedPaymentMethods[] ${imageProjection({ lang })}
-      },
-      "venue": *[_type == "venue" && slug.current == "${venueSlug}"][0]{
-        title,
-        mondayOpeningHours,
-        tuesdayOpeningHours,
-        wednesdayOpeningHours,
-        thursdayOpeningHours,
-        fridayOpeningHours,
-        saturdayOpeningHours,
-        sundayOpeningHours,
-        mail,
-        phone,
-        googleMapsLink,
-        "offerings": offerings[]{
-          "game": game->{ 
-            name,
-            "slug": slug.current
-          }
-        }
-      }
-    }
-  `);
-}
-
 export function fetchHomepageQuery(lang: Lang) {
   return defineQuery(`
   {

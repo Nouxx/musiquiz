@@ -52,39 +52,6 @@ export const SanityVenueHomepageSchema = z.strictObject({
 
 
 
-export const SanityVenueFooterSchema = z.strictObject({
-  siteSettings: z.strictObject({
-    facebookUrl: z.url(),
-    footerLogo: SanityImageSchema,
-    instagramUrl: z.url(),
-    linkedinUrl: z.url(),
-    tiktokUrl: z.url(),
-    youtubeUrl: z.url(),
-    acceptedPaymentMethods: z.array(SanityImageSchema),
-  }),
-  venue: z.strictObject({
-    title: z.string(),
-    fridayOpeningHours: z.string(),
-    mondayOpeningHours: z.string(),
-    saturdayOpeningHours: z.string(),
-    sundayOpeningHours: z.string(),
-    thursdayOpeningHours: z.string(),
-    tuesdayOpeningHours: z.string(),
-    wednesdayOpeningHours: z.string(),
-    mail: z.email(),
-    phone: z.string(),
-    googleMapsLink: z.string().nullable(),
-    offerings: z.array(
-      z.strictObject({
-        game: z.strictObject({
-          name: z.string(),
-          slug: z.string(),
-        }),
-      }),
-    ),
-  }),
-});
-
 export const SanityVenuesSlugSchema = z.array(
   z.strictObject({ slug: z.string() }),
 );
