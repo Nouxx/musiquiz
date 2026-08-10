@@ -1,6 +1,3 @@
-/* eslint-disable unicorn/max-nested-calls */
-// it's okay to nest zod function calls
-
 import { z } from "zod";
 
 export const SanityImageSchema = z.strictObject({
