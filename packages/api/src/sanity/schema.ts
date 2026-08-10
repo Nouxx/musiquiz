@@ -53,25 +53,7 @@ export const SanityVenueHomepageSchema = z.strictObject({
   }),
 });
 
-export const SanityFooterSchema = z.strictObject({
-  siteSettings: z.strictObject({
-    facebookUrl: z.url(),
-    footerLogo: SanityImageSchema,
-    instagramUrl: z.url(),
-    linkedinUrl: z.url(),
-    mainEmail: z.email(),
-    mainPhone: z.string(),
-    tiktokUrl: z.url(),
-    youtubeUrl: z.url(),
-    acceptedPaymentMethods: z.array(SanityImageSchema),
-  }),
-  gameFormats: z.array(
-    z.strictObject({
-      name: z.string().min(1),
-      slug: z.string().min(1),
-    }),
-  ),
-});
+
 
 export const SanityVenueFooterSchema = z.strictObject({
   siteSettings: z.strictObject({

@@ -1,30 +1,10 @@
 import type { Lang } from "@repo/utils/lang";
 import { defineQuery } from "groq";
 
-import { imageProjection } from "./imageProjection";
-import { pageComponentsProjection } from "./pageComponentsProjection";
+import { imageProjection } from "./shared/imageProjection";
+import { pageComponentsProjection } from "./shared/pageComponentsProjection";
 
 // todo: why not colocate query + schema + type?
-export function fetchFooterQuery({ lang }: { lang: Lang }) {
-  return defineQuery(`{
-    "siteSettings": *[_type == "siteSettings"][0]{
-          footerLogo ${imageProjection({ lang })},
-          facebookUrl,
-          instagramUrl,
-          linkedinUrl,
-          tiktokUrl,
-          youtubeUrl,
-          mainPhone,
-          mainEmail,
-          "acceptedPaymentMethods": acceptedPaymentMethods[] ${imageProjection({ lang })}
-      },
-    "gameFormats": *[_type == "gameFormat"]{
-      name,
-      "slug": slug.current
-    }
-    }
-  `);
-}
 
 export function fetchVenueFooterQuery({
   lang,

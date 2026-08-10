@@ -15,7 +15,8 @@ Rationale for every rule below: [ADR 0009](../../docs/adr/0009-sanity-query-modu
 
 - Pass values as GROQ params (`$lang`, `$venueSlug`). Never interpolate them into query text.
 - Wrap query text in `defineQuery` from `groq`, once.
-- Build the fetch function with `defineSanityQuery<TArgs>()({ query, schema })`. Declare `TArgs` per module.
+- Build the fetch function with `defineSanityQuery<{ lang: Lang }>()({ query, schema })`. Declare the param type per module; it is never inferred.
+- Param names must match the `$name` the query reads. Nothing type-checks that.
 - Use `z.strictObject`.
 
 ## shared/
