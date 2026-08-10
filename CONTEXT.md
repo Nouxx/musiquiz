@@ -1,6 +1,6 @@
 # MusiQuiz
 
-A music quiz web app. This glossary fixes the vocabulary of the `apps/web` design system: the kinds of components, layouts, and styling tokens, and how they relate.
+A music quiz web app. This glossary fixes the vocabulary of the `apps/web` design system — the kinds of components, layouts, and styling tokens, and how they relate — and of the data layer that feeds it.
 
 Musiquiz is a entertainment business that operates in France and provide various activites around music. Its a physical business with real places and this project is just the website to advertise about it and let users reserve their sessions.
 
@@ -40,6 +40,12 @@ _Avoid_: page
 
 **Page**:
 A component in `apps/web/src/components/pages/`. Fetches the data for one screen and composes Feature Components with it. One Page serves every locale's Route for that screen, which is why it is not the routing file. A Page carries no scoped `<style>` and renders no styled raw markup.
+
+## Data
+
+**Query Module**:
+One file in `packages/api/src/sanity/`, holding everything one fetch needs: its GROQ query, the Zod schema that parses the response, the inferred `Sanity*` type, and the fetch function built from the two. There is one per fetch, named after it, and it mirrors one `getXData.ts` in `@repo/services`. A Query Module exposes a call, never a query fragment — the schema stays inside it. Its rules are [ADR 0009](./docs/adr/0009-sanity-query-modules.md).
+_Avoid_: query, fetcher, endpoint, resource, api feature
 
 ## Images
 
