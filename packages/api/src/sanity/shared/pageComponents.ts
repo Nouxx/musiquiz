@@ -1,28 +1,32 @@
+import type { Lang } from "@repo/utils/lang";
 import { z } from "zod";
 
-const rollingBannerProjection = `
-  _type == "rollingBanner" => {
-    "message": message[language == $lang][0].value
-  }
-`;
+function rollingBannerProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "rollingBanner" => {
+      "message": message[language == "${lang}"][0].value
+    }
+  `;
+}
 
-const dummyComponentProjection = `
-  _type == "dummyComponent" => {
-    text
-  }
-`;
+function dummyComponentProjection() {
+  return `
+    _type == "dummyComponent" => {
+      text
+    }
+  `;
+}
 
-/**
- * Projects the `pageComponents` array of any document that owns one. Reads
- * `$lang`, so every query embedding it must declare a `lang` param.
- */
-export const pageComponentsProjection = `
-  pageComponents[]{
-    _type,
-    ${rollingBannerProjection},
-    ${dummyComponentProjection},
-  }
-`;
+/** Projects the `pageComponents` array of any document that owns one. */
+export function pageComponentsProjection({ lang }: { lang: Lang }) {
+  return `
+    pageComponents[]{
+      _type,
+      ${rollingBannerProjection({ lang })},
+      ${dummyComponentProjection()},
+    }
+  `;
+}
 
 const sanityRollingBannerSchema = z.strictObject({
   _type: z.literal("rollingBanner"),

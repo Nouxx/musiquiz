@@ -1,16 +1,16 @@
+import type { Lang } from "@repo/utils/lang";
 import { z } from "zod";
 
-/**
- * Projects a Sanity image field into a CMS Image. Reads `$lang` for the alt
- * text, so every query embedding it must declare a `lang` param.
- */
-export const imageProjection = `{
-  "url": asset->url,
-  "width": asset->metadata.dimensions.width,
-  "height": asset->metadata.dimensions.height,
-  "mimeType": asset->mimeType,
-  "alt": alt[language == $lang][0].value
-}`;
+/** Projects a Sanity image field into a CMS Image, with alt text in `lang`. */
+export function imageProjection({ lang }: { lang: Lang }) {
+  return `{
+    "url": asset->url,
+    "width": asset->metadata.dimensions.width,
+    "height": asset->metadata.dimensions.height,
+    "mimeType": asset->mimeType,
+    "alt": alt[language == "${lang}"][0].value
+  }`;
+}
 
 export const sanityImageSchema = z.strictObject({
   url: z.url(),

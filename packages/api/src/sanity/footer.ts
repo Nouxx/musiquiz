@@ -6,23 +6,25 @@ import { z } from "zod";
 import { fetchSanityData } from "./fetchData";
 import { imageProjection, sanityImageSchema } from "./shared/image";
 
-const footerQuery = defineQuery(`{
-  "siteSettings": *[_type == "siteSettings"][0]{
-    footerLogo ${imageProjection},
-    facebookUrl,
-    instagramUrl,
-    linkedinUrl,
-    tiktokUrl,
-    youtubeUrl,
-    mainPhone,
-    mainEmail,
-    "acceptedPaymentMethods": acceptedPaymentMethods[] ${imageProjection}
-  },
-  "gameFormats": *[_type == "gameFormat"]{
-    name,
-    "slug": slug.current
-  }
-}`);
+function footerQuery({ lang }: { lang: Lang }) {
+  return defineQuery(`{
+    "siteSettings": *[_type == "siteSettings"][0]{
+      footerLogo ${imageProjection({ lang })},
+      facebookUrl,
+      instagramUrl,
+      linkedinUrl,
+      tiktokUrl,
+      youtubeUrl,
+      mainPhone,
+      mainEmail,
+      "acceptedPaymentMethods": acceptedPaymentMethods[] ${imageProjection({ lang })}
+    },
+    "gameFormats": *[_type == "gameFormat"]{
+      name,
+      "slug": slug.current
+    }
+  }`);
+}
 
 const sanityFooterSchema = z.strictObject({
   siteSettings: z.strictObject({
@@ -54,9 +56,8 @@ export async function fetchFooter({
   lang: Lang;
 }) {
   return fetchSanityData({
-    query: footerQuery,
+    query: footerQuery({ lang }),
     schema: sanityFooterSchema,
-    parameters: { lang },
     config,
   });
 }

@@ -1,8 +1,8 @@
 import type { Lang } from "@repo/utils/lang";
 import { defineQuery } from "groq";
 
-import { imageProjection } from "./shared/imageProjection";
-import { pageComponentsProjection } from "./shared/pageComponentsProjection";
+import { imageProjection } from "./shared/image";
+import { pageComponentsProjection } from "./shared/pageComponents";
 
 // todo: why not colocate query + schema + type?
 
