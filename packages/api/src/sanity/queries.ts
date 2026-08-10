@@ -2,28 +2,8 @@ import type { Lang } from "@repo/utils/lang";
 import { defineQuery } from "groq";
 
 import { imageProjection } from "./shared/image";
-import { pageComponentsProjection } from "./shared/pageComponents";
 
 // todo: why not colocate query + schema + type?
-
-export function fetchHomepageQuery(lang: Lang) {
-  return defineQuery(`
-  {
-    "homepage": *[_type == "homepage"][0]{
-      "badge": badge[language == "${lang}"][0].value,
-      "heading": heading[language == "${lang}"][0].value,
-      logo ${imageProjection({ lang })},
-      cover ${imageProjection({ lang })},
-      "pageComponents": ${pageComponentsProjection({ lang })},
-    },
-    "venues": *[_type == "venue"]{
-      "title": title,
-      "slug": slug.current,
-      regionCode
-    },
-  }
-  `);
-}
 
 export function fetchVenuesSlugQuery() {
   return defineQuery(`

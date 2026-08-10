@@ -23,23 +23,6 @@ export const SanityPageComponentSchema = z.discriminatedUnion("_type", [
   SanityDummyComponentSchema,
 ]);
 
-export const SanityHomepageSchema = z.strictObject({
-  homepage: z.strictObject({
-    badge: z.string().min(1),
-    heading: z.string().min(1),
-    logo: SanityImageSchema,
-    cover: SanityImageSchema,
-    pageComponents: z.array(SanityPageComponentSchema).nullable(),
-  }),
-  venues: z.array(
-    z.strictObject({
-      title: z.string(),
-      slug: z.string(),
-      regionCode: z.string(),
-    }),
-  ),
-});
-
 export const SanityVenueHomepageSchema = z.strictObject({
   pageCover: z.strictObject({
     pageCoverMedia: SanityImageSchema,
