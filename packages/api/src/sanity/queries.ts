@@ -1,41 +1,8 @@
 import type { Lang } from "@repo/utils/lang";
 import { defineQuery } from "groq";
 
-function imageProjection({ lang }: { lang: Lang }) {
-  return `{
-    "url": asset->url,
-    "width": asset->metadata.dimensions.width,
-    "height": asset->metadata.dimensions.height,
-    "mimeType": asset->mimeType,
-    "alt": alt[language == "${lang}"][0].value
-  }`;
-}
-
-function rollingBannerProjection({ lang }: { lang: Lang }) {
-  return `
-    _type == "rollingBanner" => {
-      "message": message[language == "${lang}"][0].value
-    }
-  `;
-}
-
-function dummyProjection() {
-  return `
-    _type == "dummyComponent" => {
-      text
-    }
-  `;
-}
-
-function pageComponentsProjection({ lang }: { lang: Lang }) {
-  return `
-    pageComponents[]{
-      _type,
-      ${rollingBannerProjection({ lang })},
-      ${dummyProjection()},
-    }
-  `;
-}
+import { imageProjection } from "./imageProjection";
+import { pageComponentsProjection } from "./pageComponentsProjection";
 
 // todo: why not colocate query + schema + type?
 export function fetchFooterQuery({ lang }: { lang: Lang }) {
