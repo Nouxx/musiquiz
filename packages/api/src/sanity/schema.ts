@@ -23,6 +23,3 @@ export const SanityPageComponentSchema = z.discriminatedUnion("_type", [
   SanityDummyComponentSchema,
 ]);
 
-export const SanityVenuesSlugSchema = z.array(
-  z.strictObject({ slug: z.string() }),
-);
