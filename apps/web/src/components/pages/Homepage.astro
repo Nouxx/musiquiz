@@ -1,6 +1,6 @@
 ---
 import { getHomepageData } from "@repo/services/cms/getHomepageData";
-import HomepageBanner from "../features/HomepageBanner.astro";
+import PageComponents from "../features/PageComponents.astro";
 import HomepageCover from "../features/HomepageCover.astro";
 import VenuesList from "../features/VenuesList.astro";
 import Footer from "../features/Footer.astro";
@@ -24,7 +24,7 @@ const pageData = await getHomepageData({
   heading={pageData.heading}
 />
 
-<HomepageBanner />
+<PageComponents components={pageData.components} />
 
 <VenuesList venues={pageData.venues} />
 

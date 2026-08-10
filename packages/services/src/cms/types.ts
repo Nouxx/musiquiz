@@ -1,3 +1,5 @@
+import type { PageComponent } from "./pageComponent.types";
+
 export type CmsImage = {
   url: string;
   // `width` and `height` are the dimensions of the image the `url` points at,
@@ -18,6 +20,7 @@ export type Homepage = {
     slug: string;
     detail: string;
   }[];
+  components: PageComponent[];
 };
 
 export type VenueHomepage = {

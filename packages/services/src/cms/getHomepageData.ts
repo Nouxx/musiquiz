@@ -6,6 +6,7 @@ import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { Homepage } from "./types";
+import { adaptPageComponent } from "./utils/adaptPageComponent";
 import { toCmsImage } from "./utils/toCmsImage";
 
 function adaptVenue(
@@ -20,12 +21,16 @@ function adaptVenue(
 
 function adaptHomepage(data: SanityHomepage): Homepage {
   const { badge, cover, heading, logo } = data.homepage;
+
   return {
     logo: toCmsImage(logo),
     cover: toCmsImage(cover),
     badgeLabel: badge,
     heading,
     venues: data.venues.map((venue) => adaptVenue(venue)),
+    components: data.homepage.pageComponents?.map((component) =>
+      adaptPageComponent(component),
+    ) ?? [],
   };
 }
 

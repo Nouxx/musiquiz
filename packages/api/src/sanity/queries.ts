@@ -11,6 +11,32 @@ function imageProjection({ lang }: { lang: Lang }) {
   }`;
 }
 
+function rollingBannerProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "rollingBanner" => {
+      "message": message[language == "${lang}"][0].value
+    }
+  `;
+}
+
+function dummyProjection() {
+  return `
+    _type == "dummyComponent" => {
+      text
+    }
+  `;
+}
+
+function pageComponentsProjection({ lang }: { lang: Lang }) {
+  return `
+    pageComponents[]{
+      _type,
+      ${rollingBannerProjection({ lang })},
+      ${dummyProjection()},
+    }
+  `;
+}
+
 // todo: why not colocate query + schema + type?
 export function fetchFooterQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
@@ -81,13 +107,14 @@ export function fetchHomepageQuery(lang: Lang) {
       "badge": badge[language == "${lang}"][0].value,
       "heading": heading[language == "${lang}"][0].value,
       logo ${imageProjection({ lang })},
-      cover ${imageProjection({ lang })}
+      cover ${imageProjection({ lang })},
+      "pageComponents": ${pageComponentsProjection({ lang })},
     },
     "venues": *[_type == "venue"]{
       "title": title,
       "slug": slug.current,
       regionCode
-    }
+    },
   }
   `);
 }

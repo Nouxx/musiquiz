@@ -24,6 +24,10 @@ export const homepageType = defineType({
       name: "heading",
       type: "internationalizedArrayString",
     }),
+    defineField({
+      name: "pageComponents",
+      type: "pageComponents",
+    }),
   ],
   preview: {
     prepare() {

@@ -1,0 +1,23 @@
+---
+import type { PageComponent } from "@repo/services/cms/pageComponent.types";
+import RollingBanner from "@repo/ui/RollingBanner";
+
+interface Props {
+  components: PageComponent[];
+}
+
+const { components } = Astro.props;
+---
+
+{
+  components.map((component) => {
+    switch (component.type) {
+      case "rollingBanner": {
+        return <RollingBanner message={component.message} />;
+      }
+      case "dummyComponent": {
+        return <p>{component.text}</p>;
+      }
+    }
+  })
+}

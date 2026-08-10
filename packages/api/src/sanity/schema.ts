@@ -11,12 +11,28 @@ export const SanityImageSchema = z.strictObject({
   alt: z.string().min(1).nullable(),
 });
 
+const SanityRollingBannerSchema = z.strictObject({
+  _type: z.literal("rollingBanner"),
+  message: z.string().min(1),
+});
+
+const SanityDummyComponentSchema = z.strictObject({
+  _type: z.literal("dummyComponent"),
+  text: z.string().min(1),
+});
+
+export const SanityPageComponentSchema = z.discriminatedUnion("_type", [
+  SanityRollingBannerSchema,
+  SanityDummyComponentSchema,
+]);
+
 export const SanityHomepageSchema = z.strictObject({
   homepage: z.strictObject({
     badge: z.string().min(1),
     heading: z.string().min(1),
     logo: SanityImageSchema,
     cover: SanityImageSchema,
+    pageComponents: z.array(SanityPageComponentSchema).nullable(),
   }),
   venues: z.array(
     z.strictObject({
