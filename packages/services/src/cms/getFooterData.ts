@@ -1,7 +1,4 @@
-import { fetchSanityData } from "@repo/api/sanity/fetchData";
-import { fetchFooterQuery } from "@repo/api/sanity/queries";
-import { SanityFooterSchema } from "@repo/api/sanity/schema";
-import { type SanityFooter } from "@repo/api/sanity/types";
+import { fetchFooter, type SanityFooter } from "@repo/api/sanity/footer";
 import type { Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
@@ -50,11 +47,7 @@ export async function getFooterData({
   lang: Lang;
   config: SanityConfig;
 }) {
-  const data = await fetchSanityData({
-    query: fetchFooterQuery({ lang }),
-    schema: SanityFooterSchema,
-    config,
-  });
+  const data = await fetchFooter({ config, lang });
 
   return adaptFooter({ data });
 }

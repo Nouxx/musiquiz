@@ -1,7 +1,7 @@
-import { fetchSanityData } from "@repo/api/sanity/fetchData";
-import { fetchVenueHomepageQuery } from "@repo/api/sanity/queries";
-import { SanityVenueHomepageSchema } from "@repo/api/sanity/schema";
-import type { SanityVenueHomepage } from "@repo/api/sanity/types";
+import {
+  fetchVenueHomepage,
+  type SanityVenueHomepage,
+} from "@repo/api/sanity/venueHomepage";
 import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
@@ -37,11 +37,7 @@ export async function getVenueHomepageData({
   lang: Lang;
   config: SanityConfig;
 }) {
-  const data = await fetchSanityData({
-    query: fetchVenueHomepageQuery({ venueSlug, lang }),
-    schema: SanityVenueHomepageSchema,
-    config,
-  });
+  const data = await fetchVenueHomepage({ config, lang, venueSlug });
 
   return adaptVenueHomepage(data);
 }

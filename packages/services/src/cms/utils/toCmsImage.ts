@@ -1,4 +1,4 @@
-import type { SanityImage } from "@repo/api/sanity/types";
+import type { SanityImage } from "@repo/api/sanity/shared/image";
 
 import type { CmsImage } from "../types";
 

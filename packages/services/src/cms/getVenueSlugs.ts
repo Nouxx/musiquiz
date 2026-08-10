@@ -1,14 +1,8 @@
-import { fetchSanityData } from "@repo/api/sanity/fetchData";
-import { fetchVenuesSlugQuery } from "@repo/api/sanity/queries";
-import { SanityVenuesSlugSchema } from "@repo/api/sanity/schema";
+import { fetchVenueSlugs } from "@repo/api/sanity/venueSlugs";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 export async function getVenueSlugs({ config }: { config: SanityConfig }) {
-  const data = await fetchSanityData({
-    query: fetchVenuesSlugQuery(),
-    schema: SanityVenuesSlugSchema,
-    config,
-  });
+  const data = await fetchVenueSlugs({ config });
 
   return data.map((venue) => venue.slug);
 }

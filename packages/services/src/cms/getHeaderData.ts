@@ -1,7 +1,4 @@
-import { fetchSanityData } from "@repo/api/sanity/fetchData";
-import { fetchHeaderQuery } from "@repo/api/sanity/queries";
-import { SanityHeaderSchema } from "@repo/api/sanity/schema";
-import type { SanityHeader } from "@repo/api/sanity/types";
+import { fetchHeader, type SanityHeader } from "@repo/api/sanity/header";
 import type { Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
@@ -27,11 +24,7 @@ export async function getHeaderData({
   lang: Lang;
   venueSlug: string;
 }) {
-  const data = await fetchSanityData({
-    query: fetchHeaderQuery({ lang, venueSlug }),
-    schema: SanityHeaderSchema,
-    config,
-  });
+  const data = await fetchHeader({ config, lang, venueSlug });
 
   return adaptHeader(data);
 }

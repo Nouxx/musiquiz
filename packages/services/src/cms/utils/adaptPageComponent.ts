@@ -1,4 +1,4 @@
-import type { SanityPageComponent } from "@repo/api/sanity/types";
+import type { SanityPageComponent } from "@repo/api/sanity/shared/pageComponents";
 
 import type { PageComponent } from "../pageComponent.types";
 

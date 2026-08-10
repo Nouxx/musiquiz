@@ -1,7 +1,4 @@
-import { fetchSanityData } from "@repo/api/sanity/fetchData";
-import { fetchHomepageQuery } from "@repo/api/sanity/queries";
-import { SanityHomepageSchema } from "@repo/api/sanity/schema";
-import { type SanityHomepage } from "@repo/api/sanity/types";
+import { fetchHomepage, type SanityHomepage } from "@repo/api/sanity/homepage";
 import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
@@ -28,9 +25,10 @@ function adaptHomepage(data: SanityHomepage): Homepage {
     badgeLabel: badge,
     heading,
     venues: data.venues.map((venue) => adaptVenue(venue)),
-    components: data.homepage.pageComponents?.map((component) =>
-      adaptPageComponent(component),
-    ) ?? [],
+    components:
+      data.homepage.pageComponents?.map((component) =>
+        adaptPageComponent(component),
+      ) ?? [],
   };
 }
 
@@ -41,11 +39,7 @@ export async function getHomepageData({
   lang: Lang;
   config: SanityConfig;
 }) {
-  const data = await fetchSanityData({
-    query: fetchHomepageQuery(lang),
-    schema: SanityHomepageSchema,
-    config,
-  });
+  const data = await fetchHomepage({ config, lang });
 
   return adaptHomepage(data);
 }
