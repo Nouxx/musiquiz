@@ -1,7 +1,6 @@
 import type { Lang } from "@repo/utils/lang";
 import { z } from "zod";
 
-/** Projects a Sanity image field into a CMS Image, with alt text in `lang`. */
 export function imageProjection({ lang }: { lang: Lang }) {
   return `{
     "url": asset->url,

@@ -17,7 +17,6 @@ function dummyComponentProjection() {
   `;
 }
 
-/** Projects the `pageComponents` array of any document that owns one. */
 export function pageComponentsProjection({ lang }: { lang: Lang }) {
   return `
     pageComponents[]{
