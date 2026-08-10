@@ -1,8 +1,9 @@
 import type { Lang } from "@repo/utils/lang";
+import type { SanityConfig } from "@repo/utils/sanityConfig";
 import { defineQuery } from "groq";
 import { z } from "zod";
 
-import { defineSanityQuery } from "./defineSanityQuery";
+import { fetchSanityData } from "./fetchData";
 import { imageProjection, sanityImageSchema } from "./shared/image";
 
 const footerQuery = defineQuery(`{
@@ -45,7 +46,17 @@ const sanityFooterSchema = z.strictObject({
 
 export type SanityFooter = z.infer<typeof sanityFooterSchema>;
 
-export const fetchFooter = defineSanityQuery<{ lang: Lang }>()({
-  query: footerQuery,
-  schema: sanityFooterSchema,
-});
+export async function fetchFooter({
+  config,
+  lang,
+}: {
+  config: SanityConfig;
+  lang: Lang;
+}) {
+  return fetchSanityData({
+    query: footerQuery,
+    schema: sanityFooterSchema,
+    parameters: { lang },
+    config,
+  });
+}

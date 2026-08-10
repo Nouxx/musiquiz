@@ -15,8 +15,8 @@ Rationale for every rule below: [ADR 0009](../../docs/adr/0009-sanity-query-modu
 
 - Pass values as GROQ params (`$lang`, `$venueSlug`). Never interpolate them into query text.
 - Wrap query text in `defineQuery` from `groq`, once.
-- Build the fetch function with `defineSanityQuery<{ lang: Lang }>()({ query, schema })`. Declare the param type per module; it is never inferred.
-- Param names must match the `$name` the query reads. Nothing type-checks that.
+- Write the fetch function by hand: an `async function` taking `{ config, …params }` that returns `fetchSanityData({ query, schema, parameters, config })`.
+- Keys in `parameters` must match the `$name`s the query reads. Nothing type-checks that — read them off the same screen.
 - Use `z.strictObject`.
 
 ## shared/
@@ -27,4 +27,4 @@ Rationale for every rule below: [ADR 0009](../../docs/adr/0009-sanity-query-modu
 
 ## Repo style
 
-- Declare functions with `function`. No `const fn = () => {}`. The one exception is a function returned by a factory, e.g. `export const fetchFooter = defineSanityQuery…`.
+- Declare functions with `function`. No `const fn = () => {}`.
