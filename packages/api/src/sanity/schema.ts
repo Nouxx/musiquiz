@@ -55,17 +55,3 @@ export const SanityVenueHomepageSchema = z.strictObject({
 export const SanityVenuesSlugSchema = z.array(
   z.strictObject({ slug: z.string() }),
 );
-
-export const SanityHeaderSchema = z.strictObject({
-  siteSettings: z.strictObject({
-    headerLogo: SanityImageSchema,
-  }),
-  gameFormats: z.array(
-    z.strictObject({
-      game: z.strictObject({
-        name: z.string(),
-        slug: z.string(),
-      }),
-    }),
-  ),
-});
