@@ -12,6 +12,7 @@ type Offering = {
   price?: number;
 };
 
+// todo: i18n, "Fermé" is french
 function openingTimeValidation(rule: StringRule) {
   return [
     rule.required().error("Opening hours are required"),
