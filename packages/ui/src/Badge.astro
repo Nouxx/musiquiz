@@ -6,7 +6,6 @@ interface Props {
   // media, `light` the opaque one for plain surfaces
   color?: "dark" | "light";
   size?: "large" | "small";
-  // the sheet draws the badge level, but every page that uses one tilts it
   tilt?: boolean;
 }
 
@@ -44,10 +43,6 @@ const { color = "dark", size = "large", tilt = true } = Astro.props;
     color: var(--color-text-on-media);
     background-color: var(--color-surface-translucent);
 
-    /* only on the translucent variant — behind `light`'s opaque fill there is
-       nothing to blur, and the layer would still cost a compositing pass.
-       Prefixed too: Safari only dropped `-webkit-` at 18, and nothing in the
-       repo autoprefixes (no browserslist, no postcss). */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
@@ -57,23 +52,10 @@ const { color = "dark", size = "large", tilt = true } = Astro.props;
     background-color: var(--color-surface);
   }
 
-  /* INVENTED direction: the sheet gives the 2deg, no sheet says which way.
-     Taken from the homepage cover mockup — right end up, left end down. */
   .tilt {
     transform: rotate(-2deg);
   }
 
-  /* the brand gradient is an image, so it cannot go on `border-color`, and the
-     padding-box/border-box background trick does not work here either: the
-     fill is translucent, so the gradient shows through the whole pill instead
-     of only its edge. A masked ring keeps the fill see-through.
-
-     Figma exports this as `border-image-source`, which is not usable: border
-     images ignore `border-radius` and would square off the corners.
-
-     The uneven padding is the sheet's 1px/1px/3px/1px border. Drawing it as an
-     overlay rather than a real border is also what keeps the box at the
-     sheet's height, where the stroke sits inside the padding. */
   .badge::before {
     position: absolute;
     inset: 0;
