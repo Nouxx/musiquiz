@@ -16,8 +16,7 @@ const t = getT(getLang(Astro));
 
 const gamesWithLink = games.map((game) => ({
   ...game,
-  // there is no per-game page outside a venue yet, and inventing the route
-  // here would hide that. tracked in the footer handover.
+  // TODO: do we create games page outside of a venue context?
   url: "#todo",
 }));
 ---
