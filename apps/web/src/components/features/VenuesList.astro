@@ -7,7 +7,6 @@ import Badge from "@repo/ui/Badge";
 import Text from "@repo/ui/primitives/Text";
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
-import { getRoutesForLang } from "../../routing/routes";
 
 export interface Props {
   venues: Homepage["venues"];
@@ -16,8 +15,6 @@ export interface Props {
 const { venues } = Astro.props;
 
 const lang = getLang(Astro);
-
-const routes = getRoutesForLang(lang);
 
 const t = getT(lang);
 ---
@@ -33,7 +30,7 @@ const t = getT(lang);
       {
         venues.map((venue) => (
           <li>
-            <a href={routes.venueHome(venue.slug)}>
+            <a href={venue.url}>
               <Flex gap="1">
                 <Text variant="title-xl">{venue.title}</Text>
                 <Text variant="paragraph-base">({venue.detail})</Text>

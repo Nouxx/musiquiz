@@ -5,8 +5,8 @@ import Text from "@repo/ui/primitives/Text";
 
 import { getLang } from "../../../libs/getLang";
 import { getT } from "../../../libs/i18n";
-import { getRoutesForLang } from "../../../routing/routes";
 import FooterChangeLang from "./FooterChangeLang.astro";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 
 interface Props {
   venueSlug?: string;

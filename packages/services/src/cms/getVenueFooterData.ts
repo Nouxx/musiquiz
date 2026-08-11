@@ -5,10 +5,19 @@ import {
 import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
+import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { VenueFooter } from "./types";
 import { toCmsImage } from "./utils/toCmsImage";
 
-function adaptVenueFooter(data: SanityVenueFooter): VenueFooter {
+function adaptVenueFooter({
+  data,
+  lang,
+  venueSlug,
+}: {
+  data: SanityVenueFooter;
+  lang: Lang;
+  venueSlug: string;
+}): VenueFooter {
   const {
     footerLogo,
     facebookUrl,
@@ -61,7 +70,7 @@ function adaptVenueFooter(data: SanityVenueFooter): VenueFooter {
     },
     games: offerings.map((offer) => ({
       label: offer.game.name,
-      slug: offer.game.slug,
+      url: getRoutesForLang(lang).venueGame(venueSlug, offer.game.slug),
     })),
     paymentMethods: acceptedPaymentMethods.map((method) => toCmsImage(method)),
   };
@@ -78,5 +87,5 @@ export async function getVenueFooterData({
 }) {
   const data = await fetchVenueFooter({ config, lang, venueSlug });
 
-  return adaptVenueFooter(data);
+  return adaptVenueFooter({ data, lang, venueSlug });
 }

@@ -2,7 +2,7 @@
 import Button from "@repo/ui/primitives/Button";
 
 import { getLang } from "../../../libs/getLang";
-import { getRoutesForLang } from "../../../routing/routes";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 
 const currentLang = getLang(Astro);
 const otherLang = currentLang === "fr" ? "en" : "fr";

@@ -17,7 +17,7 @@ export type Homepage = {
   heading: string;
   venues: {
     title: string;
-    slug: string;
+    url: string;
     detail: string;
   }[];
   components: PageComponent[];
@@ -40,13 +40,13 @@ export type Header = {
   logo: CmsImage;
   experiences: {
     label: string;
-    slug: string;
+    url: string;
   }[];
 };
 
 export type GameFormatLinks = {
   label: string;
-  slug: string;
+  url: string;
 };
 
 export type Footer = {

@@ -1,7 +1,7 @@
 ---
 import VenueHomepage from "../../../components/pages/VenueHomepage.astro";
 import VenueLayout from "../../../layouts/VenueLayout.astro";
-import { getVenuesSlugParameters } from "../../../routing/getVenuesSlugParameters";
+import { getVenuesSlugParameters } from "../../../libs/getVenuesSlugParameters";
 
 export async function getStaticPaths() {
   const params = await getVenuesSlugParameters();

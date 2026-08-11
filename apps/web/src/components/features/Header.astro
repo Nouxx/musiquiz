@@ -2,9 +2,9 @@
 import Header from "@repo/ui/Header";
 import { getHeaderData } from "@repo/services/cms/getHeaderData";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
-import { getRoutesForLang } from "../../routing/routes";
 import { getT } from "../../libs/i18n";
 import { getLang } from "../../libs/getLang";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 
 interface Props {
   venueSlug: string;
@@ -29,10 +29,7 @@ const mainLinks = [
   },
   {
     label: t("header.experiences"),
-    links: data.experiences.map((experience) => ({
-      label: experience.label,
-      url: routes.venueGame(venueSlug, experience.slug),
-    })),
+    links: data.experiences
   },
   {
     label: "Occasions (TODO)",

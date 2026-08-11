@@ -5,28 +5,21 @@ import Button from "@repo/ui/primitives/Button";
 
 import { getLang } from "../../../libs/getLang";
 import { getT } from "../../../libs/i18n";
-import { getRoutesForLang } from "../../../routing/routes";
 
 interface Props {
-  venueSlug: string;
   games: VenueFooter["games"];
 }
 
-const { venueSlug, games } = Astro.props;
+const { games } = Astro.props;
 
 const lang = getLang(Astro);
 
 const t = getT(lang);
-
-const gamesWithLink = games.map((game) => ({
-  ...game,
-  url: getRoutesForLang(lang).venueGame(venueSlug, game.slug),
-}));
 ---
 
 <FooterColumn heading={t("footer.ourVenueGames")} as="ul">
   {
-    gamesWithLink.map((game) => (
+    games.map((game) => (
       <li>
         <Button as="a" href={game.url} tone="light" size="s">
           {game.label}

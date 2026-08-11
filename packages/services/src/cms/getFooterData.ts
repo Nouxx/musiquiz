@@ -5,7 +5,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 import type { Footer } from "./types";
 import { toCmsImage } from "./utils/toCmsImage";
 
-function adaptFooter({ data }: { data: SanityFooter }): Footer {
+function adaptFooter({ data }: { data: SanityFooter; lang: Lang }): Footer {
   const {
     footerLogo,
     facebookUrl,
@@ -34,7 +34,7 @@ function adaptFooter({ data }: { data: SanityFooter }): Footer {
     newsletter: false,
     gamesFormatsLinks: data.gameFormats.map((format) => ({
       label: format.name,
-      slug: format.slug,
+      url: "#todo", // TODO: what do we do with this?
     })),
     paymentMethods: acceptedPaymentMethods.map((method) => toCmsImage(method)),
   };
@@ -49,5 +49,5 @@ export async function getFooterData({
 }) {
   const data = await fetchFooter({ config, lang });
 
-  return adaptFooter({ data });
+  return adaptFooter({ data, lang });
 }

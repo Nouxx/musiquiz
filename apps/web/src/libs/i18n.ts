@@ -6,6 +6,7 @@ import { fr } from "../locales/fr";
 
 const LANGUAGES: Lang[] = ["fr", "en"];
 
+// TODO: can it be moved to @repo/services/i18n?
 /**
  * a dedicated instance, not the `i18next` default export:
  * the SSR preview build shares one module instance across requests, so mutating
