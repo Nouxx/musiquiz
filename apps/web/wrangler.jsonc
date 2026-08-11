@@ -1,17 +1,28 @@
 {
+  // base config, never deployed on its own — every deploy targets an env below
   "name": "musiquiz",
   "compatibility_date": "2026-06-23",
-  "assets": {
-    "directory": "./dist/static"
-  },
   "env": {
     // triggered by CLOUDFLARE_ENV at build time
     // https://developers.cloudflare.com/workers/wrangler/environments/
-    "preview": {
-      "name": "musiquiz-preview"
+    "static": {
+      "name": "musiquiz-static",
+      // the static build ships its own output as assets, there is no worker script
+      "assets": {
+        "directory": "./dist/static"
+      }
     },
-    "production": {
-      "name": "musiquiz-production"
+    "ssr": {
+      "name": "musiquiz-ssr",
+      // @astrojs/cloudflare injects an id-less SESSION binding unless one is
+      // declared here, which would force wrangler to provision a namespace at
+      // deploy time — it cannot in the non-interactive Workers Builds runner
+      "kv_namespaces": [
+        {
+          "binding": "SESSION",
+          "id": "aed9998536da48c49b958849250e02e0"
+        }
+      ]
     }
   }
 }

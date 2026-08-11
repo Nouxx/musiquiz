@@ -4,17 +4,19 @@ import { defineConfig, envField, fontProviders } from "astro/config";
 
 // WARNING: process.env reads variables set by the CLI
 // https://docs.astro.build/en/guides/environment-variables/#in-the-astro-config-file
-const isPreview = process.env.PREVIEW === "true";
+// not named SSR: Vite already defines import.meta.env.SSR, which means
+// "executing server-side" rather than "this build targets the SSR worker"
+const isSsrBuild = process.env.SSR_BUILD === "true";
 
 export default defineConfig({
-  output: isPreview ? "server" : "static",
+  output: isSsrBuild ? "server" : "static",
   // output directory differs to prevent a build erasing the other
-  outDir: isPreview ? "./dist/preview" : "./dist/static",
-  adapter: isPreview ? cloudflare({ imageService: "passthrough" }) : undefined,
+  outDir: isSsrBuild ? "./dist/ssr" : "./dist/static",
+  adapter: isSsrBuild ? cloudflare({ imageService: "passthrough" }) : undefined,
   image: {
     // domains allow list for image optimization
-    // only the static build needs it, preview build passthrough image service
-    domains: isPreview ? [] : ["cdn.sanity.io"],
+    // only the static build needs it, the ssr build passthrough image service
+    domains: isSsrBuild ? [] : ["cdn.sanity.io"],
   },
   fonts: [
     {
@@ -50,13 +52,15 @@ export default defineConfig({
         access: "public",
         optional: false,
       }),
-      // true only for the SSR preview build, which fetches draft content
-      PREVIEW: envField.boolean({
+      // It is **not** called `SSR`, because Vite already defines `import.meta.env.SSR`
+      // to mean "this code is executing server-side"
+      // a different claim from "this build targets the SSR worker"
+      SSR_BUILD: envField.boolean({
         context: "server",
         access: "public",
         default: false,
       }),
-      // viewer token, required by the SSR preview build
+      // viewer token, required by the ssr build
       SANITY_API_READ_TOKEN: envField.string({
         context: "server",
         access: "secret",
