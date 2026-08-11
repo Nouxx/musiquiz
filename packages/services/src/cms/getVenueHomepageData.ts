@@ -5,10 +5,19 @@ import {
 import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
+import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { VenueHomepage } from "./types";
 import { toCmsImage } from "./utils/toCmsImage";
 
-function adaptVenueHomepage(data: SanityVenueHomepage): VenueHomepage {
+function adaptVenueHomepage({
+  data,
+  lang,
+  venueSlug,
+}: {
+  data: SanityVenueHomepage;
+  lang: Lang;
+  venueSlug: string;
+}): VenueHomepage {
   const {
     pageCoverMedia,
     pageCoverHeading,
@@ -23,7 +32,10 @@ function adaptVenueHomepage(data: SanityVenueHomepage): VenueHomepage {
       badge: pageCoverBadge ?? undefined,
       heading: pageCoverHeading,
       subHeading: pageCoverSubHeading,
-      ctaLabel: pageCoverCtaLabel,
+      cta: {
+        label: pageCoverCtaLabel,
+        url: getRoutesForLang(lang).venueBook(venueSlug),
+      },
     },
   };
 }
@@ -39,5 +51,5 @@ export async function getVenueHomepageData({
 }) {
   const data = await fetchVenueHomepage({ config, lang, venueSlug });
 
-  return adaptVenueHomepage(data);
+  return adaptVenueHomepage({ data, lang, venueSlug });
 }

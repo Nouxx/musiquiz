@@ -29,7 +29,10 @@ export type VenueHomepage = {
     badge: string | undefined;
     heading: string;
     subHeading: string;
-    ctaLabel: string;
+    cta: {
+      label: string;
+      url: string;
+    };
   };
 };
 
