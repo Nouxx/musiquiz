@@ -44,13 +44,31 @@ Both workers use **Cloudflare Workers Builds**, connected to this repo's `main` 
 
 Those commands are deliberately bare script names. Every decision they expand to — env flags, adapter, worker name, bindings, output directory — lives in `apps/web/package.json` and `apps/web/wrangler.jsonc`, so changing any of it is a commit, not a dashboard visit. Only renaming a script requires touching Cloudflare.
 
-GitHub Actions deploys nothing; `.github/workflows/ci.yaml` is a pre-merge gate (format, lint, typecheck, build) and holds no secrets. Workers Builds is used instead of an Actions deploy because it exposes a **deploy hook URL** that Sanity can call on publish, with no GitHub token to mint, store or rotate.
+`.github/workflows/ci.yaml` deploys nothing — it is a pre-merge gate (format, lint, typecheck, build) that runs on pull requests and holds no secrets. Workers Builds is used for the web deploy instead of an Actions deploy because it exposes a **deploy hook URL** that Sanity can call on publish, with no GitHub token to mint, store or rotate.
+
+## The Studio deploys from GitHub Actions
+
+`.github/workflows/deploy-sanity.yaml` deploys the new Sanity Studio version on every push to `main`. The web workers and the Studio therefore deploy from two independent systems triggered by the same push: they run in parallel, neither knows about the other, and one failing leaves the other deployed. There is nothing to roll back because there is nothing joining them.
+
+### Deploying the Studio by hand
+
+```sh
+pnpm deploy:sanity
+```
+
+Locally this authenticates with your Sanity CLI session (`~/.config/sanity/config.json`), so no token is needed. `SANITY_AUTH_TOKEN` only exists to stand in for that session where there is no logged-in user.
 
 ### Secrets and env vars
 
 Public config (`SANITY_STUDIO_PROJECT_ID`, `SANITY_STUDIO_DATASET`) lives in the committed root `.env` and is inlined at build time.
 
 `SANITY_API_READ_TOKEN` is a real secret and is entered by hand in two places: `.env.local` for local dev, and a Cloudflare Secret on `musiquiz-ssr`. It is never needed by `musiquiz-static`, which only reads published content, and never by CI.
+
+`SANITY_AUTH_TOKEN` is the one secret CI holds, as a GitHub repository secret read by `deploy-sanity.yaml`. It is an **organization-level** robot token carrying only the **Manage SDK Apps** permission, created in Sanity Manage under the organization's _Settings → API → Robot tokens_ (org tokens cannot be created from the CLI).
+
+The scope is the point. The Studio deploys under an `appId` to the organization's app surface, which is what needs an org token rather than a project one. That token can deploy, read and delete apps and **cannot touch content** — whereas a project token on this plan would have to be Administrator, i.e. full read/write over every dataset. The narrower token is also the documented one for `appId` deployments.
+
+The name is not a choice: the Sanity CLI reads `SANITY_AUTH_TOKEN` from the environment on its own, so nothing wires it through.
 
 Secrets do **not** carry across a worker rename — a renamed worker is a new worker, and its secret must be set again.
 
