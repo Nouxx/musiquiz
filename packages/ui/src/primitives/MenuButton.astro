@@ -33,11 +33,17 @@ const attrs = {
   ...(Tag === "button" ? { type: "button" } : {}),
   ...rest,
 } as Record<string, unknown>;
+
+const currentValue = current
+  ? Tag === "summary"
+    ? "true"
+    : "page"
+  : undefined;
 ---
 
 <Tag
   {...attrs}
-  aria-current={current ? "page" : undefined}
+  aria-current={currentValue}
   class:list={["menu-button", className]}
 >
   {iconPosition === "leading" && icon && <Icon name={icon} size="s" />}
@@ -51,8 +57,9 @@ const attrs = {
     gap: var(--space-1);
     align-items: center;
     justify-content: center;
-    padding-block: clamp(0.375rem, 0.243rem + 0.563vw, 0.75rem);
-    padding-inline: clamp(1rem, 0.824rem + 0.751vw, 1.5rem);
+
+    padding-block: clamp(0.25rem, 0.926rem - 0.751vw, 0.75rem);
+    padding-inline: clamp(0.75rem, 1.764rem - 1.127vw, 1.5rem);
     color: var(--color-text-on-media);
 
     /* `<summary>` is a list-item by default; `inline-flex` drops its marker in Chrome and Firefox, this covers the rest */
@@ -71,7 +78,29 @@ const attrs = {
     background-color: var(--color-surface-on-media);
   }
 
+  /* an open disclosure reads the same as hover. `:global` on the `<details>`
+     because it belongs to the consumer's template and so carries the
+     consumer's scope marker, never this component's */
+  :global(details[open]) > .menu-button {
+    background-color: var(--color-surface-on-media);
+  }
+
   .menu-button[aria-current] {
     background-image: var(--color-fill-blue);
+  }
+
+  .menu-button :global(.musiquiz-icon) {
+    transition: rotate 120ms ease-out;
+  }
+
+  :global(details[open]) > .menu-button :global(.musiquiz-icon) {
+    rotate: 180deg;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu-button,
+    .menu-button :global(.musiquiz-icon) {
+      transition: none;
+    }
   }
 </style>

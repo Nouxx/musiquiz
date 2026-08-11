@@ -94,8 +94,8 @@
   /* 18/24 -> 1.333 */
   --title-xl: 400 1.125rem/1.33 var(--font-title);
 
-  /* 16/22 @375 -> 18/24 @1440. */
-  --title-base-xl: 400 clamp(1rem, 0.956rem + 0.188vw, 1.125rem) / 1.35
+  /* 18/24 @375 -> 16/22 @1440. */
+  --title-base-xl: 400 clamp(1rem, 1.169rem - 0.188vw, 1.125rem) / 1.35
     var(--font-title);
 
   /* 16/22 */

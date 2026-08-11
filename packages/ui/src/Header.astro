@@ -1,15 +1,19 @@
 ---
+import Button from "./primitives/Button.astro";
+import MenuButton from "./primitives/MenuButton.astro";
 import RemoteImage from "./primitives/RemoteImage.astro";
 import type { ImageSource } from "./types";
 
 type NavLink = {
   label: string;
   url: string;
+  current?: boolean;
 };
 
 type NavMenu = {
   label: string;
   links: NavLink[];
+  current?: boolean;
 };
 
 interface Props {
@@ -24,35 +28,176 @@ interface Props {
 const { logo, linksTree, cta } = Astro.props;
 ---
 
-<header style={{ border: "1px solid black", margin: "2px" }}>
-  <RemoteImage image={logo} variant="logo" loading="eager" />
-  <nav>
-    <ul>
-      {
-        linksTree.map((item) =>
-          "links" in item ? (
-            <li>
-              <details>
-                <summary>{item.label}</summary>
-                <ul>
-                  {item.links.map((link) => (
-                    <li>
-                      <a href={link.url}>{link.label}</a>
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            </li>
-          ) : (
-            <li>
-              <a href={item.url}>{item.label}</a>
-            </li>
-          ),
-        )
-      }
-      <li>
-        <a href={cta.url}>{cta.label}</a>
-      </li>
-    </ul>
-  </nav>
+<header class="header">
+  <div class="row">
+    <RemoteImage image={logo} variant="header-logo" loading="eager" />
+
+    <div class="bar">
+      <nav>
+        <ul class="links">
+          {
+            linksTree.map((item) =>
+              "links" in item ? (
+                <li class="menu">
+                  {/* `name` makes the browser close every sibling when this one opens */}
+                  <details name="header-nav">
+                    <MenuButton
+                      as="summary"
+                      icon="angle-down"
+                      current={item.current}
+                    >
+                      {item.label}
+                    </MenuButton>
+
+                    <ul class="panel">
+                      {item.links.map((link) => (
+                        <li>
+                          <MenuButton href={link.url} current={link.current}>
+                            {link.label}
+                          </MenuButton>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                </li>
+              ) : (
+                <li>
+                  <MenuButton href={item.url} current={item.current}>
+                    {item.label}
+                  </MenuButton>
+                </li>
+              ),
+            )
+          }
+        </ul>
+      </nav>
+
+      <Button as="a" href={cta.url} tone="red" size="m">{cta.label}</Button>
+    </div>
+  </div>
 </header>
+
+<script>
+  // progressive enhancement only: `<details>` already opens, closes, and stays
+  // mutually exclusive without this. All it adds is the two dismissals the
+  // element has no native answer for — click-outside and Escape.
+  const menus = [
+    ...document.querySelectorAll<HTMLDetailsElement>(".header details"),
+  ];
+
+  function openMenu() {
+    return menus.find((menu) => menu.open);
+  }
+
+  document.addEventListener("click", (event) => {
+    const menu = openMenu();
+
+    if (!menu || !(event.target instanceof Node) || menu.contains(event.target))
+      return;
+
+    menu.open = false;
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+
+    const menu = openMenu();
+
+    if (!menu) return;
+
+    menu.open = false;
+    // focus would otherwise be left on a control that no longer exists on screen
+    menu.querySelector("summary")?.focus();
+  });
+</script>
+
+<style>
+  .header {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: 10;
+    padding-block-start: var(--space-4);
+    padding-inline: var(--space-6);
+  }
+
+  .row {
+    display: flex;
+    gap: var(--space-10);
+    align-items: center;
+    justify-content: space-between;
+    max-inline-size: var(--size-content);
+    margin-inline: auto;
+  }
+
+  .bar {
+    /* thickness of the gradient edge below the bar */
+    --bar-edge: 3px;
+
+    position: relative;
+    display: flex;
+
+    gap: var(--space-8);
+    align-items: center;
+
+    padding-block: var(--space-2);
+    padding-inline: var(--space-5) var(--space-2);
+    border-radius: 999px;
+  }
+
+  .bar::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--color-surface-translucent);
+    backdrop-filter: blur(8px);
+    border-radius: inherit;
+    content: "";
+  }
+
+  .bar::after {
+    position: absolute;
+    inset: 0 0 calc(-1 * var(--bar-edge)) 0;
+
+    padding-block-end: var(--bar-edge);
+
+    pointer-events: none;
+    background: var(--color-border-brand);
+    border-radius: inherit;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    content: "";
+  }
+
+  .links {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    list-style: none;
+  }
+
+  .menu {
+    position: relative;
+  }
+
+  .panel {
+    position: absolute;
+    inset-block-start: calc(
+      100% + var(--space-2) + var(--bar-edge) + var(--space-2)
+    );
+    inset-inline-start: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-inline-size: 100%;
+    padding: var(--space-2);
+    white-space: nowrap;
+    list-style: none;
+    background-color: var(--color-surface-translucent);
+    backdrop-filter: blur(8px);
+    border-radius: var(--space-6);
+  }
+</style>
