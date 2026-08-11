@@ -64,9 +64,12 @@ Public config (`SANITY_STUDIO_PROJECT_ID`, `SANITY_STUDIO_DATASET`) lives in the
 
 `SANITY_API_READ_TOKEN` is a real secret and is entered by hand in two places: `.env.local` for local dev, and a Cloudflare Secret on `musiquiz-ssr`. It is never needed by `musiquiz-static`, which only reads published content, and never by CI.
 
-`SANITY_AUTH_TOKEN` is the one secret CI holds, as a GitHub repository secret read by `deploy-sanity.yaml`. It is an **organization-level** robot token carrying only the **Manage SDK Apps** permission, created in Sanity Manage under the organization's _Settings → API → Robot tokens_ (org tokens cannot be created from the CLI).
+`SANITY_AUTH_TOKEN` is the one secret CI holds, as a GitHub repository secret read by `deploy-sanity.yaml`. It is an **organization-level** robot token created in Sanity Manage under the organization's _Settings → API → Tokens_ (org tokens cannot be created from the CLI), and it needs **two** roles:
 
-The scope is the point. The Studio deploys under an `appId` to the organization's app surface, which is what needs an org token rather than a project one. That token can deploy, read and delete apps and **cannot touch content** — whereas a project token on this plan would have to be Administrator, i.e. full read/write over every dataset. The narrower token is also the documented one for `appId` deployments.
+| Role                   | Manage label    | Grants                                               |
+| ---------------------- | --------------- | ---------------------------------------------------- |
+| `sdk-app-editor-robot` | Manage SDK Apps | `sanity-sdk-applications` read / deploy / delete     |
+| `deploy-studio-robot`  | Deploy Studio   | `sanity-project` read, `sanity-project` deployStudio |
 
 The name is not a choice: the Sanity CLI reads `SANITY_AUTH_TOKEN` from the environment on its own, so nothing wires it through.
 
