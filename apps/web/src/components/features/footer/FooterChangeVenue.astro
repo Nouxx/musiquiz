@@ -13,10 +13,6 @@ const t = getT(lang);
 const routes = getRoutesForLang(lang);
 ---
 
-{
-  /* labelled with the venue you are on, and links back to the picker on the
-    homepage — the design's chevron is dropped since nothing opens */
-}
 <FooterColumn heading={t("footer.changeVenue")}>
   <Button as="a" href={routes.home} tone="light" size="s">
     {t("footer.ourVenues")}

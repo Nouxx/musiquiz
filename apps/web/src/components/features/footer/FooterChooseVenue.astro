@@ -14,10 +14,6 @@ const t = getT(lang);
 const routes = getRoutesForLang(lang);
 ---
 
-{
-  /* the design draws this as a dropdown; it is a plain link to the venue
-    picker on the homepage, so it carries no chevron */
-}
 <FooterColumn heading={t("footer.changeVenue")}>
   <Text variant="paragraph-s">{t("footer.changeVenueDescription")}</Text>
   <Button as="a" href={routes.home} tone="light" size="s">
