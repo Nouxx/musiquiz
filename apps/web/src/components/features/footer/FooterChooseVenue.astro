@@ -1,0 +1,22 @@
+---
+import FooterColumn from "@repo/ui/footer/FooterColumn";
+import Button from "@repo/ui/primitives/Button";
+import Text from "@repo/ui/primitives/Text";
+
+import { getLang } from "../../../libs/getLang";
+import { getT } from "../../../libs/i18n";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+
+const lang = getLang(Astro);
+
+const t = getT(lang);
+
+const routes = getRoutesForLang(lang);
+---
+
+<FooterColumn heading={t("footer.changeVenue")}>
+  <Text variant="paragraph-s">{t("footer.changeVenueDescription")}</Text>
+  <Button as="a" href={routes.home} tone="light" size="s">
+    {t("footer.chooseVenue")}
+  </Button>
+</FooterColumn>

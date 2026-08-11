@@ -1,0 +1,45 @@
+---
+import type { VenueFooter } from "@repo/services/cms/types";
+import ContactItem from "@repo/ui/footer/ContactItem";
+import FooterColumn from "@repo/ui/footer/FooterColumn";
+import Link from "@repo/ui/primitives/Link";
+import Text from "@repo/ui/primitives/Text";
+
+import { getLang } from "../../../libs/getLang";
+import { getT } from "../../../libs/i18n";
+
+interface Props {
+  contact: VenueFooter["contact"];
+}
+
+const { contact } = Astro.props;
+
+const t = getT(getLang(Astro));
+
+// todo: done by the service
+const sanitizedNumber = contact.phone.replaceAll(" ", "");
+---
+
+<FooterColumn heading={t("footer.contact")}>
+  <ContactItem icon="phone" label={t("footer.phone")}>
+    <Link url={`tel:${sanitizedNumber}`} underline={false}>
+      <Text variant="title-s">{contact.phone}</Text>
+    </Link>
+  </ContactItem>
+
+  <ContactItem icon="mail" label={t("footer.mail")}>
+    <Link url={`mailto:${contact.mail}`} underline={false}>
+      <Text variant="title-s">{contact.mail}</Text>
+    </Link>
+  </ContactItem>
+
+  {
+    contact.mapsLink && (
+      <ContactItem icon="pin" label={t("footer.directions")}>
+        <Link url={contact.mapsLink} underline={false} target="_blank">
+          <Text variant="title-s">{t("footer.openDirections")}</Text>
+        </Link>
+      </ContactItem>
+    )
+  }
+</FooterColumn>

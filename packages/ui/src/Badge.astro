@@ -1,0 +1,71 @@
+---
+import Text from "./primitives/Text.astro";
+
+interface Props {
+  // the sheet's Couleur axis: `dark` is the translucent pill that sits on
+  // media, `light` the opaque one for plain surfaces
+  color?: "dark" | "light";
+  size?: "large" | "small";
+  tilt?: boolean;
+}
+
+const { color = "dark", size = "large", tilt = true } = Astro.props;
+---
+
+<span class:list={["badge", color, size, { tilt }]}>
+  <Text variant={size === "large" ? "paragraph-base-sm" : "paragraph-s-sm"}>
+    <slot />
+  </Text>
+</span>
+
+<style>
+  .badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    /* 999px, not the sheet's 24px: at either size the radius already exceeds
+       half the height, so the two render identically as a pill — and this one
+       stays a pill if the label ever wraps to a second line */
+    border-radius: 999px;
+    max-width: fit-content;
+  }
+
+  .large {
+    padding: var(--space-2) var(--space-5);
+  }
+
+  .small {
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .dark {
+    color: var(--color-text-on-media);
+    background-color: var(--color-surface-translucent);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .light {
+    color: var(--color-text);
+    background-color: var(--color-surface);
+  }
+
+  .tilt {
+    transform: rotate(-2deg);
+  }
+
+  .badge::before {
+    position: absolute;
+    inset: 0;
+    padding: 1px 1px 3px;
+    background-image: var(--color-border-brand);
+    border-radius: inherit;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    content: "";
+  }
+</style>

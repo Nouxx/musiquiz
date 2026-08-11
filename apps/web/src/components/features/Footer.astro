@@ -1,0 +1,49 @@
+---
+import { getFooterData } from "@repo/services/cms/getFooterData";
+import Footer from "@repo/ui/Footer";
+import FooterBottom from "@repo/ui/footer/FooterBottom";
+import FooterSection from "@repo/ui/footer/FooterSection";
+import Text from "@repo/ui/primitives/Text";
+
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import FooterBottomLinks from "./footer/FooterBottomLinks.astro";
+import FooterChooseVenue from "./footer/FooterChooseVenue.astro";
+import FooterContact from "./footer/FooterContact.astro";
+import FooterGames from "./footer/FooterGames.astro";
+import FooterGeneralInformation from "./footer/FooterGeneralInformation.astro";
+import FooterLogo from "./footer/FooterLogo.astro";
+import FooterSocials from "./footer/FooterSocials.astro";
+
+const lang = getLang(Astro);
+
+const sanityConfig = getSanityConfigFromEnvironment();
+
+const footerData = await getFooterData({
+  lang,
+  config: sanityConfig,
+});
+
+const { logo, socials, contact, gamesFormatsLinks, paymentMethods } =
+  footerData;
+---
+
+<Footer>
+  <FooterSection align="end">
+    <FooterLogo {logo} />
+    <FooterSocials {socials} />
+  </FooterSection>
+
+  <FooterSection>
+    <FooterContact {contact} />
+    <FooterGames games={gamesFormatsLinks} />
+    <FooterChooseVenue />
+    <FooterGeneralInformation />
+  </FooterSection>
+
+  <FooterBottom>
+    <!-- todo: use current year -->
+    <Text slot="left" variant="paragraph-s-sm">© Musi'Quiz 2026</Text>
+    <FooterBottomLinks slot="right" {paymentMethods} />
+  </FooterBottom>
+</Footer>

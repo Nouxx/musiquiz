@@ -1,0 +1,32 @@
+---
+import Button from "@repo/ui/primitives/Button";
+
+import { getLang } from "../../../libs/getLang";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+
+const currentLang = getLang(Astro);
+const otherLang = currentLang === "fr" ? "en" : "fr";
+
+interface Props {
+  venueSlug?: string;
+}
+
+const { venueSlug } = Astro.props;
+
+const routes = getRoutesForLang(otherLang);
+
+const route = venueSlug ? routes.venueHome(venueSlug) : routes.home;
+
+const label = otherLang === "en" ? "English" : "Français";
+---
+
+<Button
+  as="a"
+  href={route}
+  tone="light"
+  size="s"
+  icon={otherLang === "en" ? "flag-uk" : "flag-france"}
+  iconPosition="leading"
+>
+  {label}
+</Button>

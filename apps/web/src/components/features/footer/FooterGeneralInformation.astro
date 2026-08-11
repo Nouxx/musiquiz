@@ -1,0 +1,49 @@
+---
+import FooterColumn from "@repo/ui/footer/FooterColumn";
+import Link from "@repo/ui/primitives/Link";
+import Text from "@repo/ui/primitives/Text";
+
+import { getLang } from "../../../libs/getLang";
+import { getT } from "../../../libs/i18n";
+import FooterChangeLang from "./FooterChangeLang.astro";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+
+interface Props {
+  venueSlug?: string;
+}
+
+const { venueSlug } = Astro.props;
+
+const lang = getLang(Astro);
+
+const t = getT(lang);
+
+const routes = getRoutesForLang(lang);
+
+const links = [
+  { label: t("footer.faq"), url: routes.faq },
+  { label: t("footer.contact"), url: routes.contact },
+  { label: t("footer.franchise"), url: routes.franchise },
+  // blog is not translated and only exists for FR
+  ...(routes.blog ? [{ label: t("footer.blog"), url: routes.blog }] : []),
+  { label: t("footer.press"), url: routes.press },
+];
+---
+
+<FooterColumn
+  heading={t("footer.generalInformation")}
+  as="ul"
+  gap="1"
+  tone="muted"
+>
+  {
+    links.map((link) => (
+      <li>
+        <Link url={link.url} underline={false}>
+          <Text variant="paragraph-s">{link.label}</Text>
+        </Link>
+      </li>
+    ))
+  }
+  <FooterChangeLang slot="below" {venueSlug} />
+</FooterColumn>

@@ -1,0 +1,22 @@
+---
+import PageCover from "@repo/ui/PageCover";
+import RemoteImage from "@repo/ui/primitives/RemoteImage";
+import type { VenueHomepage } from "@repo/services/cms/types";
+
+interface Props {
+  data: VenueHomepage["pageCover"];
+}
+
+const { media, badge, heading, subHeading, cta } = Astro.props.data;
+---
+
+<PageCover>
+  <div style={{ border: "1px solid black", margin: "2px" }}>
+    <p>VenueHomepageCover</p>
+    <RemoteImage image={media} variant="cover" loading="eager" />
+    <p>badgeLabel: {badge}</p>
+    <p>heading: {heading}</p>
+    <p>subHeading: {subHeading}</p>
+    {cta && <a href={cta.url}>{cta.label}</a>}
+  </div>
+</PageCover>

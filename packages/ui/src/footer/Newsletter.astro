@@ -1,0 +1,39 @@
+<form class="newsletter" data-newsletter>
+  <div class="newsletter-fields">
+    <slot />
+    <div class="newsletter-consent">
+      <slot name="consent" />
+    </div>
+  </div>
+  <slot name="cta" />
+</form>
+
+<script>
+  // the form is deliberately inert until a subscription endpoint exists.
+  for (const form of document.querySelectorAll("form[data-newsletter]")) {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+    });
+  }
+</script>
+
+<style>
+  .newsletter {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-items: flex-start;
+    inline-size: min(25rem, 100%);
+  }
+
+  .newsletter-fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-self: stretch;
+  }
+
+  .newsletter-consent {
+    color: var(--color-text-on-brand-muted);
+  }
+</style>

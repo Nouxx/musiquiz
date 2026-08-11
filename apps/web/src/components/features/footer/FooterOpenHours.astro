@@ -1,0 +1,36 @@
+---
+import type { VenueFooter } from "@repo/services/cms/types";
+import FooterColumn from "@repo/ui/footer/FooterColumn";
+import OpenHours from "@repo/ui/footer/OpenHours";
+
+import { getLang } from "../../../libs/getLang";
+import { getT } from "../../../libs/i18n";
+
+interface Props {
+  venueTitle: string;
+  openHours: VenueFooter["openHours"];
+}
+
+const { venueTitle, openHours } = Astro.props;
+
+const t = getT(getLang(Astro));
+
+const days = (
+  [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+  ] as const
+).map((day) => ({
+  label: t(`days.${day}`),
+  hours: openHours[day],
+}));
+---
+
+<FooterColumn heading={t("footer.venueOpenHours", { venue: venueTitle })}>
+  <OpenHours {days} />
+</FooterColumn>

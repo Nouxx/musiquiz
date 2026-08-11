@@ -1,13 +1,8 @@
 ---
-import Welcome from "../components/features/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
-
-import { getRelativeLocaleUrl } from "astro:i18n";
-
-const homeEnUrl = getRelativeLocaleUrl("en", "/");
+import Homepage from "../components/pages/Homepage.astro";
 ---
 
 <Layout>
-  <a href={homeEnUrl}>Switch to EN</a>
-  <Welcome lang="fr" />
+  <Homepage />
 </Layout>

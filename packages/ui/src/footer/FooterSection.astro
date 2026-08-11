@@ -1,0 +1,32 @@
+---
+interface Props {
+  align?: "start" | "end";
+}
+
+const { align = "start" } = Astro.props;
+---
+
+<div
+  class="footer-section"
+  style={{ "--section-align": align === "end" ? "flex-end" : "flex-start" }}
+>
+  <slot />
+</div>
+
+<style>
+  .footer-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-10) var(--space-12);
+    align-items: var(--section-align);
+    justify-content: space-between;
+  }
+
+  /* once the band has wrapped, every child is on its own line and bottom alignment
+    would only push the masthead's contents to the right */
+  @media (width < 60rem) {
+    .footer-section {
+      align-items: flex-start;
+    }
+  }
+</style>

@@ -1,0 +1,52 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import type { SpaceScale } from "../types";
+
+interface Props extends Omit<HTMLAttributes<"div">, "class"> {
+  as?: "div" | "ul" | "nav";
+  direction?: "row" | "column";
+  gap?: SpaceScale;
+  align?: "start" | "center" | "end" | "stretch";
+  justify?: "start" | "center" | "end" | "between";
+  wrap?: "wrap" | "nowrap" | "wrap-reverse";
+  class?: string;
+}
+
+const {
+  as: Tag = "div",
+  direction = "row",
+  gap = "1",
+  align,
+  justify,
+  wrap,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const justifyContent = justify === "between" ? "space-between" : justify;
+---
+
+<Tag
+  {...rest}
+  class:list={["flex", className]}
+  style={{
+    "--flex-direction": direction,
+    "--flex-gap": gap && `var(--space-${gap})`,
+    "--flex-align": align,
+    "--flex-justify": justifyContent,
+    "--flex-wrap": wrap,
+  }}
+>
+  <slot />
+</Tag>
+
+<style>
+  .flex {
+    display: flex;
+    flex-direction: var(--flex-direction);
+    gap: var(--flex-gap, 0);
+    align-items: var(--flex-align, stretch);
+    justify-content: var(--flex-justify, flex-start);
+    flex-wrap: var(--flex-wrap, nowrap);
+  }
+</style>

@@ -1,0 +1,16 @@
+---
+import Header from "../components/features/Header.astro";
+import Layout from "./Layout.astro";
+
+interface Props {
+  venueSlug: string;
+}
+
+const { venueSlug } = Astro.props;
+---
+
+<Layout>
+  <Header {venueSlug} />
+
+  <slot />
+</Layout>

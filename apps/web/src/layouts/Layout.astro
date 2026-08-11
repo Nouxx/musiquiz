@@ -1,30 +1,28 @@
 ---
 import { Font } from "astro:assets";
 
-import "../styles/tokens.css";
+import { getLang } from "../libs/getLang";
+// order matters: reset, then the values, then the defaults that use them
+import "@repo/ui/styles/reset.css";
+import "@repo/ui/styles/tokens.css";
+import "@repo/ui/styles/base.css";
+
+const lang = getLang(Astro);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
-    <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-momo-trust-display" preload />
+    <Font cssVariable="--font-funnel-display" preload />
     <title>Astro Basics</title>
   </head>
   <body>
     <slot />
   </body>
 </html>
-
-<style>
-  html,
-  body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-  }
-</style>

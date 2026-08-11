@@ -1,0 +1,108 @@
+---
+import { Image, Picture } from "astro:assets";
+
+type ImageSource = {
+  url: string;
+  // `width` and `height` describe the file `url` points at, not the size it is rendered at. Rendered size comes from the variant.
+  width: number;
+  height: number;
+  mimeType: string;
+  alt: string;
+};
+
+type Variant = keyof typeof variants;
+
+interface Props {
+  image: ImageSource;
+  variant: Variant;
+  loading?: "lazy" | "eager";
+}
+
+const variants = {
+  logo: { widths: [64, 128, 192], sizes: "64px" },
+  "footer-logo": {
+    widths: [120, 160, 240, 320],
+    sizes: "(width < 48rem) 120px, 160px",
+  },
+  "cover-logo": { widths: [200, 400, 600], sizes: "200px" },
+  "payment-icon": { widths: [32, 64, 96], sizes: "32px" },
+  cover: { widths: [640, 960, 1280, 1920, 2560], sizes: "100vw" },
+};
+
+const SVG_MIME_TYPE = "image/svg+xml";
+
+const { image, variant, loading = "lazy" } = Astro.props;
+
+const { widths, sizes } = variants[variant];
+
+// astro only refuses to upscale when the source is an imported file: for a
+// remote url it will happily generate a 192w rendition of a 64px upload. so
+// drop anything wider than the source, and put the source itself back as the
+// widest candidate when that dropped something
+const fittingWidths = widths.filter((width) => width <= image.width);
+
+const srcSetWidths =
+  fittingWidths.length === widths.length
+    ? fittingWidths
+    : [...fittingWidths, image.width];
+---
+
+{
+  image.mimeType === SVG_MIME_TYPE ? (
+    // a vector needs no srcset
+    <Image
+      class={variant}
+      src={image.url}
+      alt={image.alt}
+      width={image.width}
+      height={image.height}
+      format="svg"
+      loading={loading}
+    />
+  ) : (
+    <Picture
+      class={variant}
+      src={image.url}
+      alt={image.alt}
+      width={image.width}
+      height={image.height}
+      widths={srcSetWidths}
+      sizes={sizes}
+      formats={["avif", "webp"]}
+      loading={loading}
+    />
+  )
+}
+
+<style>
+  .logo {
+    width: 64px;
+    height: auto;
+  }
+
+  .footer-logo {
+    width: 120px;
+    height: auto;
+  }
+
+  @media (width >= 48rem) {
+    .footer-logo {
+      width: 160px;
+    }
+  }
+
+  .cover-logo {
+    width: 200px;
+    height: auto;
+  }
+
+  .payment-icon {
+    width: 32px;
+    height: auto;
+  }
+
+  .cover {
+    width: 100%;
+    height: auto;
+  }
+</style>

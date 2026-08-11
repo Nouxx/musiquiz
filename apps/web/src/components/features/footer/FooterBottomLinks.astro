@@ -1,0 +1,51 @@
+---
+import type { VenueFooter } from "@repo/services/cms/types";
+import Flex from "@repo/ui/primitives/Flex";
+import Link from "@repo/ui/primitives/Link";
+import RemoteImage from "@repo/ui/primitives/RemoteImage";
+import Text from "@repo/ui/primitives/Text";
+
+import { getLang } from "../../../libs/getLang";
+import { getT } from "../../../libs/i18n";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+
+interface Props {
+  paymentMethods: VenueFooter["paymentMethods"];
+}
+
+const { paymentMethods } = Astro.props;
+
+const lang = getLang(Astro);
+
+const t = getT(lang);
+
+const routes = getRoutesForLang(lang);
+
+const legalLinks = [
+  { label: t("footer.termsAndConditions"), url: routes.termsAndConditions },
+  { label: t("footer.gdpr"), url: routes.gdpr },
+  { label: t("footer.legalsNotice"), url: routes.legalsNotice },
+];
+---
+
+{
+  legalLinks.map((link) => (
+    <li>
+      <Link url={link.url} underline={false}>
+        <Text variant="paragraph-s">{link.label}</Text>
+      </Link>
+    </li>
+  ))
+}
+<li>
+  <Flex gap="6" align="center">
+    <Text variant="paragraph-s">{t("footer.paymentMethods")}</Text>
+    <Flex gap="3" align="center">
+      {
+        paymentMethods.map((paymentMethod) => (
+          <RemoteImage image={paymentMethod} variant="payment-icon" />
+        ))
+      }
+    </Flex>
+  </Flex>
+</li>

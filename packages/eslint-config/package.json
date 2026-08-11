@@ -11,7 +11,7 @@
     "@eslint/json": "^2.0.0",
     "@eslint/markdown": "^8.0.2",
     "@typescript-eslint/parser": "^8.61.1",
-    "eslint": "^10.5.0",
+    "eslint": "catalog:",
     "eslint-plugin-astro": "^1.7.0",
     "eslint-plugin-simple-import-sort": "^13.0.0",
     "eslint-plugin-unicorn": "^68.0.0",

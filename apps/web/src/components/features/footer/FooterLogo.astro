@@ -1,0 +1,12 @@
+---
+import type { CmsImage } from "@repo/services/cms/types";
+import RemoteImage from "@repo/ui/primitives/RemoteImage";
+
+interface Props {
+  logo: CmsImage;
+}
+
+const { logo } = Astro.props;
+---
+
+<RemoteImage image={logo} variant="footer-logo" />

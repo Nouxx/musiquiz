@@ -1,0 +1,31 @@
+---
+import { getHomepageData } from "@repo/services/cms/getHomepageData";
+import PageComponents from "../features/PageComponents.astro";
+import HomepageCover from "../features/HomepageCover.astro";
+import VenuesList from "../features/VenuesList.astro";
+import Footer from "../features/Footer.astro";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getLang } from "../../libs/getLang";
+
+const sanityConfig = getSanityConfigFromEnvironment();
+
+const lang = getLang(Astro);
+
+const pageData = await getHomepageData({
+  lang,
+  config: sanityConfig,
+});
+---
+
+<HomepageCover
+  logo={pageData.logo}
+  cover={pageData.cover}
+  badgeLabel={pageData.badgeLabel}
+  heading={pageData.heading}
+/>
+
+<PageComponents components={pageData.components} />
+
+<VenuesList venues={pageData.venues} />
+
+<Footer />

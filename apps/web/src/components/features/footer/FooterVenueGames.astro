@@ -1,0 +1,30 @@
+---
+import type { VenueFooter } from "@repo/services/cms/types";
+import FooterColumn from "@repo/ui/footer/FooterColumn";
+import Button from "@repo/ui/primitives/Button";
+
+import { getLang } from "../../../libs/getLang";
+import { getT } from "../../../libs/i18n";
+
+interface Props {
+  games: VenueFooter["games"];
+}
+
+const { games } = Astro.props;
+
+const lang = getLang(Astro);
+
+const t = getT(lang);
+---
+
+<FooterColumn heading={t("footer.ourVenueGames")} as="ul">
+  {
+    games.map((game) => (
+      <li>
+        <Button as="a" href={game.url} tone="light" size="s">
+          {game.label}
+        </Button>
+      </li>
+    ))
+  }
+</FooterColumn>

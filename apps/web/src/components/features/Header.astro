@@ -1,0 +1,50 @@
+---
+import Header from "@repo/ui/Header";
+import { getHeaderData } from "@repo/services/cms/getHeaderData";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getT } from "../../libs/i18n";
+import { getLang } from "../../libs/getLang";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+
+interface Props {
+  venueSlug: string;
+}
+
+const { venueSlug } = Astro.props;
+
+const lang = getLang(Astro);
+
+const t = getT(lang);
+
+const sanityConfig = getSanityConfigFromEnvironment();
+
+const data = await getHeaderData({ config: sanityConfig, lang, venueSlug });
+
+const routes = getRoutesForLang(lang);
+
+const mainLinks = [
+  {
+    label: t("header.home"),
+    url: routes.venueHome(venueSlug),
+  },
+  {
+    label: t("header.experiences"),
+    links: data.experiences,
+  },
+  {
+    label: "Occasions (TODO)",
+    url: "#todo",
+  },
+  {
+    label: t("header.offerAGame"),
+    url: routes.venueGifting(venueSlug),
+  },
+];
+
+const cta = {
+  label: t("header.book"),
+  url: routes.venueBook(venueSlug),
+};
+---
+
+<Header logo={data.logo} linksTree={mainLinks} {cta} />

@@ -1,0 +1,58 @@
+---
+import { getVenueFooterData } from "@repo/services/cms/getVenueFooterData";
+import Footer from "@repo/ui/Footer";
+import FooterBottom from "@repo/ui/footer/FooterBottom";
+import FooterSection from "@repo/ui/footer/FooterSection";
+import Text from "@repo/ui/primitives/Text";
+
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import FooterBottomLinks from "./footer/FooterBottomLinks.astro";
+import FooterChangeVenue from "./footer/FooterChangeVenue.astro";
+import FooterContact from "./footer/FooterContact.astro";
+import FooterGeneralInformation from "./footer/FooterGeneralInformation.astro";
+import FooterLogo from "./footer/FooterLogo.astro";
+import FooterNewsletter from "./footer/FooterNewsletter.astro";
+import FooterOpenHours from "./footer/FooterOpenHours.astro";
+import FooterSocials from "./footer/FooterSocials.astro";
+import FooterVenueGames from "./footer/FooterVenueGames.astro";
+
+const lang = getLang(Astro);
+
+interface Props {
+  venueSlug: string;
+}
+
+const { venueSlug } = Astro.props;
+
+const footerData = await getVenueFooterData({
+  venueSlug,
+  lang,
+  config: getSanityConfigFromEnvironment(),
+});
+
+const { logo, socials, contact, openHours, games, venueTitle, paymentMethods } =
+  footerData;
+---
+
+<Footer>
+  <FooterSection align="end">
+    <FooterLogo {logo} />
+    <FooterSocials {socials} />
+    <FooterNewsletter />
+  </FooterSection>
+
+  <FooterSection>
+    <FooterOpenHours {venueTitle} {openHours} />
+    <FooterContact {contact} />
+    <FooterVenueGames {games} />
+    <FooterChangeVenue {venueTitle} />
+    <FooterGeneralInformation {venueSlug} />
+  </FooterSection>
+
+  <FooterBottom>
+    <!-- todo: use current year -->
+    <Text slot="left" variant="paragraph-s-sm">© Musi'Quiz 2026</Text>
+    <FooterBottomLinks slot="right" {paymentMethods} />
+  </FooterBottom>
+</Footer>

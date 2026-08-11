@@ -1,0 +1,34 @@
+---
+import type { Footer } from "@repo/services/cms/types";
+import FooterColumn from "@repo/ui/footer/FooterColumn";
+import Button from "@repo/ui/primitives/Button";
+
+import { getLang } from "../../../libs/getLang";
+import { getT } from "../../../libs/i18n";
+
+interface Props {
+  games: Footer["gamesFormatsLinks"]; // todo: rename games
+}
+
+const { games } = Astro.props;
+
+const t = getT(getLang(Astro));
+
+const gamesWithLink = games.map((game) => ({
+  ...game,
+  // TODO: do we create games page outside of a venue context?
+  url: "#todo",
+}));
+---
+
+<FooterColumn heading={t("footer.ourGames")} as="ul">
+  {
+    gamesWithLink.map((game) => (
+      <li>
+        <Button as="a" href={game.url} tone="light" size="s">
+          {game.label}
+        </Button>
+      </li>
+    ))
+  }
+</FooterColumn>

@@ -1,0 +1,23 @@
+{
+  "name": "@repo/ui",
+  "private": true,
+  "sideEffects": false,
+  "exports": {
+    "./*": "./src/*.astro",
+    "./styles/*": "./src/styles/*"
+  },
+  "scripts": {
+    "clean": "rm -rf node_modules",
+    "lint": "eslint .",
+    "tsc": "astro check"
+  },
+  "dependencies": {
+    "@repo/utils": "workspace:*",
+    "astro": "catalog:"
+  },
+  "devDependencies": {
+    "eslint": "catalog:",
+    "eslint-config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

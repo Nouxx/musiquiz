@@ -1,0 +1,32 @@
+---
+import Badge from "@repo/ui/Badge";
+import PageCover from "@repo/ui/PageCover";
+import Button from "@repo/ui/primitives/Button";
+import RemoteImage from "@repo/ui/primitives/RemoteImage";
+import Text from "@repo/ui/primitives/Text";
+import type { CmsImage } from "@repo/services/cms/types";
+import { getLang } from "../../libs/getLang";
+import { getT } from "../../libs/i18n";
+
+interface Props {
+  logo: CmsImage;
+  cover: CmsImage;
+  badgeLabel: string;
+  heading: string;
+}
+
+const { logo, cover, badgeLabel, heading } = Astro.props;
+
+const t = getT(getLang(Astro));
+---
+
+<PageCover>
+  <RemoteImage slot="media" image={cover} variant="cover" loading="eager" />
+  <RemoteImage slot="logo" image={logo} variant="cover-logo" loading="eager" />
+
+  <Badge>{badgeLabel}</Badge>
+  <Text as="h1" variant="title-h1">{heading}</Text>
+
+  {/* the call to action has no destination yet — deliberately inert */}
+  <Button slot="actions" icon="angle-down">{t("cover.chooseVenue")}</Button>
+</PageCover>

@@ -1,0 +1,56 @@
+import type { fr } from "./fr";
+
+export const en: typeof fr = {
+  cover: {
+    chooseVenue: "Choose your Musi'Quiz venue",
+  },
+  venues: {
+    badge: "Our venues",
+    heading: "Find a Musi'Quiz venue near you!",
+  },
+  header: {
+    home: "Accueil",
+    experiences: "Our games",
+    offerAGame: "Offer a game",
+    book: "Book",
+  },
+  footer: {
+    faq: "FAQ",
+    contact: "Contact",
+    blog: "Blog",
+    press: "Press",
+    franchise: "Open your Musi'quiz franchise",
+    termsAndConditions: "T&C",
+    gdpr: "GDPR",
+    legalsNotice: "Legal Notices",
+    chooseVenue: "Choose a venue",
+    changeVenue: "Switch venue",
+    ourVenues: "Our venues",
+    changeVenueDescription:
+      "Musi'Quiz, the new generation of quiz venues for your bachelor/bachelorette parties, team building, and nights out with family or friends!",
+    paymentMethods: "Payment methods",
+    venueOpenHours: "{{venue}} opening hours",
+    phone: "Phone",
+    mail: "Mail",
+    directions: "Directions",
+    openDirections: "Open directions",
+    ourGames: "Our games",
+    ourVenueGames: "Our game in this venue",
+    generalInformation: "General information",
+    socials: "Follow us",
+    subscribe: "Subscribe to our newsletter",
+    subscribeCta: "Subscribe to the newsletter",
+    mailAddress: "Mail address",
+    mailPlaceholder: "Your mail address",
+    newsletterConsent: "I agree to receive information from Musi'Quiz",
+  },
+  days: {
+    monday: "Monday",
+    tuesday: "Tuesday",
+    wednesday: "Wednesday",
+    thursday: "Thursday",
+    friday: "Friday",
+    saturday: "Saturday",
+    sunday: "Sunday",
+  },
+};

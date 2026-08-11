@@ -1,0 +1,204 @@
+:root {
+  /* ============================================================
+     PRIMITIVE TOKENS
+     ============================================================ */
+
+  /* font families are emitted by the Astro Fonts API at build time (astro.config.mjs) */
+
+  /* stylelint-disable value-keyword-case, csstools/value-no-unknown-custom-properties */
+  --font-title: var(--font-momo-trust-display), system-ui, sans-serif;
+  --font-body: var(--font-funnel-display), system-ui, sans-serif;
+  /* stylelint-enable value-keyword-case, csstools/value-no-unknown-custom-properties */
+
+  --black: #120500;
+  --white: #f7f3f0;
+
+  --red-900: #4c0514;
+  --red-500: #e4314b;
+  --red-100: #ffe4e4;
+
+  --green-900: #172d06;
+  --green-600: #84df1f;
+  --green-100: #e8facd;
+
+  --blue-900: #24194d;
+  --blue-600: #4e31b9;
+  --blue-100: #dfe1ff;
+
+  --yellow-900: #442404;
+  --yellow-600: #ffd200;
+  --yellow-100: #fffec1;
+
+  --grey-800: #3c302c;
+  --grey-600: #655c57;
+  --grey-400: #cdc8c4;
+  --grey-200: #e2ddda;
+  --grey-100: #efeae7;
+
+  --black-40: rgb(18 5 0 / 40%);
+  --black-20: rgb(18 5 0 / 20%);
+  --black-10: rgb(18 5 0 / 10%);
+  --white-80: rgb(247 243 240 / 80%);
+  --white-40: rgb(247 243 240 / 40%);
+  --white-20: rgb(247 243 240 / 20%);
+  --white-10: rgb(247 243 240 / 10%);
+  --blue-900-40: rgb(36 25 77 / 40%);
+  --blue-900-0: rgb(36 25 77 / 0%);
+
+  --gradient-red: linear-gradient(90deg, #d92363, #ff530a);
+  --gradient-green: linear-gradient(90deg, #12c54b, #a1e513);
+  --gradient-blue: linear-gradient(90deg, #5625bb, #2477b3);
+  --gradient-border: conic-gradient(
+    from 180deg at 50% 50%,
+    #d92363 0deg,
+    #ffd200 90deg,
+    #a1e513 180deg,
+    #5625bb 270deg,
+    #d92363 360deg
+  );
+  --gradient-surface: linear-gradient(
+    90deg,
+    #d92363,
+    #ffd200,
+    #12c54b,
+    #5625bb
+  );
+
+  --gradient-vivid:
+    radial-gradient(40% 30% at 100% 0%, #120500, rgb(18 5 0 / 0%)),
+    radial-gradient(70% 75% at 100% 100%, #ff0 32%, rgb(255 255 0 / 0%)),
+    radial-gradient(140% 50% at 0% 100%, #2404b2 20%, rgb(36 4 178 / 0%)),
+    radial-gradient(72% 122% at 79% 75%, #d10a68 27%, rgb(209 10 104 / 0%)),
+    linear-gradient(#120500 0 0);
+
+  /* 60/72 */
+  --title-h1: 400 clamp(2rem, 1.384rem + 2.629vw, 3.75rem) / 1.2
+    var(--font-title);
+
+  /* 48/54 */
+  --title-h2: 400 clamp(1.75rem, 1.31rem + 1.878vw, 3rem) / 1.125
+    var(--font-title);
+
+  /* 36/44 -> 1.222 */
+  --title-h3: 400 clamp(1.5rem, 1.236rem + 1.127vw, 2.25rem) / 1.22
+    var(--font-title);
+
+  /* 30/38 -> 1.267 */
+  --title-h4: 400 clamp(1.375rem, 1.199rem + 0.751vw, 1.875rem) / 1.27
+    var(--font-title);
+
+  /* 24/30 */
+  --title-h5: 400 clamp(1.25rem, 1.162rem + 0.376vw, 1.5rem) / 1.25
+    var(--font-title);
+
+  /* 18/24 -> 1.333 */
+  --title-xl: 400 1.125rem/1.33 var(--font-title);
+
+  /* 16/22 @375 -> 18/24 @1440. */
+  --title-base-xl: 400 clamp(1rem, 0.956rem + 0.188vw, 1.125rem) / 1.35
+    var(--font-title);
+
+  /* 16/22 */
+  --title-base: 400 1rem/1.375 var(--font-title);
+
+  /* 14/18 -> 1.286 */
+  --title-s: 400 0.875rem/1.29 var(--font-title);
+
+  /* 12/16 -> 1.333 */
+  --title-xs: 400 0.75rem/1.33 var(--font-title);
+
+  /* 18/24 -> 1.333 */
+  --paragraph-xl: 400 1.125rem/1.33 var(--font-body);
+  --paragraph-xl-sm: 600 1.125rem/1.33 var(--font-body);
+
+  /* 16/22 */
+  --paragraph-base: 400 1rem/1.375 var(--font-body);
+  --paragraph-base-sm: 600 1rem/1.375 var(--font-body);
+
+  /* 14/20 -> 1.429 */
+  --paragraph-s: 400 0.875rem/1.43 var(--font-body);
+  --paragraph-s-sm: 600 0.875rem/1.43 var(--font-body);
+
+  /* 12/18 */
+  --paragraph-xs: 400 0.75rem/1.5 var(--font-body);
+  --paragraph-xs-sm: 600 0.75rem/1.5 var(--font-body);
+
+  /* simply 4px steps */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  --space-section-m: clamp(2.5rem, 1.62rem + 3.756vw, 5rem);
+  --space-section-l: clamp(4rem, 2.768rem + 5.258vw, 7.5rem);
+
+  /* ============================================================
+     SEMANTIC TOKENS
+     ============================================================ */
+
+  --size-content: 78rem;
+
+  --color-surface: var(--white);
+  --color-surface-inverse: var(--blue-900);
+  --color-surface-muted: var(--grey-100);
+  --color-surface-translucent: var(--black-40);
+
+  --color-overlay: linear-gradient(
+    180deg,
+    var(--blue-900) 0%,
+    var(--blue-900-0) 100%
+  );
+
+  --color-text: var(--black);
+  --color-text-muted: var(--grey-600);
+  --color-text-inverse: var(--white);
+  --color-text-on-media: var(--white);
+  --color-surface-on-media: var(--white-20);
+  --color-text-placeholder: var(--grey-400);
+
+  --color-surface-brand: var(--gradient-blue);
+  --color-surface-vivid: var(--gradient-vivid);
+
+  --color-text-on-brand: var(--white);
+  --color-text-on-brand-muted: var(--blue-100);
+  --color-border-on-brand: var(--grey-400);
+
+  --color-overlay-pressed: var(--black-10);
+
+  --color-accent: var(--red-500);
+
+  --color-border: var(--grey-200);
+  --color-border-brand: var(--gradient-border);
+
+  --color-fill-red: var(--gradient-red);
+
+  --color-border-red: var(--red-900);
+  --color-text-on-red: var(--white);
+
+  --color-text-on-red-muted: var(--red-100);
+
+  --color-fill-blue: var(--gradient-blue);
+  --color-border-blue: var(--blue-900);
+  --color-text-on-blue: var(--white);
+
+  --color-fill-green: var(--gradient-green);
+
+  --color-border-green: var(--green-900);
+  --color-text-on-green: var(--black);
+
+  --color-fill-light: var(--white);
+  --color-border-light: var(--black);
+  --color-text-on-light: var(--black);
+
+  --color-fill-dark: var(--black);
+  --color-border-dark: var(--white);
+  --color-text-on-dark: var(--white);
+}

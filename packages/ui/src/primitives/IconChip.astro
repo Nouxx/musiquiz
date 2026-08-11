@@ -1,0 +1,54 @@
+---
+import Icon, { type IconName } from "./Icon.astro";
+
+type Tone = "light" | "dark";
+
+type Size = "s" | "xl";
+
+interface Props {
+  name: IconName;
+  tone?: Tone;
+  size?: Size;
+}
+
+const { name, tone = "light", size = "xl" } = Astro.props;
+---
+
+<span class:list={["icon-chip", tone, size]}>
+  <Icon {name} {size} />
+</span>
+
+<style>
+  .icon-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--chip-text);
+    background: var(--chip-fill);
+    border: 1px solid var(--chip-border);
+    border-block-end-width: 3px;
+    border-radius: 999px;
+  }
+
+  .light {
+    --chip-fill: var(--color-fill-light);
+    --chip-border: var(--color-border-light);
+    --chip-text: var(--color-text-on-light);
+  }
+
+  .dark {
+    --chip-fill: var(--color-fill-dark);
+    --chip-border: var(--color-border-dark);
+    --chip-text: var(--color-text-on-dark);
+  }
+
+  .s {
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+  }
+
+  .xl {
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+  }
+</style>

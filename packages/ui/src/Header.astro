@@ -1,0 +1,58 @@
+---
+import RemoteImage from "./primitives/RemoteImage.astro";
+import type { ImageSource } from "./types";
+
+type NavLink = {
+  label: string;
+  url: string;
+};
+
+type NavMenu = {
+  label: string;
+  links: NavLink[];
+};
+
+interface Props {
+  logo: ImageSource;
+  linksTree: (NavLink | NavMenu)[];
+  cta: {
+    label: string;
+    url: string;
+  };
+}
+
+const { logo, linksTree, cta } = Astro.props;
+---
+
+<header style={{ border: "1px solid black", margin: "2px" }}>
+  <RemoteImage image={logo} variant="logo" loading="eager" />
+  <nav>
+    <ul>
+      {
+        linksTree.map((item) =>
+          "links" in item ? (
+            <li>
+              <details>
+                <summary>{item.label}</summary>
+                <ul>
+                  {item.links.map((link) => (
+                    <li>
+                      <a href={link.url}>{link.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </li>
+          ) : (
+            <li>
+              <a href={item.url}>{item.label}</a>
+            </li>
+          ),
+        )
+      }
+      <li>
+        <a href={cta.url}>{cta.label}</a>
+      </li>
+    </ul>
+  </nav>
+</header>

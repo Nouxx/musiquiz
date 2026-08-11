@@ -1,0 +1,42 @@
+---
+import Text from "../primitives/Text.astro";
+
+interface Props {
+  days: { label: string; hours: string }[];
+}
+
+const { days } = Astro.props;
+---
+
+<dl class="open-hours">
+  {
+    days.map(({ label, hours }) => (
+      <div class="open-hours-day">
+        <dt class="open-hours-label">
+          <Text variant="paragraph-s">{label}</Text>
+        </dt>
+        <dd>
+          <Text variant="title-xs">{hours}</Text>
+        </dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .open-hours {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(5.5rem, max-content));
+    gap: var(--space-3) var(--space-4);
+  }
+
+  .open-hours-day {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .open-hours-label {
+    color: var(--color-text-on-brand-muted);
+  }
+</style>

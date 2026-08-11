@@ -1,32 +1,56 @@
-import { getSanityClient } from "@repo/api/sanity/client";
-import { fetchHomepageData } from "@repo/api/sanity/fetchHomepageData";
-import { type SanityHomepage } from "@repo/api/sanity/types";
+import { fetchHomepage, type SanityHomepage } from "@repo/api/sanity/homepage";
 import { type Lang } from "@repo/utils/lang";
+import type { SanityConfig } from "@repo/utils/sanityConfig";
 
-import { type Homepage } from "./types";
+import { getRoutesForLang } from "../routing/getRoutesForLang";
+import type { Homepage } from "./types";
+import { adaptPageComponent } from "./utils/adaptPageComponent";
+import { toCmsImage } from "./utils/toCmsImage";
 
-function adaptHomepage(data: SanityHomepage): Homepage {
+function adaptVenue({
+  data,
+  lang,
+}: {
+  data: SanityHomepage["venues"][number];
+  lang: Lang;
+}): Homepage["venues"][number] {
   return {
-    heading: data.heading,
+    title: data.title,
+    url: getRoutesForLang(lang).venueHome(data.slug),
+    detail: data.regionCode,
+  };
+}
+
+function adaptHomepage({
+  data,
+  lang,
+}: {
+  data: SanityHomepage;
+  lang: Lang;
+}): Homepage {
+  const { badge, cover, heading, logo } = data.homepage;
+
+  return {
+    logo: toCmsImage(logo),
+    cover: toCmsImage(cover),
+    badgeLabel: badge,
+    heading,
+    venues: data.venues.map((venue) => adaptVenue({ data: venue, lang })),
+    components:
+      data.homepage.pageComponents?.map((component) =>
+        adaptPageComponent(component),
+      ) ?? [],
   };
 }
 
 export async function getHomepageData({
   lang,
-  projectId,
-  dataset,
-  draft,
-  token,
+  config,
 }: {
   lang: Lang;
-  projectId: string;
-  dataset: string;
-  draft?: boolean;
-  token?: string;
+  config: SanityConfig;
 }) {
-  const sanityClient = getSanityClient({ projectId, dataset, draft, token });
+  const data = await fetchHomepage({ config, lang });
 
-  const sanityHomepage = await fetchHomepageData({ lang, sanityClient });
-
-  return adaptHomepage(sanityHomepage);
+  return adaptHomepage({ data, lang });
 }

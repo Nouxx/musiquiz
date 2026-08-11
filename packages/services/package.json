@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "typescript": "catalog:",
-    "eslint": "^10.5.0",
+    "eslint": "catalog:",
     "eslint-config": "workspace:*"
   }
 }

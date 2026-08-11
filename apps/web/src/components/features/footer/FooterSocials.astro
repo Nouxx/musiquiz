@@ -1,0 +1,43 @@
+---
+import type { VenueFooter } from "@repo/services/cms/types";
+import FooterColumn from "@repo/ui/footer/FooterColumn";
+import IconChip from "@repo/ui/primitives/IconChip";
+import Link from "@repo/ui/primitives/Link";
+
+import { getLang } from "../../../libs/getLang";
+import { getT } from "../../../libs/i18n";
+
+interface Props {
+  socials: VenueFooter["socials"];
+}
+
+const { socials } = Astro.props;
+
+const { tiktokUrl, youtubeUrl, instagramUrl, facebookUrl, linkedinUrl } =
+  socials;
+
+const t = getT(getLang(Astro));
+
+const networks = [
+  { url: tiktokUrl, icon: "tiktok", label: "TikTok" },
+  { url: youtubeUrl, icon: "youtube", label: "YouTube" },
+  { url: instagramUrl, icon: "instagram", label: "Instagram" },
+  { url: facebookUrl, icon: "facebook", label: "Facebook" },
+  { url: linkedinUrl, icon: "linkedin", label: "LinkedIn" },
+] as const;
+---
+
+<FooterColumn heading={t("footer.socials")} as="ul" direction="row" gap="6">
+  {
+    networks.map(
+      ({ url, icon, label }) =>
+        url && (
+          <li>
+            <Link {url} ariaLabel={label} target="_blank">
+              <IconChip name={icon} size="xl" />
+            </Link>
+          </li>
+        ),
+    )
+  }
+</FooterColumn>
