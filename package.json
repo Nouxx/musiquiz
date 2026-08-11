@@ -10,6 +10,7 @@
     "build:web:ssr": "pnpm --filter web build:ssr",
     "deploy:web:static": "pnpm --filter web run deploy:static",
     "deploy:web:ssr": "pnpm --filter web run deploy:ssr",
+    "deploy:sanity": "pnpm --filter sanity run deploy",
     "format:check": "prettier . --check",
     "fc": "pnpm format:check",
     "format:fix": "prettier . --write",
