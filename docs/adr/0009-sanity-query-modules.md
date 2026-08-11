@@ -1,6 +1,6 @@
 # Sanity access is one Query Module per fetch
 
-`@repo/api` held its Sanity layer in four files split by *kind*: every GROQ query in `queries.ts`, every Zod schema in `schema.ts`, every inferred type in `types.ts`, and the fetch helper in `fetchData.ts`. A query, the schema that parses its response, and the type that describes it are one contract — change a projection and all three must move together. Splitting them by kind meant three files opened for every content change, and `types.ts` existed only to re-export `z.infer` of something one directory away.
+`@repo/api` held its Sanity layer in four files split by _kind_: every GROQ query in `queries.ts`, every Zod schema in `schema.ts`, every inferred type in `types.ts`, and the fetch helper in `fetchData.ts`. A query, the schema that parses its response, and the type that describes it are one contract — change a projection and all three must move together. Splitting them by kind meant three files opened for every content change, and `types.ts` existed only to re-export `z.infer` of something one directory away.
 
 A **Query Module** is that contract in one file: `packages/api/src/sanity/<name>.ts` holds the GROQ query, the Zod schema, the inferred `Sanity*` type, and the fetch function built from them. There is one per fetch, named after the fetch, mirroring one `getXData.ts` in `@repo/services`. Answering "which file backs `getVenueFooterData`?" needs no search, and a projection edit is a single-file diff where the schema that must follow it is on screen.
 
@@ -13,8 +13,18 @@ Parameters were tried and reverted. Two of the three arguments for them do not a
 The fetch function is **written by hand**, not generated. `fetchSanityData` stays a plain helper taking `query`, `schema` and `config`, and each module wraps it in a short `async function` that names its own arguments:
 
 ```ts
-export async function fetchFooter({ config, lang }: { config: SanityConfig; lang: Lang }) {
-  return fetchSanityData({ query: footerQuery({ lang }), schema: sanityFooterSchema, config });
+export async function fetchFooter({
+  config,
+  lang,
+}: {
+  config: SanityConfig;
+  lang: Lang;
+}) {
+  return fetchSanityData({
+    query: footerQuery({ lang }),
+    schema: sanityFooterSchema,
+    config,
+  });
 }
 ```
 
