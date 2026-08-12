@@ -1,0 +1,276 @@
+---
+import { MODAL_ID } from "../Header.astro";
+import Button from "../primitives/Button.astro";
+import { type IconName } from "../primitives/Icon.astro";
+import IconChip from "../primitives/IconChip.astro";
+import Link from "../primitives/Link.astro";
+import MenuButton from "../primitives/MenuButton.astro";
+import RemoteImage from "../primitives/RemoteImage.astro";
+import Text from "../primitives/Text.astro";
+import type { ImageSource, NavLink, NavMenu } from "../types";
+
+type ContactLine = { text: string; url?: string };
+
+// exported so the caller can type its props in one place while the values are
+// still stubbed
+export interface Props {
+  logo: ImageSource;
+  linksTree: (NavLink | NavMenu)[];
+  cta: { label: string; url: string };
+  closeLabel: string;
+  menuLabel?: string;
+  venueSwitcher?: NavMenu;
+  languageSwitch?: { url: string; icon: IconName; label: string };
+  contact?: {
+    address?: ContactLine;
+    phone?: ContactLine;
+    email?: ContactLine;
+  };
+  socials?: { url: string; icon: IconName; label: string }[];
+}
+
+const {
+  logo,
+  linksTree,
+  cta,
+  closeLabel,
+  menuLabel = "Menu",
+  venueSwitcher,
+  languageSwitch,
+  contact,
+  socials,
+} = Astro.props;
+
+const groups = venueSwitcher ? [...linksTree, venueSwitcher] : linksTree;
+
+const contactLines = [contact?.address, contact?.phone, contact?.email].filter(
+  (line) => line !== undefined,
+);
+---
+
+<dialog
+  id={MODAL_ID}
+  data-mobile-menu
+  class="mobile-menu"
+  aria-label={menuLabel}
+>
+  <div class="top">
+    {
+      languageSwitch && (
+        <Link
+          url={languageSwitch.url}
+          ariaLabel={languageSwitch.label}
+          underline={false}
+        >
+          <IconChip name={languageSwitch.icon} tone="muted" size="l" />
+        </Link>
+      )
+    }
+
+    <form method="dialog" class="close-form">
+      <button class="close" aria-label={closeLabel}>
+        <IconChip name="cross" tone="muted" size="l" />
+      </button>
+    </form>
+  </div>
+
+  <div class="sheet">
+    {/* eager: because the logo loads only when the modal appears */}
+    <RemoteImage image={logo} variant="menu-logo" loading="eager" />
+
+    <ul class="links">
+      {
+        groups.map((item) =>
+          "links" in item ? (
+            <li class="group">
+              {/* its own exclusive group: the desktop nav's `header-nav`
+                  details sit in the same DOM */}
+              <details name="mobile-nav">
+                <MenuButton
+                  as="summary"
+                  icon="angle-down"
+                  current={item.current}
+                >
+                  {item.label}
+                </MenuButton>
+
+                <ul class="panel">
+                  {item.links.map((link) => (
+                    <li>
+                      <MenuButton href={link.url} current={link.current}>
+                        {link.label}
+                      </MenuButton>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </li>
+          ) : (
+            <li>
+              <MenuButton href={item.url} current={item.current}>
+                {item.label}
+              </MenuButton>
+            </li>
+          ),
+        )
+      }
+    </ul>
+
+    <div class="bottom">
+      {
+        contactLines.length > 0 && (
+          <ul class="contact">
+            {contactLines.map((line) => (
+              <li>
+                {line.url ? (
+                  <Link url={line.url} underline={false}>
+                    <Text variant="paragraph-s">{line.text}</Text>
+                  </Link>
+                ) : (
+                  <Text variant="paragraph-s">{line.text}</Text>
+                )}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+
+      <div class="actions">
+        <Button as="a" href={cta.url} tone="red" size="l" class="cta">
+          {cta.label}
+        </Button>
+
+        {
+          socials && socials.length > 0 && (
+            <ul class="socials">
+              {socials.map((social) => (
+                <li>
+                  <Link
+                    url={social.url}
+                    ariaLabel={social.label}
+                    underline={false}
+                    target="_blank"
+                  >
+                    <IconChip name={social.icon} size="m" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  // mobile menu nav fallback for the browsers that ignore commandfor
+  // where the attributes are inert and the burger would do nothing
+  if (!("commandForElement" in HTMLButtonElement.prototype)) {
+    const menu = document.querySelector<HTMLDialogElement>("[data-mobile-menu]");
+
+    document
+      .querySelector<HTMLButtonElement>("[data-burger]")
+      ?.addEventListener("click", () => menu?.showModal());
+  }
+</script>
+
+<style>
+  .mobile-menu {
+    inline-size: 100%;
+    max-inline-size: 100%;
+    block-size: 100dvh;
+    max-block-size: 100dvh;
+    padding: 0;
+    overflow-y: auto;
+    color: var(--color-text-on-media);
+    background-image: var(--color-surface-vivid);
+    border: 0;
+  }
+
+  .top {
+    position: fixed;
+    inset-block-start: var(--space-4);
+    inset-inline: var(--space-6);
+    display: flex;
+    gap: var(--space-6);
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .close-form {
+    margin-inline-start: auto;
+  }
+
+  .close:active :global(.icon-chip) {
+    background:
+      linear-gradient(var(--color-fill-muted) 0 0) padding-box,
+      var(--color-border-brand) border-box;
+    border-color: transparent;
+  }
+
+  .sheet {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-block-size: 100%;
+    padding-block: var(--space-10);
+    padding-inline: var(--space-6);
+  }
+
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    align-items: center;
+
+    /* collapses to 0 under overflow, unlike `space-between` */
+    margin-block: auto;
+    padding-block: var(--space-10);
+  }
+
+  .group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    align-items: center;
+    padding-block-start: var(--space-1);
+  }
+
+  .bottom {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-self: stretch;
+  }
+
+  .contact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    align-items: center;
+    text-align: center;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-items: center;
+  }
+
+  .cta {
+    align-self: stretch;
+  }
+
+  .socials {
+    display: flex;
+    gap: var(--space-4);
+  }
+</style>

@@ -22,6 +22,10 @@ const data = await getHeaderData({ config: sanityConfig, lang, venueSlug });
 
 const routes = getRoutesForLang(lang);
 
+// WARNING: when modifying these links
+// the viewport width at which the menu switch to "mobile burger menu"
+// is hardcoded (search for "header collapsed" -- breakpoint.css) and depends on the number of items and their label
+// if this has to be modified, adjust this value
 const mainLinks = [
   {
     label: t("header.home"),
@@ -36,7 +40,7 @@ const mainLinks = [
     links: data.experiences,
   },
   {
-    label: "Occasions",
+    label: "Occasions", // todo: translate
     url: "#todo",
   },
   {

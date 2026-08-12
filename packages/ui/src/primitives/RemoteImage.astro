@@ -19,7 +19,12 @@ interface Props {
 }
 
 const variants = {
-  "header-logo": { widths: [200, 400, 600], sizes: "200px" },
+  "header-logo": {
+    widths: [140, 200, 280, 400, 600],
+    // 80rem = "header collapsed"
+    sizes: "(width < 80rem) 140px, 200px",
+  },
+  "menu-logo": { widths: [144, 288, 432], sizes: "144px" },
   "footer-logo": {
     widths: [120, 160, 240, 320],
     sizes: "(width < 48rem) 120px, 160px",
@@ -76,7 +81,19 @@ const srcSetWidths =
 
 <style>
   .header-logo {
-    width: 200px;
+    width: 140px;
+    height: auto;
+  }
+
+  /* 80rem = "header collapsed" */
+  @media (width >= 80rem) {
+    .header-logo {
+      width: 200px;
+    }
+  }
+
+  .menu-logo {
+    width: 144px;
     height: auto;
   }
 

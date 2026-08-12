@@ -1,20 +1,19 @@
 ---
+import MobileMenu, {
+  type Props as MobileMenuProps,
+} from "./header/MobileMenu.astro";
 import Button from "./primitives/Button.astro";
+import IconChip from "./primitives/IconChip.astro";
 import MenuButton from "./primitives/MenuButton.astro";
 import RemoteImage from "./primitives/RemoteImage.astro";
-import type { ImageSource } from "./types";
+import type { ImageSource, NavLink, NavMenu } from "./types";
 
-type NavLink = {
-  label: string;
-  url: string;
-  current?: boolean;
-};
-
-type NavMenu = {
-  label: string;
-  links: NavLink[];
-  current?: boolean;
-};
+/**
+ * invariant: bind "dialog" and its opening "button".
+ * 
+ * DO NOT MODIFY
+ */
+export const MODAL_ID = "mobile-menu"
 
 interface Props {
   logo: ImageSource;
@@ -23,9 +22,53 @@ interface Props {
     label: string;
     url: string;
   };
+  menuLabel?: string;
 }
 
-const { logo, linksTree, cta } = Astro.props;
+// Menu has a default because the same in english or french, todo: translate though
+const { logo, linksTree, cta, menuLabel = "Menu" } = Astro.props;
+
+// TODO: everything the CMS does not supply yet, stubbed at this one call site.
+// Wiring it up = delete this block, widen `Props`, pass the values through.
+const mobileMenu: MobileMenuProps = {
+  logo: {
+    // `apps/web/public/`, not this package: `<Image>` rejects a bundled asset's
+    // dev-time `/@fs/…` url outright, and a public path is the only string that
+    // resolves the same in dev, in the static build and under SSR. It leaves
+    // with this block
+    url: "/mobile-header-logo.svg",
+    width: 144,
+    height: 160,
+    // decorative: the bar's own logo already names the site, and the sheet is
+    // labelled by `menuLabel`
+    alt: "",
+    mimeType: "image/svg+xml",
+  },
+  linksTree,
+  cta,
+  menuLabel,
+  closeLabel: "Fermer",
+  venueSwitcher: {
+    label: "Changer de ville",
+    links: [{ label: "Paris", url: "#" }],
+  },
+  languageSwitch: { url: "#", icon: "flag-france", label: "Français" },
+  contact: {
+    address: { text: "28 boulevard Poissonnière, 75009 Paris" },
+    phone: { text: "01 82 83 23 01", url: "tel:0182832301" },
+    email: {
+      text: "paris@musiquizlejeu.fr",
+      url: "mailto:paris@musiquizlejeu.fr",
+    },
+  },
+  socials: [
+    { url: "#", icon: "tiktok", label: "TikTok" },
+    { url: "#", icon: "youtube", label: "YouTube" },
+    { url: "#", icon: "instagram", label: "Instagram" },
+    { url: "#", icon: "facebook", label: "Facebook" },
+    { url: "#", icon: "linkedin", label: "LinkedIn" },
+  ],
+};
 ---
 
 <header class="header">
@@ -33,7 +76,7 @@ const { logo, linksTree, cta } = Astro.props;
     <RemoteImage image={logo} variant="header-logo" loading="eager" />
 
     <div class="bar">
-      <nav>
+      <nav class="nav">
         <ul class="links">
           {
             linksTree.map((item) =>
@@ -73,35 +116,49 @@ const { logo, linksTree, cta } = Astro.props;
       </nav>
 
       <Button as="a" href={cta.url} tone="red" size="m">{cta.label}</Button>
+
+      <button
+        class="burger"
+        data-burger
+        type="button"
+        command="show-modal"
+        commandfor={MODAL_ID}
+        aria-label={menuLabel}
+        aria-haspopup="dialog"
+      >
+        <IconChip name="menu" tone="muted" size="l" />
+      </button>
     </div>
   </div>
+
+  <MobileMenu {...mobileMenu} />
 </header>
 
 <script>
-  // progressive enhancement only: `<details>` already opens, closes, and stays
-  // mutually exclusive without this. All it adds is the two dismissals the
-  // element has no native answer for — click-outside and Escape.
+  // this script adds progressive enhancement for the desktop menu only
+  // `<details>` already opens, closes, and stays mutually exclusive without JS
+  // this adds 2 more dismissals option: click-outside and escape
+
   const menus = [
-    ...document.querySelectorAll<HTMLDetailsElement>(".header details"),
+    ...document.querySelectorAll<HTMLDetailsElement>(".header .nav details"),
   ];
 
-  function openMenu() {
-    return menus.find((menu) => menu.open);
+  function openMenus() {
+    return menus.filter((menu) => menu.open);
   }
 
   document.addEventListener("click", (event) => {
-    const menu = openMenu();
+    if (!(event.target instanceof Node)) return;
 
-    if (!menu || !(event.target instanceof Node) || menu.contains(event.target))
-      return;
-
-    menu.open = false;
+    for (const menu of openMenus()) {
+      if (!menu.contains(event.target)) menu.open = false;
+    }
   });
 
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
 
-    const menu = openMenu();
+    const [menu] = openMenus();
 
     if (!menu) return;
 
@@ -199,5 +256,34 @@ const { logo, linksTree, cta } = Astro.props;
     background-color: var(--color-surface-translucent);
     backdrop-filter: blur(8px);
     border-radius: var(--space-6);
+  }
+
+  .burger {
+    display: none;
+  }
+
+  /* 80rem = "header collapsed" */
+  @media (width < 80rem) {
+    .nav {
+      display: none;
+    }
+
+    .row {
+      gap: var(--space-6);
+    }
+
+    .bar {
+      gap: var(--space-3);
+      padding: 0;
+    }
+
+    .bar::before,
+    .bar::after {
+      content: none;
+    }
+
+    .burger {
+      display: block;
+    }
   }
 </style>

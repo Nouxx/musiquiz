@@ -1,9 +1,16 @@
 ---
 import Icon, { type IconName } from "./Icon.astro";
 
-type Tone = "light" | "dark";
+type Tone = "light" | "dark" | "muted";
 
-type Size = "s" | "xl";
+const iconSizes = {
+  s: "s", // 24px box, 14px icon
+  m: "l", // 30px box, 20px icon
+  l: "l", // 36px box, 20px icon
+  xl: "xl", // 40px box, 24px icon
+} as const;
+
+type Size = keyof typeof iconSizes;
 
 interface Props {
   name: IconName;
@@ -15,7 +22,7 @@ const { name, tone = "light", size = "xl" } = Astro.props;
 ---
 
 <span class:list={["icon-chip", tone, size]}>
-  <Icon {name} {size} />
+  <Icon {name} size={iconSizes[size]} />
 </span>
 
 <style>
@@ -42,9 +49,25 @@ const { name, tone = "light", size = "xl" } = Astro.props;
     --chip-text: var(--color-text-on-dark);
   }
 
+  .muted {
+    --chip-fill: var(--color-fill-muted);
+    --chip-border: var(--color-border-light);
+    --chip-text: var(--color-text-on-light);
+  }
+
   .s {
     inline-size: 1.5rem;
     block-size: 1.5rem;
+  }
+
+  .m {
+    inline-size: 1.875rem;
+    block-size: 1.875rem;
+  }
+
+  .l {
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
   }
 
   .xl {

@@ -12,6 +12,18 @@ export type SpaceScale =
   | "20"
   | "24";
 
+export type NavLink = {
+  label: string;
+  url: string;
+  current?: boolean;
+};
+
+export type NavMenu = {
+  label: string;
+  links: NavLink[];
+  current?: boolean;
+};
+
 export type ImageSource = {
   url: string;
   width: number;

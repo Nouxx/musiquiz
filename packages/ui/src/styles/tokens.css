@@ -195,6 +195,9 @@
   --color-text-on-green: var(--black);
 
   --color-fill-light: var(--white);
+
+  --color-fill-muted: var(--grey-200);
+
   --color-border-light: var(--black);
   --color-text-on-light: var(--black);
 
