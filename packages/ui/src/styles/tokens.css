@@ -71,6 +71,12 @@
     radial-gradient(72% 122% at 79% 75%, #d10a68 27%, rgb(209 10 104 / 0%)),
     linear-gradient(#120500 0 0);
 
+  --gradient-vivid-menu:
+    radial-gradient(165% 79% at 210% 103%, #ff0 32%, rgb(255 255 0 / 0%)),
+    radial-gradient(330% 53% at -26% 103%, #2404b2 20%, rgb(36 4 178 / 0%)),
+    radial-gradient(170% 129% at 160% 77%, #d10a68 27%, rgb(209 10 104 / 0%)),
+    linear-gradient(#120500 0 0);
+
   /* 60/72 */
   --title-h1: 400 clamp(2rem, 1.384rem + 2.629vw, 3.75rem) / 1.2
     var(--font-title);
@@ -166,6 +172,7 @@
 
   --color-surface-brand: var(--gradient-blue);
   --color-surface-vivid: var(--gradient-vivid);
+  --color-surface-vivid-menu: var(--gradient-vivid-menu);
 
   --color-text-on-brand: var(--white);
   --color-text-on-brand-muted: var(--blue-100);
