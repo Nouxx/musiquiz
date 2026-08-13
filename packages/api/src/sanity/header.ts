@@ -9,7 +9,12 @@ import { imageProjection, sanityImageSchema } from "./shared/image";
 function headerQuery({ lang, venueSlug }: { lang: Lang; venueSlug: string }) {
   return defineQuery(`{
     "siteSettings": *[_type == "siteSettings"][0]{
-      headerLogo ${imageProjection({ lang })}
+      headerLogo ${imageProjection({ lang })},
+      facebookUrl,
+      instagramUrl,
+      linkedinUrl,
+      tiktokUrl,
+      youtubeUrl,
     },
     "venue": *[_type == "venue" && slug.current == "${venueSlug}"][0]{
       "games": offerings[].game->{
@@ -28,6 +33,11 @@ function headerQuery({ lang, venueSlug }: { lang: Lang; venueSlug: string }) {
 const sanityHeaderSchema = z.strictObject({
   siteSettings: z.strictObject({
     headerLogo: sanityImageSchema,
+    facebookUrl: z.url(),
+    instagramUrl: z.url(),
+    linkedinUrl: z.url(),
+    tiktokUrl: z.url(),
+    youtubeUrl: z.url(),
   }),
   venue: z.strictObject({
     games: z.array(

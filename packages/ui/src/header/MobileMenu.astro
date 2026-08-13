@@ -11,9 +11,7 @@ import type { ImageSource, NavLink, NavMenu } from "../types";
 
 type ContactLine = { label: string; url: string };
 
-// exported so the caller can type its props in one place while the values are
-// still stubbed
-export interface Props {
+interface Props {
   logo: ImageSource;
   linksTree: (NavLink | NavMenu)[];
   additionalMobileMenuLink: NavLink;
@@ -26,7 +24,6 @@ export interface Props {
     phone: ContactLine;
     mail: ContactLine;
   };
-  socials?: { url: string; icon: IconName; label: string }[];
 }
 
 const {
@@ -37,11 +34,14 @@ const {
   menuLabel = "Menu",
   languageSwitch,
   contact,
-  socials,
-  additionalMobileMenuLink
+  additionalMobileMenuLink,
 } = Astro.props;
 
-const groups = additionalMobileMenuLink ? [...linksTree, additionalMobileMenuLink] : linksTree;
+const hasSocials = Astro.slots.has("socials");
+
+const groups = additionalMobileMenuLink
+  ? [...linksTree, additionalMobileMenuLink]
+  : linksTree;
 
 const contactLines = [contact.address, contact.phone, contact.mail];
 ---
@@ -139,20 +139,9 @@ const contactLines = [contact.address, contact.phone, contact.mail];
         </Button>
 
         {
-          socials && socials.length > 0 && (
+          hasSocials && (
             <ul class="socials">
-              {socials.map((social) => (
-                <li>
-                  <Link
-                    url={social.url}
-                    ariaLabel={social.label}
-                    underline={false}
-                    target="_blank"
-                  >
-                    <IconChip name={social.icon} size="m" />
-                  </Link>
-                </li>
-              ))}
+              <slot name="socials" />
             </ul>
           )
         }
@@ -165,7 +154,8 @@ const contactLines = [contact.address, contact.phone, contact.mail];
   // mobile menu nav fallback for the browsers that ignore commandfor
   // where the attributes are inert and the burger would do nothing
   if (!("commandForElement" in HTMLButtonElement.prototype)) {
-    const menu = document.querySelector<HTMLDialogElement>("[data-mobile-menu]");
+    const menu =
+      document.querySelector<HTMLDialogElement>("[data-mobile-menu]");
 
     document
       .querySelector<HTMLButtonElement>("[data-burger]")

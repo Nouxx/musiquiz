@@ -31,6 +31,13 @@ function adaptHeader({
       label: format.name,
       url: getRoutesForLang(lang).venueGame(venueSlug, format.slug),
     })),
+    socials: {
+      facebookUrl: data.siteSettings.facebookUrl,
+      instagramUrl: data.siteSettings.instagramUrl,
+      linkedinUrl: data.siteSettings.linkedinUrl,
+      tiktokUrl: data.siteSettings.tiktokUrl,
+      youtubeUrl: data.siteSettings.youtubeUrl,
+    },
   };
 }
 

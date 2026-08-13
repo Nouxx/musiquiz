@@ -6,6 +6,7 @@ import { getT } from "../../libs/i18n";
 import { getLang } from "../../libs/getLang";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import { getOtherLang } from "../../libs/getOtherLang";
+import HeaderSocials from "./header/HeaderSocials.astro";
 
 interface Props {
   venueSlug: string;
@@ -84,4 +85,6 @@ const contact = {
   additionalMobileMenuLink={venueSwitcherLink}
   closeLabel={t("header.closeLabel")}
   {contact}
-/>
+>
+  <HeaderSocials slot="socials" socials={data.socials} />
+</Header>
