@@ -38,7 +38,15 @@ export type VenueHomepage = {
 
 export type Header = {
   logo: CmsImage;
-  venueLogo: CmsImage;
+  venue: {
+    logo: CmsImage;
+    address: string;
+    mapsLink: string;
+    mail: string;
+    mailLink: string;
+    phone: string;
+    phoneLink: string;
+  };
   experiences: {
     label: string;
     url: string;

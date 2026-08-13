@@ -67,14 +67,21 @@ const cta = {
   label: t("header.book"),
   url: routes.venueBook(venueSlug),
 };
+
+const contact = {
+  address: { label: data.venue.address, url: data.venue.mapsLink },
+  phone: { label: data.venue.phone, url: data.venue.phoneLink },
+  mail: { label: data.venue.mail, url: data.venue.mailLink },
+};
 ---
 
 <Header
   logo={data.logo}
-  mobileMenuLogo={data.venueLogo}
+  mobileMenuLogo={data.venue.logo}
   linksTree={mainLinks}
   {cta}
   lang={langSwitcher}
   additionalMobileMenuLink={venueSwitcherLink}
   closeLabel={t("header.closeLabel")}
+  {contact}
 />

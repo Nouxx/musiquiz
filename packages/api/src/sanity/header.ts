@@ -16,7 +16,11 @@ function headerQuery({ lang, venueSlug }: { lang: Lang; venueSlug: string }) {
         name,
         "slug": slug.current
       },
-      venueLogo ${imageProjection({ lang })}
+      venueLogo ${imageProjection({ lang })},
+      addressLine,
+      phone,
+      mail,
+      googleMapsLink
     }
   }`);
 }
@@ -33,6 +37,10 @@ const sanityHeaderSchema = z.strictObject({
       }),
     ),
     venueLogo: sanityImageSchema,
+    addressLine: z.string(),
+    phone: z.string(),
+    mail: z.string(),
+    googleMapsLink: z.string(),
   }),
 });
 

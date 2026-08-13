@@ -32,6 +32,11 @@ interface Props {
   };
   closeLabel: string;
   menuLabel?: string;
+  contact: {
+    address: { label: string; url: string };
+    phone: { label: string; url: string };
+    mail: { label: string; url: string };
+  };
 }
 
 // Menu has a default because the same in english or french, todo: translate though
@@ -43,20 +48,13 @@ const {
   mobileMenuLogo,
   lang,
   additionalMobileMenuLink,
-  closeLabel
+  closeLabel,
+  contact
 } = Astro.props;
 
 // TODO: everything the CMS does not supply yet, stubbed at this one call site.
 // Wiring it up = delete this block, widen `Props`, pass the values through.
 const mobileMenu: Partial<MobileMenuProps> = {
-  contact: {
-    address: { text: "28 boulevard Poissonnière, 75009 Paris" },
-    phone: { text: "01 82 83 23 01", url: "tel:0182832301" },
-    email: {
-      text: "paris@musiquizlejeu.fr",
-      url: "mailto:paris@musiquizlejeu.fr",
-    },
-  },
   socials: [
     { url: "#", icon: "tiktok", label: "TikTok" },
     { url: "#", icon: "youtube", label: "YouTube" },
@@ -135,6 +133,7 @@ const mobileMenu: Partial<MobileMenuProps> = {
     additionalMobileMenuLink={additionalMobileMenuLink}
     {cta}
     {closeLabel}
+    {contact}
   />
 </header>
 

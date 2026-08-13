@@ -9,7 +9,7 @@ import RemoteImage from "../primitives/RemoteImage.astro";
 import Text from "../primitives/Text.astro";
 import type { ImageSource, NavLink, NavMenu } from "../types";
 
-type ContactLine = { text: string; url?: string };
+type ContactLine = { label: string; url: string };
 
 // exported so the caller can type its props in one place while the values are
 // still stubbed
@@ -21,10 +21,10 @@ export interface Props {
   closeLabel: string;
   menuLabel?: string;
   languageSwitch?: { url: string; icon: IconName; label: string };
-  contact?: {
-    address?: ContactLine;
-    phone?: ContactLine;
-    email?: ContactLine;
+  contact: {
+    address: ContactLine;
+    phone: ContactLine;
+    mail: ContactLine;
   };
   socials?: { url: string; icon: IconName; label: string }[];
 }
@@ -43,9 +43,7 @@ const {
 
 const groups = additionalMobileMenuLink ? [...linksTree, additionalMobileMenuLink] : linksTree;
 
-const contactLines = [contact?.address, contact?.phone, contact?.email].filter(
-  (line) => line !== undefined,
-);
+const contactLines = [contact.address, contact.phone, contact.mail];
 ---
 
 <dialog
@@ -124,10 +122,10 @@ const contactLines = [contact?.address, contact?.phone, contact?.email].filter(
               <li>
                 {line.url ? (
                   <Link url={line.url} underline={false}>
-                    <Text variant="paragraph-s">{line.text}</Text>
+                    <Text variant="paragraph-s">{line.label}</Text>
                   </Link>
                 ) : (
-                  <Text variant="paragraph-s">{line.text}</Text>
+                  <Text variant="paragraph-s">{line.label}</Text>
                 )}
               </li>
             ))}

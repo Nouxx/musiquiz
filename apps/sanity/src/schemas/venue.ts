@@ -248,5 +248,13 @@ export const venueType = defineType({
       group: "images",
       validation: (rule) => rule.required(),
     }),
+    defineField({
+      name: "addressLine",
+      title: "Address line",
+      type: "string",
+      description: "Example: 28 boulevard Poissonnière, 75009 Paris",
+      group: "contact",
+      validation: (rule) => rule.required(),
+    }),
   ],
 });
