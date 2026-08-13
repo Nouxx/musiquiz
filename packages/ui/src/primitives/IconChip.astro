@@ -29,12 +29,20 @@ const { name, tone = "light", size = "xl" } = Astro.props;
 <style>
   .icon-chip {
     display: inline-flex;
+
+    /* the size classes set `inline-size` only: the ratio keeps the box square
+       whatever the icon inside, and `flex: none` stops a flex parent from
+       stretching or squeezing it out of round */
+    flex: none;
+    aspect-ratio: 1;
     align-items: center;
     justify-content: center;
     color: var(--chip-text);
     background: var(--chip-fill);
+
+    /* even on all four sides: the bottom-heavy border used elsewhere reads as
+       depth on a pill, but as a wobble on a circle this small */
     border: 1px solid var(--chip-border);
-    border-block-end-width: 3px;
     border-radius: 999px;
   }
 
@@ -58,21 +66,17 @@ const { name, tone = "light", size = "xl" } = Astro.props;
 
   .s {
     inline-size: 1.5rem;
-    block-size: 1.5rem;
   }
 
   .m {
     inline-size: 1.875rem;
-    block-size: 1.875rem;
   }
 
   .l {
     inline-size: 2.25rem;
-    block-size: 2.25rem;
   }
 
   .xl {
     inline-size: 2.5rem;
-    block-size: 2.5rem;
   }
 </style>
