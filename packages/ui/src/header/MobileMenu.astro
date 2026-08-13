@@ -134,7 +134,7 @@ const contactLines = [contact.address, contact.phone, contact.mail];
       }
 
       <div class="actions">
-        <Button as="a" href={cta.url} tone="red" size="l" class="cta">
+        <Button as="a" href={cta.url} tone="red" size="l">
           {cta.label}
         </Button>
 
@@ -251,10 +251,7 @@ const contactLines = [contact.address, contact.phone, contact.mail];
     flex-direction: column;
     gap: var(--space-6);
     align-items: center;
-  }
-
-  .cta {
-    align-self: stretch;
+    justify-content: center;
   }
 
   .socials {
