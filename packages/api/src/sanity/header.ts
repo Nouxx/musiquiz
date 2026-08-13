@@ -11,11 +11,12 @@ function headerQuery({ lang, venueSlug }: { lang: Lang; venueSlug: string }) {
     "siteSettings": *[_type == "siteSettings"][0]{
       headerLogo ${imageProjection({ lang })}
     },
-    "gameFormats": *[_type == "venue" && slug.current == "${venueSlug}"][0].offerings[]{
-      "game": game->{
+    "venue": *[_type == "venue" && slug.current == "${venueSlug}"][0]{
+      "games": offerings[].game->{
         name,
         "slug": slug.current
-      }
+      },
+      venueLogo ${imageProjection({ lang })}
     }
   }`);
 }
@@ -24,14 +25,15 @@ const sanityHeaderSchema = z.strictObject({
   siteSettings: z.strictObject({
     headerLogo: sanityImageSchema,
   }),
-  gameFormats: z.array(
-    z.strictObject({
-      game: z.strictObject({
+  venue: z.strictObject({
+    games: z.array(
+      z.strictObject({
         name: z.string(),
         slug: z.string(),
       }),
-    }),
-  ),
+    ),
+    venueLogo: sanityImageSchema,
+  }),
 });
 
 export type SanityHeader = z.infer<typeof sanityHeaderSchema>;

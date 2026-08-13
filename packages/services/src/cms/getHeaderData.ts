@@ -17,9 +17,10 @@ function adaptHeader({
 }): Header {
   return {
     logo: toCmsImage(data.siteSettings.headerLogo),
-    experiences: data.gameFormats.map((format) => ({
-      label: format.game.name,
-      url: getRoutesForLang(lang).venueGame(venueSlug, format.game.slug),
+    venueLogo: toCmsImage(data.venue.venueLogo),
+    experiences: data.venue.games.map((format) => ({
+      label: format.name,
+      url: getRoutesForLang(lang).venueGame(venueSlug, format.slug),
     })),
   };
 }

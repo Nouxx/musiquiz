@@ -17,6 +17,7 @@ export const MODAL_ID = "mobile-menu"
 
 interface Props {
   logo: ImageSource;
+  mobileMenuLogo: ImageSource;
   linksTree: (NavLink | NavMenu)[];
   cta: {
     label: string;
@@ -26,24 +27,11 @@ interface Props {
 }
 
 // Menu has a default because the same in english or french, todo: translate though
-const { logo, linksTree, cta, menuLabel = "Menu" } = Astro.props;
+const { logo, linksTree, cta, menuLabel = "Menu", mobileMenuLogo } = Astro.props;
 
 // TODO: everything the CMS does not supply yet, stubbed at this one call site.
 // Wiring it up = delete this block, widen `Props`, pass the values through.
 const mobileMenu: MobileMenuProps = {
-  logo: {
-    // `apps/web/public/`, not this package: `<Image>` rejects a bundled asset's
-    // dev-time `/@fs/…` url outright, and a public path is the only string that
-    // resolves the same in dev, in the static build and under SSR. It leaves
-    // with this block
-    url: "/mobile-header-logo.svg",
-    width: 144,
-    height: 160,
-    // decorative: the bar's own logo already names the site, and the sheet is
-    // labelled by `menuLabel`
-    alt: "",
-    mimeType: "image/svg+xml",
-  },
   linksTree,
   cta,
   menuLabel,
@@ -131,7 +119,7 @@ const mobileMenu: MobileMenuProps = {
     </div>
   </div>
 
-  <MobileMenu {...mobileMenu} />
+  <MobileMenu {...mobileMenu} logo={mobileMenuLogo} />
 </header>
 
 <script>
