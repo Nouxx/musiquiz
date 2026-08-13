@@ -8,9 +8,13 @@ export const fr = {
   },
   header: {
     home: "Accueil",
+    concept: "Concept",
+    events: "Occasions",
     experiences: "Nos expériences",
     offerAGame: "Offrir une partie",
     book: "Réserver",
+    changeVenue: "Changez de ville",
+    closeLabel: "Fermer",
   },
   footer: {
     faq: "FAQ",

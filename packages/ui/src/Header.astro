@@ -3,6 +3,7 @@ import MobileMenu, {
   type Props as MobileMenuProps,
 } from "./header/MobileMenu.astro";
 import Button from "./primitives/Button.astro";
+import type { FlagIconName } from "./lib/icons";
 import IconChip from "./primitives/IconChip.astro";
 import MenuButton from "./primitives/MenuButton.astro";
 import RemoteImage from "./primitives/RemoteImage.astro";
@@ -10,37 +11,44 @@ import type { ImageSource, NavLink, NavMenu } from "./types";
 
 /**
  * invariant: bind "dialog" and its opening "button".
- * 
+ *
  * DO NOT MODIFY
  */
-export const MODAL_ID = "mobile-menu"
+export const MODAL_ID = "mobile-menu";
 
 interface Props {
   logo: ImageSource;
   mobileMenuLogo: ImageSource;
+  lang: {
+    url: string;
+    icon: FlagIconName;
+    label: string;
+  };
   linksTree: (NavLink | NavMenu)[];
+  additionalMobileMenuLink: NavLink;
   cta: {
     label: string;
     url: string;
   };
+  closeLabel: string;
   menuLabel?: string;
 }
 
 // Menu has a default because the same in english or french, todo: translate though
-const { logo, linksTree, cta, menuLabel = "Menu", mobileMenuLogo } = Astro.props;
+const {
+  logo,
+  linksTree,
+  cta,
+  menuLabel = "Menu",
+  mobileMenuLogo,
+  lang,
+  additionalMobileMenuLink,
+  closeLabel
+} = Astro.props;
 
 // TODO: everything the CMS does not supply yet, stubbed at this one call site.
 // Wiring it up = delete this block, widen `Props`, pass the values through.
-const mobileMenu: MobileMenuProps = {
-  linksTree,
-  cta,
-  menuLabel,
-  closeLabel: "Fermer",
-  venueSwitcher: {
-    label: "Changer de ville",
-    links: [{ label: "Paris", url: "#" }],
-  },
-  languageSwitch: { url: "#", icon: "flag-france", label: "Français" },
+const mobileMenu: Partial<MobileMenuProps> = {
   contact: {
     address: { text: "28 boulevard Poissonnière, 75009 Paris" },
     phone: { text: "01 82 83 23 01", url: "tel:0182832301" },
@@ -119,7 +127,15 @@ const mobileMenu: MobileMenuProps = {
     </div>
   </div>
 
-  <MobileMenu {...mobileMenu} logo={mobileMenuLogo} />
+  <MobileMenu
+    {...mobileMenu}
+    logo={mobileMenuLogo}
+    languageSwitch={lang}
+    linksTree={linksTree}
+    additionalMobileMenuLink={additionalMobileMenuLink}
+    {cta}
+    {closeLabel}
+  />
 </header>
 
 <script>
