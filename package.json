@@ -17,6 +17,7 @@
     "ff": "pnpm format:fix",
     "lint": "pnpm --recursive lint",
     "tsc": "pnpm --recursive tsc",
+    "test": "pnpm --recursive test",
     "typegen": "pnpm --filter sanity typegen"
   },
   "keywords": [],
