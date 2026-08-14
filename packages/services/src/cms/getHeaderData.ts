@@ -1,5 +1,6 @@
 import { fetchHeader, type SanityHeader } from "@repo/api/sanity/header";
 import { getMailto } from "@repo/utils/getMailto";
+import { getTel } from "@repo/utils/getTel";
 import type { Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
@@ -22,10 +23,10 @@ function adaptHeader({
       logo: toCmsImage(data.venue.venueLogo),
       address: data.venue.addressLine,
       mapsLink: data.venue.googleMapsLink,
-      mail: data.venue.mail,
-      mailLink: getMailto(data.venue.mail),
-      phone: data.venue.phone,
-      phoneLink: `tel:${data.venue.phone}`,
+      mailLabel: data.venue.mail,
+      mailHref: getMailto(data.venue.mail),
+      phoneLabel: data.venue.phone,
+      phoneHref: getTel(data.venue.phone),
     },
     experiences: data.venue.games.map((format) => ({
       label: format.name,

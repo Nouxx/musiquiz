@@ -48,8 +48,8 @@ const sanityHeaderSchema = z.strictObject({
     ),
     venueLogo: sanityImageSchema,
     addressLine: z.string(),
-    phone: z.string(),
-    mail: z.string(),
+    phone: z.string().min(1),
+    mail: z.email(),
     googleMapsLink: z.string(),
   }),
 });

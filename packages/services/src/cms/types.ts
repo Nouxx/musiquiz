@@ -42,10 +42,10 @@ export type Header = {
     logo: CmsImage;
     address: string;
     mapsLink: string;
-    mail: string;
-    mailLink: string;
-    phone: string;
-    phoneLink: string;
+    mailLabel: string;
+    mailHref: string;
+    phoneLabel: string;
+    phoneHref: string;
   };
   experiences: {
     label: string;
