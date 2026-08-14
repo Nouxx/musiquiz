@@ -27,6 +27,7 @@ const t = getT(getLang(Astro));
   <Badge>{badgeLabel}</Badge>
   <Text as="h1" variant="title-h1">{heading}</Text>
 
-  {/* the call to action has no destination yet — deliberately inert */}
-  <Button slot="actions" icon="angle-down">{t("cover.chooseVenue")}</Button>
+  <Button slot="actions" as="a" href="#venues" icon="angle-down">
+    {t("cover.chooseVenue")}
+  </Button>
 </PageCover>

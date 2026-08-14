@@ -42,3 +42,11 @@ const t = getT(lang);
     </Grid>
   </Flex>
 </Section>
+
+<style>
+  /* the header is `position: fixed`, so an anchor jump would otherwise land the
+     heading underneath it */
+  #venues {
+    scroll-margin-block-start: var(--space-20);
+  }
+</style>
