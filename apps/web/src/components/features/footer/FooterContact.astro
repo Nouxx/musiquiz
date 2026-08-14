@@ -15,21 +15,18 @@ interface Props {
 const { contact } = Astro.props;
 
 const t = getT(getLang(Astro));
-
-// todo: done by the service
-const sanitizedNumber = contact.phone.replaceAll(" ", "");
 ---
 
 <FooterColumn heading={t("footer.contact")}>
   <ContactItem icon="phone" label={t("footer.phone")}>
-    <Link url={`tel:${sanitizedNumber}`} underline={false}>
-      <Text variant="title-s">{contact.phone}</Text>
+    <Link url={contact.phoneHref} underline={false}>
+      <Text variant="title-s">{contact.phoneLabel}</Text>
     </Link>
   </ContactItem>
 
   <ContactItem icon="mail" label={t("footer.mail")}>
-    <Link url={`mailto:${contact.mail}`} underline={false}>
-      <Text variant="title-s">{contact.mail}</Text>
+    <Link url={contact.mailHref} underline={false}>
+      <Text variant="title-s">{contact.mailLabel}</Text>
     </Link>
   </ContactItem>
 

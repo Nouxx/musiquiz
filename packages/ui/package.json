@@ -4,6 +4,8 @@
   "sideEffects": false,
   "exports": {
     "./*": "./src/*.astro",
+    "./lib/*": "./src/lib/*.ts",
+    "./types": "./src/types.ts",
     "./styles/*": "./src/styles/*"
   },
   "scripts": {

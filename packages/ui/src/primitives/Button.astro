@@ -1,7 +1,8 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 import Text from "./Text.astro";
-import Icon, { type IconName } from "./Icon.astro";
+import Icon from "./Icon.astro";
+import type { IconName } from "../lib/icons";
 
 type Tone = "red" | "blue" | "green" | "light";
 
@@ -65,6 +66,8 @@ const textVariant = size === "s" ? "title-s" : "title-base";
     color: var(--button-text);
     text-align: center;
     background: var(--button-fill);
+
+    max-width: fit-content;
 
     /* 999px because at 46px tall (button) the radius already exceeds half the
        height. Useful if the button has 2 lines of text */

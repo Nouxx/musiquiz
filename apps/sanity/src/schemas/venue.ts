@@ -1,7 +1,9 @@
 import ClockIcon from "@sanity/icons/Clock";
 import EnvelopeIcon from "@sanity/icons/Envelope";
 import ImageIcon from "@sanity/icons/Image";
+import InfoOutlineIcon from "@sanity/icons/InfoOutline";
 import JoystickIcon from "@sanity/icons/Joystick";
+import PinIcon from "@sanity/icons/Pin";
 import { defineField, defineType } from "sanity";
 import type { Path, Reference, StringRule } from "sanity";
 import { HomeIcon } from "@sanity/icons/Home";
@@ -28,14 +30,23 @@ export const venueType = defineType({
   type: "document",
   icon: HomeIcon,
   groups: [
+    {
+      name: "general",
+      title: "General",
+      icon: InfoOutlineIcon,
+      default: true,
+    },
     { name: "pageCover", title: "Page Cover", icon: ImageIcon },
+    { name: "offerings", title: "Offerings", icon: JoystickIcon },
     { name: "contact", title: "Contact", icon: EnvelopeIcon },
+    { name: "location", title: "Location", icon: PinIcon },
     { name: "openHours", title: "Open Hours", icon: ClockIcon },
   ],
   fields: [
     defineField({
       name: "title",
       type: "string",
+      group: "general",
       // todo: add character count
       validation: (rule) => rule.required().max(30),
     }),
@@ -43,6 +54,7 @@ export const venueType = defineType({
       name: "slug",
       title: "URL slug",
       type: "slug",
+      group: "general",
       description:
         'How the venue name will appear in a URL. Use the "Generate" button.',
       validation: (rule) => rule.required(),
@@ -60,6 +72,7 @@ export const venueType = defineType({
       name: "offerings",
       title: "Offerings",
       type: "array",
+      group: "offerings",
       validation: (rule) =>
         rule.custom((offerings?: Offering[]) => {
           if (!offerings) return true;
@@ -230,14 +243,30 @@ export const venueType = defineType({
       type: "string",
       description:
         "Paste it from Google Maps, example: https://share.google/pfpYwPnyAXvmLJ1Su",
-      group: "contact",
+      group: "location",
     }),
     defineField({
       name: "regionCode",
-      title: "Google Maps Link",
+      title: "Region code",
       type: "string",
       description: "Example: '59' for Lille",
-      group: "contact",
+      group: "location",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "venueLogo",
+      title: "Venue Logo",
+      type: "imageWithAlt",
+      description: "Prefer SVG files",
+      group: "general",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "addressLine",
+      title: "Address line",
+      type: "string",
+      description: "Example: 28 boulevard Poissonnière, 75009 Paris",
+      group: "location",
       validation: (rule) => rule.required(),
     }),
   ],

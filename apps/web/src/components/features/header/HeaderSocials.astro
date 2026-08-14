@@ -1,0 +1,35 @@
+---
+import type { Header } from "@repo/services/cms/types";
+import IconChip from "@repo/ui/primitives/IconChip";
+import Link from "@repo/ui/primitives/Link";
+
+interface Props {
+  socials: Header["socials"];
+}
+
+const { socials } = Astro.props;
+
+const { tiktokUrl, youtubeUrl, instagramUrl, facebookUrl, linkedinUrl } =
+  socials;
+
+const networks = [
+  { url: tiktokUrl, icon: "tiktok", label: "TikTok" },
+  { url: youtubeUrl, icon: "youtube", label: "YouTube" },
+  { url: instagramUrl, icon: "instagram", label: "Instagram" },
+  { url: facebookUrl, icon: "facebook", label: "Facebook" },
+  { url: linkedinUrl, icon: "linkedin", label: "LinkedIn" },
+] as const;
+---
+
+{
+  networks.map(
+    ({ url, icon, label }) =>
+      url && (
+        <li>
+          <Link {url} ariaLabel={label} target="_blank" underline={false}>
+            <IconChip name={icon} size="m" />
+          </Link>
+        </li>
+      ),
+  )
+}

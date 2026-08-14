@@ -83,6 +83,17 @@ export default defineConfig([
   {
     files: ["**/*.astro"],
     languageOptions: { parserOptions: { parser: typescriptEslintParser } },
+    // Same resolution failure decides which processor extracts `<script>`
+    // blocks: the plugin only picks client-side-ts when it can require
+    // @typescript-eslint/parser from process.cwd(), otherwise it extracts the
+    // scripts as virtual .js files. TypeScript parses `f<T>(x)` in a .js file
+    // as a chained comparison, so every generic call in a client script trips
+    // unicorn/no-chained-comparison. Astro client scripts are TS — pin it.
+    processor: "astro/client-side-ts",
+  },
+  {
+    files: ["**/*.astro/*.ts"],
+    languageOptions: { parser: typescriptEslintParser },
   },
   // disable formatting rules of ESLint
   // so that only Prettier owns them

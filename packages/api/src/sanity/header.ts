@@ -9,13 +9,23 @@ import { imageProjection, sanityImageSchema } from "./shared/image";
 function headerQuery({ lang, venueSlug }: { lang: Lang; venueSlug: string }) {
   return defineQuery(`{
     "siteSettings": *[_type == "siteSettings"][0]{
-      headerLogo ${imageProjection({ lang })}
+      headerLogo ${imageProjection({ lang })},
+      facebookUrl,
+      instagramUrl,
+      linkedinUrl,
+      tiktokUrl,
+      youtubeUrl,
     },
-    "gameFormats": *[_type == "venue" && slug.current == "${venueSlug}"][0].offerings[]{
-      "game": game->{
+    "venue": *[_type == "venue" && slug.current == "${venueSlug}"][0]{
+      "games": offerings[].game->{
         name,
         "slug": slug.current
-      }
+      },
+      venueLogo ${imageProjection({ lang })},
+      addressLine,
+      phone,
+      mail,
+      googleMapsLink
     }
   }`);
 }
@@ -23,15 +33,25 @@ function headerQuery({ lang, venueSlug }: { lang: Lang; venueSlug: string }) {
 const sanityHeaderSchema = z.strictObject({
   siteSettings: z.strictObject({
     headerLogo: sanityImageSchema,
+    facebookUrl: z.url(),
+    instagramUrl: z.url(),
+    linkedinUrl: z.url(),
+    tiktokUrl: z.url(),
+    youtubeUrl: z.url(),
   }),
-  gameFormats: z.array(
-    z.strictObject({
-      game: z.strictObject({
+  venue: z.strictObject({
+    games: z.array(
+      z.strictObject({
         name: z.string(),
         slug: z.string(),
       }),
-    }),
-  ),
+    ),
+    venueLogo: sanityImageSchema,
+    addressLine: z.string(),
+    phone: z.string().min(1),
+    mail: z.email(),
+    googleMapsLink: z.string(),
+  }),
 });
 
 export type SanityHeader = z.infer<typeof sanityHeaderSchema>;

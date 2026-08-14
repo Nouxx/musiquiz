@@ -2,14 +2,16 @@
 interface Props {
   surface?: "default" | "vivid";
   spacing?: "l" | "m";
+  id?: string;
 }
 
-const { surface = "default", spacing = "l" } = Astro.props;
+const { surface = "default", spacing = "l", id } = Astro.props;
 ---
 
 <section
   class:list={["section", surface]}
   style={{ "--section-spacing": `var(--space-section-${spacing})` }}
+  {id}
 >
   <div class="content"><slot /></div>
 </section>

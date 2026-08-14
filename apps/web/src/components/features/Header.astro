@@ -5,6 +5,10 @@ import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEn
 import { getT } from "../../libs/i18n";
 import { getLang } from "../../libs/getLang";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+import { isCurrentUrl } from "@repo/services/routing/isCurrentUrl";
+import type { NavLink, NavMenu } from "@repo/ui/types";
+import { getOtherLang } from "../../libs/getOtherLang";
+import HeaderSocials from "./header/HeaderSocials.astro";
 
 interface Props {
   venueSlug: string;
@@ -22,17 +26,35 @@ const data = await getHeaderData({ config: sanityConfig, lang, venueSlug });
 
 const routes = getRoutesForLang(lang);
 
-const mainLinks = [
+const otherLang = getOtherLang(lang);
+
+const langSwitcher = {
+  url: getRoutesForLang(otherLang.lang).venueHome(venueSlug),
+  icon: otherLang.icon,
+  label: otherLang.label,
+};
+
+const pathname = Astro.url.pathname;
+
+// WARNING: when modifying these links
+// the viewport width at which the menu switch to "mobile burger menu"
+// is hardcoded (search for "header collapsed" -- breakpoint.css) and depends on the number of items and their label
+// if this has to be modified, adjust this value
+const mainLinks: (NavLink | NavMenu)[] = [
   {
     label: t("header.home"),
     url: routes.venueHome(venueSlug),
+  },
+  {
+    label: t("header.concept"),
+    url: "#todo",
   },
   {
     label: t("header.experiences"),
     links: data.experiences,
   },
   {
-    label: "Occasions (TODO)",
+    label: t("header.events"),
     url: "#todo",
   },
   {
@@ -41,10 +63,47 @@ const mainLinks = [
   },
 ];
 
+function withCurrent(item: NavLink | NavMenu): NavLink | NavMenu {
+  if (!("links" in item)) {
+    return { ...item, current: isCurrentUrl(pathname, item.url) };
+  }
+
+  const links = item.links.map((link) => ({
+    ...link,
+    current: isCurrentUrl(pathname, link.url),
+  }));
+
+  return { ...item, links, current: links.some((link) => link.current) };
+}
+
+const linksTree = mainLinks.map(withCurrent);
+
+const venueSwitcherLink = {
+  label: t("header.changeVenue"),
+  url: routes.home + "#venues",
+};
+
 const cta = {
   label: t("header.book"),
   url: routes.venueBook(venueSlug),
 };
+
+const contact = {
+  address: { label: data.venue.address, url: data.venue.mapsLink },
+  phone: { label: data.venue.phoneLabel, url: data.venue.phoneHref },
+  mail: { label: data.venue.mailLabel, url: data.venue.mailHref },
+};
 ---
 
-<Header logo={data.logo} linksTree={mainLinks} {cta} />
+<Header
+  logo={data.logo}
+  mobileMenuLogo={data.venue.logo}
+  {linksTree}
+  {cta}
+  lang={langSwitcher}
+  additionalMobileMenuLink={venueSwitcherLink}
+  closeLabel={t("header.closeLabel")}
+  {contact}
+>
+  <HeaderSocials slot="socials" socials={data.socials} />
+</Header>

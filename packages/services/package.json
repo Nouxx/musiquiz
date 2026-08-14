@@ -8,6 +8,7 @@
   "scripts": {
     "clean": "rm -rf node_modules",
     "tsc": "tsc",
+    "test": "vitest run",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -15,8 +16,9 @@
     "@repo/utils": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "catalog:",
     "eslint": "catalog:",
-    "eslint-config": "workspace:*"
+    "eslint-config": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

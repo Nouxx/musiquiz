@@ -10,6 +10,19 @@
 
 html {
   scroll-behavior: smooth;
+
+  /* eslint-disable-next-line css/use-baseline -- 
+    classic desktop scrollbars eat page width. When a modal hides the root's
+    overflow the scrollbar vanishes and the page behind it jumps sideways by that width.
+    reserving the strip permanently means removing the scrollbar changes nothing.
+    no-op with macOS overlay scrollbars.
+    no fallback needed: unsupported browsers just get the old jump */
+  scrollbar-gutter: stable;
+}
+
+/* eslint-disable-next-line css/use-baseline -- freezes background scroll while dialog open. */
+html:has(dialog:modal) {
+  overflow: hidden;
 }
 
 body {

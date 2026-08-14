@@ -1,58 +1,286 @@
 ---
+import MobileMenu from "./header/MobileMenu.astro";
+import Button from "./primitives/Button.astro";
+import type { FlagIconName } from "./lib/icons";
+import IconChip from "./primitives/IconChip.astro";
+import MenuButton from "./primitives/MenuButton.astro";
 import RemoteImage from "./primitives/RemoteImage.astro";
-import type { ImageSource } from "./types";
+import type { ImageSource, NavLink, NavMenu } from "./types";
 
-type NavLink = {
-  label: string;
-  url: string;
-};
-
-type NavMenu = {
-  label: string;
-  links: NavLink[];
-};
+/**
+ * invariant: bind "dialog" and its opening "button".
+ *
+ * DO NOT MODIFY
+ */
+export const MODAL_ID = "mobile-menu";
 
 interface Props {
   logo: ImageSource;
+  mobileMenuLogo: ImageSource;
+  lang: {
+    url: string;
+    icon: FlagIconName;
+    label: string;
+  };
   linksTree: (NavLink | NavMenu)[];
+  additionalMobileMenuLink: NavLink;
   cta: {
     label: string;
     url: string;
   };
+  closeLabel: string;
+  menuLabel?: string;
+  contact: {
+    address: { label: string; url: string };
+    phone: { label: string; url: string };
+    mail: { label: string; url: string };
+  };
 }
 
-const { logo, linksTree, cta } = Astro.props;
+// Menu has a default because the same in english or french, todo: translate though
+const {
+  logo,
+  linksTree,
+  cta,
+  menuLabel = "Menu",
+  mobileMenuLogo,
+  lang,
+  additionalMobileMenuLink,
+  closeLabel,
+  contact,
+} = Astro.props;
+
+// forwarded conditionally: a `<slot>` element counts as filled content in the
+// child, so an unconditional forward would leave `MobileMenu` with an empty list
+const hasSocials = Astro.slots.has("socials");
 ---
 
-<header style={{ border: "1px solid black", margin: "2px" }}>
-  <RemoteImage image={logo} variant="logo" loading="eager" />
-  <nav>
-    <ul>
-      {
-        linksTree.map((item) =>
-          "links" in item ? (
-            <li>
-              <details>
-                <summary>{item.label}</summary>
-                <ul>
-                  {item.links.map((link) => (
-                    <li>
-                      <a href={link.url}>{link.label}</a>
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            </li>
-          ) : (
-            <li>
-              <a href={item.url}>{item.label}</a>
-            </li>
-          ),
-        )
-      }
-      <li>
-        <a href={cta.url}>{cta.label}</a>
-      </li>
-    </ul>
-  </nav>
+<header class="header">
+  <div class="row">
+    <RemoteImage image={logo} variant="header-logo" loading="eager" />
+
+    <div class="bar">
+      <nav class="nav">
+        <ul class="links">
+          {
+            linksTree.map((item) =>
+              "links" in item ? (
+                <li class="menu">
+                  {/* `name` makes the browser close every sibling when this one opens */}
+                  <details name="header-nav">
+                    <MenuButton
+                      as="summary"
+                      icon="angle-down"
+                      current={item.current}
+                    >
+                      {item.label}
+                    </MenuButton>
+
+                    <ul class="panel">
+                      {item.links.map((link) => (
+                        <li>
+                          <MenuButton href={link.url} current={link.current}>
+                            {link.label}
+                          </MenuButton>
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                </li>
+              ) : (
+                <li>
+                  <MenuButton href={item.url} current={item.current}>
+                    {item.label}
+                  </MenuButton>
+                </li>
+              ),
+            )
+          }
+        </ul>
+      </nav>
+
+      <Button as="a" href={cta.url} tone="red" size="m">{cta.label}</Button>
+
+      <button
+        class="burger"
+        data-burger
+        type="button"
+        command="show-modal"
+        commandfor={MODAL_ID}
+        aria-label={menuLabel}
+        aria-haspopup="dialog"
+      >
+        <IconChip name="menu" tone="muted" size="l" />
+      </button>
+    </div>
+  </div>
+
+  <MobileMenu
+    logo={mobileMenuLogo}
+    languageSwitch={lang}
+    linksTree={linksTree}
+    additionalMobileMenuLink={additionalMobileMenuLink}
+    {cta}
+    {closeLabel}
+    {contact}
+  >
+    {hasSocials && <slot name="socials" slot="socials" />}
+  </MobileMenu>
 </header>
+
+<script>
+  // this script adds progressive enhancement for the desktop menu only
+  // `<details>` already opens, closes, and stays mutually exclusive without JS
+  // this adds 2 more dismissals option: click-outside and escape
+  const menus = [
+    ...document.querySelectorAll<HTMLDetailsElement>(".header .nav details"),
+  ];
+
+  function openMenus() {
+    return menus.filter((menu) => menu.open);
+  }
+
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Node)) return;
+
+    for (const menu of openMenus()) {
+      if (!menu.contains(event.target)) menu.open = false;
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+
+    const [menu] = openMenus();
+
+    if (!menu) return;
+
+    menu.open = false;
+    // focus would otherwise be left on a control that no longer exists on screen
+    menu.querySelector("summary")?.focus();
+  });
+</script>
+
+<style>
+  .header {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: 10;
+    padding-block-start: var(--space-4);
+    padding-inline: var(--space-6);
+  }
+
+  .row {
+    display: flex;
+    gap: var(--space-10);
+    align-items: center;
+    justify-content: space-between;
+    max-inline-size: var(--size-content);
+    margin-inline: auto;
+  }
+
+  .bar {
+    /* thickness of the gradient edge below the bar */
+    --bar-edge: 3px;
+
+    position: relative;
+    display: flex;
+
+    gap: var(--space-8);
+    align-items: center;
+
+    padding-block: var(--space-2);
+    padding-inline: var(--space-5) var(--space-2);
+    border-radius: 999px;
+  }
+
+  .bar::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--color-surface-translucent);
+    backdrop-filter: blur(8px);
+    border-radius: inherit;
+    content: "";
+  }
+
+  .bar::after {
+    position: absolute;
+    inset: 0 0 calc(-1 * var(--bar-edge)) 0;
+
+    padding-block-end: var(--bar-edge);
+
+    pointer-events: none;
+    background: var(--color-border-brand);
+    border-radius: inherit;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    content: "";
+  }
+
+  .links {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    list-style: none;
+  }
+
+  .menu {
+    position: relative;
+  }
+
+  .panel {
+    position: absolute;
+    inset-block-start: calc(
+      100% + var(--space-2) + var(--bar-edge) + var(--space-2)
+    );
+    inset-inline-start: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-inline-size: 100%;
+    padding: var(--space-2);
+    white-space: nowrap;
+    list-style: none;
+    background-color: var(--color-surface-translucent);
+    backdrop-filter: blur(8px);
+    border-radius: var(--space-6);
+  }
+
+  .panel :global(.menu-button[aria-current]) {
+    background-image: none;
+  }
+
+  .burger {
+    display: none;
+  }
+
+  /* 80rem = "header collapsed" */
+  @media (width < 80rem) {
+    .nav {
+      display: none;
+    }
+
+    .row {
+      gap: var(--space-6);
+    }
+
+    .bar {
+      gap: var(--space-3);
+      padding: 0;
+    }
+
+    .bar::before,
+    .bar::after {
+      content: none;
+    }
+
+    .burger {
+      display: block;
+    }
+  }
+</style>

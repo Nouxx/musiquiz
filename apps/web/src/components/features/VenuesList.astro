@@ -19,7 +19,7 @@ const lang = getLang(Astro);
 const t = getT(lang);
 ---
 
-<Section surface="vivid">
+<Section surface="vivid" id="venues">
   <Flex direction="column" gap="12">
     <Flex direction="column" gap="3">
       <Badge>{t("venues.badge")}</Badge>
@@ -42,3 +42,11 @@ const t = getT(lang);
     </Grid>
   </Flex>
 </Section>
+
+<style>
+  /* the header is `position: fixed`, so an anchor jump would otherwise land the
+     heading underneath it */
+  #venues {
+    scroll-margin-block-start: var(--space-20);
+  }
+</style>

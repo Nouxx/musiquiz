@@ -38,10 +38,20 @@ export type VenueHomepage = {
 
 export type Header = {
   logo: CmsImage;
+  venue: {
+    logo: CmsImage;
+    address: string;
+    mapsLink: string;
+    mailLabel: string;
+    mailHref: string;
+    phoneLabel: string;
+    phoneHref: string;
+  };
   experiences: {
     label: string;
     url: string;
   }[];
+  socials: Socials;
 };
 
 export type GameFormatLinks = {
@@ -49,18 +59,22 @@ export type GameFormatLinks = {
   url: string;
 };
 
+type Socials = {
+  tiktokUrl?: string;
+  youtubeUrl?: string;
+  instagramUrl?: string;
+  facebookUrl?: string;
+  linkedinUrl?: string;
+};
+
 export type Footer = {
   logo: CmsImage;
-  socials: {
-    tiktokUrl?: string;
-    youtubeUrl?: string;
-    instagramUrl?: string;
-    facebookUrl?: string;
-    linkedinUrl?: string;
-  };
+  socials: Socials;
   contact: {
-    mail: string;
-    phone: string;
+    mailLabel: string;
+    mailHref: string;
+    phoneLabel: string;
+    phoneHref: string;
   };
   gamesFormatsLinks: GameFormatLinks[];
   newsletter: boolean;
@@ -69,13 +83,7 @@ export type Footer = {
 
 export type VenueFooter = {
   logo: CmsImage;
-  socials: {
-    tiktokUrl?: string;
-    youtubeUrl?: string;
-    instagramUrl?: string;
-    facebookUrl?: string;
-    linkedinUrl?: string;
-  };
+  socials: Socials;
   newsletter: boolean;
   venueTitle: string;
   openHours: {
@@ -88,8 +96,10 @@ export type VenueFooter = {
     sunday: string;
   };
   contact: {
-    mail: string;
-    phone: string;
+    mailLabel: string;
+    mailHref: string;
+    phoneLabel: string;
+    phoneHref: string;
     mapsLink?: string;
   };
   games: GameFormatLinks[];

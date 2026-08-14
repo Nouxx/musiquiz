@@ -1,0 +1,55 @@
+/* ============================================================
+   BREAKPOINTS — documentation only, nothing to import
+   ============================================================
+
+   Media query conditions cannot read custom properties, so a breakpoint
+   cannot be a token: `@media (width < var(--x))` is invalid CSS, and there
+   is no build step substituting one (see the `@custom-media` route below).
+   The literals therefore stay written out at each call site, and this file
+   is the one place recording what each number means.
+
+   Rule: every `@media (width …)` in this package quotes the name below in a
+   comment, so a reader can find the derivation and an editor can find the
+   siblings that must change with it.
+
+   ------------------------------------------------------------
+   80rem — header collapsed
+   ------------------------------------------------------------
+   Derived, not picked: the nav bar is drawn at `--size-content` (78rem)
+   plus the header's own `--space-6` gutter on each side = 81rem. Under it
+   the logo + nav + CTA row stops fitting, so:
+     - Header.astro          the nav moves into the burger sheet
+     - RemoteImage.astro     `header-logo` drops 200px → 140px, in the
+                             stylesheet AND in the `sizes` attribute string,
+                             which is TS and must be edited in step
+
+   Note it is a worst-case number, tied to the widest the bar can be drawn,
+   not to what a given venue's links actually measure. Nav labels come from
+   Sanity, so a venue with few short labels collapses earlier than it needs
+   to. Making the flip content-driven needs JS (measure the row, compare
+   against available width) — deliberately not done.
+
+   ------------------------------------------------------------
+   60rem — footer columns stacked
+   ------------------------------------------------------------
+   Used by footer/FooterColumn.astro and footer/FooterSection.astro.
+   Figma step, no derivation recorded.
+
+   ------------------------------------------------------------
+   48rem — footer logo step
+   ------------------------------------------------------------
+   Used by RemoteImage.astro for `footer-logo` (120px → 160px), in the
+   stylesheet and in its `sizes` string. Figma step, no derivation recorded.
+
+   ------------------------------------------------------------
+   If this list grows
+   ------------------------------------------------------------
+   The literals become a real single source with `@custom-media`:
+   `@csstools/postcss-global-data` (pointed at this file) +
+   `postcss-custom-media` in a `postcss.config.mjs` under apps/web, then
+   `@media (--header-collapsed)`. Cost is two devDeps plus exceptions in
+   both linters — `@eslint/css` runs `css/no-invalid-at-rules` and
+   `css/use-baseline`, and stylelint runs `at-rule-no-unknown`; all three
+   reject `@custom-media`. Not worth it for three sites; worth it once the
+   `sizes` strings are the only mirrors left.
+   ============================================================ */

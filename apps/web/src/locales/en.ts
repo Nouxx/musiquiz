@@ -9,10 +9,14 @@ export const en: typeof fr = {
     heading: "Find a Musi'Quiz venue near you!",
   },
   header: {
-    home: "Accueil",
+    home: "Home",
+    concept: "Concept",
+    events: "Events",
     experiences: "Our games",
     offerAGame: "Offer a game",
     book: "Book",
+    changeVenue: "Switch venue",
+    closeLabel: "Close",
   },
   footer: {
     faq: "FAQ",

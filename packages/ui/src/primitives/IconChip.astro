@@ -1,9 +1,17 @@
 ---
-import Icon, { type IconName } from "./Icon.astro";
+import Icon from "./Icon.astro";
+import type { IconName } from "../lib/icons";
 
-type Tone = "light" | "dark";
+type Tone = "light" | "dark" | "muted";
 
-type Size = "s" | "xl";
+const iconSizes = {
+  s: "s", // 24px box, 14px icon
+  m: "l", // 30px box, 20px icon
+  l: "l", // 36px box, 20px icon
+  xl: "xl", // 40px box, 24px icon
+} as const;
+
+type Size = keyof typeof iconSizes;
 
 interface Props {
   name: IconName;
@@ -15,18 +23,26 @@ const { name, tone = "light", size = "xl" } = Astro.props;
 ---
 
 <span class:list={["icon-chip", tone, size]}>
-  <Icon {name} {size} />
+  <Icon {name} size={iconSizes[size]} />
 </span>
 
 <style>
   .icon-chip {
     display: inline-flex;
+
+    /* the size classes set `inline-size` only: the ratio keeps the box square
+       whatever the icon inside, and `flex: none` stops a flex parent from
+       stretching or squeezing it out of round */
+    flex: none;
+    aspect-ratio: 1;
     align-items: center;
     justify-content: center;
     color: var(--chip-text);
     background: var(--chip-fill);
+
+    /* even on all four sides: the bottom-heavy border used elsewhere reads as
+       depth on a pill, but as a wobble on a circle this small */
     border: 1px solid var(--chip-border);
-    border-block-end-width: 3px;
     border-radius: 999px;
   }
 
@@ -42,13 +58,25 @@ const { name, tone = "light", size = "xl" } = Astro.props;
     --chip-text: var(--color-text-on-dark);
   }
 
+  .muted {
+    --chip-fill: var(--color-fill-muted);
+    --chip-border: var(--color-border-light);
+    --chip-text: var(--color-text-on-light);
+  }
+
   .s {
     inline-size: 1.5rem;
-    block-size: 1.5rem;
+  }
+
+  .m {
+    inline-size: 1.875rem;
+  }
+
+  .l {
+    inline-size: 2.25rem;
   }
 
   .xl {
     inline-size: 2.5rem;
-    block-size: 2.5rem;
   }
 </style>

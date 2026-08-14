@@ -1,4 +1,6 @@
 import { fetchFooter, type SanityFooter } from "@repo/api/sanity/footer";
+import { getMailto } from "@repo/utils/getMailto";
+import { getTel } from "@repo/utils/getTel";
 import type { Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
@@ -28,8 +30,10 @@ function adaptFooter({ data }: { data: SanityFooter; lang: Lang }): Footer {
       youtubeUrl,
     },
     contact: {
-      mail: mainEmail,
-      phone: mainPhone,
+      mailLabel: mainEmail,
+      mailHref: getMailto(mainEmail),
+      phoneLabel: mainPhone,
+      phoneHref: getTel(mainPhone),
     },
     newsletter: false,
     gamesFormatsLinks: data.gameFormats.map((format) => ({
