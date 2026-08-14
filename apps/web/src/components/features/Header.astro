@@ -5,6 +5,8 @@ import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEn
 import { getT } from "../../libs/i18n";
 import { getLang } from "../../libs/getLang";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+import { isCurrentUrl } from "@repo/services/routing/isCurrentUrl";
+import type { NavLink, NavMenu } from "@repo/ui/types";
 import { getOtherLang } from "../../libs/getOtherLang";
 import HeaderSocials from "./header/HeaderSocials.astro";
 
@@ -32,11 +34,13 @@ const langSwitcher = {
   label: otherLang.label,
 };
 
+const pathname = Astro.url.pathname;
+
 // WARNING: when modifying these links
 // the viewport width at which the menu switch to "mobile burger menu"
 // is hardcoded (search for "header collapsed" -- breakpoint.css) and depends on the number of items and their label
 // if this has to be modified, adjust this value
-const mainLinks = [
+const mainLinks: (NavLink | NavMenu)[] = [
   {
     label: t("header.home"),
     url: routes.venueHome(venueSlug),
@@ -59,6 +63,21 @@ const mainLinks = [
   },
 ];
 
+function withCurrent(item: NavLink | NavMenu): NavLink | NavMenu {
+  if (!("links" in item)) {
+    return { ...item, current: isCurrentUrl(pathname, item.url) };
+  }
+
+  const links = item.links.map((link) => ({
+    ...link,
+    current: isCurrentUrl(pathname, link.url),
+  }));
+
+  return { ...item, links, current: links.some((link) => link.current) };
+}
+
+const linksTree = mainLinks.map(withCurrent);
+
 const venueSwitcherLink = {
   label: t("header.changeVenue"),
   url: routes.home + "#venues",
@@ -79,7 +98,7 @@ const contact = {
 <Header
   logo={data.logo}
   mobileMenuLogo={data.venue.logo}
-  linksTree={mainLinks}
+  {linksTree}
   {cta}
   lang={langSwitcher}
   additionalMobileMenuLink={venueSwitcherLink}

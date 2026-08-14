@@ -231,6 +231,10 @@ const contactLines = [contact.address, contact.phone, contact.mail];
     padding-block-start: var(--space-1);
   }
 
+  .panel :global(.menu-button[aria-current]) {
+    background-image: none;
+  }
+
   .bottom {
     display: flex;
     flex-direction: column;
