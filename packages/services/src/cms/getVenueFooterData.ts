@@ -2,6 +2,8 @@ import {
   fetchVenueFooter,
   type SanityVenueFooter,
 } from "@repo/api/sanity/venueFooter";
+import { getMailto } from "@repo/utils/getMailto";
+import { getTel } from "@repo/utils/getTel";
 import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
@@ -64,8 +66,10 @@ function adaptVenueFooter({
       sunday: sundayOpeningHours,
     },
     contact: {
-      mail,
-      phone,
+      mailLabel: mail,
+      mailHref: getMailto(mail),
+      phoneLabel: phone,
+      phoneHref: getTel(phone),
       mapsLink: googleMapsLink ?? undefined,
     },
     games: offerings.map((offer) => ({

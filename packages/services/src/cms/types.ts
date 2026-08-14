@@ -71,8 +71,10 @@ export type Footer = {
   logo: CmsImage;
   socials: Socials;
   contact: {
-    mail: string;
-    phone: string;
+    mailLabel: string;
+    mailHref: string;
+    phoneLabel: string;
+    phoneHref: string;
   };
   gamesFormatsLinks: GameFormatLinks[];
   newsletter: boolean;
@@ -94,8 +96,10 @@ export type VenueFooter = {
     sunday: string;
   };
   contact: {
-    mail: string;
-    phone: string;
+    mailLabel: string;
+    mailHref: string;
+    phoneLabel: string;
+    phoneHref: string;
     mapsLink?: string;
   };
   games: GameFormatLinks[];

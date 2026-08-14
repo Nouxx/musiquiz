@@ -65,7 +65,7 @@ const sanityVenueFooterSchema = z.strictObject({
     tuesdayOpeningHours: z.string(),
     wednesdayOpeningHours: z.string(),
     mail: z.email(),
-    phone: z.string(),
+    phone: z.string().min(1),
     googleMapsLink: z.string().nullable(),
     offerings: z.array(
       z.strictObject({

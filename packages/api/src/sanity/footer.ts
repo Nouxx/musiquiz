@@ -33,7 +33,7 @@ const sanityFooterSchema = z.strictObject({
     instagramUrl: z.url(),
     linkedinUrl: z.url(),
     mainEmail: z.email(),
-    mainPhone: z.string(),
+    mainPhone: z.string().min(1),
     tiktokUrl: z.url(),
     youtubeUrl: z.url(),
     acceptedPaymentMethods: z.array(sanityImageSchema),
