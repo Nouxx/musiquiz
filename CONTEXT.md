@@ -7,8 +7,40 @@ Musiquiz is a entertainment business that operates in France and provide various
 ## Domain
 
 **Venue**:
-One physical Musi'Quiz location, addressed by a slug under `/[venue]`. A city is an attribute of a Venue, not a synonym for one — a city may hold more than one Venue. Its French UI label is "centre"; that label is copy, and the code says Venue everywhere.
+One physical Musi'Quiz location, addressed by a slug under `/[venue]`. A city is an attribute of a Venue, not a synonym for one — a city may hold more than one Venue. Its French UI label is "centre"; that label is copy, and the code says Venue everywhere. A Venue holds only facts about the place — address, opening hours, contact, logo — and owns no page content; what a visitor reads lives in a Venue Page, a Venue Game or a Venue Event. [ADR 0010](./docs/adr/0010-page-content-lives-in-documents.md).
 _Avoid_: centre, ville, city, site, location
+
+**Game Format**:
+A kind of game the business runs, named and slugged once for the whole company — "Musi'Quiz", "Pixel Games". It is the same product in Lille and in Pau, which is why it carries no marketing copy and no price: those differ per Venue and belong to a Venue Game. Its `displayOrder` fixes the order games appear in wherever they are listed, at every Venue.
+_Avoid_: game, game type, product
+
+**Event Format**:
+The same idea as a Game Format for the evergreen occasions a Venue markets — "bachelor party". Not dated and not scheduled: an Event Format is standing marketing material, so nothing about it expires.
+_Avoid_: event, occasion, session
+
+**Venue Game**:
+One document saying this Venue sells this Game Format, holding the price and the whole page a visitor reads at `/[venue]/jeux/[game]`. It is the single place that fact is asserted — a Venue does not separately list which games it offers, and a Venue Game with no matching page does not exist. Uniqueness of the (Venue, Game Format) pair is validated on the document.
+_Avoid_: offering, venue game page, game page
+
+**Venue Event**:
+A Venue Game for Event Formats, serving `/[venue]/evenements/[event]`. It carries no price. It is a separate document type rather than a Venue Game with a flag, because a discriminator would make `price` and the reference target conditional. [ADR 0010](./docs/adr/0010-page-content-lives-in-documents.md).
+_Avoid_: offering, event page
+
+**Venue Page**:
+The document holding one of a Venue's three fixed screens — its home page, its gift page, its booking page — distinguished by a `pageType`. All three have identical shape, so they are one document type; the enum names a route, never a field that only some of them have. It is content, and the component that renders it is a Page.
+_Avoid_: page, page document, venue content, screen
+
+## Page Content
+
+Every page of the site is a document, and every one of those documents has exactly these two things and differs only in what else it carries.
+
+**Page Cover**:
+The block at the top of every page — media, badge, heading, sub-heading, and a call-to-action label. The call to action's **label** is content; its **destination is not**. Where the button goes is decided in code from the page's kind, so `getRoutesForLang` stays the only source of routing truth and an editor cannot author a URL that skips the locale prefix or 404s. Authored as one object type reused across every content document, rendered by the `PageCover` UI Component.
+_Avoid_: hero, banner, header, masthead
+
+**Page Component**:
+One entry in the ordered array an editor composes a page body from — a Rolling Banner today, more later. The array is the same shared dictionary on every content document, so a component written for one page works on all of them.
+_Avoid_: block, section, module, widget
 
 ## Components
 

@@ -23,17 +23,20 @@ export type Homepage = {
   components: PageComponent[];
 };
 
-export type VenueHomepage = {
-  pageCover: {
-    media: CmsImage;
-    badge: string | undefined;
-    heading: string;
-    subHeading: string;
-    cta: {
-      label: string;
-      url: string;
-    };
+export type PageCover = {
+  media: CmsImage;
+  badge: string | undefined;
+  heading: string;
+  subHeading: string | undefined;
+  cta: {
+    label: string;
+    url: string;
   };
+};
+
+export type VenuePage = {
+  pageCover: PageCover;
+  components: PageComponent[];
 };
 
 export type Header = {

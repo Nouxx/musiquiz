@@ -12,6 +12,11 @@ export const singletonIds = ["homepage", "siteSettings"];
 
 const singletonTypes = new Set(singletonIds);
 
+/** types that are never created from the "create new" menu */
+const structureOnlyTypes = new Set(["venuePage"]);
+
+export const venuePageTemplateId = "venuePage-by-venue";
+
 export default defineConfig({
   name: "default",
   title: "MusiQuiz",
@@ -31,9 +36,34 @@ export default defineConfig({
   ],
   schema: {
     types: schemaTypes,
-    // restrict creation for the singleton types
-    templates: (templates) =>
-      templates.filter(({ schemaType }) => !singletonTypes.has(schemaType)),
+    templates: (templates) => [
+      // restrict creation for the singleton and structure-only types
+      ...templates.filter(
+        ({ schemaType }) =>
+          !singletonTypes.has(schemaType) &&
+          !structureOnlyTypes.has(schemaType),
+      ),
+      // make sure venue and page type fields are filled before the editor sees the document
+      {
+        id: venuePageTemplateId,
+        title: "Venue Page",
+        schemaType: "venuePage",
+        parameters: [
+          { name: "venueId", type: "string" },
+          { name: "pageType", type: "string" },
+        ],
+        value: ({
+          venueId,
+          pageType,
+        }: {
+          venueId: string;
+          pageType: string;
+        }) => ({
+          pageType,
+          venue: { _type: "reference", _ref: venueId },
+        }),
+      },
+    ],
   },
   document: {
     // restrict edition actions for singleton types

@@ -1,6 +1,5 @@
 import ClockIcon from "@sanity/icons/Clock";
 import EnvelopeIcon from "@sanity/icons/Envelope";
-import ImageIcon from "@sanity/icons/Image";
 import InfoOutlineIcon from "@sanity/icons/InfoOutline";
 import JoystickIcon from "@sanity/icons/Joystick";
 import PinIcon from "@sanity/icons/Pin";
@@ -36,7 +35,6 @@ export const venueType = defineType({
       icon: InfoOutlineIcon,
       default: true,
     },
-    { name: "pageCover", title: "Page Cover", icon: ImageIcon },
     { name: "offerings", title: "Offerings", icon: JoystickIcon },
     { name: "contact", title: "Contact", icon: EnvelopeIcon },
     { name: "location", title: "Location", icon: PinIcon },
@@ -133,39 +131,6 @@ export const venueType = defineType({
           },
         }),
       ],
-    }),
-    defineField({
-      name: "pageCoverMedia",
-      title: "Page Cover Media",
-      type: "imageWithAlt",
-      group: "pageCover",
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "pageCoverHeading",
-      title: "Page Cover Heading",
-      type: "internationalizedArrayString",
-      group: "pageCover",
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "pageCoverSubHeading",
-      title: "Page Cover Sub Heading",
-      type: "internationalizedArrayString",
-      group: "pageCover",
-    }),
-    defineField({
-      name: "pageCoverBadge",
-      title: "Page Cover Badge",
-      type: "internationalizedArrayString",
-      group: "pageCover",
-    }),
-    defineField({
-      name: "pageCoverCtaLabel",
-      title: "Page Cover CTA Label",
-      type: "internationalizedArrayString",
-      group: "pageCover",
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "mondayOpeningHours",
