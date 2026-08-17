@@ -7,6 +7,7 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
     return {
       type: data._type,
       message: data.message,
+      color: data.color,
     };
 
   return {

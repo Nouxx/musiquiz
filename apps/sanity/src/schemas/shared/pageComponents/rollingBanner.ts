@@ -29,6 +29,21 @@ export const rollingBannerType = defineType({
         ),
       ],
     }),
+    defineField({
+      name: "color",
+      title: "Color",
+      description: "The color of the strip the message scrolls across.",
+      type: "string",
+      validation: (Rule) => Rule.required(),
+      initialValue: "red",
+      options: {
+        list: [
+          { title: "Red", value: "red" },
+          { title: "Blue", value: "blue" },
+        ],
+        layout: "radio",
+      },
+    }),
   ],
   preview: {
     prepare() {

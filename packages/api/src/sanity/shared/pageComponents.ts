@@ -4,7 +4,8 @@ import { z } from "zod";
 function rollingBannerProjection({ lang }: { lang: Lang }) {
   return `
     _type == "rollingBanner" => {
-      "message": message[language == "${lang}"][0].value
+      "message": message[language == "${lang}"][0].value,
+      "color": coalesce(color, "red")
     }
   `;
 }
@@ -30,6 +31,7 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
 const sanityRollingBannerSchema = z.strictObject({
   _type: z.literal("rollingBanner"),
   message: z.string().min(1),
+  color: z.enum(["red", "blue"]),
 });
 
 const sanityDummyComponentSchema = z.strictObject({

@@ -13,7 +13,9 @@ const { components } = Astro.props;
   components.map((component) => {
     switch (component.type) {
       case "rollingBanner": {
-        return <RollingBanner message={component.message} />;
+        return (
+          <RollingBanner message={component.message} color={component.color} />
+        );
       }
       case "dummyComponent": {
         return <p>{component.text}</p>;

@@ -3,9 +3,10 @@ import Text from "./primitives/Text.astro";
 
 export interface Props {
   message: string;
+  color?: "red" | "blue";
 }
 
-const { message } = Astro.props;
+const { message, color = "red" } = Astro.props;
 
 /*
  * How many copies to render is a question CSS cannot answer, so the width of
@@ -56,7 +57,7 @@ const durationSeconds = (copiesPerHalf * copyWidth) / SCROLL_SPEED_PX_PER_SEC;
 const copies = Array.from({ length: copiesPerHalf * 2 });
 ---
 
-<div class="banner">
+<div class:list={["banner", color]}>
   <div
     class="track"
     style={{ "--rolling-banner-duration": `${durationSeconds}s` }}
@@ -76,8 +77,18 @@ const copies = Array.from({ length: copiesPerHalf * 2 });
   .banner {
     padding-block: var(--space-6);
     overflow: hidden;
-    color: var(--color-text-on-red-muted);
-    background-image: var(--color-fill-red);
+    color: var(--banner-text);
+    background-image: var(--banner-fill);
+  }
+
+  .banner.red {
+    --banner-fill: var(--color-fill-red);
+    --banner-text: var(--color-text-on-red-muted);
+  }
+
+  .banner.blue {
+    --banner-fill: var(--color-fill-blue);
+    --banner-text: var(--color-text-on-blue);
   }
 
   .track {
