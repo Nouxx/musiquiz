@@ -55,6 +55,7 @@ function venueChild({ S, venueId }: { S: StructureBuilder; venueId: string }) {
     .title("Venue")
     .items([
       venuePageItem({ S, venueId, pageType: "home", title: "Home page" }),
+      venuePageItem({ S, venueId, pageType: "gift", title: "Gift page" }),
 
       S.listItem()
         .title("Venue details")

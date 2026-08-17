@@ -35,6 +35,6 @@ export const pageCoverType = defineType({
       type: "internationalizedArrayString",
       validation: (rule) => rule.required(), // todo: not working, to check
     }),
-    // there is no CTA url: driven by the front 
+    // there is no CTA url: driven by the front
   ],
 });

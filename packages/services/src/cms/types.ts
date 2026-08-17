@@ -34,6 +34,8 @@ export type PageCover = {
   };
 };
 
+export type VenuePageType = "home" | "gift" | "book";
+
 export type VenuePage = {
   pageCover: PageCover;
   components: PageComponent[];

@@ -63,7 +63,6 @@ export async function fetchVenuePage({
   venueSlug: string;
   pageType: VenuePageType;
 }) {
-  console.log("DEBUG", venuePageQuery({ lang, venueSlug, pageType }))
   return fetchSanityData({
     query: venuePageQuery({ lang, venueSlug, pageType }),
     schema: sanityVenuePageSchema,
