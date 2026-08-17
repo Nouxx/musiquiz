@@ -5,6 +5,7 @@ import { gameFormatType } from "./gameFormat";
 import { homepageType } from "./homepage";
 import { siteSettingsType } from "./siteSettings";
 import { venueType } from "./venue";
+import { venueGameType } from "./venueGame";
 import { venuePageType } from "./venuePage";
 import {
   dummyType,
@@ -15,6 +16,7 @@ export const schemaTypes = [
   homepageType,
   venueType,
   venuePageType,
+  venueGameType,
   siteSettingsType,
   gameFormatType,
   imageWithAltType,

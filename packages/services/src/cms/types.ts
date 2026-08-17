@@ -41,6 +41,13 @@ export type VenuePage = {
   components: PageComponent[];
 };
 
+export type VenueGamePage = {
+  gameName: string;
+  price: number;
+  pageCover: PageCover;
+  components: PageComponent[];
+};
+
 export type Header = {
   logo: CmsImage;
   venue: {

@@ -5,10 +5,15 @@ import {
 import { ControlsIcon } from "@sanity/icons/Controls";
 import { HomeIcon } from "@sanity/icons/Home";
 import { InfoOutlineIcon } from "@sanity/icons/InfoOutline";
-import { singletonIds, venuePageTemplateId } from "./sanity.config";
+import { JoystickIcon } from "@sanity/icons/Joystick";
+import {
+  singletonIds,
+  venueGameTemplateId,
+  venuePageTemplateId,
+} from "./sanity.config";
 
-// venuePage belong to a venue, only reachable from there
-const nestedTypeIds = ["venue", "venuePage"];
+// venuePage and venueGame belong to a venue, only reachable from there
+const nestedTypeIds = ["venue", "venuePage", "venueGame"];
 
 function venuePageId({
   venueId,
@@ -56,6 +61,24 @@ function venueChild({ S, venueId }: { S: StructureBuilder; venueId: string }) {
     .items([
       venuePageItem({ S, venueId, pageType: "home", title: "Home page" }),
       venuePageItem({ S, venueId, pageType: "gift", title: "Gift page" }),
+      venuePageItem({ S, venueId, pageType: "book", title: "Booking page" }),
+
+      S.listItem()
+        .title("Games")
+        .id("games")
+        .icon(JoystickIcon)
+        .child(
+          S.documentList()
+            .title("Games")
+            .schemaType("venueGame")
+            .filter('_type == "venueGame" && venue._ref == $venueId')
+            .params({ venueId: venueId.replace(/^drafts\./, "") })
+            .initialValueTemplates([
+              S.initialValueTemplateItem(venueGameTemplateId, {
+                venueId: venueId.replace(/^drafts\./, ""),
+              }),
+            ]),
+        ),
 
       S.listItem()
         .title("Venue details")

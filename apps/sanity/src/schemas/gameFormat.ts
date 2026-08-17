@@ -13,6 +13,14 @@ export const gameFormatType = defineType({
       type: "string",
     }),
     defineField({
+      name: "displayOrder",
+      title: "Display order",
+      description:
+        "Where this game sits wherever games are listed. Lower comes first. The order is the same at every venue.",
+      type: "number",
+      validation: (rule) => rule.required().integer().min(0),
+    }),
+    defineField({
       name: "slug",
       title: "URL slug",
       type: "slug",
