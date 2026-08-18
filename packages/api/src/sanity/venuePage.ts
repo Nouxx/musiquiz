@@ -5,14 +5,10 @@ import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
 import {
-  imageProjection,
-  optionalImageProjection,
-  sanityImageSchema,
-} from "./shared/image";
-import {
   pageComponentsProjection,
   sanityPageComponentSchema,
 } from "./shared/pageComponents";
+import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
 
 export type VenuePageType = "home" | "gift" | "book";
 
@@ -29,14 +25,7 @@ function venuePageQuery({
     "venuePage": *[_type == "venuePage"
       && venue->slug.current == "${venueSlug}"
       && pageType == "${pageType}"][0]{
-      pageCover{
-        media ${imageProjection({ lang })},
-        "logo": ${optionalImageProjection({ field: "logo", lang })},
-        "heading": heading[language == "${lang}"][0].value,
-        "subHeading": subHeading[language == "${lang}"][0].value,
-        "badge": badge[language == "${lang}"][0].value,
-        "ctaLabel": ctaLabel[language == "${lang}"][0].value,
-      },
+      pageCover ${pageCoverProjection({ lang })},
       "pageComponents": ${pageComponentsProjection({ lang })},
     }
   }`);
@@ -44,14 +33,7 @@ function venuePageQuery({
 
 const sanityVenuePageSchema = z.strictObject({
   venuePage: z.strictObject({
-    pageCover: z.strictObject({
-      media: sanityImageSchema,
-      logo: sanityImageSchema.nullable(),
-      heading: z.string().min(1),
-      subHeading: z.string().min(1).nullable(),
-      badge: z.string().min(1).nullable(),
-      ctaLabel: z.string().min(1),
-    }),
+    pageCover: sanityPageCoverSchema,
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
   }),
 });

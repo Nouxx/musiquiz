@@ -5,14 +5,10 @@ import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
 import {
-  imageProjection,
-  optionalImageProjection,
-  sanityImageSchema,
-} from "./shared/image";
-import {
   pageComponentsProjection,
   sanityPageComponentSchema,
 } from "./shared/pageComponents";
+import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
 
 function venueGamePageQuery({
   lang,
@@ -29,14 +25,7 @@ function venueGamePageQuery({
       && game->slug.current == "${gameSlug}"][0]{
       price,
       "gameName": game->name,
-      pageCover{
-        media ${imageProjection({ lang })},
-        "logo": ${optionalImageProjection({ field: "logo", lang })},
-        "heading": heading[language == "${lang}"][0].value,
-        "subHeading": subHeading[language == "${lang}"][0].value,
-        "badge": badge[language == "${lang}"][0].value,
-        "ctaLabel": ctaLabel[language == "${lang}"][0].value,
-      },
+      pageCover ${pageCoverProjection({ lang })},
       "pageComponents": ${pageComponentsProjection({ lang })},
     }
   }`);
@@ -46,14 +35,7 @@ const sanityVenueGamePageSchema = z.strictObject({
   venueGame: z.strictObject({
     price: z.number().nonnegative(),
     gameName: z.string().min(1),
-    pageCover: z.strictObject({
-      media: sanityImageSchema,
-      logo: sanityImageSchema.nullable(),
-      heading: z.string().min(1),
-      subHeading: z.string().min(1).nullable(),
-      badge: z.string().min(1).nullable(),
-      ctaLabel: z.string().min(1),
-    }),
+    pageCover: sanityPageCoverSchema,
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
   }),
 });

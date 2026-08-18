@@ -9,7 +9,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { VenuePage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
-import { toCmsImage } from "./utils/toCmsImage";
+import { toPageCover } from "./utils/toPageCover";
 
 function ctaUrl({
   lang,
@@ -44,21 +44,11 @@ function adaptVenuePage({
   venueSlug: string;
   pageType: VenuePageType;
 }): VenuePage {
-  const { media, logo, heading, subHeading, badge, ctaLabel } =
-    data.venuePage.pageCover;
-
   return {
-    pageCover: {
-      media: toCmsImage(media),
-      logo: logo ? toCmsImage(logo) : undefined,
-      heading,
-      subHeading: subHeading ?? undefined,
-      badge: badge ?? undefined,
-      cta: {
-        label: ctaLabel,
-        url: ctaUrl({ lang, venueSlug, pageType }),
-      },
-    },
+    pageCover: toPageCover({
+      data: data.venuePage.pageCover,
+      ctaUrl: ctaUrl({ lang, venueSlug, pageType }),
+    }),
     components:
       data.venuePage.pageComponents?.map((component) =>
         adaptPageComponent(component),

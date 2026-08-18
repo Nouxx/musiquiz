@@ -8,7 +8,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { VenueGamePage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
-import { toCmsImage } from "./utils/toCmsImage";
+import { toPageCover } from "./utils/toPageCover";
 
 function adaptVenueGamePage({
   data,
@@ -19,23 +19,13 @@ function adaptVenueGamePage({
   lang: Lang;
   venueSlug: string;
 }): VenueGamePage {
-  const { media, logo, heading, subHeading, badge, ctaLabel } =
-    data.venueGame.pageCover;
-
   return {
     gameName: data.venueGame.gameName,
     price: data.venueGame.price,
-    pageCover: {
-      media: toCmsImage(media),
-      logo: logo ? toCmsImage(logo) : undefined,
-      heading,
-      subHeading: subHeading ?? undefined,
-      badge: badge ?? undefined,
-      cta: {
-        label: ctaLabel,
-        url: getRoutesForLang(lang).venueBook(venueSlug),
-      },
-    },
+    pageCover: toPageCover({
+      data: data.venueGame.pageCover,
+      ctaUrl: getRoutesForLang(lang).venueBook(venueSlug),
+    }),
     components:
       data.venueGame.pageComponents?.map((component) =>
         adaptPageComponent(component),
