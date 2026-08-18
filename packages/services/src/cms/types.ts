@@ -25,6 +25,8 @@ export type Homepage = {
 
 export type PageCover = {
   media: CmsImage;
+  // the game's own mark, not the venue logo the header carries
+  logo: CmsImage | undefined;
   badge: string | undefined;
   heading: string;
   subHeading: string | undefined;

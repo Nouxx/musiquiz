@@ -27,6 +27,7 @@ function venueGamePageQuery({
       "gameName": game->name,
       pageCover{
         media ${imageProjection({ lang })},
+        logo ${imageProjection({ lang })},
         "heading": heading[language == "${lang}"][0].value,
         "subHeading": subHeading[language == "${lang}"][0].value,
         "badge": badge[language == "${lang}"][0].value,
@@ -43,6 +44,7 @@ const sanityVenueGamePageSchema = z.strictObject({
     gameName: z.string().min(1),
     pageCover: z.strictObject({
       media: sanityImageSchema,
+      logo: sanityImageSchema.nullable(),
       heading: z.string().min(1),
       subHeading: z.string().min(1).nullable(),
       badge: z.string().min(1).nullable(),

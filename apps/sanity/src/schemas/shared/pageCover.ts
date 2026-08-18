@@ -12,6 +12,13 @@ export const pageCoverType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "logo",
+      title: "Logo",
+      description:
+        "The game's own mark, shown beside the text. Not the venue logo, which the header already carries.",
+      type: "imageWithAlt",
+    }),
+    defineField({
       name: "heading",
       title: "Heading",
       type: "internationalizedArrayString",

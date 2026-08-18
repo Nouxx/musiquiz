@@ -167,6 +167,7 @@
   --color-text-muted: var(--grey-600);
   --color-text-inverse: var(--white);
   --color-text-on-media: var(--white);
+  --color-text-on-media-muted: var(--grey-100);
   --color-surface-on-media: var(--white-20);
   --color-text-placeholder: var(--grey-400);
 

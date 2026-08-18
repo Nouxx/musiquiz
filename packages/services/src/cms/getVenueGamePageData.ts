@@ -19,7 +19,7 @@ function adaptVenueGamePage({
   lang: Lang;
   venueSlug: string;
 }): VenueGamePage {
-  const { media, heading, subHeading, badge, ctaLabel } =
+  const { media, logo, heading, subHeading, badge, ctaLabel } =
     data.venueGame.pageCover;
 
   return {
@@ -27,6 +27,7 @@ function adaptVenueGamePage({
     price: data.venueGame.price,
     pageCover: {
       media: toCmsImage(media),
+      logo: logo ? toCmsImage(logo) : undefined,
       heading,
       subHeading: subHeading ?? undefined,
       badge: badge ?? undefined,

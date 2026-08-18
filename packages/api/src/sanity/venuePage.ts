@@ -27,6 +27,7 @@ function venuePageQuery({
       && pageType == "${pageType}"][0]{
       pageCover{
         media ${imageProjection({ lang })},
+        logo ${imageProjection({ lang })},
         "heading": heading[language == "${lang}"][0].value,
         "subHeading": subHeading[language == "${lang}"][0].value,
         "badge": badge[language == "${lang}"][0].value,
@@ -41,6 +42,7 @@ const sanityVenuePageSchema = z.strictObject({
   venuePage: z.strictObject({
     pageCover: z.strictObject({
       media: sanityImageSchema,
+      logo: sanityImageSchema.nullable(),
       heading: z.string().min(1),
       subHeading: z.string().min(1).nullable(),
       badge: z.string().min(1).nullable(),

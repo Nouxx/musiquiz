@@ -15,8 +15,23 @@ const isGradient = props.background === "gradient";
 
 // only the wrappers that CSS needs a hook for are guarded: a bare `<slot>`
 // renders no element when unfilled, but a wrapper div is still a flex/grid
-// item and would leave a phantom `gap` behind
-const hasLogo = Astro.slots.has("logo");
+// item and would leave a phantom track or `gap` behind.
+//
+// `Astro.slots.has` is not enough to guard them. The compiler emits a slot
+// entry for `{cond && <el slot="x" />}` whether or not `cond` holds, so `has`
+// answers true for a conditional slot that renders nothing — which is exactly
+// how an optional logo or subheading gets passed. Ask what came out instead.
+async function slotHtml(name: string) {
+  if (!Astro.slots.has(name)) {
+    return "";
+  }
+
+  return (await Astro.slots.render(name)).trim();
+}
+
+const logo = await slotHtml("logo");
+const subheading = await slotHtml("subheading");
+const actions = await slotHtml("actions");
 
 const style = {
   ...(height === "full"
@@ -36,34 +51,15 @@ const style = {
     {!isGradient && <slot name="media" />}
   </div>
 
-  <div class:list={["frame", hasLogo && "with-logo"]}>
-    {
-      hasLogo && (
-        <div class="logo">
-          <slot name="logo" />
-        </div>
-      )
-    }
+  <div class:list={["frame", logo && "with-logo"]}>
+    {logo && <div class="logo" set:html={logo} />}
 
     <div class="stack">
       <slot name="badge" />
       <slot name="heading" />
 
-      {
-        Astro.slots.has("subheading") && (
-          <div class="subheading">
-            <slot name="subheading" />
-          </div>
-        )
-      }
-
-      {
-        Astro.slots.has("actions") && (
-          <div class="actions">
-            <slot name="actions" />
-          </div>
-        )
-      }
+      {subheading && <div class="subheading" set:html={subheading} />}
+      {actions && <div class="actions" set:html={actions} />}
     </div>
   </div>
 </section>
@@ -192,6 +188,7 @@ const style = {
      homepage. */
   .subheading {
     margin-block-start: calc(var(--space-4) - var(--space-2));
+    color: var(--color-text-on-media-muted);
   }
 
   .actions {

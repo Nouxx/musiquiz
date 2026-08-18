@@ -44,12 +44,13 @@ function adaptVenuePage({
   venueSlug: string;
   pageType: VenuePageType;
 }): VenuePage {
-  const { media, heading, subHeading, badge, ctaLabel } =
+  const { media, logo, heading, subHeading, badge, ctaLabel } =
     data.venuePage.pageCover;
 
   return {
     pageCover: {
       media: toCmsImage(media),
+      logo: logo ? toCmsImage(logo) : undefined,
       heading,
       subHeading: subHeading ?? undefined,
       badge: badge ?? undefined,
