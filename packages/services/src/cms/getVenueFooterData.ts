@@ -39,7 +39,7 @@ function adaptVenueFooter({
     fridayOpeningHours,
     saturdayOpeningHours,
     sundayOpeningHours,
-    offerings,
+    games,
     mail,
     phone,
     googleMapsLink,
@@ -72,9 +72,9 @@ function adaptVenueFooter({
       phoneHref: getTel(phone),
       mapsLink: googleMapsLink ?? undefined,
     },
-    games: offerings.map((offer) => ({
-      label: offer.game.name,
-      url: getRoutesForLang(lang).venueGame(venueSlug, offer.game.slug),
+    games: games.map((game) => ({
+      label: game.name,
+      url: getRoutesForLang(lang).venueGame(venueSlug, game.slug),
     })),
     paymentMethods: acceptedPaymentMethods.map((method) => toCmsImage(method)),
   };

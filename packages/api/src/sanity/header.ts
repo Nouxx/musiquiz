@@ -17,9 +17,10 @@ function headerQuery({ lang, venueSlug }: { lang: Lang; venueSlug: string }) {
       youtubeUrl,
     },
     "venue": *[_type == "venue" && slug.current == "${venueSlug}"][0]{
-      "games": offerings[].game->{
-        name,
-        "slug": slug.current
+      "games": *[_type == "venueGame" && venue._ref == ^._id]
+        | order(coalesce(game->displayOrder, 999) asc, game->name asc){
+        "name": game->name,
+        "slug": game->slug.current
       },
       venueLogo ${imageProjection({ lang })},
       addressLine,
