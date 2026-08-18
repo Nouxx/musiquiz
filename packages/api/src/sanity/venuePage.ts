@@ -4,7 +4,11 @@ import { defineQuery } from "groq";
 import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
-import { imageProjection, sanityImageSchema } from "./shared/image";
+import {
+  imageProjection,
+  optionalImageProjection,
+  sanityImageSchema,
+} from "./shared/image";
 import {
   pageComponentsProjection,
   sanityPageComponentSchema,
@@ -27,7 +31,7 @@ function venuePageQuery({
       && pageType == "${pageType}"][0]{
       pageCover{
         media ${imageProjection({ lang })},
-        logo ${imageProjection({ lang })},
+        "logo": ${optionalImageProjection({ field: "logo", lang })},
         "heading": heading[language == "${lang}"][0].value,
         "subHeading": subHeading[language == "${lang}"][0].value,
         "badge": badge[language == "${lang}"][0].value,

@@ -11,6 +11,25 @@ export function imageProjection({ lang }: { lang: Lang }) {
   }`;
 }
 
+/**
+ * For an image an editor may leave empty.
+ *
+ * Sanity keeps the field object once the field has been touched — an
+ * `imageWithAlt` holding an `alt` array but no `asset` — so `defined(logo)` is
+ * true for an image that was never uploaded, and projecting it straight yields
+ * an object of nulls rather than null. Keying off the asset gives the null the
+ * nullable schema expects.
+ */
+export function optionalImageProjection({
+  field,
+  lang,
+}: {
+  field: string;
+  lang: Lang;
+}) {
+  return `select(defined(${field}.asset) => ${field} ${imageProjection({ lang })})`;
+}
+
 export const sanityImageSchema = z.strictObject({
   url: z.url(),
   width: z.number().int().positive(),
