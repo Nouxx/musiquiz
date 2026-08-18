@@ -4,8 +4,7 @@ import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
 
-// the game routes exist for the pairs that were authored, and for no others:
-// there is no rule saying every venue sells every game (see adr 0010)
+// the game routes exist for the pairs that were authored
 function venueGameSlugsQuery() {
   return defineQuery(`*[_type == "venueGame"]
     | order(coalesce(game->displayOrder, 999) asc, game->name asc){
