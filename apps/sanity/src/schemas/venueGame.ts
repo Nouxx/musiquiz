@@ -73,8 +73,8 @@ async function findDuplicate({
 }
 
 // one document per (venue, game) pair
-// unlike a venue page the id cannot enforce the pair, because the editor picks
-// the two references that would compose it
+// unlike a venue page the id cannot enforce the pair
+// because the editor picks the two references that would compose it
 export const venueGameType = defineType({
   name: "venueGame",
   title: "Venue Game",
