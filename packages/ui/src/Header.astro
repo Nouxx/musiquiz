@@ -99,7 +99,9 @@ const hasSocials = Astro.slots.has("socials");
         </ul>
       </nav>
 
-      <Button as="a" href={cta.url} tone="red" size="m">{cta.label}</Button>
+      <Button as="a" href={cta.url} tone="red" size="m" class="cta">
+        {cta.label}
+      </Button>
 
       <button
         class="burger"
@@ -281,6 +283,14 @@ const hasSocials = Astro.slots.has("socials");
 
     .burger {
       display: block;
+    }
+  }
+
+  /* 24rem = "header CTA dropped" */
+  @media (width < 24rem) {
+    /* the sheet behind the burger carries the same CTA, so nothing is lost */
+    .cta {
+      display: none;
     }
   }
 </style>

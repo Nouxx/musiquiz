@@ -38,9 +38,9 @@ const legalLinks = [
   ))
 }
 <li>
-  <Flex gap="6" align="center">
+  <Flex gap="6" align="center" wrap="wrap">
     <Text variant="paragraph-s">{t("footer.paymentMethods")}</Text>
-    <Flex gap="3" align="center">
+    <Flex gap="3" align="center" wrap="wrap">
       {
         paymentMethods.map((paymentMethod) => (
           <RemoteImage image={paymentMethod} variant="payment-icon" />
