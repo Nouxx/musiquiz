@@ -30,6 +30,12 @@ const variants = {
     sizes: "(width < 48rem) 120px, 160px",
   },
   "cover-logo": { widths: [200, 400, 600], sizes: "200px" },
+  "cover-logo-side": {
+    widths: [400, 800, 1200],
+    // 60rem = "cover columns stacked", 78rem = the cover frame reaching
+    // `--size-content`, above which the logo column is a fixed 396px
+    sizes: "(width < 60rem) 200px, (width < 78rem) 40vw, 396px",
+  },
   "payment-icon": { widths: [32, 64, 96], sizes: "32px" },
   cover: { widths: [640, 960, 1280, 1920, 2560], sizes: "100vw" },
 };
@@ -111,6 +117,21 @@ const srcSetWidths =
   .cover-logo {
     width: 200px;
     height: auto;
+  }
+
+  /* fluid: Figma gives the logo `flex-grow: 1` at 396px, so 396 is the cap it
+     reaches at 1728px rather than a fixed size */
+  .cover-logo-side {
+    width: 100%;
+    max-width: 396px;
+    height: auto;
+  }
+
+  /* 60rem = "cover columns stacked" — mirrors the `sizes` string above */
+  @media (width < 60rem) {
+    .cover-logo-side {
+      max-width: 200px;
+    }
   }
 
   .payment-icon {

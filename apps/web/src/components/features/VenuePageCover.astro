@@ -11,7 +11,7 @@ const { media, badge, heading, subHeading, cta } = Astro.props.data;
 ---
 
 <PageCover>
-  <div style={{ border: "1px solid black", margin: "2px" }}>
+  <div slot="heading" style={{ border: "1px solid black", margin: "2px" }}>
     <p>VenuePageCover</p>
     <RemoteImage image={media} variant="cover" loading="eager" />
     <p>badgeLabel: {badge}</p>

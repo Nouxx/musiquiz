@@ -1,11 +1,70 @@
-<section class="page-cover">
-  <div class="media"><slot name="media" /></div>
+---
+type Props = {
+  align?: "center" | "left";
+  height?: "full" | "l" | "m";
+} & (
+  | { background?: "image" }
+  | { background: "gradient"; surface: "brand" | "vivid" }
+);
 
-  <div class="logo"><slot name="logo" /></div>
+const props = Astro.props;
 
-  <div class="stack">
-    <slot />
-    <div class="actions"><slot name="actions" /></div>
+const align = props.align ?? "center";
+const height = props.height ?? "full";
+const isGradient = props.background === "gradient";
+
+// only the wrappers that CSS needs a hook for are guarded: a bare `<slot>`
+// renders no element when unfilled, but a wrapper div is still a flex/grid
+// item and would leave a phantom `gap` behind
+const hasLogo = Astro.slots.has("logo");
+
+const style = {
+  ...(height === "full"
+    ? {}
+    : { "--cover-spacing": `var(--space-section-${height})` }),
+  ...(props.background === "gradient"
+    ? { "--cover-surface": `var(--color-surface-${props.surface})` }
+    : {}),
+};
+---
+
+<section
+  class:list={["page-cover", align, height === "full" ? "full" : "sized"]}
+  style={style}
+>
+  <div class:list={["media", isGradient && "gradient"]}>
+    {!isGradient && <slot name="media" />}
+  </div>
+
+  <div class:list={["frame", hasLogo && "with-logo"]}>
+    {
+      hasLogo && (
+        <div class="logo">
+          <slot name="logo" />
+        </div>
+      )
+    }
+
+    <div class="stack">
+      <slot name="badge" />
+      <slot name="heading" />
+
+      {
+        Astro.slots.has("subheading") && (
+          <div class="subheading">
+            <slot name="subheading" />
+          </div>
+        )
+      }
+
+      {
+        Astro.slots.has("actions") && (
+          <div class="actions">
+            <slot name="actions" />
+          </div>
+        )
+      }
+    </div>
   </div>
 </section>
 
@@ -14,13 +73,21 @@
     position: relative;
     display: grid;
     place-items: center;
-
-    /* svh, not vh: on mobile the cover must fit the visible viewport rather
-       than sit partly under the browser chrome */
-    min-block-size: 100svh;
-    padding-block: var(--space-10);
     padding-inline: var(--space-6);
     overflow: hidden;
+  }
+
+  /* svh, not vh: on mobile the cover must fit the visible viewport rather
+     than sit partly under the browser chrome */
+  .full {
+    min-block-size: 100svh;
+    padding-block: var(--space-10);
+  }
+
+  /* the shorter sizes have no floor: content plus padding decides the height,
+     so there is no viewport unit left in play */
+  .sized {
+    padding-block: var(--cover-spacing);
   }
 
   /* three layers, top to bottom: the scrim (`::after`), the photo (the media
@@ -35,6 +102,13 @@
     background-image: var(--color-surface-brand);
   }
 
+  /* a gradient cover is art-directed, so it needs neither the photo fallback
+     nor the scrim: `--color-overlay` over `--gradient-vivid` only muddies the
+     top band the design already controls */
+  .media.gradient {
+    background-image: var(--cover-surface);
+  }
+
   .media :global(picture),
   .media :global(img) {
     display: block;
@@ -43,46 +117,119 @@
     object-fit: cover;
   }
 
-  .media::after {
+  .media:not(.gradient)::after {
     position: absolute;
     inset: 0;
     background-image: var(--color-overlay);
     content: "";
   }
 
-  .logo {
-    position: absolute;
-    inset-block-start: var(--space-10);
+  /* a grid item, so `z-index` applies without `position` — which matters,
+     because the centered logo positions against the section, not the frame */
+  .frame {
     z-index: 2;
+    color: var(--color-text-on-media);
   }
 
-  .stack {
-    position: relative;
-    z-index: 2;
+  .center .frame {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
     align-items: center;
 
     /* the cover frame's content width, 1036px */
     max-inline-size: 64.75rem;
-    color: var(--color-text-on-media);
+  }
+
+  .left .frame {
+    inline-size: 100%;
+
+    /* the venue cover frame is 1728px wide with 240px gutters, leaving
+       1248px — which is `--size-content` exactly */
+    max-inline-size: var(--size-content);
+  }
+
+  /* 612px text column and 396px logo, both from Figma. The 240px "gap" there
+     is the leftover between the two at 1728px rather than a fixed gap, so
+     `space-between` reproduces it and then degrades instead of overflowing. */
+  .left .with-logo {
+    display: grid;
+    grid-template-columns: minmax(0, 38.25rem) minmax(0, 24.75rem);
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .left .with-logo .stack {
+    grid-area: 1 / 1;
+  }
+
+  .left .with-logo .logo {
+    grid-area: 1 / 2;
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .center .stack {
+    align-items: center;
     text-align: center;
+  }
+
+  /* the 612px measure is a typographic decision, so it holds whether or not
+     the logo is there to take the other column */
+  .left .stack {
+    align-items: flex-start;
+    max-inline-size: 38.25rem;
+    text-align: left;
+  }
+
+  /* Figma nests the text column's gaps: 8px badge→heading (the `gap` above),
+     16px heading→subheading, 40px →CTA. The subheading rule is the delta on
+     top of the gap; `.actions` keeps the flat `--space-10` it has always had,
+     which lands 8px over Figma — left alone so this change does not move the
+     homepage. */
+  .subheading {
+    margin-block-start: calc(var(--space-4) - var(--space-2));
   }
 
   .actions {
     margin-block-start: var(--space-10);
   }
 
-  /* the logo would collide with the stack once the viewport is short */
+  .center .logo {
+    position: absolute;
+    inset-block-start: var(--space-10);
+    inset-inline: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* the logo would collide with the stack once the viewport is short. Only
+     `full` runs out of room — the other heights are sized by their content. */
   @media (height <= 40rem) {
-    .logo {
+    .center.full .logo {
       position: static;
       margin-block-end: var(--space-6);
     }
 
-    .page-cover {
+    .center.full {
       place-content: center;
+    }
+  }
+
+  /* 60rem = "cover columns stacked" */
+  @media (width < 60rem) {
+    .left .with-logo {
+      grid-template-columns: minmax(0, 38.25rem);
+      gap: var(--space-10);
+      justify-content: start;
+    }
+
+    .left .with-logo .logo {
+      grid-area: 2 / 1;
     }
   }
 </style>

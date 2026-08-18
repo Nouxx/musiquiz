@@ -30,10 +30,23 @@
    against available width) — deliberately not done.
 
    ------------------------------------------------------------
-   60rem — footer columns stacked
+   60rem — footer columns stacked / cover columns stacked
    ------------------------------------------------------------
    Used by footer/FooterColumn.astro and footer/FooterSection.astro.
    Figma step, no derivation recorded.
+
+   Reused by PageCover.astro for `align="left"`: below it the 612px text
+   column and the logo stop sitting side by side, so the logo drops under
+   the text. Reused rather than derived — the honest derivation (612px plus
+   a logo minimum plus gutters, ~66rem) would add a fourth literal for one
+   component, and the two columns shrink fluidly down to here anyway.
+
+   RemoteImage.astro mirrors it for `cover-logo-side` (396px → 200px), in
+   the stylesheet AND in the `sizes` attribute string, which is TS and must
+   be edited in step. That `sizes` string also names 78rem — the width at
+   which the cover frame reaches `--size-content` and the logo column stops
+   growing. It is not a media query anywhere, so it is not a breakpoint;
+   it is recorded here only because the string reads as if it were one.
 
    ------------------------------------------------------------
    48rem — footer logo step
