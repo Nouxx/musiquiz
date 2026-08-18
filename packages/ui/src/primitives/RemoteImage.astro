@@ -32,9 +32,12 @@ const variants = {
   "cover-logo": { widths: [200, 400, 600], sizes: "200px" },
   "cover-logo-side": {
     widths: [400, 800, 1200],
-    // 60rem = "cover columns stacked", 78rem = the cover frame reaching
-    // `--size-content`, above which the logo column is a fixed 396px
-    sizes: "(width < 60rem) 200px, (width < 78rem) 40vw, 396px",
+    // the cover sizes this one by ratio (31.75% of its frame) and wraps it
+    // without a breakpoint, so there is no honest query to quote. 78rem is
+    // where the frame stops growing and the logo settles at 396px; below the
+    // wrap it runs between 200px and 290px. Both arms round up: an over-large
+    // `sizes` costs a few bytes, an under-large one costs sharpness.
+    sizes: "(width < 60rem) 300px, (width < 78rem) 31.75vw, 396px",
   },
   "payment-icon": { widths: [32, 64, 96], sizes: "32px" },
   cover: { widths: [640, 960, 1280, 1920, 2560], sizes: "100vw" },
@@ -119,19 +122,11 @@ const srcSetWidths =
     height: auto;
   }
 
-  /* fluid: Figma gives the logo `flex-grow: 1` at 396px, so 396 is the cap it
-     reaches at 1728px rather than a fixed size */
+  /* no width of its own: PageCover's flex item is what sizes this logo, by
+     ratio down to a floor, so a cap here would only fight it */
   .cover-logo-side {
     width: 100%;
-    max-width: 396px;
     height: auto;
-  }
-
-  /* 60rem = "cover columns stacked" — mirrors the `sizes` string above */
-  @media (width < 60rem) {
-    .cover-logo-side {
-      max-width: 200px;
-    }
   }
 
   .payment-icon {

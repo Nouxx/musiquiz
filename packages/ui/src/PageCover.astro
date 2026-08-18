@@ -144,22 +144,44 @@ const style = {
     max-inline-size: var(--size-content);
   }
 
-  /* 612px text column and 396px logo, both from Figma. The 240px "gap" there
-     is the leftover between the two at 1728px rather than a fixed gap, so
-     `space-between` reproduces it and then degrades instead of overflowing. */
+  /* Figma draws this row at a 1248px frame: 612px of text, 396px of logo, 240px
+     between them — 49%, 31.75% and the 19.25% left over, which is why the gap
+     is `space-between` rather than a fourth number. Ratios, not pixels, so the
+     row keeps its proportions at every frame width, not just at 1728px.
+
+     It wraps on its own, the way footer/FooterSection.astro does, rather than
+     at a breakpoint. The percentages alone never trigger it (they only sum to
+     80.75%), so the wrap comes from the two floors: 36.5rem + 12.5rem + the
+     2.5rem gap stops fitting at a 57rem container, i.e. a 60rem viewport once
+     the `--space-6` gutters are taken off. */
   .left .with-logo {
-    display: grid;
-    grid-template-columns: minmax(0, 38.25rem) minmax(0, 24.75rem);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-10);
     align-items: center;
     justify-content: space-between;
   }
 
+  /* `flex-grow` must stay 0: were the stack allowed to grow it would swallow
+     the 19.25% and leave `space-between` nothing to distribute. Its width once
+     the row has wrapped therefore comes from the floor below, which carries it
+     from 64% of the container back up to 100% as the screen narrows. */
   .left .with-logo .stack {
-    grid-area: 1 / 1;
+    flex: 0 1 49%;
+
+    /* `min-inline-size` does not shrink, hence the `100%` arm. `max-inline-size`
+       is cleared because beside a logo the width is the flex basis, not the
+       no-logo measure set further down. */
+    min-inline-size: min(36.5rem, 100%);
+    max-inline-size: none;
   }
 
   .left .with-logo .logo {
-    grid-area: 1 / 2;
+    flex: 0 1 31.75%;
+
+    /* `min-inline-size` does not shrink, so it needs the `100%` arm or a phone
+       narrower than the floor overflows the page sideways */
+    min-inline-size: min(12.5rem, 100%);
   }
 
   .stack {
@@ -173,11 +195,15 @@ const style = {
     text-align: center;
   }
 
-  /* the 612px measure is a typographic decision, so it holds whether or not
-     the logo is there to take the other column */
+  /* Figma gives the text 930px of the 1248px frame when no logo sits beside it
+     — 74.5% — against 612px when one does. The floor keeps the measure usable
+     once the frame is small, and the `100%` ceiling stops the floor overflowing
+     below it. `clamp()` cannot express this: it resolves to `max(MIN, min(VAL,
+     MAX))`, so on a narrow frame the floor would win over the ceiling and the
+     text would run off the page. */
   .left .stack {
     align-items: flex-start;
-    max-inline-size: 38.25rem;
+    max-inline-size: min(100%, max(74.5%, 36.5rem));
     text-align: left;
   }
 
@@ -217,16 +243,6 @@ const style = {
     }
   }
 
-  /* 60rem = "cover columns stacked" */
-  @media (width < 60rem) {
-    .left .with-logo {
-      grid-template-columns: minmax(0, 38.25rem);
-      gap: var(--space-10);
-      justify-content: start;
-    }
-
-    .left .with-logo .logo {
-      grid-area: 2 / 1;
-    }
-  }
+  /* no breakpoint stacks this row: `flex-wrap` above drops the logo under the
+     stack once the floors stop fitting, around a 60rem viewport */
 </style>

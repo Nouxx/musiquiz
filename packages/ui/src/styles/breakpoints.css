@@ -35,18 +35,20 @@
    Used by footer/FooterColumn.astro and footer/FooterSection.astro.
    Figma step, no derivation recorded.
 
-   Reused by PageCover.astro for `align="left"`: below it the 612px text
-   column and the logo stop sitting side by side, so the logo drops under
-   the text. Reused rather than derived — the honest derivation (612px plus
-   a logo minimum plus gutters, ~66rem) would add a fourth literal for one
-   component, and the two columns shrink fluidly down to here anyway.
+   PageCover.astro lands on the same number for `align="left"` without
+   using a query for it. That row is a wrapping flex row, like the footer
+   band above: the text and the logo carry floors of 36.5rem and 12.5rem,
+   and 36.5 + 12.5 + the 2.5rem gap stops fitting a 57rem container, which
+   is a 60rem viewport once the `--space-6` gutters come off. Change either
+   floor and the wrap moves — it is a consequence, not a setting.
 
-   RemoteImage.astro mirrors it for `cover-logo-side` (396px → 200px), in
-   the stylesheet AND in the `sizes` attribute string, which is TS and must
-   be edited in step. That `sizes` string also names 78rem — the width at
-   which the cover frame reaches `--size-content` and the logo column stops
-   growing. It is not a media query anywhere, so it is not a breakpoint;
-   it is recorded here only because the string reads as if it were one.
+   RemoteImage.astro quotes both 60rem and 78rem in `cover-logo-side`'s
+   `sizes` string, which is TS. Neither is a media query: the logo is sized
+   by ratio (31.75% of the cover frame), 78rem is where that frame stops
+   growing and the ratio settles at 396px, and 60rem is the wrap above.
+   The string only approximates the curve — deliberately erring large,
+   since an over-large `sizes` costs bytes and an under-large one costs
+   sharpness. It needs revisiting only if those floors or the ratio move.
 
    ------------------------------------------------------------
    48rem — footer logo step
