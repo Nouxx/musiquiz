@@ -52,8 +52,6 @@ const style = {
   </div>
 
   <div class:list={["frame", logo && "with-logo"]}>
-    {logo && <div class="logo" set:html={logo} />}
-
     <div class="stack">
       <slot name="badge" />
       <slot name="heading" />
@@ -61,6 +59,8 @@ const style = {
       {subheading && <div class="subheading" set:html={subheading} />}
       {actions && <div class="actions" set:html={actions} />}
     </div>
+
+    {logo && <div class="logo" set:html={logo} />}
   </div>
 </section>
 
@@ -221,6 +221,8 @@ const style = {
     margin-block-start: var(--space-10);
   }
 
+  /* the logo is written after the stack so the left row reads in the order it
+     renders, text then logo; the centered layout lifts it back out of flow */
   .center .logo {
     position: absolute;
     inset-block-start: var(--space-10);
@@ -233,8 +235,11 @@ const style = {
   /* the logo would collide with the stack once the viewport is short. Only
      `full` runs out of room — the other heights are sized by their content. */
   @media (height <= 40rem) {
+    /* `order`, because the logo sits after the stack in the markup so the left
+       row can read text-then-logo; dropped back into flow it belongs above */
     .center.full .logo {
       position: static;
+      order: -1;
       margin-block-end: var(--space-6);
     }
 
