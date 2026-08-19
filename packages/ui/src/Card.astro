@@ -1,0 +1,94 @@
+---
+import Badge from "./Badge.astro";
+import Button from "./primitives/Button.astro";
+import RemoteImage from "./primitives/RemoteImage.astro";
+import Text from "./primitives/Text.astro";
+import type { CardItem } from "./types";
+
+export type Props = CardItem & {
+  size?: "large" | "small";
+};
+
+const { size = "large", media, badge, title, body, cta } = Astro.props;
+---
+
+<article class="card">
+  <RemoteImage image={media} variant="card-media" />
+
+  <div class="content">
+    <div class="stack">
+      <Badge color="light">{badge}</Badge>
+
+      <Text as="h3" variant={size === "large" ? "title-h5" : "title-xl"}>
+        {title}
+      </Text>
+
+      {
+        body && (
+          <div class="body">
+            <Text as="p" variant="paragraph-base">
+              {body}
+            </Text>
+          </div>
+        )
+      }
+    </div>
+
+    {
+      cta && (
+        <Button as="a" href={cta.url} tone="blue">
+          {cta.label}
+        </Button>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    block-size: 100%;
+    background-color: var(--color-surface);
+    border-radius: 24px;
+    overflow: hidden;
+  }
+
+  .card::before {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    padding: 1px 1px 3px;
+    background-image: var(--color-border-brand);
+    border-radius: inherit;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    content: "";
+  }
+
+  .content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-10);
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: var(--space-6);
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+
+  /* Figma said #524B47 we used the nearest token --grey-600 (#655c57) here. */
+  .body {
+    color: var(--color-text-muted);
+  }
+</style>

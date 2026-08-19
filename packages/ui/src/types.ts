@@ -31,3 +31,16 @@ export type ImageSource = {
   mimeType: string;
   alt: string;
 };
+
+export type CtaLink = {
+  label: string;
+  url: string;
+};
+
+export type CardItem = {
+  media: ImageSource;
+  badge: string;
+  title: string;
+  body?: string;
+  cta?: CtaLink;
+};

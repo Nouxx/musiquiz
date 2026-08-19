@@ -1,0 +1,162 @@
+---
+import Card from "./Card.astro";
+import Button from "./primitives/Button.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { CardItem, CtaLink } from "./types";
+
+interface Props {
+  heading: string;
+  body: string;
+  align?: "left" | "center";
+  background?: "vivid" | "muted";
+  cta?: CtaLink;
+  cards: CardItem[];
+}
+
+const {
+  heading,
+  body,
+  align = "left",
+  background = "muted",
+  cta,
+  cards,
+} = Astro.props;
+
+const count = cards.length;
+const size = count <= 3 ? "large" : "small";
+---
+
+<Section surface={background} spacing="l">
+  <div
+    class:list={["cards-grid", align, background]}
+    style={{
+      "--cards-count": count,
+      "--cards-gap": size === "large" ? "var(--space-10)" : "var(--space-6)",
+    }}
+  >
+    <div class="header">
+      <div class="intro">
+        <Text as="h2" variant="title-h2">{heading}</Text>
+
+        <div class="body">
+          <Text as="p" variant="paragraph-base">{body}</Text>
+        </div>
+      </div>
+
+      {
+        cta && (
+          <div class="action">
+            <Button as="a" href={cta.url}>
+              {cta.label}
+            </Button>
+          </div>
+        )
+      }
+    </div>
+
+    <ul class="grid">
+      {
+        cards.map((card) => (
+          <li>
+            <Card
+              size={size}
+              media={card.media}
+              badge={card.badge}
+              title={card.title}
+              body={card.body}
+              cta={card.cta}
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Section>
+
+<style>
+  .cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .left .header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-10);
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .left .intro {
+    flex: 0 1 49%;
+
+    /* `min-inline-size` does not shrink, hence the `100%` arm */
+    min-inline-size: min(38.25rem, 100%);
+  }
+
+  .center .header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    align-items: center;
+    text-align: center;
+  }
+
+  .center .intro {
+    gap: var(--space-6);
+    max-inline-size: 44rem;
+  }
+
+  /* QA: on vivid the sheet fills this text #EFEAE7, which is --grey-100, i.e.
+     --color-text-on-media-muted — not --color-text-on-brand-muted (--blue-100),
+     which is the token the name would suggest. Confirm which the design means. */
+  .vivid .body {
+    color: var(--color-text-on-media-muted);
+  }
+
+  .muted .body {
+    color: var(--color-text-muted);
+  }
+
+  /* explicit column counts rather than an intrinsic `auto-fill`
+    because: with `auto-fill` a four-card grid passes through a 3 + 1 orphan row on the way down.
+    four goes 4 -> 2x2 -> stacked;
+    three goes 3 -> 2 + 1 -> stacked,
+  */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--cards-gap);
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (width >= 40rem) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (width >= 64rem) {
+    .grid {
+      grid-template-columns: repeat(var(--cards-count), 1fr);
+    }
+  }
+
+  /* the card fills its track, so a row of them shares the tallest one's height */
+  .grid li {
+    display: flex;
+  }
+
+  .grid li > :global(*) {
+    inline-size: 100%;
+  }
+</style>

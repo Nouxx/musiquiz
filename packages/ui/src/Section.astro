@@ -1,6 +1,6 @@
 ---
 interface Props {
-  surface?: "default" | "vivid";
+  surface?: "default" | "vivid" | "muted";
   spacing?: "l" | "m";
   id?: string;
 }
@@ -30,5 +30,9 @@ const { surface = "default", spacing = "l", id } = Astro.props;
   .vivid {
     color: var(--color-text-on-brand);
     background-image: var(--color-surface-vivid);
+  }
+
+  .muted {
+    background-color: var(--color-surface-muted);
   }
 </style>
