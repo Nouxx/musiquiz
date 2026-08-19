@@ -1,5 +1,6 @@
 ---
 import type { PageComponent } from "@repo/services/cms/pageComponent.types";
+import CardsGrid from "@repo/ui/CardsGrid";
 import RollingBanner from "@repo/ui/RollingBanner";
 
 interface Props {
@@ -17,8 +18,17 @@ const { components } = Astro.props;
           <RollingBanner message={component.message} color={component.color} />
         );
       }
-      case "dummyComponent": {
-        return <p>{component.text}</p>;
+      case "cardsGrid": {
+        return (
+          <CardsGrid
+            heading={component.heading}
+            body={component.body}
+            align={component.align}
+            background={component.background}
+            cta={component.cta}
+            cards={component.cards}
+          />
+        );
       }
     }
   })

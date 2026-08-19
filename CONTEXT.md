@@ -39,7 +39,7 @@ The block at the top of every page — media, badge, heading, sub-heading, and a
 _Avoid_: hero, banner, header, masthead
 
 **Page Component**:
-One entry in the ordered array an editor composes a page body from — a Rolling Banner today, more later. The array is the same shared dictionary on every content document, so a component written for one page works on all of them.
+One entry in the ordered array an editor composes a page body from — a Rolling Banner or a Cards Grid today, more later. The array is the same shared dictionary on every content document, so a component written for one page works on all of them.
 _Avoid_: block, section, module, widget
 
 ## Components
@@ -55,6 +55,14 @@ _Avoid_: business component, smart component, container, block, domain component
 **Rolling Banner**:
 A full-bleed strip holding one short message, repeated as many times as the width needs and scrolled horizontally without end. The repetition is a layout mechanic, never content — every copy says the same thing, which is why only the first is readable to assistive tech. How the copy count is decided is [ADR 0008](./docs/adr/0008-rolling-banner-fill-strategy.md).
 _Avoid_: marquee, ticker, carousel, news bar
+
+**Cards Grid**:
+A Page Component holding a heading, a body, an optional call to action, and three or four Cards. The count is the design variant, not just a length — it sets the column gap, the track template and the Card's title step, so a fourth card is a different design rather than one more of the same. Unlike a Page Cover, a Cards Grid's calls to action carry an authored, localized url: they point at pages the site does not own routes for, so the destination cannot be derived and an authored url can 404.
+_Avoid_: card list, tiles, features grid
+
+**Card**:
+The UI Component inside a Cards Grid — media, badge, title, optional body, optional call to action, on a light surface inside a gradient ring. Every Card in a grid is the same width and height whatever it holds; the media is a fixed 240px crop and the call to action is pinned to the bottom edge, so a row of Cards lines up whatever the bodies do.
+_Avoid_: tile, panel, box
 
 **Site Chrome**:
 The one kind of Feature Component that fetches its own data instead of receiving it from a Page — `Header`, `Footer`. Its content is site-wide settings, so it belongs to no single page and threading it through every Page would be noise. Any other Feature Component takes its data as props.

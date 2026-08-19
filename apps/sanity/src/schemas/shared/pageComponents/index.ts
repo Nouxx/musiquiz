@@ -6,6 +6,6 @@ export const pageComponentsType = defineType({
   type: "array",
   of: [
     defineArrayMember({ type: "rollingBanner" }),
-    defineArrayMember({ type: "dummyComponent" }),
+    defineArrayMember({ type: "cardsGrid" }),
   ],
 });

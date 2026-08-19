@@ -22,11 +22,13 @@ export const rollingBannerType = defineType({
           if (tooShort?.length) return "At least 8 characters";
           return true;
         }),
-        rule.warning().custom((entries?: { value?: string }[]) =>
-          entries?.some((e) => (e.value?.length ?? 0) > 55)
-            ? "Longer than the line this banner was designed for (55 characters)"
-            : true,
-        ),
+        rule
+          .warning()
+          .custom((entries?: { value?: string }[]) =>
+            entries?.some((e) => (e.value?.length ?? 0) > 55)
+              ? "Longer than the line this banner was designed for (55 characters)"
+              : true,
+          ),
       ],
     }),
     defineField({
@@ -49,26 +51,6 @@ export const rollingBannerType = defineType({
     prepare() {
       return {
         title: "Rolling Banner",
-      };
-    },
-  },
-});
-
-export const dummyType = defineType({
-  name: "dummyComponent",
-  title: "Dummy Comp",
-  type: "object",
-  fields: [
-    defineField({
-      name: "text",
-      title: "text",
-      type: "string",
-    }),
-  ],
-  preview: {
-    prepare() {
-      return {
-        title: "Dummy Component",
       };
     },
   },

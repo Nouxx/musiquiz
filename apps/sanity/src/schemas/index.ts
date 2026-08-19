@@ -1,5 +1,7 @@
+import { ctaType } from "./shared/cta";
 import { imageWithAltType } from "./shared/imageWithAltType";
 import { pageComponentsType } from "./shared/pageComponents";
+import { cardsGridType, cardType } from "./shared/pageComponents/cardsGrid";
 import { pageCoverType } from "./shared/pageCover";
 import { gameFormatType } from "./gameFormat";
 import { homepageType } from "./homepage";
@@ -7,10 +9,7 @@ import { siteSettingsType } from "./siteSettings";
 import { venueType } from "./venue";
 import { venueGameType } from "./venueGame";
 import { venuePageType } from "./venuePage";
-import {
-  dummyType,
-  rollingBannerType,
-} from "./shared/pageComponents/rollingBanner";
+import { rollingBannerType } from "./shared/pageComponents/rollingBanner";
 
 export const schemaTypes = [
   homepageType,
@@ -22,6 +21,8 @@ export const schemaTypes = [
   imageWithAltType,
   pageComponentsType,
   pageCoverType,
+  ctaType,
   rollingBannerType,
-  dummyType,
+  cardsGridType,
+  cardType,
 ];
