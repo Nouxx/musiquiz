@@ -21,7 +21,7 @@ Rationale for every rule below: [ADR 0009](../../docs/adr/0009-sanity-query-modu
 
 ## shared/
 
-- `shared/` is closed at `image.ts` and `pageComponents.ts`. Adding a third entry needs an ADR.
+- `shared/` is open to any fragment that makes sense shared: a named thing whose shape is fixed by the domain rather than by the page asking for it — `image.ts`, `pageComponents.ts`, `cta.ts`. Judgement, not a repeat count.
 - Duplicate projections across Query Modules freely. Each module asks for exactly the fields its page needs.
 - A shared entry keeps its projection, schema, and type in one file, same as a Query Module.
 
