@@ -27,6 +27,20 @@ export const reviewsType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "surface",
+      title: "Background",
+      type: "string",
+      initialValue: "default",
+      options: {
+        list: [
+          { title: "Default", value: "default" },
+          { title: "Muted", value: "muted" },
+        ],
+        layout: "radio",
+      },
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: "searchTerm",
       title: "Word filter",
       description: "Filter reviews with a word, example: 'evjf' (case insensitive)",

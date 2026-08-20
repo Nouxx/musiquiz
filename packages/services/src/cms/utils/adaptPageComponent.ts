@@ -9,7 +9,7 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
   switch (data._type) {
     case "rollingBanner": {
       return {
-        type: data._type,
+        type: "rollingBanner",
         message: data.message,
         color: data.color,
       };
@@ -17,7 +17,7 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
 
     case "cardsGrid": {
       return {
-        type: data._type,
+        type: "cardsGrid",
         heading: data.heading,
         body: data.body,
         align: data.align,
@@ -29,13 +29,20 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
 
     case "carousel": {
       return {
-        type: data._type,
+        type: "carousel",
         badge: data.badge ?? undefined,
         title: data.title,
         body: data.body,
         cta: toCta(data.cta),
         ctaTone: data.ctaTone,
         images: data.images.map((image) => toCmsImage(image)),
+      };
+    }
+
+    case "reviews": {
+      return {
+        type: "reviews",
+        surface: data.surface,
       };
     }
   }

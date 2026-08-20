@@ -13,6 +13,17 @@ function rollingBannerProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function reviewsProjection() {
+  return `
+    _type == "reviews" => {
+      "venueSlug": venue->slug.current,
+      starsThreshold,
+      "surface": coalesce(surface, "default"),
+      searchTerm
+    }
+  `;
+}
+
 function cardsGridProjection({ lang }: { lang: Lang }) {
   return `
     _type == "cardsGrid" => {
@@ -52,6 +63,7 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${rollingBannerProjection({ lang })},
       ${cardsGridProjection({ lang })},
       ${carouselProjection({ lang })},
+      ${reviewsProjection()},
     }
   `;
 }
@@ -92,10 +104,19 @@ const sanityCarouselSchema = z.strictObject({
   images: z.array(sanityImageSchema).min(5).max(12),
 });
 
+const sanityReviewsSchema = z.strictObject({
+  _type: z.literal("reviews"),
+  venueSlug: z.string().min(1).nullable(),
+  starsThreshold: z.union([z.literal(4), z.literal(5)]),
+  surface: z.enum(["default", "muted"]),
+  searchTerm: z.string().min(1).nullable(),
+});
+
 export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityRollingBannerSchema,
   sanityCardsGridSchema,
   sanityCarouselSchema,
+  sanityReviewsSchema,
 ]);
 
 export type SanityPageComponent = z.infer<typeof sanityPageComponentSchema>;

@@ -5,6 +5,7 @@ import Carousel from "@repo/ui/Carousel";
 import RollingBanner from "@repo/ui/RollingBanner";
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
+import Reviews from "@repo/ui/Reviews";
 
 interface Props {
   components: PageComponent[];
@@ -49,6 +50,62 @@ const t = getT(lang);
             previousLabel={t("carousel.previous")}
             nextLabel={t("carousel.next")}
             goToImageLabel={t("carousel.goToImage")}
+          />
+        );
+      }
+      case "reviews": {
+        // todo: currently dummy data, waiting on Google connection
+        const reviews = [
+          {
+            name: "Gauthier Corion",
+            body: "Très bon moment passé entre collègues et amis !",
+            score: 5,
+          },
+          {
+            name: "Alexiaa",
+            body: "Après midi au top entre copines pour un evjf!! On a bien rigolé et surtt Céline Dion n'a qu'à bien se tenir 🤣",
+            score: 5,
+          },
+          {
+            name: "Gauthier Corion",
+            body: "Un moment inoubliable. Moment incroyable, ambiance parfaite ! L'expérience fut à la fois divertissante et conviviale, idéale pour une soirée entre amis comme pour un anniversaire un peu spécial.",
+            score: 5,
+          },
+          {
+            name: "Marie-Charlotte de Villeneuve",
+            body: "Super ambiance, on a adoré le concept !",
+            score: 4,
+          },
+          {
+            name: "Tom",
+            body: "Génial.",
+            score: 3,
+          },
+          {
+            name: "Sofia B.",
+            body: "Parfait pour un team building. Les animateurs sont au top et le format télé fonctionne vraiment bien, même pour ceux qui ne connaissent rien à la musique.",
+            score: 5,
+          },
+        ];
+        const badge = "Temoignages";
+        const title = "Ils ont testé... et approuvé !";
+        const ratingLabel = "Évaluation Trustindex :";
+        const ratingValue = "5.0 sur 5, Basée sur 2 100 avis";
+        const labels = {
+          previousLabel: t("reviews.previous"),
+          nextLabel: t("reviews.next"),
+          starsLabel: (score: number) => t("reviews.stars", { score }),
+        };
+
+        return (
+          <Reviews
+            surface={component.surface}
+            {badge}
+            {title}
+            {ratingLabel}
+            {ratingValue}
+            {reviews}
+            {...labels}
           />
         );
       }

@@ -39,4 +39,9 @@ type Carousel = {
   images: CmsImage[];
 };
 
-export type PageComponent = RollingBanner | CardsGrid | Carousel;
+type Reviews = {
+  type: "reviews";
+  surface: "default" | "muted";
+};
+
+export type PageComponent = RollingBanner | CardsGrid | Carousel | Reviews;
