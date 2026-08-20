@@ -24,6 +24,15 @@ function reviewsProjection() {
   `;
 }
 
+function pricesProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "prices" => {
+      "title": title[language == "${lang}"][0].value,
+      "surface": coalesce(surface, "muted")
+    }
+  `;
+}
+
 function cardsGridProjection({ lang }: { lang: Lang }) {
   return `
     _type == "cardsGrid" => {
@@ -64,6 +73,7 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${cardsGridProjection({ lang })},
       ${carouselProjection({ lang })},
       ${reviewsProjection()},
+      ${pricesProjection({ lang })},
     }
   `;
 }
@@ -112,11 +122,18 @@ const sanityReviewsSchema = z.strictObject({
   searchTerm: z.string().min(1).nullable(),
 });
 
+const sanityPricesSchema = z.strictObject({
+  _type: z.literal("prices"),
+  title: z.string().min(1),
+  surface: z.enum(["default", "muted"]),
+});
+
 export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityRollingBannerSchema,
   sanityCardsGridSchema,
   sanityCarouselSchema,
   sanityReviewsSchema,
+  sanityPricesSchema,
 ]);
 
 export type SanityPageComponent = z.infer<typeof sanityPageComponentSchema>;

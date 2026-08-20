@@ -44,4 +44,15 @@ type Reviews = {
   surface: "default" | "muted";
 };
 
-export type PageComponent = RollingBanner | CardsGrid | Carousel | Reviews;
+type Prices = {
+  type: "prices";
+  title: string;
+  surface: "default" | "muted";
+};
+
+export type PageComponent =
+  | RollingBanner
+  | CardsGrid
+  | Carousel
+  | Reviews
+  | Prices;

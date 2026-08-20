@@ -1,0 +1,23 @@
+---
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+
+interface Props {
+  title: string;
+  surface?: "default" | "muted";
+}
+
+const { title, surface = "muted" } = Astro.props;
+---
+
+<Section {surface} width="content">
+  <div class="prices">
+    <Text as="h2" variant="title-h2">{title}</Text>
+  </div>
+</Section>
+
+<style>
+  .prices {
+    text-align: center;
+  }
+</style>

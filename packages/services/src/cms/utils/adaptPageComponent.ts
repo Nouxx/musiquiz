@@ -45,5 +45,13 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         surface: data.surface,
       };
     }
+
+    case "prices": {
+      return {
+        type: "prices",
+        title: data.title,
+        surface: data.surface,
+      };
+    }
   }
 }

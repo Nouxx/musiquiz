@@ -9,5 +9,6 @@ export const pageComponentsType = defineType({
     defineArrayMember({ type: "cardsGrid" }),
     defineArrayMember({ type: "carousel" }),
     defineArrayMember({ type: "reviews" }),
+    defineArrayMember({ type: "prices" }),
   ],
 });

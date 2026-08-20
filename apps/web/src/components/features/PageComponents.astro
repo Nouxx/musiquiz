@@ -6,6 +6,7 @@ import RollingBanner from "@repo/ui/RollingBanner";
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 import Reviews from "@repo/ui/Reviews";
+import Prices from "@repo/ui/Prices";
 
 interface Props {
   components: PageComponent[];
@@ -108,6 +109,9 @@ const t = getT(lang);
             {...labels}
           />
         );
+      }
+      case "prices": {
+        return <Prices title={component.title} surface={component.surface} />;
       }
     }
   })
