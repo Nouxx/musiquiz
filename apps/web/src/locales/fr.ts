@@ -6,6 +6,11 @@ export const fr = {
     badge: "Nos centres",
     heading: "Retrouvez nos centres Musi'Quiz près de chez vous !",
   },
+  carousel: {
+    previous: "Image précédente",
+    next: "Image suivante",
+    goToImage: "Aller à l'image",
+  },
   header: {
     home: "Accueil",
     concept: "Concept",

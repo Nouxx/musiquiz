@@ -8,6 +8,11 @@ export const en: typeof fr = {
     badge: "Our venues",
     heading: "Find a Musi'Quiz venue near you!",
   },
+  carousel: {
+    previous: "Previous image",
+    next: "Next image",
+    goToImage: "Go to image",
+  },
   header: {
     home: "Home",
     concept: "Concept",

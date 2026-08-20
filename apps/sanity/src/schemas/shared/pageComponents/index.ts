@@ -7,5 +7,6 @@ export const pageComponentsType = defineType({
   of: [
     defineArrayMember({ type: "rollingBanner" }),
     defineArrayMember({ type: "cardsGrid" }),
+    defineArrayMember({ type: "carousel" }),
   ],
 });

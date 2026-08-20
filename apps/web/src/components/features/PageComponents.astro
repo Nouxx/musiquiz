@@ -1,13 +1,20 @@
 ---
 import type { PageComponent } from "@repo/services/cms/pageComponent.types";
 import CardsGrid from "@repo/ui/CardsGrid";
+import Carousel from "@repo/ui/Carousel";
 import RollingBanner from "@repo/ui/RollingBanner";
+import { getLang } from "../../libs/getLang";
+import { getT } from "../../libs/i18n";
 
 interface Props {
   components: PageComponent[];
 }
 
 const { components } = Astro.props;
+
+const lang = getLang(Astro);
+
+const t = getT(lang);
 ---
 
 {
@@ -27,6 +34,21 @@ const { components } = Astro.props;
             background={component.background}
             cta={component.cta}
             cards={component.cards}
+          />
+        );
+      }
+      case "carousel": {
+        return (
+          <Carousel
+            badge={component.badge}
+            title={component.title}
+            body={component.body}
+            cta={component.cta}
+            ctaTone={component.ctaTone}
+            images={component.images}
+            previousLabel={t("carousel.previous")}
+            nextLabel={t("carousel.next")}
+            goToImageLabel={t("carousel.goToImage")}
           />
         );
       }

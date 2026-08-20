@@ -32,12 +32,26 @@ function cardsGridProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function carouselProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "carousel" => {
+      "badge": badge[language == "${lang}"][0].value,
+      "title": title[language == "${lang}"][0].value,
+      "body": body[language == "${lang}"][0].value,
+      "cta": ${optionalCtaProjection({ field: "cta", lang })},
+      "ctaTone": coalesce(ctaTone, "red"),
+      "images": images[] ${imageProjection({ lang })}
+    }
+  `;
+}
+
 export function pageComponentsProjection({ lang }: { lang: Lang }) {
   return `
     pageComponents[]{
       _type,
       ${rollingBannerProjection({ lang })},
       ${cardsGridProjection({ lang })},
+      ${carouselProjection({ lang })},
     }
   `;
 }
@@ -58,9 +72,6 @@ const sanityCardSchema = z.strictObject({
 
 export type SanityCard = z.infer<typeof sanityCardSchema>;
 
-// the count is validated in the studio too. mirrored here because it is a
-// design constraint, not an editing convenience: below three or above four
-// there is no layout to render.
 const sanityCardsGridSchema = z.strictObject({
   _type: z.literal("cardsGrid"),
   heading: z.string().min(1),
@@ -71,9 +82,20 @@ const sanityCardsGridSchema = z.strictObject({
   cards: z.array(sanityCardSchema).min(3).max(4),
 });
 
+const sanityCarouselSchema = z.strictObject({
+  _type: z.literal("carousel"),
+  badge: z.string().min(1).nullable(),
+  title: z.string().min(1),
+  body: z.string().min(1),
+  cta: sanityCtaSchema.nullable(),
+  ctaTone: z.enum(["red", "blue"]),
+  images: z.array(sanityImageSchema).min(5).max(12),
+});
+
 export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityRollingBannerSchema,
   sanityCardsGridSchema,
+  sanityCarouselSchema,
 ]);
 
 export type SanityPageComponent = z.infer<typeof sanityPageComponentSchema>;

@@ -29,4 +29,14 @@ type CardsGrid = {
   cards: Card[];
 };
 
-export type PageComponent = RollingBanner | CardsGrid;
+type Carousel = {
+  type: "carousel";
+  badge: string | undefined;
+  title: string;
+  body: string;
+  cta: Cta | undefined;
+  ctaTone: "red" | "blue";
+  images: CmsImage[];
+};
+
+export type PageComponent = RollingBanner | CardsGrid | Carousel;
