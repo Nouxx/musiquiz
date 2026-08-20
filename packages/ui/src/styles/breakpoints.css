@@ -31,9 +31,16 @@
 
    ------------------------------------------------------------
    60rem — footer columns stacked / cover columns stacked
+           / reviews columns stacked
    ------------------------------------------------------------
    Used by footer/FooterColumn.astro and footer/FooterSection.astro.
    Figma step, no derivation recorded.
+
+   Reviews.astro lands on the same number for its text-column / track row.
+   Reused rather than derived: it is the same decision those two make, and at
+   960px the 325px text column plus the 80px gap still leaves ~1.4 cards
+   visible, so the row is doing real work right up to the flip. Below it the
+   arrows sit under the body, which is the order the mobile sheet draws.
 
    PageCover.astro lands on the same number for `align="left"` without
    using a query for it. That row is a wrapping flex row, like the footer
@@ -49,6 +56,26 @@
    The string only approximates the curve — deliberately erring large,
    since an over-large `sizes` costs bytes and an under-large one costs
    sharpness. It needs revisiting only if those floors or the ratio move.
+
+   ------------------------------------------------------------
+   64rem and 88rem — carousel slot count
+   ------------------------------------------------------------
+   Used by Carousel.astro, which renders a fixed number of whole images per
+   band: 5 above 88rem, 3 between, and "as many as fit plus a peek" below.
+
+   64rem is where three full-size (281.6px) images fit exactly, so the peek
+   runs out rather than being cut off: at 1023px you see three whole images
+   and an 11px sliver, at 1024px the sliver goes and nothing resizes. The
+   earlier 48rem boundary dropped the image 281.6 → 205.6 *as the viewport
+   widened*, which reads as a bug rather than a layout change.
+
+   88rem (1408px) rather than 96rem so a 1440px laptop gets five images, with
+   32px of headroom for a classic scrollbar. The cost is a −21% step at the
+   switch, because the 3-band sits at its cap right up to the boundary —
+   inherent to changing slot count at a fixed width, not to the value.
+
+   Both also gate the valley depth (0/120/240 by slot) and, at 88rem only, the
+   header tuck. Change either number and those move with it.
 
    ------------------------------------------------------------
    48rem — footer logo step

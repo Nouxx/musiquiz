@@ -1,7 +1,7 @@
 ---
 import Badge from "./Badge.astro";
 import Button from "./primitives/Button.astro";
-import Icon from "./primitives/Icon.astro";
+import ScrollArrow from "./primitives/ScrollArrow.astro";
 import RemoteImage from "./primitives/RemoteImage.astro";
 import Text from "./primitives/Text.astro";
 import Section from "./Section.astro";
@@ -81,25 +81,17 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
           </ol>
 
           <div class="arrows">
-            <button
-              type="button"
-              class="arrow"
-              aria-label={previousLabel}
-              aria-controls={trackId}
-              data-carousel-previous
-            >
-              <Icon name="angle-left" size="l" />
-            </button>
+            <ScrollArrow
+              direction="previous"
+              label={previousLabel}
+              controls={trackId}
+            />
 
-            <button
-              type="button"
-              class="arrow"
-              aria-label={nextLabel}
-              aria-controls={trackId}
-              data-carousel-next
-            >
-              <Icon name="angle-right" size="l" />
-            </button>
+            <ScrollArrow
+              direction="next"
+              label={nextLabel}
+              controls={trackId}
+            />
           </div>
         </div>
       </div>
@@ -136,7 +128,7 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
     /* how far the deepest slot sits below the shallowest */
     --valley-depth: 0px;
 
-    --arrow-size: 2.25rem;
+    --scroll-arrow-size: 2.25rem;
   }
 
   .header {
@@ -223,56 +215,6 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
   .arrows {
     display: flex;
     gap: var(--space-4);
-  }
-
-  /* the same key-travel construction as Button: a 1px ring, a 2px shadow that
-     shortens on hover, and the box moving down to meet it */
-  .arrow {
-    --lift: 2px;
-
-    position: relative;
-    display: inline-flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-    inline-size: var(--arrow-size);
-    block-size: var(--arrow-size);
-    padding: 0;
-    color: var(--color-text-on-light);
-    background-color: var(--color-fill-muted);
-    border: none;
-    border-radius: 999px;
-    box-shadow: 0 var(--lift) 0 var(--color-border-light);
-    cursor: pointer;
-    transform: translateY(calc(2px - var(--lift)));
-    transition:
-      transform 120ms ease-out,
-      box-shadow 120ms ease-out;
-  }
-
-  .arrow::before {
-    position: absolute;
-    inset: 0;
-    padding: 1px; /* the ring's thickness */
-    background: var(--color-border-light);
-    border-radius: inherit;
-    mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    mask-composite: exclude;
-    content: "";
-  }
-
-  .arrow:hover,
-  .arrow:focus-visible {
-    --lift: 1px;
-  }
-
-  .arrow:active {
-    --lift: 0px;
-
-    background-image: linear-gradient(var(--color-overlay-pressed) 0 0);
-    transition-duration: 0s;
   }
 
   /* ---- track ------------------------------------------------------------ */
@@ -368,9 +310,7 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
     }
   }
 
-  /* 64rem is where three full-size images fit exactly, so the peek runs out
-     rather than being cut off: at 1023px you see three whole images and an 11px
-     sliver, at 1024px the sliver goes and nothing resizes. */
+  /* 64rem — carousel slot count. see styles/breakpoints.css */
   @media (width >= 64rem) {
     .carousel {
       --valley-depth: 120px;
@@ -396,12 +336,14 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
     }
   }
 
+  /* 64rem and 88rem — carousel slot count. see styles/breakpoints.css */
   @media (64rem <= width < 88rem) {
     .track > li:nth-child(3n + 2) {
       translate: 0 var(--valley-depth);
     }
   }
 
+  /* 88rem — carousel slot count. see styles/breakpoints.css */
   @media (width >= 88rem) {
     .carousel {
       --valley-depth: 240px;
@@ -437,13 +379,13 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
     .arrows {
       position: absolute;
       inset-block: 0;
-      inset-inline: calc(-1 * (var(--arrow-size) + var(--gap)));
+      inset-inline: calc(-1 * (var(--scroll-arrow-size) + var(--gap)));
       align-items: center;
       justify-content: space-between;
       pointer-events: none;
     }
 
-    .arrows > .arrow {
+    .arrows > :global(.scroll-arrow) {
       pointer-events: auto;
     }
 
@@ -472,10 +414,6 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
     .dot {
       transition: none;
     }
-
-    .arrow {
-      transition: none;
-    }
   }
 </style>
 
@@ -484,8 +422,8 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
 
   function setUpCarousel(carousel: HTMLElement) {
     const track = carousel.querySelector<HTMLElement>("[data-carousel-track]");
-    const previous = carousel.querySelector("[data-carousel-previous]");
-    const next = carousel.querySelector("[data-carousel-next]");
+    const previous = carousel.querySelector('[data-scroll-arrow="previous"]');
+    const next = carousel.querySelector('[data-scroll-arrow="next"]');
 
     if (!track || !previous || !next) {
       return;

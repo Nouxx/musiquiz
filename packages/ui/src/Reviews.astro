@@ -1,0 +1,346 @@
+---
+import Badge from "./Badge.astro";
+import Icon from "./primitives/Icon.astro";
+import IconChip from "./primitives/IconChip.astro";
+import RemoteImage from "./primitives/RemoteImage.astro";
+import ScrollArrow from "./primitives/ScrollArrow.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { Review } from "./types";
+
+interface Props {
+  badge: string;
+  title: string;
+  ratingLabel: string;
+  ratingValue: string;
+  surface?: "default" | "muted";
+  reviews: Review[];
+  previousLabel: string;
+  nextLabel: string;
+  starsLabel: (score: number) => string;
+}
+
+const {
+  badge,
+  title,
+  ratingLabel,
+  ratingValue,
+  surface = "default",
+  reviews,
+  previousLabel,
+  nextLabel,
+  starsLabel,
+} = Astro.props;
+
+const STARS = [1, 2, 3, 4, 5];
+
+const trackId = `reviews-${crypto.randomUUID().slice(0, 8)}`;
+---
+
+<Section surface={surface === "muted" ? "muted" : "default"} width="content">
+  <div class:list={["reviews", surface]} data-reviews>
+    <div class="column">
+      <div class="intro">
+        <div class="heading">
+          <Badge color="light">{badge}</Badge>
+
+          <Text as="h2" variant="title-h2">{title}</Text>
+        </div>
+
+        <div class="rating">
+          <Text as="p" variant="paragraph-base">{ratingLabel}</Text>
+
+          <Text as="p" variant="paragraph-base-sm">{ratingValue}</Text>
+        </div>
+      </div>
+
+      <div class="arrows">
+        <ScrollArrow
+          direction="previous"
+          label={previousLabel}
+          controls={trackId}
+        />
+
+        <ScrollArrow direction="next" label={nextLabel} controls={trackId} />
+      </div>
+    </div>
+
+    <ul
+      class="track"
+      id={trackId}
+      tabindex="0"
+      aria-label={title}
+      data-reviews-track
+    >
+      {
+        reviews.map((review: Review) => (
+          <li class="card">
+            <div class="card-header">
+              {review.avatar ? (
+                <div class="avatar">
+                  <RemoteImage image={review.avatar} variant="review-avatar" />
+                </div>
+              ) : (
+                <IconChip name="user" size="xl" tone="muted" />
+              )}
+
+              <Icon name="google" size="xl" />
+            </div>
+
+            <div class="card-body">
+              <div class="card-text">
+                <Text as="h3" variant="title-xl">
+                  <span class="name">{review.name}</span>
+                </Text>
+
+                <p class="quote">{review.body}</p>
+              </div>
+
+              <div
+                class="stars"
+                role="img"
+                aria-label={starsLabel(review.score)}
+              >
+                {STARS.map((star: number) => (
+                  <span class:list={["star", { filled: star <= review.score }]}>
+                    <Icon name="star" size="s" />
+                  </span>
+                ))}
+              </div>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Section>
+
+<style>
+  .reviews {
+    --card-inline: clamp(260px, 66vw, 294px);
+    --card-block: 255px;
+    --gap: var(--space-6);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .column {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-items: flex-start;
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+
+  /* Figma said #524B47, we use the nearest token --grey-600, as Card does */
+  .rating {
+    color: var(--color-text-muted);
+  }
+
+  .arrows {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .track {
+    display: flex;
+    gap: var(--gap);
+    align-items: flex-start;
+    padding-inline: 0 var(--space-6);
+    margin-inline: 0 calc(50% - 50vw);
+    overflow-x: auto;
+    overflow-y: hidden;
+    list-style: none;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .card {
+    display: flex;
+    flex: 0 0 var(--card-inline);
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    block-size: var(--card-block);
+    background-color: var(--color-surface-muted);
+    border: 1px solid var(--color-border);
+    border-width: 1px 3px 3px 1px;
+    border-radius: 24px;
+    scroll-snap-align: start;
+  }
+
+  .muted .card {
+    background-color: var(--color-surface);
+  }
+
+  .card-header {
+    display: flex;
+    flex: none;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .avatar {
+    inline-size: 40px;
+    block-size: 40px;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .avatar > :global(picture) {
+    display: block;
+    block-size: 100%;
+  }
+
+  .card-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-4);
+    min-block-size: 0;
+  }
+
+  .card-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-block-size: 0;
+  }
+
+  .name {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .quote {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    font: var(--paragraph-s);
+    color: var(--color-text-muted);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+  }
+
+  .stars {
+    display: flex;
+    flex: none;
+    gap: var(--space-1);
+    align-items: center;
+    margin-block-start: auto;
+    color: var(--color-fill-indicator);
+  }
+
+  .star.filled {
+    color: var(--yellow-600);
+  }
+
+  /* 60rem — reviews columns stacked. see styles/breakpoints.css */
+  @media (width >= 60rem) {
+    .reviews {
+      flex-direction: row;
+      gap: var(--space-20);
+      align-items: flex-start;
+    }
+
+    .column {
+      inline-size: 325px;
+    }
+
+    .track {
+      flex: 1;
+      min-inline-size: 0;
+    }
+  }
+</style>
+
+<script>
+  const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)");
+
+  function setUpReviews(reviews: HTMLElement) {
+    const track = reviews.querySelector<HTMLElement>("[data-reviews-track]");
+    const previous = reviews.querySelector('[data-scroll-arrow="previous"]');
+    const next = reviews.querySelector('[data-scroll-arrow="next"]');
+
+    if (!track || !previous || !next) {
+      return;
+    }
+
+    const scroller: HTMLElement = track;
+
+    function step() {
+      const [first, second] = scroller.children;
+
+      if (!first || !second) {
+        return scroller.clientWidth;
+      }
+
+      return (
+        second.getBoundingClientRect().left - first.getBoundingClientRect().left
+      );
+    }
+
+    function lastPosition() {
+      const scrollable = scroller.scrollWidth - scroller.clientWidth;
+
+      return Math.max(0, Math.round(scrollable / step()));
+    }
+
+    function currentPosition() {
+      const position = Math.round(scroller.scrollLeft / step());
+
+      if (position < 0) {
+        return 0;
+      }
+
+      return Math.min(position, lastPosition());
+    }
+
+    function goTo(position: number) {
+      scroller.scrollTo({
+        left: position * step(),
+        behavior: REDUCED_MOTION.matches ? "auto" : "smooth",
+      });
+    }
+
+    previous.addEventListener("click", () => {
+      const position = currentPosition();
+
+      // rewind effect
+      goTo(position === 0 ? lastPosition() : position - 1);
+    });
+
+    next.addEventListener("click", () => {
+      const position = currentPosition();
+
+      goTo(position === lastPosition() ? 0 : position + 1);
+    });
+  }
+
+  for (const reviews of document.querySelectorAll<HTMLElement>(
+    "[data-reviews]",
+  )) {
+    setUpReviews(reviews);
+  }
+</script>

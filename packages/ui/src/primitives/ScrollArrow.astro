@@ -1,0 +1,82 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  direction: "previous" | "next";
+  label: string;
+  /** id of the scroll port this button drives */
+  controls: string;
+}
+
+const { direction, label, controls } = Astro.props;
+---
+
+<button
+  type="button"
+  class="scroll-arrow"
+  aria-label={label}
+  aria-controls={controls}
+  data-scroll-arrow={direction}
+>
+  <Icon
+    name={direction === "previous" ? "angle-left" : "angle-right"}
+    size="l"
+  />
+</button>
+
+<style>
+  .scroll-arrow {
+    --scroll-arrow-size: 2.25rem;
+    --lift: 2px;
+
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--scroll-arrow-size);
+    block-size: var(--scroll-arrow-size);
+    padding: 0;
+    color: var(--color-text-on-light);
+    background-color: var(--color-fill-muted);
+    border: none;
+    border-radius: 999px;
+    box-shadow: 0 var(--lift) 0 var(--color-border-light);
+    cursor: pointer;
+    transform: translateY(calc(2px - var(--lift)));
+    transition:
+      transform 120ms ease-out,
+      box-shadow 120ms ease-out;
+  }
+
+  .scroll-arrow::before {
+    position: absolute;
+    inset: 0;
+    padding: 1px; /* the ring's thickness */
+    background: var(--color-border-light);
+    border-radius: inherit;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    content: "";
+  }
+
+  .scroll-arrow:hover,
+  .scroll-arrow:focus-visible {
+    --lift: 1px;
+  }
+
+  .scroll-arrow:active {
+    --lift: 0px;
+
+    background-image: linear-gradient(var(--color-overlay-pressed) 0 0);
+    transition-duration: 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-arrow {
+      transition: none;
+    }
+  }
+</style>

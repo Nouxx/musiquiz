@@ -66,7 +66,7 @@ export const carouselType = defineType({
       of: [defineArrayMember({ type: "imageWithAlt" })],
       validation: (rule) => rule.required().min(5).max(12),
       // deliberately NOT `options: { layout: "grid" }`
-      // this makes the alt un-authorable 
+      // this makes the alt un-authorable
       // because internationalizedArrayString (array) is rendered as grid cells as well
     }),
   ],

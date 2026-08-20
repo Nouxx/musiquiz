@@ -24,6 +24,14 @@ const { surface = "default", spacing = "l", width = "wide", id } = Astro.props;
   .section {
     padding-block: var(--section-spacing);
     padding-inline: var(--space-6);
+
+    /* a component may bleed a scroll port out to the viewport edge with a
+       `calc(50% - 50vw)` margin (see Reviews). `100vw` counts the classic
+       scrollbar that Windows draws and the document width does not, so without
+       this the bleed overshoots by its width and the page scrolls sideways.
+       `clip` rather than `hidden`: it creates no scroll container, and leaves
+       `overflow-y` visible instead of forcing it to `auto`. */
+    overflow-x: clip;
   }
 
   .wide {
