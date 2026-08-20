@@ -2,14 +2,23 @@
 interface Props {
   surface?: "default" | "vivid" | "muted";
   spacing?: "l" | "m";
+  // `content` reads as a column of text and caps at `--size-content`. `wide` is
+  // for sections composed edge to edge, and caps at the 1728px frame the Figma
+  // sheets are drawn at, with the wider gutter that frame uses.
+  width?: "content" | "wide";
   id?: string;
 }
 
-const { surface = "default", spacing = "l", id } = Astro.props;
+const {
+  surface = "default",
+  spacing = "l",
+  width = "wide",
+  id,
+} = Astro.props;
 ---
 
 <section
-  class:list={["section", surface]}
+  class:list={["section", surface, width]}
   style={{ "--section-spacing": `var(--space-section-${spacing})` }}
   {id}
 >
@@ -22,9 +31,17 @@ const { surface = "default", spacing = "l", id } = Astro.props;
     padding-inline: var(--space-6);
   }
 
+  .wide {
+    padding-inline: var(--space-gutter-wide);
+  }
+
   .content {
     max-inline-size: var(--size-content);
     margin-inline: auto;
+  }
+
+  .wide .content {
+    max-inline-size: var(--size-content-wide);
   }
 
   .vivid {

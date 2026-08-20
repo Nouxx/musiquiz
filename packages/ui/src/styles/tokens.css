@@ -14,6 +14,7 @@
   --white: #f7f3f0;
 
   --red-900: #4c0514;
+  --red-600: #d92363;
   --red-500: #e4314b;
   --red-100: #ffe4e4;
 
@@ -152,6 +153,13 @@
 
   --size-content: 78rem;
 
+  /* the wide frame the Figma sheets are drawn at (1728px), for the sections
+     that are composed edge to edge rather than read as a column of text */
+  --size-content-wide: 108rem;
+
+  /* 4.63vw is 80px at 1728px */
+  --space-gutter-wide: clamp(var(--space-6), 4.63vw, var(--space-20));
+
   --color-surface: var(--white);
   --color-surface-inverse: var(--blue-900);
   --color-surface-muted: var(--grey-100);
@@ -185,6 +193,9 @@
 
   --color-border: var(--grey-200);
   --color-border-brand: var(--gradient-border);
+
+  --color-fill-indicator: var(--grey-400);
+  --color-fill-indicator-active: var(--red-600);
 
   --color-fill-red: var(--gradient-red);
 

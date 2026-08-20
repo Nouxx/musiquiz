@@ -1,0 +1,584 @@
+---
+import Badge from "./Badge.astro";
+import Button from "./primitives/Button.astro";
+import Icon from "./primitives/Icon.astro";
+import RemoteImage from "./primitives/RemoteImage.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { CtaLink, ImageSource } from "./types";
+
+interface Props {
+  badge?: string;
+  title: string;
+  body: string;
+  cta?: CtaLink;
+  ctaTone?: "red" | "blue";
+  images: ImageSource[];
+  previousLabel: string;
+  nextLabel: string;
+  goToImageLabel: string;
+}
+
+const {
+  badge,
+  title,
+  body,
+  cta,
+  ctaTone = "red",
+  images,
+  previousLabel,
+  nextLabel,
+  goToImageLabel,
+} = Astro.props;
+
+// the widest band shows five slots, so a set of five never overflows there:
+// no controls, and no scroll range for the valley to ride either — that case
+// falls back to the resting offsets. See `.fits-wide` below.
+const fitsWide = images.length <= 5;
+
+const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
+---
+
+<Section surface="muted" width="wide">
+  <div class:list={["carousel", { "fits-wide": fitsWide }]} data-carousel>
+    <div class="header">
+      <div class="column">
+        <div class="intro">
+          <div class="heading">
+            {badge && <Badge color="light">{badge}</Badge>}
+
+            <Text as="h2" variant="title-h2">{title}</Text>
+          </div>
+
+          <div class="body">
+            <Text as="p" variant="paragraph-base">{body}</Text>
+          </div>
+        </div>
+
+        {
+          cta && (
+            <Button as="a" href={cta.url} tone={ctaTone}>
+              {cta.label}
+            </Button>
+          )
+        }
+
+        <div class="controls">
+          <ol class="dots">
+            {
+              images.map((_: ImageSource, index: number) => (
+                <li>
+                  <button
+                    type="button"
+                    class="dot"
+                    aria-label={`${goToImageLabel} ${index + 1}`}
+                    aria-controls={trackId}
+                    data-carousel-dot={index}
+                  />
+                </li>
+              ))
+            }
+          </ol>
+
+          <div class="arrows">
+            <button
+              type="button"
+              class="arrow"
+              aria-label={previousLabel}
+              aria-controls={trackId}
+              data-carousel-previous
+            >
+              <Icon name="angle-left" size="l" />
+            </button>
+
+            <button
+              type="button"
+              class="arrow"
+              aria-label={nextLabel}
+              aria-controls={trackId}
+              data-carousel-next
+            >
+              <Icon name="angle-right" size="l" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ul
+      class="track"
+      id={trackId}
+      tabindex="0"
+      aria-label={title}
+      data-carousel-track
+    >
+      {
+        images.map((image: ImageSource) => (
+          <li>
+            <RemoteImage image={image} variant="carousel-media" />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Section>
+
+<style>
+  .carousel {
+    /* the image never gets wider than this at any breakpoint: the band decides
+       how many are shown, never how wide one is. */
+    --image-max: 281.6px;
+    --gap: var(--space-10);
+
+    /* how much of the next image shows past the last whole one */
+    --peek: 3rem;
+
+    /* how far the deepest slot sits below the shallowest */
+    --valley-depth: 0px;
+
+    --arrow-size: 2.25rem;
+  }
+
+  .header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-block-end: var(--space-10);
+    text-align: center;
+  }
+
+  .column {
+    /* the containing block the widest band hangs its arrows off */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    align-items: center;
+
+    /* the sheet's 672px text column */
+    inline-size: min(42rem, 100%);
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-items: center;
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  /* Figma said #524B47, we use the nearest token --grey-600, as Card does */
+  .body {
+    color: var(--color-text-muted);
+  }
+
+  .controls {
+    display: flex;
+    gap: var(--space-6);
+    align-items: center;
+    justify-content: center;
+    inline-size: 100%;
+  }
+
+  .dots {
+    display: flex;
+    gap: var(--space-1);
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .dot {
+    display: block;
+    inline-size: 12px;
+    block-size: 4px;
+    padding: 0;
+    background-color: var(--color-fill-indicator);
+    border: none;
+    border-radius: 1px;
+    cursor: pointer;
+    transition:
+      inline-size 160ms ease-out,
+      block-size 160ms ease-out,
+      rotate 160ms ease-out,
+      background-color 160ms ease-out;
+  }
+
+  .dot[aria-current="true"] {
+    inline-size: 16px;
+    block-size: 6px;
+    background-color: var(--color-fill-indicator-active);
+    rotate: 10deg;
+  }
+
+  .arrows {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  /* the same key-travel construction as Button: a 1px ring, a 2px shadow that
+     shortens on hover, and the box moving down to meet it */
+  .arrow {
+    --lift: 2px;
+
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--arrow-size);
+    block-size: var(--arrow-size);
+    padding: 0;
+    color: var(--color-text-on-light);
+    background-color: var(--color-fill-muted);
+    border: none;
+    border-radius: 999px;
+    box-shadow: 0 var(--lift) 0 var(--color-border-light);
+    cursor: pointer;
+    transform: translateY(calc(2px - var(--lift)));
+    transition:
+      transform 120ms ease-out,
+      box-shadow 120ms ease-out;
+  }
+
+  .arrow::before {
+    position: absolute;
+    inset: 0;
+    padding: 1px; /* the ring's thickness */
+    background: var(--color-border-light);
+    border-radius: inherit;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    content: "";
+  }
+
+  .arrow:hover,
+  .arrow:focus-visible {
+    --lift: 1px;
+  }
+
+  .arrow:active {
+    --lift: 0px;
+
+    background-image: linear-gradient(var(--color-overlay-pressed) 0 0);
+    transition-duration: 0s;
+  }
+
+  /* ---- track ------------------------------------------------------------ */
+
+  /* Below 64rem the track escapes the section's gutter so the overflowing image
+     runs to the screen edge, the way the mobile sheet draws it. The gutter comes
+     back as padding, and as `scroll-padding` so a snapped image lands on the
+     gutter rather than on the screen edge. */
+  .track {
+    display: flex;
+    gap: var(--gap);
+    align-items: start;
+
+    /* the valley pushes items down out of the line box, so the scroll port has
+       to be that much taller or it clips them */
+    padding-block: 0 var(--valley-depth);
+    padding-inline: var(--space-gutter-wide);
+    margin-inline: calc(-1 * var(--space-gutter-wide));
+    overflow-x: auto;
+    overflow-y: hidden;
+    list-style: none;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--space-gutter-wide);
+    scrollbar-width: none;
+  }
+
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .track > li {
+    position: relative;
+    flex: 0 0
+      min(
+        var(--image-max),
+        100% + var(--space-gutter-wide) - var(--gap) - var(--peek)
+      );
+    aspect-ratio: 4 / 7;
+    border-radius: 24px;
+    scroll-snap-align: start;
+    overflow: hidden;
+
+    /* resting offset. the animation below overrides it whenever the scroller should have it */
+    translate: 0 0;
+  }
+
+  .track > li::before {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    padding: 1px 1px 3px;
+    background-image: var(--color-border-brand);
+    border-radius: inherit;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    content: "";
+  }
+
+  .track > li > :global(picture) {
+    display: block;
+    block-size: 100%;
+  }
+
+  /* The travelling valley.
+
+     `contain` runs the timeline from "this item's leading edge is at the start
+     of the scroll port" to "its trailing edge is at the end", which is exactly
+     the item's slot position expressed 0..1. A three-keyframe tent over that
+     range therefore lands on the sheet's offsets exactly at rest — five slots
+     put the items at 0, .25, .5, .75, 1, giving 0/120/240/120/0 — and keeps
+     drawing a V at every position in between. */
+  .track > li {
+    animation: carousel-valley linear both;
+    animation-range: contain;
+    animation-timeline: --slot;
+    view-timeline: --slot inline;
+  }
+
+  @keyframes carousel-valley {
+    from {
+      translate: 0 0;
+    }
+
+    50% {
+      translate: 0 var(--valley-depth);
+    }
+
+    to {
+      translate: 0 0;
+    }
+  }
+
+  /* 64rem is where three full-size images fit exactly, so the peek runs out
+     rather than being cut off: at 1023px you see three whole images and an 11px
+     sliver, at 1024px the sliver goes and nothing resizes. */
+  @media (width >= 64rem) {
+    .carousel {
+      --valley-depth: 120px;
+    }
+
+    .track {
+      inline-size: min(100%, calc(3 * var(--image-max) + 2 * var(--gap)));
+      padding-inline: 0;
+      margin-inline: auto;
+      scroll-padding-inline: 0;
+    }
+
+    .track > li {
+      flex: 0 0 calc((100% - 2 * var(--gap)) / 3);
+    }
+
+    /* an exact band has exactly `count - slots + 1` positions, so the trailing
+       dots can be trimmed here rather than waiting for the script to measure —
+       which is what keeps them from flashing on load. The peeking band has no
+       fixed slot count, so there the script is the only way */
+    .dots > li:nth-last-child(-n + 2) {
+      display: none;
+    }
+  }
+
+  @media (64rem <= width < 88rem) {
+    .track > li:nth-child(3n + 2) {
+      translate: 0 var(--valley-depth);
+    }
+  }
+
+  @media (width >= 88rem) {
+    .carousel {
+      --valley-depth: 240px;
+    }
+
+    .track {
+      inline-size: min(100%, calc(5 * var(--image-max) + 4 * var(--gap)));
+    }
+
+    .track > li {
+      flex: 0 0 calc((100% - 4 * var(--gap)) / 5);
+    }
+
+    .track > li:nth-child(5n + 2),
+    .track > li:nth-child(5n + 4) {
+      translate: 0 calc(var(--valley-depth) / 2);
+    }
+
+    .track > li:nth-child(5n + 3) {
+      translate: 0 var(--valley-depth);
+    }
+
+    .dots > li:nth-last-child(-n + 4) {
+      display: none;
+    }
+
+    /* the arrows leave the row and hang off the text column, 40px clear of it
+       and centred on the column's full height */
+    .controls {
+      justify-content: center;
+    }
+
+    .arrows {
+      position: absolute;
+      inset-block: 0;
+      inset-inline: calc(-1 * (var(--arrow-size) + var(--gap)));
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .arrows > .arrow {
+      pointer-events: auto;
+    }
+
+    .header {
+      margin-block-end: calc(-1 * var(--valley-depth) / 2);
+    }
+
+    .fits-wide .header {
+      margin-block-end: calc(-1 * var(--space-20));
+    }
+
+    .fits-wide .track > li {
+      animation: none;
+    }
+
+    .fits-wide .controls {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .track > li {
+      animation: none;
+    }
+
+    .dot {
+      transition: none;
+    }
+
+    .arrow {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)");
+
+  function setUpCarousel(carousel: HTMLElement) {
+    const track = carousel.querySelector<HTMLElement>("[data-carousel-track]");
+    const previous = carousel.querySelector("[data-carousel-previous]");
+    const next = carousel.querySelector("[data-carousel-next]");
+
+    if (!track || !previous || !next) {
+      return;
+    }
+
+    const dots = [
+      ...carousel.querySelectorAll<HTMLElement>("[data-carousel-dot]"),
+    ];
+
+    const scroller: HTMLElement = track;
+
+    // measured rather than derived from the band: the two items' distance is
+    // the item width plus the gutter, whatever the CSS resolved them to
+    function step() {
+      const [first, second] = scroller.children;
+
+      if (!first || !second) {
+        return scroller.clientWidth;
+      }
+
+      return (
+        second.getBoundingClientRect().left - first.getBoundingClientRect().left
+      );
+    }
+
+    function lastPosition() {
+      const scrollable = scroller.scrollWidth - scroller.clientWidth;
+
+      return Math.max(0, Math.round(scrollable / step()));
+    }
+
+    function currentPosition() {
+      const position = Math.round(scroller.scrollLeft / step());
+
+      if (position < 0) {
+        return 0;
+      }
+
+      return Math.min(position, lastPosition());
+    }
+
+    function goTo(position: number) {
+      scroller.scrollTo({
+        left: position * step(),
+        behavior: REDUCED_MOTION.matches ? "auto" : "smooth",
+      });
+    }
+
+    function render() {
+      const position = currentPosition();
+      const last = lastPosition();
+
+      for (const [index, dot] of dots.entries()) {
+        // one dot per reachable position, not per image
+        dot.parentElement?.toggleAttribute("hidden", index > last);
+        dot.setAttribute("aria-current", index === position ? "true" : "false");
+      }
+    }
+
+    next.addEventListener("click", () => {
+      const position = currentPosition();
+
+      // at the end the arrow rewinds rather than dying
+      goTo(position >= lastPosition() ? 0 : position + 1);
+    });
+
+    previous.addEventListener("click", () => {
+      const position = currentPosition();
+
+      goTo(position <= 0 ? lastPosition() : position - 1);
+    });
+
+    for (const [index, dot] of dots.entries()) {
+      dot.addEventListener("click", () => goTo(index));
+    }
+
+    let frame = 0;
+
+    track.addEventListener("scroll", () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(render);
+    });
+
+    // a band change moves the slot count, so both the step and how many
+    // positions exist change with it
+    new ResizeObserver(render).observe(track);
+
+    render();
+  }
+
+  for (const carousel of document.querySelectorAll<HTMLElement>(
+    "[data-carousel]",
+  )) {
+    setUpCarousel(carousel);
+  }
+</script>
