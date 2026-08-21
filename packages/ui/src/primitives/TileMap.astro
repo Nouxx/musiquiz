@@ -22,28 +22,39 @@ const { lat, lng, title, zoom = 17 } = Astro.props;
 </div>
 
 <script>
-  import "leaflet/dist/leaflet.css";
-
-  import { divIcon, map as createMap, marker, tileLayer } from "leaflet";
-
   const TILES =
     "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png";
 
   const ATTRIBUTION = "© OpenStreetMap © CARTO";
-
   const TILE_SIZE = 256;
 
-  for (const element of document.querySelectorAll<HTMLElement>("[data-map]")) {
+  // start fetching a little before the map is actually on screen, so it is
+  // painted by the time it arrives rather than after
+  const ROOT_MARGIN = "200px";
+
+  async function loadLeaflet() {
+    const [leaflet] = await Promise.all([
+      import("leaflet"),
+      import("leaflet/dist/leaflet.css"),
+    ]);
+
+    return leaflet;
+  }
+
+  async function renderMap(element: HTMLElement) {
     const { lat, lng, zoom } = element.dataset;
 
-    if (!lat || !lng || !zoom) continue;
+    if (!lat || !lng || !zoom) return;
+
+    const { divIcon, map: createMap, marker, tileLayer } = await loadLeaflet();
 
     const centre: [number, number] = [Number(lat), Number(lng)];
 
     const map = createMap(element, {
       center: centre,
       zoom: Number(zoom),
-      scrollWheelZoom: false, // the page must stay scrollable when the cursor crosses the map
+      // the page must stay scrollable when the cursor crosses the map
+      scrollWheelZoom: false,
     });
 
     tileLayer(TILES, {
@@ -64,11 +75,29 @@ const { lat, lng, title, zoom = 17 } = Astro.props;
       }),
     }).addTo(map);
   }
+
+  const elements = document.querySelectorAll<HTMLElement>("[data-map]");
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+
+        // one map per element, however many times it crosses the viewport
+        observer.unobserve(entry.target);
+
+        void renderMap(entry.target as HTMLElement);
+      }
+    },
+    { rootMargin: ROOT_MARGIN },
+  );
+
+  for (const element of elements) {
+    observer.observe(element);
+  }
 </script>
 
 <style>
-  /* Leaflet measures the element it is handed, so it needs a real box before
-     it initialises. The caller owns that box; this fills it. */
   .map {
     position: absolute;
     inset: 0;
