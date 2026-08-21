@@ -52,6 +52,8 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         type: "venuePrices",
         title: data.title,
         surface: data.surface,
+        cta: toCta(data.cta),
+        venueSlug: data.venueSlug,
         games: data.games.map((game) => toPricesGame(game)),
       };
     }

@@ -13,6 +13,7 @@ export const fr = {
   },
   prices: {
     perPerson: "Par personne",
+    book: "Réservez votre activité",
     // shown when a game has a single price: it applies whatever the group size
     unique: "Tarif unique",
     range: "De {{from}} à {{to}} joueurs",

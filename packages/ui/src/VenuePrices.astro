@@ -3,7 +3,7 @@ import GameOffer from "./prices/GameOffer.astro";
 import Button from "./primitives/Button.astro";
 import Text from "./primitives/Text.astro";
 import Section from "./Section.astro";
-import type { PriceOffer } from "./types";
+import type { CtaLink, PriceOffer } from "./types";
 
 interface Props {
   title: string;
@@ -11,9 +11,18 @@ interface Props {
   // every game the venue runs. empty when it runs none yet
   games: PriceOffer[];
   perPersonLabel: string;
+  bookCta: CtaLink;
+  cta: CtaLink | undefined;
 }
 
-const { title, surface = "muted", games, perPersonLabel } = Astro.props;
+const {
+  title,
+  surface = "muted",
+  games,
+  perPersonLabel,
+  bookCta,
+  cta,
+} = Astro.props;
 
 // two prices sections on one page would otherwise share a radio group and
 // fight over which game is selected
@@ -53,10 +62,21 @@ const group = `prices-${crypto.randomUUID()}`;
     }
 
     <div class="actions">
-      <Button tone="light" icon="arrow-right" iconPosition="trailing"
-        >Découvrez le Pack Activités Musi'Quiz + Pixel Games</Button
-      >
-      <Button tone="blue">Réservez votre activité</Button>
+      {
+        cta && (
+          <Button
+            as="a"
+            href={cta.url}
+            tone="light"
+            icon="arrow-right"
+            iconPosition="trailing"
+          >
+            {cta.label}
+          </Button>
+        )
+      }
+
+      <Button as="a" href={bookCta.url} tone="blue">{bookCta.label}</Button>
     </div>
   </div>
 </Section>

@@ -42,6 +42,8 @@ function venuePricesProjection({ lang }: { lang: Lang }) {
     _type == "venuePrices" => {
       "title": title[language == "${lang}"][0].value,
       "surface": coalesce(surface, "muted"),
+      "cta": ${optionalCtaProjection({ field: "cta", lang })},
+      "venueSlug": venue->slug.current,
       "games": *[
         _type == "venueGame"
         && venue._ref == ^.venue._ref
@@ -174,6 +176,8 @@ const sanityVenuePricesSchema = z.strictObject({
   _type: z.literal("venuePrices"),
   title: z.string().min(1),
   surface: z.enum(["default", "muted"]),
+  cta: sanityCtaSchema.nullable(),
+  venueSlug: z.string().min(1),
   games: z.array(sanityPricedGameSchema),
 });
 

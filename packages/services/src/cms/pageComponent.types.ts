@@ -61,6 +61,8 @@ type VenuePrices = {
   type: "venuePrices";
   title: string;
   surface: "default" | "muted";
+  cta: Cta | undefined;
+  venueSlug: string;
   games: PricesGame[];
 };
 

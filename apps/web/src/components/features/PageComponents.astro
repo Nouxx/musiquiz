@@ -8,6 +8,7 @@ import { getT } from "../../libs/i18n";
 import Reviews from "@repo/ui/Reviews";
 import VenuePrices from "@repo/ui/VenuePrices";
 import GamePrices from "@repo/ui/GamePrices";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import { toPriceOffer } from "../../libs/toPriceOffer";
 
 interface Props {
@@ -121,6 +122,11 @@ const t = getT(lang);
               toPriceOffer({ game, t, lang }),
             )}
             perPersonLabel={t("prices.perPerson")}
+            bookCta={{
+              label: t("prices.book"),
+              url: getRoutesForLang(lang).venueBook(component.venueSlug),
+            }}
+            cta={component.cta}
           />
         );
       }

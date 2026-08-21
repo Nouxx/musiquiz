@@ -15,6 +15,7 @@ export const en: typeof fr = {
   },
   prices: {
     perPerson: "Per person",
+    book: "Book your activity",
     // shown when a game has a single price: it applies whatever the group size
     unique: "Single rate",
     range: "From {{from}} to {{to}} players",
