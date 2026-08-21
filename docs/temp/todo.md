@@ -11,3 +11,4 @@
 - cards grid: in 2 + 1 layout, center the last track
 - hotspots for the map: draggable by the user
 - center star.svg
+- add custom venue page (slug authored from Sanity) - not accessible from the header
