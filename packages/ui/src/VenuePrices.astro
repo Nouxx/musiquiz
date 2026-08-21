@@ -1,6 +1,7 @@
 ---
 import GameOffer from "./prices/GameOffer.astro";
 import Button from "./primitives/Button.astro";
+import Card from "./primitives/Card.astro";
 import Text from "./primitives/Text.astro";
 import Section from "./Section.astro";
 import type { CtaLink, PriceOffer } from "./types";
@@ -13,6 +14,7 @@ interface Props {
   perPersonLabel: string;
   bookCta: CtaLink;
   cta: CtaLink | undefined;
+  footnote: { title: string; body: string } | undefined;
 }
 
 const {
@@ -22,6 +24,7 @@ const {
   perPersonLabel,
   bookCta,
   cta,
+  footnote,
 } = Astro.props;
 
 // two prices sections on one page would otherwise share a radio group and
@@ -78,6 +81,20 @@ const group = `prices-${crypto.randomUUID()}`;
 
       <Button as="a" href={bookCta.url} tone="blue">{bookCta.label}</Button>
     </div>
+
+    {
+      footnote && (
+        <Card border="muted" class="footnote">
+          <Text as="h3" variant="title-base">
+            {footnote.title}
+          </Text>
+
+          <Text as="p" variant="paragraph-s">
+            {footnote.body}
+          </Text>
+        </Card>
+      )
+    }
   </div>
 </Section>
 
@@ -136,5 +153,17 @@ const group = `prices-${crypto.randomUUID()}`;
     justify-content: center;
     gap: var(--space-6);
     flex-wrap: wrap;
+  }
+
+  .footnote {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-6);
+    text-align: left;
+  }
+
+  .footnote p {
+    color: var(--color-text-muted);
   }
 </style>

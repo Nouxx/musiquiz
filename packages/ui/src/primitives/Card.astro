@@ -1,7 +1,7 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 
-type Border = "thin" | "thick";
+type Border = "thin" | "thick" | "muted";
 
 interface Props extends Omit<HTMLAttributes<"div">, "class"> {
   as?: "div" | "article" | "li";
@@ -48,5 +48,11 @@ const {
 
   .thick::before {
     padding: 2px 6px 6px 2px;
+  }
+
+  .muted::before {
+    padding: 1px;
+    background-image: none;
+    background-color: var(--color-border);
   }
 </style>

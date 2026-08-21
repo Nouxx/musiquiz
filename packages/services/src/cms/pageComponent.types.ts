@@ -62,6 +62,7 @@ type VenuePrices = {
   title: string;
   surface: "default" | "muted";
   cta: Cta | undefined;
+  footnote: { title: string; body: string } | undefined;
   venueSlug: string;
   games: PricesGame[];
 };

@@ -32,7 +32,7 @@ export default defineConfig({
         { id: "fr", title: "French" },
       ],
       defaultLanguages: ["fr"],
-      fieldTypes: ["string"],
+      fieldTypes: ["string", "text"],
     }),
   ],
   schema: {

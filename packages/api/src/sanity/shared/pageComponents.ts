@@ -37,12 +37,20 @@ function pricedGameProjection({ lang }: { lang: Lang }) {
   }`;
 }
 
+function footnoteProjection({ lang }: { lang: Lang }) {
+  return `"footnote": select(count(footnote.title) > 0 => footnote{
+    "title": title[language == "${lang}"][0].value,
+    "body": body[language == "${lang}"][0].value
+  })`;
+}
+
 function venuePricesProjection({ lang }: { lang: Lang }) {
   return `
     _type == "venuePrices" => {
       "title": title[language == "${lang}"][0].value,
       "surface": coalesce(surface, "muted"),
       "cta": ${optionalCtaProjection({ field: "cta", lang })},
+      ${footnoteProjection({ lang })},
       "venueSlug": venue->slug.current,
       "games": *[
         _type == "venueGame"
@@ -177,6 +185,12 @@ const sanityVenuePricesSchema = z.strictObject({
   title: z.string().min(1),
   surface: z.enum(["default", "muted"]),
   cta: sanityCtaSchema.nullable(),
+  footnote: z
+    .strictObject({
+      title: z.string().min(1),
+      body: z.string().min(1),
+    })
+    .nullable(),
   venueSlug: z.string().min(1),
   games: z.array(sanityPricedGameSchema),
 });
