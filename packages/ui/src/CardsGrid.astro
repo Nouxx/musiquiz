@@ -1,5 +1,5 @@
 ---
-import Card from "./Card.astro";
+import ImageCard from "./ImageCard.astro";
 import Button from "./primitives/Button.astro";
 import Text from "./primitives/Text.astro";
 import Section from "./Section.astro";
@@ -59,7 +59,7 @@ const size = count <= 3 ? "large" : "small";
       {
         cards.map((card) => (
           <li>
-            <Card
+            <ImageCard
               size={size}
               media={card.media}
               badge={card.badge}

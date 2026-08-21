@@ -1,6 +1,6 @@
 ---
 import Badge from "../Badge.astro";
-import CardWithSlot from "../primitives/CardWithSlot.astro";
+import Card from "../primitives/Card.astro";
 import Text from "../primitives/Text.astro";
 import type { PriceTier } from "../types";
 
@@ -13,7 +13,7 @@ interface Props {
 const { tier, perPersonLabel, class: className } = Astro.props;
 ---
 
-<CardWithSlot border="thick" class:list={["card", className]}>
+<Card border="thick" class:list={["card", className]}>
   <Badge color="light" size="small" icon={tier.icon}>
     {tier.label}
   </Badge>
@@ -35,7 +35,7 @@ const { tier, perPersonLabel, class: className } = Astro.props;
       </Text>
     )
   }
-</CardWithSlot>
+</Card>
 
 <style>
   .card {

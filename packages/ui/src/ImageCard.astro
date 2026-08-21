@@ -1,6 +1,7 @@
 ---
 import Badge from "./Badge.astro";
 import Button from "./primitives/Button.astro";
+import Card from "./primitives/Card.astro";
 import RemoteImage from "./primitives/RemoteImage.astro";
 import Text from "./primitives/Text.astro";
 import type { CardItem } from "./types";
@@ -12,7 +13,7 @@ export type Props = CardItem & {
 const { size = "large", media, badge, title, body, cta } = Astro.props;
 ---
 
-<article class="card">
+<Card as="article" border="thin" class="card">
   <RemoteImage image={media} variant="card-media" />
 
   <div class="content">
@@ -42,33 +43,17 @@ const { size = "large", media, badge, title, body, cta } = Astro.props;
       )
     }
   </div>
-</article>
+</Card>
 
 <style>
+  /* the radius, the clip and the ring come from the shell; what is left here is
+     the card's own fill and the column the media and the copy sit in */
   .card {
-    position: relative;
     display: flex;
     flex-direction: column;
     block-size: 100%;
     color: var(--color-text);
     background-color: var(--color-surface);
-    border-radius: 24px;
-    overflow: hidden;
-  }
-
-  .card::before {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    padding: 1px 1px 3px;
-    background-image: var(--color-border-brand);
-    border-radius: inherit;
-    mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    mask-composite: exclude;
-    pointer-events: none;
-    content: "";
   }
 
   .content {
