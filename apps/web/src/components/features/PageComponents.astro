@@ -1,6 +1,7 @@
 ---
 import type { PageComponent } from "@repo/services/cms/pageComponent.types";
 import CardsGrid from "@repo/ui/CardsGrid";
+import ClientContactForm from "@repo/ui/ClientContactForm";
 import FindUs from "@repo/ui/FindUs";
 import Carousel from "@repo/ui/Carousel";
 import RollingBanner from "@repo/ui/RollingBanner";
@@ -148,6 +149,28 @@ const t = getT(lang);
               ...component.location,
               title: t("findUs.mapTitle", { venue: component.venueTitle }),
             }}
+          />
+        );
+      }
+      case "clientContactForm": {
+        return (
+          <ClientContactForm
+            images={component.images}
+            badge={t("contactForm.badge")}
+            title={t("contactForm.title")}
+            mediaLabel={t("contactForm.mediaLabel")}
+            previousLabel={t("carousel.previous")}
+            nextLabel={t("carousel.next")}
+            goToImageLabel={t("carousel.goToImage")}
+            firstNameLabel={t("contactForm.firstName")}
+            firstNamePlaceholder={t("contactForm.firstNamePlaceholder")}
+            mailLabel={t("contactForm.mail")}
+            mailPlaceholder={t("contactForm.mailPlaceholder")}
+            phoneLabel={t("contactForm.phone")}
+            phonePlaceholder={t("contactForm.phonePlaceholder")}
+            messageLabel={t("contactForm.message")}
+            messagePlaceholder={t("contactForm.messagePlaceholder")}
+            submitLabel={t("contactForm.submit")}
           />
         );
       }

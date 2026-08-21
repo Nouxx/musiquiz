@@ -90,6 +90,11 @@ type FindUs = {
   contactNote: string;
 };
 
+type ClientContactForm = {
+  type: "clientContactForm";
+  images: CmsImage[];
+};
+
 export type PageComponent =
   | RollingBanner
   | CardsGrid
@@ -97,4 +102,5 @@ export type PageComponent =
   | Reviews
   | VenuePrices
   | GamePrices
-  | FindUs;
+  | FindUs
+  | ClientContactForm;

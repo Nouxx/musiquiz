@@ -15,6 +15,7 @@ import { reviewsType } from "./shared/pageComponents/reviews";
 import { venuePricesType } from "./shared/pageComponents/venuePrices";
 import { gamePricesType } from "./shared/pageComponents/gamePrices";
 import { findUsType } from "./shared/pageComponents/findUs";
+import { clientContactFormType } from "./shared/pageComponents/clientContactForm";
 
 export const schemaTypes = [
   homepageType,
@@ -36,4 +37,5 @@ export const schemaTypes = [
   venuePricesType,
   gamePricesType,
   findUsType,
+  clientContactFormType,
 ];

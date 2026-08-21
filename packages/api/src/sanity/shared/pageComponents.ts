@@ -126,6 +126,14 @@ function carouselProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function clientContactFormProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "clientContactForm" => {
+      "images": images[] ${imageProjection({ lang })}
+    }
+  `;
+}
+
 export function pageComponentsProjection({ lang }: { lang: Lang }) {
   return `
     pageComponents[]{
@@ -137,6 +145,7 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${venuePricesProjection({ lang })},
       ${gamePricesProjection({ lang })},
       ${findUsProjection({ lang })},
+      ${clientContactFormProjection({ lang })},
     }
   `;
 }
@@ -240,6 +249,11 @@ const sanityFindUsSchema = z.strictObject({
   contactNote: z.string().min(1),
 });
 
+const sanityClientContactFormSchema = z.strictObject({
+  _type: z.literal("clientContactForm"),
+  images: z.array(sanityImageSchema).min(1).max(8),
+});
+
 export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityRollingBannerSchema,
   sanityCardsGridSchema,
@@ -248,6 +262,7 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityVenuePricesSchema,
   sanityGamePricesSchema,
   sanityFindUsSchema,
+  sanityClientContactFormSchema,
 ]);
 
 export type SanityPageComponent = z.infer<typeof sanityPageComponentSchema>;

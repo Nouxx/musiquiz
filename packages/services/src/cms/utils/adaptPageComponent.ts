@@ -77,6 +77,13 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
       };
     }
 
+    case "clientContactForm": {
+      return {
+        type: "clientContactForm",
+        images: data.images.map((image) => toCmsImage(image)),
+      };
+    }
+
     case "gamePrices": {
       return {
         type: "gamePrices",
