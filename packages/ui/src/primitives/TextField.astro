@@ -3,19 +3,44 @@ import type { HTMLAttributes } from "astro/types";
 
 import Text from "./Text.astro";
 
-interface Props extends Omit<HTMLAttributes<"input">, "class" | "id"> {
+type Options = {
   id: string;
   label: string;
-}
+  /** `light` fills the control, `plain` lets the surface behind it show */
+  tone?: "light" | "plain";
+  /** only read when rendering a textarea */
+  rows?: number;
+};
 
-const { id, label, ...rest } = Astro.props;
+// exported because rendering through a dynamic `<Tag>` leaves Astro's
+// generated types with no reference to `Props`, and `noUnusedLocals` then
+// reports it as unused
+export type Props = Options &
+  (
+    | (Omit<HTMLAttributes<"input">, "class" | "id"> & { as?: "input" })
+    | (Omit<HTMLAttributes<"textarea">, "class" | "id"> & { as: "textarea" })
+  );
+
+const {
+  as: Tag = "input",
+  id,
+  label,
+  tone = "light",
+  rows = 3,
+  ...rest
+} = Astro.props;
 ---
 
-<div class="field">
+<div class:list={["field", tone]}>
   <label for={id}>
-    <Text variant="title-s">{label}</Text>
+    <Text variant="title-base">{label}</Text>
   </label>
-  <input {...rest} {id} class="input" />
+  <Tag
+    {...rest}
+    {id}
+    class="input"
+    rows={Tag === "textarea" ? rows : undefined}
+  />
 </div>
 
 <style>
@@ -27,14 +52,25 @@ const { id, label, ...rest } = Astro.props;
   }
 
   .input {
-    padding-block: var(--space-2);
+    padding-block: var(--space-3);
     padding-inline: var(--space-4);
     font: var(--paragraph-base);
     color: var(--color-text-on-light);
-    background: var(--color-fill-light);
     border: 1px solid var(--color-border-light);
     border-block-end-width: 3px;
-    border-radius: 8px;
+    border-radius: var(--radius-s);
+
+    /* ignored by an input, and the only sensible axis for a textarea: growing
+       sideways would break the column */
+    resize: vertical;
+  }
+
+  .light .input {
+    background: var(--color-fill-light);
+  }
+
+  .plain .input {
+    background: transparent;
   }
 
   .input::placeholder {

@@ -30,10 +30,9 @@ const { color = "dark", size = "large", tilt = true, icon } = Astro.props;
     gap: var(--space-2);
     align-items: center;
 
-    /* 999px, not the sheet's 24px: at either size the radius already exceeds
-       half the height, so the two render identically as a pill — and this one
-       stays a pill if the label ever wraps to a second line */
-    border-radius: 999px;
+    /* a pill, not the sheet's 24px: at either size the radius already exceeds
+       half the height, so the two render identically */
+    border-radius: var(--radius-pill);
     max-width: fit-content;
   }
 

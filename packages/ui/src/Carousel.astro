@@ -1,7 +1,7 @@
 ---
 import Badge from "./Badge.astro";
 import Button from "./primitives/Button.astro";
-import ScrollArrow from "./primitives/ScrollArrow.astro";
+import CarouselControls from "./primitives/CarouselControls.astro";
 import RemoteImage from "./primitives/RemoteImage.astro";
 import Text from "./primitives/Text.astro";
 import Section from "./Section.astro";
@@ -63,36 +63,16 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
           )
         }
 
-        <div class="controls">
-          <ol class="dots">
-            {
-              images.map((_: ImageSource, index: number) => (
-                <li>
-                  <button
-                    type="button"
-                    class="dot"
-                    aria-label={`${goToImageLabel} ${index + 1}`}
-                    aria-controls={trackId}
-                    data-carousel-dot={index}
-                  />
-                </li>
-              ))
-            }
-          </ol>
-
-          <div class="arrows">
-            <ScrollArrow
-              direction="previous"
-              label={previousLabel}
-              controls={trackId}
-            />
-
-            <ScrollArrow
-              direction="next"
-              label={nextLabel}
-              controls={trackId}
-            />
-          </div>
+        <div class="controls-row">
+          <CarouselControls
+            count={images.length}
+            controls={trackId}
+            slots="band"
+            flank
+            {previousLabel}
+            {nextLabel}
+            {goToImageLabel}
+          />
         </div>
       </div>
     </div>
@@ -117,8 +97,6 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
 
 <style>
   .carousel {
-    /* the image never gets wider than this at any breakpoint: the band decides
-       how many are shown, never how wide one is. */
     --image-max: 281.6px;
     --gap: var(--space-10);
 
@@ -172,49 +150,11 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
     color: var(--color-text-muted);
   }
 
-  .controls {
-    display: flex;
-    gap: var(--space-6);
-    align-items: center;
-    justify-content: center;
+  /* the row exists so the widest band can hide the controls without reaching
+     into CarouselControls, and so its `inline-size: 100%` has the column to
+     resolve against */
+  .controls-row {
     inline-size: 100%;
-  }
-
-  .dots {
-    display: flex;
-    gap: var(--space-1);
-    align-items: center;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-
-  .dot {
-    display: block;
-    inline-size: 12px;
-    block-size: 4px;
-    padding: 0;
-    background-color: var(--color-fill-indicator);
-    border: none;
-    border-radius: 1px;
-    cursor: pointer;
-    transition:
-      inline-size 160ms ease-out,
-      block-size 160ms ease-out,
-      rotate 160ms ease-out,
-      background-color 160ms ease-out;
-  }
-
-  .dot[aria-current="true"] {
-    inline-size: 16px;
-    block-size: 6px;
-    background-color: var(--color-fill-indicator-active);
-    rotate: 10deg;
-  }
-
-  .arrows {
-    display: flex;
-    gap: var(--space-4);
   }
 
   /* ---- track ------------------------------------------------------------ */
@@ -253,7 +193,7 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
         100% + var(--space-gutter-wide) - var(--gap) - var(--peek)
       );
     aspect-ratio: 4 / 7;
-    border-radius: 24px;
+    border-radius: var(--radius-l);
     scroll-snap-align: start;
     overflow: hidden;
 
@@ -366,29 +306,6 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
       translate: 0 var(--valley-depth);
     }
 
-    .dots > li:nth-last-child(-n + 4) {
-      display: none;
-    }
-
-    /* the arrows leave the row and hang off the text column, 40px clear of it
-       and centred on the column's full height */
-    .controls {
-      justify-content: center;
-    }
-
-    .arrows {
-      position: absolute;
-      inset-block: 0;
-      inset-inline: calc(-1 * (var(--scroll-arrow-size) + var(--gap)));
-      align-items: center;
-      justify-content: space-between;
-      pointer-events: none;
-    }
-
-    .arrows > :global(.scroll-arrow) {
-      pointer-events: auto;
-    }
-
     .header {
       margin-block-end: calc(-1 * var(--valley-depth) / 2);
     }
@@ -401,7 +318,7 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
       animation: none;
     }
 
-    .fits-wide .controls {
+    .fits-wide .controls-row {
       display: none;
     }
   }
@@ -410,113 +327,11 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
     .track > li {
       animation: none;
     }
-
-    .dot {
-      transition: none;
-    }
   }
 </style>
 
 <script>
-  const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)");
+  import { mountCarousels } from "./lib/carousel";
 
-  function setUpCarousel(carousel: HTMLElement) {
-    const track = carousel.querySelector<HTMLElement>("[data-carousel-track]");
-    const previous = carousel.querySelector('[data-scroll-arrow="previous"]');
-    const next = carousel.querySelector('[data-scroll-arrow="next"]');
-
-    if (!track || !previous || !next) {
-      return;
-    }
-
-    const dots = [
-      ...carousel.querySelectorAll<HTMLElement>("[data-carousel-dot]"),
-    ];
-
-    const scroller: HTMLElement = track;
-
-    // measured rather than derived from the band: the two items' distance is
-    // the item width plus the gutter, whatever the CSS resolved them to
-    function step() {
-      const [first, second] = scroller.children;
-
-      if (!first || !second) {
-        return scroller.clientWidth;
-      }
-
-      return (
-        second.getBoundingClientRect().left - first.getBoundingClientRect().left
-      );
-    }
-
-    function lastPosition() {
-      const scrollable = scroller.scrollWidth - scroller.clientWidth;
-
-      return Math.max(0, Math.round(scrollable / step()));
-    }
-
-    function currentPosition() {
-      const position = Math.round(scroller.scrollLeft / step());
-
-      if (position < 0) {
-        return 0;
-      }
-
-      return Math.min(position, lastPosition());
-    }
-
-    function goTo(position: number) {
-      scroller.scrollTo({
-        left: position * step(),
-        behavior: REDUCED_MOTION.matches ? "auto" : "smooth",
-      });
-    }
-
-    function render() {
-      const position = currentPosition();
-      const last = lastPosition();
-
-      for (const [index, dot] of dots.entries()) {
-        // one dot per reachable position, not per image
-        dot.parentElement?.toggleAttribute("hidden", index > last);
-        dot.setAttribute("aria-current", index === position ? "true" : "false");
-      }
-    }
-
-    next.addEventListener("click", () => {
-      const position = currentPosition();
-
-      // at the end the arrow rewinds rather than dying
-      goTo(position >= lastPosition() ? 0 : position + 1);
-    });
-
-    previous.addEventListener("click", () => {
-      const position = currentPosition();
-
-      goTo(position <= 0 ? lastPosition() : position - 1);
-    });
-
-    for (const [index, dot] of dots.entries()) {
-      dot.addEventListener("click", () => goTo(index));
-    }
-
-    let frame = 0;
-
-    track.addEventListener("scroll", () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(render);
-    });
-
-    // a band change moves the slot count, so both the step and how many
-    // positions exist change with it
-    new ResizeObserver(render).observe(track);
-
-    render();
-  }
-
-  for (const carousel of document.querySelectorAll<HTMLElement>(
-    "[data-carousel]",
-  )) {
-    setUpCarousel(carousel);
-  }
+  mountCarousels("[data-carousel]");
 </script>

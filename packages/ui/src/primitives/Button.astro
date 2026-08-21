@@ -70,9 +70,9 @@ const textVariant = size === "s" ? "title-s" : "title-base";
 
     max-width: fit-content;
 
-    /* 999px because at 46px tall (button) the radius already exceeds half the
+    /* a pill because at 46px tall (button) the radius already exceeds half the
        height. Useful if the button has 2 lines of text */
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     box-shadow: 0 var(--lift) 0 var(--button-border);
     transform: translateY(calc(2px - var(--lift)));
 

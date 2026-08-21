@@ -1,0 +1,105 @@
+---
+import Card from "./Card.astro";
+import CarouselControls from "./CarouselControls.astro";
+import RemoteImage from "./RemoteImage.astro";
+import type { ImageSource } from "../types";
+
+interface Props {
+  images: ImageSource[];
+  /** names the scroll port for screen readers */
+  label: string;
+  previousLabel: string;
+  nextLabel: string;
+  goToImageLabel: string;
+}
+
+const { images, label, previousLabel, nextLabel, goToImageLabel } = Astro.props;
+
+// one image is a picture frame, not a carousel: nothing to scroll to
+const hasControls = images.length > 1;
+
+const trackId = `mini-carousel-${crypto.randomUUID().slice(0, 8)}`;
+---
+
+<div class="mini-carousel" data-mini-carousel>
+  <Card border="thick" class="frame">
+    <ul
+      class="track"
+      id={trackId}
+      tabindex="0"
+      aria-label={label}
+      data-carousel-track
+    >
+      {
+        images.map((image: ImageSource) => (
+          <li>
+            <RemoteImage image={image} variant="mini-carousel-media" />
+          </li>
+        ))
+      }
+    </ul>
+  </Card>
+
+  {
+    hasControls && (
+      <CarouselControls
+        count={images.length}
+        controls={trackId}
+        size="m"
+        layout="split"
+        {previousLabel}
+        {nextLabel}
+        {goToImageLabel}
+      />
+    )
+  }
+</div>
+
+<style>
+  .mini-carousel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    block-size: 100%;
+  }
+
+  .frame {
+    display: flex;
+    flex: 1;
+
+    /* without this the track's content floors the frame instead of the frame capping the track */
+    min-block-size: 0;
+  }
+
+  .track {
+    display: flex;
+    inline-size: 100%;
+    padding: 0;
+    margin: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    list-style: none;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .track > li {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+  }
+
+  .track > li > :global(picture) {
+    display: block;
+    block-size: 100%;
+  }
+</style>
+
+<script>
+  import { mountCarousels } from "../lib/carousel";
+
+  mountCarousels("[data-mini-carousel]");
+</script>

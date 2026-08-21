@@ -150,6 +150,13 @@
   --space-section-m: clamp(2.5rem, 1.62rem + 3.756vw, 5rem);
   --space-section-l: clamp(4rem, 2.768rem + 5.258vw, 7.5rem);
 
+  /* `pill` is 999px rather than 50%: every box that wears it is already taller
+     than it is round, so the two draw the same shape — and this one survives a
+     label wrapping to a second line */
+  --radius-s: 8px;
+  --radius-l: 24px;
+  --radius-pill: 999px;
+
   /* ============================================================
      SEMANTIC TOKENS
      ============================================================ */

@@ -1,0 +1,182 @@
+---
+import Badge from "./Badge.astro";
+import Button from "./primitives/Button.astro";
+import MiniCarousel from "./primitives/MiniCarousel.astro";
+import Text from "./primitives/Text.astro";
+import TextField from "./primitives/TextField.astro";
+import TwoBlocks from "./primitives/TwoBlocks.astro";
+import Section from "./Section.astro";
+import type { ImageSource } from "./types";
+
+interface Props {
+  badge: string;
+  title: string;
+  images: ImageSource[];
+  mediaLabel: string;
+  previousLabel: string;
+  nextLabel: string;
+  goToImageLabel: string;
+  firstNameLabel: string;
+  firstNamePlaceholder: string;
+  mailLabel: string;
+  mailPlaceholder: string;
+  phoneLabel: string;
+  phonePlaceholder: string;
+  messageLabel: string;
+  messagePlaceholder: string;
+  submitLabel: string;
+}
+
+const {
+  badge,
+  title,
+  images,
+  mediaLabel,
+  previousLabel,
+  nextLabel,
+  goToImageLabel,
+  firstNameLabel,
+  firstNamePlaceholder,
+  mailLabel,
+  mailPlaceholder,
+  phoneLabel,
+  phonePlaceholder,
+  messageLabel,
+  messagePlaceholder,
+  submitLabel,
+} = Astro.props;
+
+// the section can appear more than once on a page, and a label only points at
+// its own field if the ids are unique
+const uid = crypto.randomUUID().slice(0, 8);
+---
+
+<Section spacing="m">
+  <TwoBlocks>
+    <div slot="first" class="media">
+      <MiniCarousel
+        {images}
+        label={mediaLabel}
+        {previousLabel}
+        {nextLabel}
+        {goToImageLabel}
+      />
+    </div>
+
+    <div slot="second" class="panel">
+      <div class="heading">
+        <Badge color="light">{badge}</Badge>
+
+        <Text as="h2" variant="title-h4">{title}</Text>
+      </div>
+
+      {
+        /* the form is inert: it swallows its own submit until a contact
+          endpoint exists. Native validation still runs first. */
+      }
+      <form class="form" data-contact-form>
+        <div class="fields">
+          <TextField
+            id={`contact-${uid}-first-name`}
+            name="firstName"
+            type="text"
+            autocomplete="given-name"
+            tone="plain"
+            label={firstNameLabel}
+            placeholder={firstNamePlaceholder}
+            required
+          />
+
+          <TextField
+            id={`contact-${uid}-mail`}
+            name="mail"
+            type="email"
+            autocomplete="email"
+            tone="plain"
+            label={mailLabel}
+            placeholder={mailPlaceholder}
+            required
+          />
+
+          <TextField
+            id={`contact-${uid}-phone`}
+            name="phone"
+            type="tel"
+            autocomplete="tel"
+            tone="plain"
+            label={phoneLabel}
+            placeholder={phonePlaceholder}
+          />
+
+          <TextField
+            as="textarea"
+            id={`contact-${uid}-message`}
+            name="message"
+            tone="plain"
+            label={messageLabel}
+            placeholder={messagePlaceholder}
+            required
+          />
+        </div>
+
+        <Button type="submit" tone="blue">{submitLabel}</Button>
+      </form>
+    </div>
+  </TwoBlocks>
+</Section>
+
+<style>
+  .media {
+    display: none;
+  }
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    background-color: var(--color-surface-muted);
+    border-radius: var(--radius-l);
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    align-items: flex-start;
+  }
+
+  .fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-self: stretch;
+  }
+
+  /* 60rem — two columns stop fitting (styles/breakpoints.css) */
+  @media (width >= 60rem) {
+    .media {
+      display: block;
+    }
+
+    .panel {
+      padding: var(--space-10);
+    }
+  }
+</style>
+
+<script>
+  // deliberately inert until a contact endpoint exists
+  for (const form of document.querySelectorAll("form[data-contact-form]")) {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+    });
+  }
+</script>

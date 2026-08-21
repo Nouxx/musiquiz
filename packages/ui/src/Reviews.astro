@@ -184,7 +184,7 @@ const trackId = `reviews-${crypto.randomUUID().slice(0, 8)}`;
     background-color: var(--color-surface-muted);
     border: 1px solid var(--color-border);
     border-width: 1px 3px 3px 1px;
-    border-radius: 24px;
+    border-radius: var(--radius-l);
     scroll-snap-align: start;
   }
 
@@ -202,7 +202,7 @@ const trackId = `reviews-${crypto.randomUUID().slice(0, 8)}`;
   .avatar {
     inline-size: 40px;
     block-size: 40px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     overflow: hidden;
   }
 

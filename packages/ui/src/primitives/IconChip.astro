@@ -43,7 +43,7 @@ const { name, tone = "light", size = "xl" } = Astro.props;
     /* even on all four sides: the bottom-heavy border used elsewhere reads as
        depth on a pill, but as a wobble on a circle this small */
     border: 1px solid var(--chip-border);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
   }
 
   .light {

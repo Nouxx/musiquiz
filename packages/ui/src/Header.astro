@@ -194,7 +194,7 @@ const hasSocials = Astro.slots.has("socials");
 
     padding-block: var(--space-2);
     padding-inline: var(--space-5) var(--space-2);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
   }
 
   .bar::before {
@@ -250,7 +250,7 @@ const hasSocials = Astro.slots.has("socials");
     list-style: none;
     background-color: var(--color-surface-translucent);
     backdrop-filter: blur(8px);
-    border-radius: var(--space-6);
+    border-radius: var(--radius-l);
   }
 
   .panel :global(.menu-button[aria-current]) {

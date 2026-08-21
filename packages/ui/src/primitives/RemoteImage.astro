@@ -41,6 +41,11 @@ const variants = {
     sizes: "(width < 48rem) 100vw, (width < 78rem) 33vw, 400px",
   },
   "carousel-media": { widths: [282, 564, 846], sizes: "282px" },
+  // hidden below 60rem, where the contact form takes the full width
+  "mini-carousel-media": {
+    widths: [400, 700, 1000, 1400],
+    sizes: "(width < 60rem) 1px, min(604px, 47vw)",
+  },
   // hidden below 60rem, where the tiers take the full width
   "prices-media": {
     widths: [400, 700, 1000, 1400],
@@ -146,7 +151,6 @@ const srcSetWidths =
     object-fit: cover;
   }
 
-  /* the carousel slot owns the box (fixed 4:7); the photo fills it, centered */
   .carousel-media {
     width: 100%;
     height: 100%;
@@ -154,7 +158,13 @@ const srcSetWidths =
     object-position: center;
   }
 
-  /* the offer slot owns the box (11:8); the photo fills it, centered */
+  .mini-carousel-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
   .prices-media {
     width: 100%;
     height: 100%;
