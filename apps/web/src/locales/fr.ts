@@ -11,6 +11,9 @@ export const fr = {
     next: "Image suivante",
     goToImage: "Aller à l'image",
   },
+  prices: {
+    perPerson: "Par personne",
+  },
   reviews: {
     previous: "Avis précédent",
     next: "Avis suivant",

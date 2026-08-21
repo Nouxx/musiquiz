@@ -13,6 +13,9 @@ export const en: typeof fr = {
     next: "Next image",
     goToImage: "Go to image",
   },
+  prices: {
+    perPerson: "Per person",
+  },
   reviews: {
     previous: "Previous review",
     next: "Next review",

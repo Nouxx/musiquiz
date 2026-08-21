@@ -1,3 +1,5 @@
+import type { IconName } from "./lib/icons";
+
 export type SpaceScale =
   | "1"
   | "2"
@@ -50,4 +52,12 @@ export type CardItem = {
   title: string;
   body?: string;
   cta?: CtaLink;
+};
+
+export type PriceTier = {
+  label: string;
+  icon: IconName;
+  /** @example "16€" */
+  amountWithCurrency: string;
+  note?: string;
 };

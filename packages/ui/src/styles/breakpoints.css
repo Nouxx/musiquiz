@@ -31,7 +31,7 @@
 
    ------------------------------------------------------------
    60rem — footer columns stacked / cover columns stacked
-           / reviews columns stacked
+           / reviews columns stacked / venue prices columns stacked
    ------------------------------------------------------------
    Used by footer/FooterColumn.astro and footer/FooterSection.astro.
    Figma step, no derivation recorded.
@@ -48,6 +48,11 @@
    and 36.5 + 12.5 + the 2.5rem gap stops fitting a 57rem container, which
    is a 60rem viewport once the `--space-6` gutters come off. Change either
    floor and the wrap moves — it is a consequence, not a setting.
+
+   VenuePrices.astro lands on the same number for its image / price-tier row.
+   Reused, not derived: it is the same "two columns stop fitting" decision.
+   Below it the image sits above the tiers, and the tiers lose their 307px
+   basis so they span the column.
 
    RemoteImage.astro quotes both 60rem and 78rem in `cover-logo-side`'s
    `sizes` string, which is TS. Neither is a media query: the logo is sized

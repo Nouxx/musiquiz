@@ -1,16 +1,31 @@
 ---
+import { Image } from "astro:assets";
+import PriceCard from "./prices/PriceCard.astro";
 import Button from "./primitives/Button.astro";
 import Text from "./primitives/Text.astro";
 import Section from "./Section.astro";
+import type { PriceTier } from "./types";
 
 interface Props {
   title: string;
   surface?: "default" | "muted";
   // every game the venue runs. empty when it runs none yet
   games: { name: string }[];
+  // placeholder while the image is not authored: a local asset, so `ImageMetadata`
+  // rather than the `ImageSource` descriptor a CMS image would arrive as
+  image: ImageMetadata;
+  tiers: PriceTier[];
+  perPersonLabel: string;
 }
 
-const { title, surface = "muted", games } = Astro.props;
+const {
+  title,
+  surface = "muted",
+  games,
+  image,
+  tiers,
+  perPersonLabel,
+} = Astro.props;
 ---
 
 <Section {surface} width="content">
@@ -31,6 +46,30 @@ const { title, surface = "muted", games } = Astro.props;
         </div>
       )
     }
+
+    <div class="offer">
+      <div class="media">
+        <Image
+          src={image}
+          alt=""
+          widths={[400, 700, 1000, 1400]}
+          sizes="(width < 60rem) 1px, 60vw"
+        />
+      </div>
+
+      <div class="tiers">
+        {
+          tiers.map((tier) => (
+            <PriceCard {tier} {perPersonLabel} class="tier" />
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="actions">
+      <Button tone="light" icon="arrow-right" iconPosition="trailing">Découvrez le Pack Activités Musi'Quiz + Pixel Games</Button>
+      <Button tone="blue">Réservez votre activité</Button>
+    </div>
   </div>
 </Section>
 
@@ -42,13 +81,75 @@ const { title, surface = "muted", games } = Astro.props;
     text-align: center;
   }
 
-  /* the sheet distributes three pills across a 689px track with `flex-grow`,
-     which only equalises them because that track has a width to fill. centred
-     here, so the pills take their label's width and wrap instead */
   .games {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-4);
     justify-content: center;
+  }
+
+  .offer {
+    display: flex;
+    gap: var(--space-10);
+    align-items: stretch;
+  }
+
+  .media {
+    position: relative;
+    flex: 1 1 auto;
+    border-radius: 24px;
+    overflow: hidden;
+  }
+
+  .media::before {
+    display: block;
+    aspect-ratio: 11 / 8;
+    content: "";
+  }
+
+  .media img {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .tiers {
+    /* max width for a price card */
+    --tier-width: 307px;
+
+    display: flex;
+    flex: 0 0 var(--tier-width);
+    flex-direction: column;
+    gap: var(--space-6);
+    justify-content: center;
+  }
+
+  .tier {
+    max-width: var(--tier-width);
+  }
+
+  .actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+  }
+
+  @media (width < 60rem) {
+    .media {
+      display: none;
+    }
+
+    .tiers {
+      flex: 1 1 auto;
+      flex-flow: row wrap;
+    }
+
+    .tier {
+      flex: 1 1 min(var(--tier-width), 100%);
+    }
   }
 </style>

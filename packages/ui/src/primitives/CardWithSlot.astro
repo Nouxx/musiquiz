@@ -1,0 +1,52 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Border = "thin" | "thick";
+
+interface Props extends Omit<HTMLAttributes<"div">, "class"> {
+  as?: "div" | "article" | "li";
+  border?: Border;
+  class?: string;
+}
+
+const {
+  as: Tag = "div",
+  border = "thick",
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<Tag {...rest} class:list={["card", border, className]}>
+  <slot />
+</Tag>
+
+<style>
+  .card {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden; /* blocks anything would must escape the box */
+  }
+
+  .card::before {
+    position: absolute;
+    inset: 0;
+    z-index: 1; /* keeps the border over content that bleeds to the edge */
+    background-image: var(--color-border-brand);
+    border-radius: inherit;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    content: "";
+  }
+
+  .thin::before {
+    padding: 1px 1px 3px;
+  }
+
+  .thick::before {
+    padding: 2px 6px 6px 2px;
+  }
+</style>

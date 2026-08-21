@@ -1,4 +1,6 @@
 ---
+import Icon from "./primitives/Icon.astro";
+import type { IconName } from "./lib/icons";
 import Text from "./primitives/Text.astro";
 
 interface Props {
@@ -7,12 +9,15 @@ interface Props {
   color?: "dark" | "light";
   size?: "large" | "small";
   tilt?: boolean;
+  icon?: IconName;
 }
 
-const { color = "dark", size = "large", tilt = true } = Astro.props;
+const { color = "dark", size = "large", tilt = true, icon } = Astro.props;
 ---
 
 <span class:list={["badge", color, size, { tilt }]}>
+  {icon && <Icon name={icon} size={size === "large" ? "l" : "s"} />}
+
   <Text variant={size === "large" ? "paragraph-base-sm" : "paragraph-s-sm"}>
     <slot />
   </Text>
@@ -22,6 +27,7 @@ const { color = "dark", size = "large", tilt = true } = Astro.props;
   .badge {
     position: relative;
     display: inline-flex;
+    gap: var(--space-2);
     align-items: center;
 
     /* 999px, not the sheet's 24px: at either size the radius already exceeds
