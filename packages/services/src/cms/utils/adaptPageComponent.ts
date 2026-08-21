@@ -46,11 +46,21 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
       };
     }
 
-    case "prices": {
+    case "venuePrices": {
       return {
-        type: "prices",
+        type: "venuePrices",
         title: data.title,
         surface: data.surface,
+        games: data.games.map((game) => ({ name: game.name })),
+      };
+    }
+
+    case "gamePrices": {
+      return {
+        type: "gamePrices",
+        title: data.title,
+        surface: data.surface,
+        game: { name: data.game.name },
       };
     }
   }

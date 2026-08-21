@@ -5,15 +5,18 @@ import Section from "./Section.astro";
 interface Props {
   title: string;
   surface?: "default" | "muted";
+  // the single game this section is pinned to
+  game: { name: string };
 }
 
-const { title, surface = "muted" } = Astro.props;
+const { title, surface = "muted", game } = Astro.props;
 ---
 
 <Section {surface} width="content">
   <div class="prices">
     <Text as="h2" variant="title-h2">{title}</Text>
   </div>
+  <p>{game.name}</p>
 </Section>
 
 <style>

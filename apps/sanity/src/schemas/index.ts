@@ -12,7 +12,8 @@ import { venueGameType } from "./venueGame";
 import { venuePageType } from "./venuePage";
 import { rollingBannerType } from "./shared/pageComponents/rollingBanner";
 import { reviewsType } from "./shared/pageComponents/reviews";
-import { pricesType } from "./shared/pageComponents/prices";
+import { venuePricesType } from "./shared/pageComponents/venuePrices";
+import { gamePricesType } from "./shared/pageComponents/gamePrices";
 
 export const schemaTypes = [
   homepageType,
@@ -30,5 +31,6 @@ export const schemaTypes = [
   cardType,
   carouselType,
   reviewsType,
-  pricesType,
+  venuePricesType,
+  gamePricesType,
 ];

@@ -9,11 +9,11 @@ interface Props {
   id?: string;
 }
 
-const { surface = "default", spacing = "l", width = "wide", id } = Astro.props;
+const { surface = "default", spacing = "l", width = "content", id } = Astro.props;
 ---
 
 <section
-  class:list={["section", surface, width]}
+  class:list={["section", surface, `width-${width}`]}
   style={{ "--section-spacing": `var(--space-section-${spacing})` }}
   {id}
 >
@@ -34,7 +34,7 @@ const { surface = "default", spacing = "l", width = "wide", id } = Astro.props;
     overflow-x: clip;
   }
 
-  .wide {
+  .width-wide {
     padding-inline: var(--space-gutter-wide);
   }
 
@@ -43,7 +43,7 @@ const { surface = "default", spacing = "l", width = "wide", id } = Astro.props;
     margin-inline: auto;
   }
 
-  .wide .content {
+  .width-wide .content {
     max-inline-size: var(--size-content-wide);
   }
 

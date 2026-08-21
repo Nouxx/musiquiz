@@ -9,3 +9,5 @@
 - One link to Canada, Brussels in
 - Reviews widget: fetch from Google, by center, from 4 to 5 stars, with word analysis (ex: EVJF)
 - cards grid: in 2 + 1 layout, center the last track
+- hotspots for the map: draggable by the user
+- center star.svg

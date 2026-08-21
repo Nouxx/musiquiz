@@ -1,0 +1,54 @@
+---
+import Button from "./primitives/Button.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+
+interface Props {
+  title: string;
+  surface?: "default" | "muted";
+  // every game the venue runs. empty when it runs none yet
+  games: { name: string }[];
+}
+
+const { title, surface = "muted", games } = Astro.props;
+---
+
+<Section {surface} width="content">
+  <div class="prices">
+    <Text as="h2" variant="title-h2">{title}</Text>
+
+    {
+      games.length > 0 && (
+        <div class="games">
+          {games.map((game, index) => (
+            // plain toggles for now. these become a `tablist` in the commit that
+            // adds the price panel they select — a `role="tab"` whose
+            // `aria-controls` points at nothing is worse than no role at all
+            <Button tone="light" aria-pressed={index === 0 ? "true" : "false"}>
+              {game.name}
+            </Button>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</Section>
+
+<style>
+  .prices {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    text-align: center;
+  }
+
+  /* the sheet distributes three pills across a 689px track with `flex-grow`,
+     which only equalises them because that track has a width to fill. centred
+     here, so the pills take their label's width and wrap instead */
+  .games {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    justify-content: center;
+  }
+</style>

@@ -7,7 +7,7 @@ type GetClient = ValidationContext["getClient"];
 
 type LocalizedEntry = { _key?: string; value?: string };
 
-type PricesParent = {
+type GamePricesParent = {
   venue?: Reference;
 };
 
@@ -18,9 +18,9 @@ function frenchValue(entries?: LocalizedEntry[]) {
 }
 
 // the reference sits in an object inside an array, so the venue it depends on is
-// on `parent` — the prices object — not on `document`, which is the page holding it
+// on `parent` — the gamePrices object — not on `document`, which is the page holding it
 function venueRefOf(parent: unknown) {
-  return (parent as PricesParent | undefined)?.venue?._ref;
+  return (parent as GamePricesParent | undefined)?.venue?._ref;
 }
 
 /**
@@ -43,9 +43,9 @@ async function gameIdsAtVenue({
   );
 }
 
-export const pricesType = defineType({
-  name: "prices",
-  title: "Prices",
+export const gamePricesType = defineType({
+  name: "gamePrices",
+  title: "Game Prices",
   type: "object",
   fields: [
     defineField({
@@ -71,7 +71,7 @@ export const pricesType = defineType({
     defineField({
       name: "venue",
       title: "Venue",
-      description: "Which venue these prices are for.",
+      description: "Pick the venue before the game.",
       type: "reference",
       to: [{ type: "venue" }],
       validation: (rule) => rule.required(),
@@ -79,16 +79,17 @@ export const pricesType = defineType({
     defineField({
       name: "game",
       title: "Game",
-      description:
-        "Narrow to a single game. Only games this venue runs are listed. Leave empty for every game at the venue.",
+      description: "Only games this venue runs are listed.",
       type: "reference",
       to: [{ type: "gameFormat" }],
-      // an unfiltered list before a venue is picked would offer games the venue may not run
-      hidden: ({ parent }) => !venueRefOf(parent),
+      // readOnly rather than hidden: the field is required, and a required field
+      // an editor cannot see reports an error that points at nothing
+      readOnly: ({ parent }) => !venueRefOf(parent),
+      validation: (rule) => rule.required(),
       options: {
         filter: async ({ parent, getClient }) => {
           const games = await gameIdsAtVenue({ parent, getClient });
-          // with no venueGame at the venue this reads `_id in []`, which is nothing
+          // with no venue picked this reads `_id in []`, which is nothing
           return { filter: "_id in $games", params: { games } };
         },
       },
@@ -109,11 +110,11 @@ export const pricesType = defineType({
       venueTitle?: string;
       gameName?: string;
     }) {
-      const scope = [venueTitle, gameName].filter(Boolean).join(" — ");
+      const pair = [venueTitle, gameName].filter(Boolean).join(" — ");
 
       return {
-        title: frenchValue(title) ?? "Prices",
-        subtitle: ["Prices", scope].filter(Boolean).join(" · "),
+        title: frenchValue(title) ?? "Game Prices",
+        subtitle: ["Game Prices", pair].filter(Boolean).join(" · "),
       };
     },
   },

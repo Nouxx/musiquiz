@@ -85,11 +85,17 @@ const textVariant = size === "s" ? "title-s" : "title-base";
     --lift: 1px;
   }
 
-  .button:active {
+  .button:active,
+  .button[aria-pressed="true"] {
     --lift: 0px;
 
     background:
       linear-gradient(var(--color-overlay-pressed) 0 0), var(--button-fill);
+  }
+
+  /* only the real press is instant. a selected button that later becomes
+     interactive should animate when selection moves */
+  .button:active {
     transition-duration: 0s;
   }
 
@@ -106,7 +112,8 @@ const textVariant = size === "s" ? "title-s" : "title-base";
     content: "";
   }
 
-  .light:active::before {
+  .light:active::before,
+  .light[aria-pressed="true"]::before {
     background: var(--color-border-brand);
   }
 

@@ -6,7 +6,8 @@ import RollingBanner from "@repo/ui/RollingBanner";
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 import Reviews from "@repo/ui/Reviews";
-import Prices from "@repo/ui/Prices";
+import VenuePrices from "@repo/ui/VenuePrices";
+import GamePrices from "@repo/ui/GamePrices";
 
 interface Props {
   components: PageComponent[];
@@ -110,8 +111,23 @@ const t = getT(lang);
           />
         );
       }
-      case "prices": {
-        return <Prices title={component.title} surface={component.surface} />;
+      case "venuePrices": {
+        return (
+          <VenuePrices
+            title={component.title}
+            surface={component.surface}
+            games={component.games}
+          />
+        );
+      }
+      case "gamePrices": {
+        return (
+          <GamePrices
+            title={component.title}
+            surface={component.surface}
+            game={component.game}
+          />
+        );
       }
     }
   })

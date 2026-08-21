@@ -44,10 +44,22 @@ type Reviews = {
   surface: "default" | "muted";
 };
 
-type Prices = {
-  type: "prices";
+export type PricesGame = {
+  name: string;
+};
+
+type VenuePrices = {
+  type: "venuePrices";
   title: string;
   surface: "default" | "muted";
+  games: PricesGame[];
+};
+
+type GamePrices = {
+  type: "gamePrices";
+  title: string;
+  surface: "default" | "muted";
+  game: PricesGame;
 };
 
 export type PageComponent =
@@ -55,4 +67,5 @@ export type PageComponent =
   | CardsGrid
   | Carousel
   | Reviews
-  | Prices;
+  | VenuePrices
+  | GamePrices;
