@@ -59,6 +59,24 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
       };
     }
 
+    case "findUs": {
+      return {
+        type: "findUs",
+        badge: data.badge,
+        title: data.title,
+        media: toCmsImage(data.media),
+        venueTitle: data.venueTitle,
+        location: data.location,
+        address: data.address,
+        mapsUrl: data.mapsUrl,
+        addressNote: data.addressNote,
+        openingTitle: data.openingTitle,
+        openingNote: data.openingNote,
+        contactTitle: data.contactTitle,
+        contactNote: data.contactNote,
+      };
+    }
+
     case "gamePrices": {
       return {
         type: "gamePrices",

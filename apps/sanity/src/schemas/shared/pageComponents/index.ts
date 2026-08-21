@@ -11,5 +11,6 @@ export const pageComponentsType = defineType({
     defineArrayMember({ type: "reviews" }),
     defineArrayMember({ type: "venuePrices" }),
     defineArrayMember({ type: "gamePrices" }),
+    defineArrayMember({ type: "findUs" }),
   ],
 });

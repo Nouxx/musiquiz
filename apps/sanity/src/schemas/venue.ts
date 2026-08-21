@@ -135,6 +135,16 @@ export const venueType = defineType({
       description:
         "Paste it from Google Maps, example: https://share.google/pfpYwPnyAXvmLJ1Su",
       group: "location",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "location",
+      title: "Location",
+      type: "geopoint",
+      description:
+        "Where the map in the Find Us section is centred. Right-click the venue in Google Maps and copy the coordinates it offers. Leave Altitude empty — it is not used.",
+      group: "location",
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "regionCode",

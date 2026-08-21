@@ -14,6 +14,7 @@ import { rollingBannerType } from "./shared/pageComponents/rollingBanner";
 import { reviewsType } from "./shared/pageComponents/reviews";
 import { venuePricesType } from "./shared/pageComponents/venuePrices";
 import { gamePricesType } from "./shared/pageComponents/gamePrices";
+import { findUsType } from "./shared/pageComponents/findUs";
 
 export const schemaTypes = [
   homepageType,
@@ -34,4 +35,5 @@ export const schemaTypes = [
   reviewsType,
   venuePricesType,
   gamePricesType,
+  findUsType,
 ];

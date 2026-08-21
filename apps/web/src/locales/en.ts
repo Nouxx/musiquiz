@@ -69,6 +69,13 @@ export const en: typeof fr = {
     mailPlaceholder: "Your mail address",
     newsletterConsent: "I agree to receive information from Musi'Quiz",
   },
+  findUs: {
+    address: "Address",
+    openingHours: "Opening hours",
+    contact: "Contact",
+    mapTitle: "The Musi'Quiz venue in {{venue}} on the map",
+    viewOnGoogleMaps: "View on Google Maps",
+  },
   days: {
     monday: "Monday",
     tuesday: "Tuesday",

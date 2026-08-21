@@ -67,6 +67,13 @@ export const fr = {
     mailPlaceholder: "Votre adresse mail",
     newsletterConsent: "J'accepte de recevoir les informations de Musi'Quiz",
   },
+  findUs: {
+    address: "Adresse",
+    openingHours: "Horaires",
+    contact: "Contact",
+    mapTitle: "Le centre Musi'Quiz de {{venue}} sur la carte",
+    viewOnGoogleMaps: "Voir dans Google Maps",
+  },
   days: {
     monday: "Lundi",
     tuesday: "Mardi",

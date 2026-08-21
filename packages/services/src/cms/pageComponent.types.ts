@@ -74,10 +74,27 @@ type GamePrices = {
   game: PricesGame;
 };
 
+type FindUs = {
+  type: "findUs";
+  badge: string;
+  title: string;
+  media: CmsImage;
+  venueTitle: string;
+  location: { lat: number; lng: number };
+  address: string;
+  mapsUrl: string;
+  addressNote: string;
+  openingTitle: string;
+  openingNote: string;
+  contactTitle: string;
+  contactNote: string;
+};
+
 export type PageComponent =
   | RollingBanner
   | CardsGrid
   | Carousel
   | Reviews
   | VenuePrices
-  | GamePrices;
+  | GamePrices
+  | FindUs;

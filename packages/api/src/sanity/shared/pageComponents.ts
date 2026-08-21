@@ -75,6 +75,25 @@ function gamePricesProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function findUsProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "findUs" => {
+      "badge": badge[language == "${lang}"][0].value,
+      "title": title[language == "${lang}"][0].value,
+      "media": media ${imageProjection({ lang })},
+      "venueTitle": venue->title,
+      "location": venue->location{ lat, lng },
+      "address": venue->addressLine,
+      "mapsUrl": venue->googleMapsLink,
+      "addressNote": addressNote[language == "${lang}"][0].value,
+      "openingTitle": openingTitle[language == "${lang}"][0].value,
+      "openingNote": openingNote[language == "${lang}"][0].value,
+      "contactTitle": contactTitle[language == "${lang}"][0].value,
+      "contactNote": contactNote[language == "${lang}"][0].value
+    }
+  `;
+}
+
 function cardsGridProjection({ lang }: { lang: Lang }) {
   return `
     _type == "cardsGrid" => {
@@ -117,6 +136,7 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${reviewsProjection()},
       ${venuePricesProjection({ lang })},
       ${gamePricesProjection({ lang })},
+      ${findUsProjection({ lang })},
     }
   `;
 }
@@ -204,6 +224,22 @@ const sanityGamePricesSchema = z.strictObject({
   game: sanityPricedGameSchema,
 });
 
+const sanityFindUsSchema = z.strictObject({
+  _type: z.literal("findUs"),
+  badge: z.string().min(1),
+  title: z.string().min(1),
+  media: sanityImageSchema,
+  venueTitle: z.string().min(1),
+  location: z.strictObject({ lat: z.number(), lng: z.number() }),
+  address: z.string().min(1),
+  mapsUrl: z.string().min(1),
+  addressNote: z.string().min(1),
+  openingTitle: z.string().min(1),
+  openingNote: z.string().min(1),
+  contactTitle: z.string().min(1),
+  contactNote: z.string().min(1),
+});
+
 export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityRollingBannerSchema,
   sanityCardsGridSchema,
@@ -211,6 +247,7 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityReviewsSchema,
   sanityVenuePricesSchema,
   sanityGamePricesSchema,
+  sanityFindUsSchema,
 ]);
 
 export type SanityPageComponent = z.infer<typeof sanityPageComponentSchema>;

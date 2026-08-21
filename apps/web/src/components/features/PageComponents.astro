@@ -1,6 +1,7 @@
 ---
 import type { PageComponent } from "@repo/services/cms/pageComponent.types";
 import CardsGrid from "@repo/ui/CardsGrid";
+import FindUs from "@repo/ui/FindUs";
 import Carousel from "@repo/ui/Carousel";
 import RollingBanner from "@repo/ui/RollingBanner";
 import { getLang } from "../../libs/getLang";
@@ -10,6 +11,7 @@ import VenuePrices from "@repo/ui/VenuePrices";
 import GamePrices from "@repo/ui/GamePrices";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import { toPriceOffer } from "../../libs/toPriceOffer";
+import { toContactFacts } from "../../libs/toContactFacts";
 
 interface Props {
   components: PageComponent[];
@@ -128,6 +130,24 @@ const t = getT(lang);
             }}
             cta={component.cta}
             footnote={component.footnote}
+          />
+        );
+      }
+      case "findUs": {
+        return (
+          <FindUs
+            media={component.media}
+            badge={component.badge}
+            title={component.title}
+            facts={toContactFacts({ component, t })}
+            cta={{
+              label: t("findUs.viewOnGoogleMaps"),
+              url: component.mapsUrl,
+            }}
+            map={{
+              ...component.location,
+              title: t("findUs.mapTitle", { venue: component.venueTitle }),
+            }}
           />
         );
       }
