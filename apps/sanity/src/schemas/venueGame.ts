@@ -104,7 +104,7 @@ async function findDuplicate({
  * renders, so a preview never shows a price the page will not
  */
 function formatEuros(amount: number) {
-  return Number.isInteger(amount)
+  return Number.isSafeInteger(amount)
     ? `${amount}€`
     : `${amount.toFixed(2).replace(".", ",")}€`;
 }

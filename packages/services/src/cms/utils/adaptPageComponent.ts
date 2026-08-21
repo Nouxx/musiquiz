@@ -4,6 +4,7 @@ import type { PageComponent } from "../pageComponent.types";
 import { toCard } from "./toCard";
 import { toCmsImage } from "./toCmsImage";
 import { toCta } from "./toCta";
+import { toPricesGame } from "./toPricesGame";
 
 export function adaptPageComponent(data: SanityPageComponent): PageComponent {
   switch (data._type) {
@@ -51,7 +52,7 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         type: "venuePrices",
         title: data.title,
         surface: data.surface,
-        games: data.games.map((game) => ({ name: game.name })),
+        games: data.games.map((game) => toPricesGame(game)),
       };
     }
 
@@ -60,7 +61,7 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         type: "gamePrices",
         title: data.title,
         surface: data.surface,
-        game: { name: data.game.name },
+        game: toPricesGame(data.game),
       };
     }
   }

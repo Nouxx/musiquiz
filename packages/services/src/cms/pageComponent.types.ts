@@ -44,8 +44,17 @@ type Reviews = {
   surface: "default" | "muted";
 };
 
+export type GamePrice = {
+  playerCountFrom: number | undefined;
+  playerCountTo: number | undefined;
+  amount: number;
+  note: string | undefined;
+};
+
 export type PricesGame = {
   name: string;
+  image: CmsImage;
+  prices: GamePrice[];
 };
 
 type VenuePrices = {

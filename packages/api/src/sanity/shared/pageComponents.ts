@@ -24,12 +24,20 @@ function reviewsProjection() {
   `;
 }
 
+function pricedGameProjection({ lang }: { lang: Lang }) {
+  return `{
+    "name": game->name,
+    "image": game->image ${imageProjection({ lang })},
+    prices[]{
+      playerCountFrom,
+      playerCountTo,
+      amount,
+      "note": note[language == "${lang}"][0].value
+    }
+  }`;
+}
+
 function venuePricesProjection({ lang }: { lang: Lang }) {
-  // the games are resolved from venueGame, the (venue, game) pairing, rather than
-  // authored: the section lists every game the venue runs. `^` reaches back out of
-  // the subquery to the venuePrices object holding the reference. drafts are handled
-  // by the client perspective, so the subquery does not filter them.
-  // `game->name` is a plain string, not internationalized, so `lang` never reaches it
   return `
     _type == "venuePrices" => {
       "title": title[language == "${lang}"][0].value,
@@ -37,18 +45,13 @@ function venuePricesProjection({ lang }: { lang: Lang }) {
       "games": *[
         _type == "venueGame"
         && venue._ref == ^.venue._ref
-      ] | order(game->displayOrder asc) {
-        "name": game->name
-      }
+      ] | order(game->displayOrder asc) ${pricedGameProjection({ lang })}
     }
   `;
 }
 
 function gamePricesProjection({ lang }: { lang: Lang }) {
-  // venueGame holds one document per (venue, game), so the pair resolves to exactly
-  // one game or to nothing at all — the latter only if the venueGame was deleted
-  // after this section was authored, which is a broken reference rather than a
-  // legitimate state, and the schema below refuses it
+  // venueGame holds one document per (venue, game), so the pair resolves to exactly one game or to nothing at all
   return `
     _type == "gamePrices" => {
       "title": title[language == "${lang}"][0].value,
@@ -57,9 +60,7 @@ function gamePricesProjection({ lang }: { lang: Lang }) {
         _type == "venueGame"
         && venue._ref == ^.venue._ref
         && game._ref == ^.game._ref
-      ][0] {
-        "name": game->name
-      }
+      ][0] ${pricedGameProjection({ lang })}
     }
   `;
 }
@@ -154,12 +155,26 @@ const sanityReviewsSchema = z.strictObject({
   searchTerm: z.string().min(1).nullable(),
 });
 
+const sanityPriceSchema = z.strictObject({
+  playerCountFrom: z.number().int().positive().nullable(),
+  playerCountTo: z.number().int().positive().nullable(),
+  amount: z.number().positive(),
+  note: z.string().min(1).nullable(),
+});
+
+const sanityPricedGameSchema = z.strictObject({
+  name: z.string().min(1),
+  image: sanityImageSchema,
+  prices: z.array(sanityPriceSchema).min(1),
+});
+
+export type SanityPricedGame = z.infer<typeof sanityPricedGameSchema>;
+
 const sanityVenuePricesSchema = z.strictObject({
   _type: z.literal("venuePrices"),
   title: z.string().min(1),
   surface: z.enum(["default", "muted"]),
-  // empty is legitimate: a venue may run no games yet
-  games: z.array(z.strictObject({ name: z.string().min(1) })),
+  games: z.array(sanityPricedGameSchema),
 });
 
 const sanityGamePricesSchema = z.strictObject({
@@ -167,9 +182,8 @@ const sanityGamePricesSchema = z.strictObject({
   title: z.string().min(1),
   surface: z.enum(["default", "muted"]),
   // not nullable: a section pointing at a deleted venueGame has nothing to render
-  // and no other game to fall back on, so it fails the build rather than rendering
-  // a heading over nothing
-  game: z.strictObject({ name: z.string().min(1) }),
+  // and no other game to fall back on, so it fails the build rather than rendering a heading over nothing
+  game: sanityPricedGameSchema,
 });
 
 export const sanityPageComponentSchema = z.discriminatedUnion("_type", [

@@ -15,6 +15,13 @@ export const en: typeof fr = {
   },
   prices: {
     perPerson: "Per person",
+    // shown when a game has a single price: it applies whatever the group size
+    unique: "Single rate",
+    range: "From {{from}} to {{to}} players",
+    fromOnly_one: "{{count}} player and up",
+    fromOnly_other: "{{count}} players and up",
+    exact_one: "{{count}} player",
+    exact_other: "{{count}} players",
   },
   reviews: {
     previous: "Previous review",

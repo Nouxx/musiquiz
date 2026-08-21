@@ -21,7 +21,6 @@ function adaptVenueGamePage({
 }): VenueGamePage {
   return {
     gameName: data.venueGame.gameName,
-    price: data.venueGame.price,
     pageCover: toPageCover({
       data: data.venueGame.pageCover,
       ctaUrl: getRoutesForLang(lang).venueBook(venueSlug),

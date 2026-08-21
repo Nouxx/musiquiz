@@ -45,7 +45,6 @@ export type VenuePage = {
 
 export type VenueGamePage = {
   gameName: string;
-  price: number;
   pageCover: PageCover;
   components: PageComponent[];
 };

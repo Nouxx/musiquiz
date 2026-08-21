@@ -87,6 +87,12 @@ A component in `apps/web/src/components/pages/`. Fetches the data for one screen
 One file in `packages/api/src/sanity/`, holding everything one fetch needs: its GROQ query, the Zod schema that parses the response, the inferred `Sanity*` type, and the fetch function built from the two. There is one per fetch, named after it, and it mirrors one `getXData.ts` in `@repo/services`. A Query Module exposes a call, never a query fragment — the schema stays inside it. Its rules are [ADR 0009](./docs/adr/0009-sanity-query-modules.md).
 _Avoid_: query, fetcher, endpoint, resource, api feature
 
+**Adapted Content**:
+What `@repo/services` returns: content that came out of the CMS, reshaped for the front end — a Sanity image asset turned into a `CmsImage`, a localized array narrowed to the string for the requested language, a reference resolved into the fields that use it. Transforming it is the job; inventing it is not.
+_Avoid_: view model, DTO, presenter
+
+`@repo/services` returns **CMS content only, never interface copy.** A string the editor did not author — a label, a unit, a derived phrase like "De 4 à 6 joueurs" — belongs to the web app, in `apps/web/src/locales/`, reached through `getT(lang)`. So services hands over the values (`playerCountFrom`, `amount`) and the web app turns them into words. This is why `adaptPageComponent` takes no `lang`: the language decides how content is _selected_ inside a Query Module's projection, and how copy is _written_ in the web app, and nothing in between needs it.
+
 ## Images
 
 **CMS Image**:

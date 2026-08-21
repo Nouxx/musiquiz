@@ -7,9 +7,8 @@ import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 import Reviews from "@repo/ui/Reviews";
 import VenuePrices from "@repo/ui/VenuePrices";
-import type { PriceTier } from "@repo/ui/types";
-import pricesPlaceholder from "../../assets/prices-placeholder.jpg";
 import GamePrices from "@repo/ui/GamePrices";
+import { toPriceOffer } from "../../libs/toPriceOffer";
 
 interface Props {
   components: PageComponent[];
@@ -114,25 +113,13 @@ const t = getT(lang);
         );
       }
       case "venuePrices": {
-        // todo: tiers and the image are hardcoded
-        const tiers: PriceTier[] = [
-          { label: "4 joueurs et plus", icon: "users-4", amountWithCurrency: "16€" },
-          {
-            label: "3 joueurs",
-            icon: "users-3",
-            amountWithCurrency: "21€",
-            note: "Si combiné avec Musi'Quiz",
-          },
-          { label: "2 joueurs", icon: "users-2", amountWithCurrency: "25€" },
-        ];
-
         return (
           <VenuePrices
             title={component.title}
             surface={component.surface}
-            games={component.games}
-            image={pricesPlaceholder}
-            {tiers}
+            games={component.games.map((game) =>
+              toPriceOffer({ game, t, lang }),
+            )}
             perPersonLabel={t("prices.perPerson")}
           />
         );
@@ -142,7 +129,8 @@ const t = getT(lang);
           <GamePrices
             title={component.title}
             surface={component.surface}
-            game={component.game}
+            game={toPriceOffer({ game: component.game, t, lang })}
+            perPersonLabel={t("prices.perPerson")}
           />
         );
       }

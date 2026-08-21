@@ -1,31 +1,23 @@
 ---
-import { Image } from "astro:assets";
-import PriceCard from "./prices/PriceCard.astro";
+import GameOffer from "./prices/GameOffer.astro";
 import Button from "./primitives/Button.astro";
 import Text from "./primitives/Text.astro";
 import Section from "./Section.astro";
-import type { PriceTier } from "./types";
+import type { PriceOffer } from "./types";
 
 interface Props {
   title: string;
   surface?: "default" | "muted";
   // every game the venue runs. empty when it runs none yet
-  games: { name: string }[];
-  // placeholder while the image is not authored: a local asset, so `ImageMetadata`
-  // rather than the `ImageSource` descriptor a CMS image would arrive as
-  image: ImageMetadata;
-  tiers: PriceTier[];
+  games: PriceOffer[];
   perPersonLabel: string;
 }
 
-const {
-  title,
-  surface = "muted",
-  games,
-  image,
-  tiers,
-  perPersonLabel,
-} = Astro.props;
+const { title, surface = "muted", games, perPersonLabel } = Astro.props;
+
+// two prices sections on one page would otherwise share a radio group and
+// fight over which game is selected
+const group = `prices-${crypto.randomUUID()}`;
 ---
 
 <Section {surface} width="content">
@@ -34,40 +26,36 @@ const {
 
     {
       games.length > 0 && (
-        <div class="games">
+        <div class="picker">
           {games.map((game, index) => (
-            // plain toggles for now. these become a `tablist` in the commit that
-            // adds the price panel they select — a `role="tab"` whose
-            // `aria-controls` points at nothing is worse than no role at all
-            <Button tone="light" aria-pressed={index === 0 ? "true" : "false"}>
-              {game.name}
-            </Button>
+            <>
+              <Button
+                as="label"
+                tone="light"
+                class:list={["choice", games.length === 1 && "only"]}
+              >
+                <input
+                  type="radio"
+                  name={group}
+                  value={game.name}
+                  checked={index === 0}
+                />
+                {game.name}
+              </Button>
+
+              <div class="panel">
+                <GameOffer offer={game} {perPersonLabel} />
+              </div>
+            </>
           ))}
         </div>
       )
     }
 
-    <div class="offer">
-      <div class="media">
-        <Image
-          src={image}
-          alt=""
-          widths={[400, 700, 1000, 1400]}
-          sizes="(width < 60rem) 1px, 60vw"
-        />
-      </div>
-
-      <div class="tiers">
-        {
-          tiers.map((tier) => (
-            <PriceCard {tier} {perPersonLabel} class="tier" />
-          ))
-        }
-      </div>
-    </div>
-
     <div class="actions">
-      <Button tone="light" icon="arrow-right" iconPosition="trailing">Découvrez le Pack Activités Musi'Quiz + Pixel Games</Button>
+      <Button tone="light" icon="arrow-right" iconPosition="trailing"
+        >Découvrez le Pack Activités Musi'Quiz + Pixel Games</Button
+      >
       <Button tone="blue">Réservez votre activité</Button>
     </div>
   </div>
@@ -81,54 +69,46 @@ const {
     text-align: center;
   }
 
-  .games {
+  /* every choice is followed in the markup by the panel it reveals, so the
+     panel can be selected from the checked radio. `order` then pulls the
+     choices back up into a single row above the panels */
+  .picker {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-4);
     justify-content: center;
   }
 
-  .offer {
-    display: flex;
-    gap: var(--space-10);
-    align-items: stretch;
+  .choice {
+    order: 1;
   }
 
-  .media {
-    position: relative;
-    flex: 1 1 auto;
-    border-radius: 24px;
-    overflow: hidden;
+  /* with a single game there is nothing to choose between */
+  .choice.only {
+    display: none;
   }
 
-  .media::before {
-    display: block;
-    aspect-ratio: 11 / 8;
-    content: "";
-  }
-
-  .media img {
+  .choice input {
     position: absolute;
-    inset: 0;
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
-    object-position: center;
+    width: 1px;
+    height: 1px;
+    /* clipped rather than `display: none`, which would take the radio out of
+       the tab order and off the accessibility tree */
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
   }
 
-  .tiers {
-    /* max width for a price card */
-    --tier-width: 307px;
-
-    display: flex;
-    flex: 0 0 var(--tier-width);
-    flex-direction: column;
-    gap: var(--space-6);
-    justify-content: center;
+  .panel {
+    order: 2;
+    flex: 1 0 100%;
+    display: none;
+    /* the row of choices already carries the section's gap */
+    margin-block-start: var(--space-6);
   }
 
-  .tier {
-    max-width: var(--tier-width);
+  .choice:has(input:checked) + .panel {
+    display: block;
   }
 
   .actions {
@@ -136,20 +116,5 @@ const {
     justify-content: center;
     gap: var(--space-6);
     flex-wrap: wrap;
-  }
-
-  @media (width < 60rem) {
-    .media {
-      display: none;
-    }
-
-    .tiers {
-      flex: 1 1 auto;
-      flex-flow: row wrap;
-    }
-
-    .tier {
-      flex: 1 1 min(var(--tier-width), 100%);
-    }
   }
 </style>

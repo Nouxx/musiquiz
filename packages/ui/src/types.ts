@@ -55,9 +55,16 @@ export type CardItem = {
 };
 
 export type PriceTier = {
+  /** @example "De 4 à 6 joueurs", "Tarif unique" */
   label: string;
   icon: IconName;
   /** @example "16€" */
   amountWithCurrency: string;
   note?: string;
+};
+
+export type PriceOffer = {
+  name: string;
+  image: ImageSource;
+  tiers: PriceTier[];
 };

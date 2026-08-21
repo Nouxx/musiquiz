@@ -23,7 +23,6 @@ function venueGamePageQuery({
     "venueGame": *[_type == "venueGame"
       && venue->slug.current == "${venueSlug}"
       && game->slug.current == "${gameSlug}"][0]{
-      price,
       "gameName": game->name,
       pageCover ${pageCoverProjection({ lang })},
       "pageComponents": ${pageComponentsProjection({ lang })},
@@ -33,7 +32,6 @@ function venueGamePageQuery({
 
 const sanityVenueGamePageSchema = z.strictObject({
   venueGame: z.strictObject({
-    price: z.number().nonnegative(),
     gameName: z.string().min(1),
     pageCover: sanityPageCoverSchema,
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
