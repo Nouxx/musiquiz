@@ -1,10 +1,37 @@
-import { defineField, defineType } from "sanity";
-import type { Reference, SanityDocument, ValidationContext } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
+import type {
+  Path,
+  Reference,
+  SanityDocument,
+  ValidationContext,
+} from "sanity";
 import { JoystickIcon } from "@sanity/icons/Joystick";
 
 const API_VERSION = "2025-02-06";
 
+/** the note sits in a narrow card beside the amount, so it has to stay short */
+const NOTE_MAX_LENGTH = 30;
+
+/** past this the tier column outgrows the image it stands next to */
+const MAX_PRICES = 5;
+
 type GetClient = ValidationContext["getClient"];
+
+type LocalizedEntry = { _key?: string; value?: string };
+
+type PriceValue = {
+  _key?: string;
+  playerCountFrom?: number;
+  playerCountTo?: number;
+  amount?: number;
+  note?: LocalizedEntry[];
+};
+
+function frenchValue(entries?: LocalizedEntry[]) {
+  return (
+    entries?.find((entry) => entry._key === "fr")?.value ?? entries?.[0]?.value
+  );
+}
 
 function venueRefOf(document: SanityDocument | undefined) {
   return (document?.venue as Reference | undefined)?._ref;
@@ -72,6 +99,185 @@ async function findDuplicate({
   );
 }
 
+/**
+ * "16€" for a round amount, "21,50€" otherwise — the same shape the front
+ * renders, so a preview never shows a price the page will not
+ */
+function formatEuros(amount: number) {
+  return Number.isInteger(amount)
+    ? `${amount}€`
+    : `${amount.toFixed(2).replace(".", ",")}€`;
+}
+
+/** "16€" for one amount or many identical ones, "16€ – 25€" for a range */
+function formatSpan(amounts: number[]) {
+  const lowest = Math.min(...amounts);
+  const highest = Math.max(...amounts);
+
+  return lowest === highest
+    ? formatEuros(lowest)
+    : `${formatEuros(lowest)} – ${formatEuros(highest)}`;
+}
+
+function pluralPlayers(count: number) {
+  return count > 1 ? `${count} joueurs` : `${count} joueur`;
+}
+
+/**
+ * The badge the front puts on the card, repeated here so a collapsed row reads
+ * the way the page will. french only, like every other preview in this studio
+ */
+function playerRangeLabel({
+  playerCountFrom,
+  playerCountTo,
+}: Pick<PriceValue, "playerCountFrom" | "playerCountTo">) {
+  if (playerCountFrom == null) {
+    if (playerCountTo == null) return "Tarif unique";
+
+    // rejected by validation: a row in this state is on its way somewhere, and a
+    // preview still has to say something about it
+    return `Jusqu'à ${pluralPlayers(playerCountTo)}`;
+  }
+
+  if (playerCountTo == null) return `${pluralPlayers(playerCountFrom)} et plus`;
+
+  return playerCountTo === playerCountFrom
+    ? pluralPlayers(playerCountFrom)
+    : `De ${playerCountFrom} à ${pluralPlayers(playerCountTo)}`;
+}
+
+function pathToRow(price: PriceValue, field: string): Path | undefined {
+  return price._key ? [{ _key: price._key }, field] : undefined;
+}
+
+/**
+ * The rules a single price cannot check on its own, because they depend on how
+ * many other prices there are:
+ *
+ * - one price applies whatever the group size, so it carries no counts
+ * - several prices each need a lower bound to tell them apart
+ *
+ * an upper bound without a lower one is caught by the second rule, since it is
+ * the missing lower bound that makes it wrong
+ */
+function priceListErrors(prices: PriceValue[] | undefined) {
+  if (!prices?.length) return [];
+
+  if (prices.length === 1) {
+    const [only] = prices;
+
+    if (only.playerCountFrom == null && only.playerCountTo == null) return [];
+
+    return [
+      {
+        message:
+          "A lone price applies whatever the group size, and the page says so. Clear the player counts, or add a second price.",
+        // pinned to whichever count the editor actually filled in
+        path: pathToRow(
+          only,
+          only.playerCountFrom != null ? "playerCountFrom" : "playerCountTo",
+        ),
+      },
+    ];
+  }
+
+  return prices
+    .filter((price) => price.playerCountFrom == null)
+    .map((price) => ({
+      message:
+        price.playerCountTo == null
+          ? "With more than one price, every one of them needs a lower player count."
+          : "An upper count needs a lower one beside it — the card reads “De 4 à 6 joueurs”, never “jusqu’à 6”.",
+      path: pathToRow(price, "playerCountFrom"),
+    }));
+}
+
+// one price band: a player range, what it costs per player, and the condition
+// attached to it. lives here rather than in shared/ because venueGame is its
+// only consumer, the way cardsGrid keeps cardType
+export const priceType = defineType({
+  name: "price",
+  title: "Price",
+  type: "object",
+  fields: [
+    defineField({
+      name: "playerCountFrom",
+      title: "From (players)",
+      description:
+        "The smallest group this price applies to. Leave empty, along with the upper count, when this is the only price.",
+      type: "number",
+      validation: (rule) => rule.integer().min(1),
+    }),
+    defineField({
+      name: "playerCountTo",
+      title: "Up to (players)",
+      description:
+        'The largest group this price applies to. Leave empty for "and more".',
+      type: "number",
+      validation: (rule) =>
+        rule
+          .integer()
+          .min(1)
+          .custom((value: number | undefined, context) => {
+            const from = (context.parent as PriceValue | undefined)
+              ?.playerCountFrom;
+
+            if (value == null || from == null) return true;
+
+            return value >= from
+              ? true
+              : "The upper count cannot be below the lower one.";
+          }),
+    }),
+    defineField({
+      name: "amount",
+      title: "Amount",
+      description: "In euros, per player.",
+      type: "number",
+      validation: (rule) => rule.required().min(1).precision(2),
+    }),
+    defineField({
+      name: "note",
+      title: "Note",
+      description: `A condition attached to this price, shown under "Par personne" rather than in place of it. Example: "Si combiné avec Musi'Quiz". ${NOTE_MAX_LENGTH} characters at most.`,
+      type: "internationalizedArrayString",
+      validation: (rule) =>
+        // the value is an array of one entry per language, so `max` would count
+        // languages rather than characters
+        rule.custom((entries?: LocalizedEntry[]) => {
+          const tooLong = entries?.filter(
+            (entry) => (entry.value?.length ?? 0) > NOTE_MAX_LENGTH,
+          );
+
+          return tooLong?.length
+            ? `Keep the note to ${NOTE_MAX_LENGTH} characters — it sits in a narrow card beside the amount.`
+            : true;
+        }),
+    }),
+  ],
+  preview: {
+    select: {
+      playerCountFrom: "playerCountFrom",
+      playerCountTo: "playerCountTo",
+      amount: "amount",
+      note: "note",
+    },
+    prepare({ playerCountFrom, playerCountTo, amount, note }: PriceValue) {
+      return {
+        title: playerRangeLabel({ playerCountFrom, playerCountTo }),
+        // the amount belongs here: two bands sharing a lower count are otherwise
+        // the same row twice once collapsed
+        subtitle: [
+          amount == null ? undefined : formatEuros(amount),
+          frenchValue(note),
+        ]
+          .filter(Boolean)
+          .join(" · "),
+      };
+    },
+  },
+});
+
 // one document per (venue, game) pair
 // unlike a venue page the id cannot enforce the pair
 // because the editor picks the two references that would compose it
@@ -123,11 +329,22 @@ export const venueGameType = defineType({
       },
     }),
     defineField({
-      name: "price",
-      title: "Price",
-      description: "In euros, per player.",
-      type: "number",
-      validation: (rule) => rule.required().min(0),
+      name: "prices",
+      title: "Prices",
+      description:
+        "What this game costs at this venue. Re-order the bands to decide the order they appear in.",
+      type: "array",
+      of: [defineArrayMember({ type: "price" })],
+      validation: (rule) => [
+        rule.required().min(1).max(MAX_PRICES),
+        // messages are pinned to the row that earned them: one complaint over a
+        // list of five leaves the editor guessing which
+        rule.custom((prices?: PriceValue[]) => {
+          const errors = priceListErrors(prices);
+
+          return errors.length ? errors : true;
+        }),
+      ],
     }),
     defineField({
       name: "pageCover",
@@ -144,14 +361,28 @@ export const venueGameType = defineType({
     select: {
       gameName: "game.name",
       venueTitle: "venue.title",
-      price: "price",
+      prices: "prices",
     },
-    prepare({ gameName, venueTitle, price }) {
+    prepare({
+      gameName,
+      venueTitle,
+      prices,
+    }: {
+      gameName?: string;
+      venueTitle?: string;
+      prices?: PriceValue[];
+    }) {
+      const amounts = (prices ?? [])
+        .map((price) => price.amount)
+        .filter((amount): amount is number => typeof amount === "number");
+
+      // the span is what an editor scans this list for; the count is already
+      // visible from the array itself
+      const span = amounts.length === 0 ? undefined : formatSpan(amounts);
+
       return {
         title: gameName ?? "No game selected",
-        subtitle: [venueTitle, price == null ? undefined : `${price}€`]
-          .filter(Boolean)
-          .join(" — "),
+        subtitle: [venueTitle, span].filter(Boolean).join(" — "),
       };
     },
   },

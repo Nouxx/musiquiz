@@ -21,6 +21,14 @@ export const gameFormatType = defineType({
       validation: (rule) => rule.required().integer().min(0),
     }),
     defineField({
+      name: "image",
+      title: "Image",
+      description:
+        "The picture shown beside this game's prices, wherever it is priced. The same image is used at every venue.",
+      type: "imageWithAlt",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: "slug",
       title: "URL slug",
       type: "slug",

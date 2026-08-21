@@ -8,7 +8,7 @@ import { gameFormatType } from "./gameFormat";
 import { homepageType } from "./homepage";
 import { siteSettingsType } from "./siteSettings";
 import { venueType } from "./venue";
-import { venueGameType } from "./venueGame";
+import { priceType, venueGameType } from "./venueGame";
 import { venuePageType } from "./venuePage";
 import { rollingBannerType } from "./shared/pageComponents/rollingBanner";
 import { reviewsType } from "./shared/pageComponents/reviews";
@@ -20,6 +20,7 @@ export const schemaTypes = [
   venueType,
   venuePageType,
   venueGameType,
+  priceType,
   siteSettingsType,
   gameFormatType,
   imageWithAltType,
