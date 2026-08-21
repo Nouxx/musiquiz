@@ -1,23 +1,27 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 
-type Border = "thin" | "thick" | "muted";
+type Border = "thin" | "thick" | "muted" | "translucent";
+
+type Surface = "glass";
 
 interface Props extends Omit<HTMLAttributes<"div">, "class"> {
   as?: "div" | "article" | "li";
   border?: Border;
+  surface?: Surface;
   class?: string;
 }
 
 const {
   as: Tag = "div",
   border = "thick",
+  surface,
   class: className,
   ...rest
 } = Astro.props;
 ---
 
-<Tag {...rest} class:list={["card", border, className]}>
+<Tag {...rest} class:list={["card", border, surface, className]}>
   <slot />
 </Tag>
 
@@ -54,5 +58,19 @@ const {
     padding: 1px;
     background-image: none;
     background-color: var(--color-border);
+  }
+
+  /* the `thick` geometry with a flat light ring instead of the brand gradient,
+     so the photo behind the card is what carries the colour */
+  .translucent::before {
+    padding: 2px 6px 6px 2px;
+    background-image: none;
+    background-color: var(--color-border-translucent);
+  }
+
+  .glass {
+    background-color: var(--color-surface-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 </style>

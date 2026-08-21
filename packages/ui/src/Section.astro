@@ -1,15 +1,18 @@
 ---
 interface Props {
-  surface?: "default" | "vivid" | "muted";
+  /** when `"media"`, use the `media` slot */
+  surface?: "default" | "vivid" | "muted" | "media";
   spacing?: "l" | "m";
-  // `content` reads as a column of text and caps at `--size-content`. `wide` is
-  // for sections composed edge to edge, and caps at the 1728px frame the Figma
-  // sheets are drawn at, with the wider gutter that frame uses.
   width?: "content" | "wide";
   id?: string;
 }
 
-const { surface = "default", spacing = "l", width = "content", id } = Astro.props;
+const {
+  surface = "default",
+  spacing = "l",
+  width = "content",
+  id,
+} = Astro.props;
 ---
 
 <section
@@ -17,6 +20,14 @@ const { surface = "default", spacing = "l", width = "content", id } = Astro.prop
   style={{ "--section-spacing": `var(--space-section-${spacing})` }}
   {id}
 >
+  {
+    surface === "media" && (
+      <div class="backdrop">
+        <slot name="media" />
+      </div>
+    )
+  }
+
   <div class="content"><slot /></div>
 </section>
 
@@ -25,12 +36,6 @@ const { surface = "default", spacing = "l", width = "content", id } = Astro.prop
     padding-block: var(--section-spacing);
     padding-inline: var(--space-6);
 
-    /* a component may bleed a scroll port out to the viewport edge with a
-       `calc(50% - 50vw)` margin (see Reviews). `100vw` counts the classic
-       scrollbar that Windows draws and the document width does not, so without
-       this the bleed overshoots by its width and the page scrolls sideways.
-       `clip` rather than `hidden`: it creates no scroll container, and leaves
-       `overflow-y` visible instead of forcing it to `auto`. */
     overflow-x: clip;
   }
 
@@ -54,5 +59,42 @@ const { surface = "default", spacing = "l", width = "content", id } = Astro.prop
 
   .muted {
     background-color: var(--color-surface-muted);
+  }
+
+  /* the brand gradient shows only while the photo is still loading, or if it
+     never arrives — the scrim sits over it either way, so that state degrades
+     to the same palette rather than to bare colour. Same trick PageCover uses. */
+  .media {
+    position: relative;
+    color: var(--color-text-on-media);
+    background-image: var(--color-surface-brand);
+  }
+
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .backdrop::after {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-scrim);
+    content: "";
+  }
+
+  /* the slot is handed a RemoteImage, which sizes itself for the box it is normally placed in. Here the box is the whole section, so override it. */
+  .backdrop :global(picture),
+  .backdrop :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  /* `.backdrop` is positioned, so without a stacking context of its own the content would render under it */
+  .media .content {
+    position: relative;
+    z-index: 1;
   }
 </style>

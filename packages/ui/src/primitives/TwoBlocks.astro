@@ -1,0 +1,28 @@
+---
+import type { SpaceScale } from "../types";
+
+interface Props {
+  gap?: SpaceScale;
+}
+
+const { gap = "10" } = Astro.props;
+---
+
+<div class="two-blocks" style={{ "--two-blocks-gap": `var(--space-${gap})` }}>
+  <slot name="first" />
+  <slot name="second" />
+</div>
+
+<style>
+  .two-blocks {
+    display: grid;
+    gap: var(--two-blocks-gap);
+  }
+
+  /* 60rem — two columns stop fitting - see styles/breakpoints.css */
+  @media (width >= 60rem) {
+    .two-blocks {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

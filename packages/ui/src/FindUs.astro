@@ -1,0 +1,129 @@
+---
+import Badge from "./Badge.astro";
+import ContactRow from "./findUs/ContactRow.astro";
+import Button from "./primitives/Button.astro";
+import Card from "./primitives/Card.astro";
+import RemoteImage from "./primitives/RemoteImage.astro";
+import Text from "./primitives/Text.astro";
+import TwoBlocks from "./primitives/TwoBlocks.astro";
+import Section from "./Section.astro";
+import type { ContactFact, CtaLink, ImageSource } from "./types";
+
+interface Props {
+  media: ImageSource;
+  badge: string;
+  title: string;
+  facts: ContactFact[];
+  cta: CtaLink;
+  map: { image: ImageSource; url: string };
+}
+
+const { media, badge, title, facts, cta, map } = Astro.props;
+---
+
+<Section surface="media" width="content">
+  <RemoteImage slot="media" image={media} variant="cover" />
+
+  <TwoBlocks>
+    <Card slot="first" border="translucent" surface="glass" class="panel">
+      <div class="heading">
+        <Badge color="dark">{badge}</Badge>
+
+        <Text as="h2" variant="title-h3">{title}</Text>
+      </div>
+
+      <div class="facts">
+        {
+          facts.map((fact) => (
+            <ContactRow
+              icon={fact.icon}
+              label={fact.label}
+              title={fact.title}
+              body={fact.body}
+            />
+          ))
+        }
+      </div>
+
+      <Button as="a" href={cta.url} tone="blue">{cta.label}</Button>
+    </Card>
+
+    <a
+      slot="second"
+      class="map-link"
+      href={map.url}
+      target="_blank"
+      rel="noopener"
+    >
+      <Card border="thick" class="map-card">
+        <RemoteImage image={map.image} variant="map" />
+      </Card>
+    </a>
+  </TwoBlocks>
+</Section>
+
+<style>
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-items: flex-start;
+    padding: var(--space-6);
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+
+  .facts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-self: stretch;
+  }
+
+  .map-link {
+    display: flex;
+
+    /* matches the Card it wraps, so the focus ring traces the visible shape */
+    border-radius: 24px;
+
+    aspect-ratio: 1;
+  }
+
+  .map-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+  }
+
+  .map-card {
+    inline-size: 100%;
+  }
+
+  /* `Picture` puts the sizing class on the `img`, and its `block-size: 100%`
+     has nothing to resolve against until the `picture` between them is given a
+     height of its own. Same fix Carousel makes for its track items. */
+  .map-card :global(picture) {
+    display: block;
+    block-size: 100%;
+  }
+
+  /* 60rem — two columns stop fitting (styles/breakpoints.css) */
+  @media (width >= 60rem) {
+    .panel {
+      gap: var(--space-10);
+      padding: var(--space-10);
+    }
+
+    .facts {
+      gap: var(--space-4);
+    }
+
+    .map-link {
+      aspect-ratio: auto;
+    }
+  }
+</style>

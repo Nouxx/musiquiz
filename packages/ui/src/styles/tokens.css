@@ -105,6 +105,9 @@
   --title-base-xl: 400 clamp(1rem, 1.169rem - 0.188vw, 1.125rem) / 1.35
     var(--font-title);
 
+  --title-base-to-xl: 400 clamp(1rem, 0.956rem + 0.188vw, 1.125rem) / 1.35
+    var(--font-title);
+
   /* 16/22 */
   --title-base: 400 1rem/1.375 var(--font-title);
 
@@ -152,9 +155,6 @@
      ============================================================ */
 
   --size-content: 78rem;
-
-  /* the wide frame the Figma sheets are drawn at (1728px), for the sections
-     that are composed edge to edge rather than read as a column of text */
   --size-content-wide: 108rem;
 
   /* 4.63vw is 80px at 1728px */
@@ -164,6 +164,10 @@
   --color-surface-inverse: var(--blue-900);
   --color-surface-muted: var(--grey-100);
   --color-surface-translucent: var(--black-40);
+
+  --color-scrim: var(--blue-900-40);
+
+  --color-surface-glass: var(--blue-900-40);
 
   --color-overlay: linear-gradient(
     180deg,
@@ -193,6 +197,8 @@
 
   --color-border: var(--grey-200);
   --color-border-brand: var(--gradient-border);
+
+  --color-border-translucent: var(--white-20);
 
   --color-fill-indicator: var(--grey-400);
   --color-fill-indicator-active: var(--red-600);

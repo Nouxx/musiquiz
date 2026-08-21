@@ -68,3 +68,10 @@ export type PriceOffer = {
   image: ImageSource;
   tiers: PriceTier[];
 };
+
+export type ContactFact = {
+  icon: IconName;
+  label: string;
+  title: string;
+  body?: string;
+};

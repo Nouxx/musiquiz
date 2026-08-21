@@ -1,0 +1,79 @@
+---
+import IconChip from "../primitives/IconChip.astro";
+import Text from "../primitives/Text.astro";
+import type { IconName } from "../lib/icons";
+
+interface Props {
+  icon: IconName;
+  label: string;
+  title: string;
+  body?: string;
+}
+
+const { icon, label, title, body } = Astro.props;
+---
+
+<div class="row">
+  <IconChip name={icon} tone="light" size="l" />
+
+  <div class="lines">
+    <span class="label"><Text variant="paragraph-s">{label}</Text></span>
+
+    <Text variant="title-base-to-xl">{title}</Text>
+
+    {
+      body && (
+        <span class="note">
+          <Text variant="paragraph-s">{body}</Text>
+        </span>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+
+  .lines {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .label,
+  .note {
+    color: var(--color-text-on-media-muted);
+  }
+
+  /* the mobile sheet drops the label - redundant. clipped rather than `display: none` so it stays on the accessibility tree */
+  .label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  /* 60rem — two columns stop fitting (styles/breakpoints.css) */
+  @media (width >= 60rem) {
+    .row {
+      flex-direction: row;
+      gap: var(--space-6);
+    }
+
+    .label {
+      position: static;
+      width: auto;
+      height: auto;
+      clip-path: none;
+      overflow: visible;
+      white-space: normal;
+    }
+  }
+</style>
