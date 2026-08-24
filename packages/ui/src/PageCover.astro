@@ -13,14 +13,6 @@ const align = props.align ?? "center";
 const height = props.height ?? "full";
 const isGradient = props.background === "gradient";
 
-// only the wrappers that CSS needs a hook for are guarded: a bare `<slot>`
-// renders no element when unfilled, but a wrapper div is still a flex/grid
-// item and would leave a phantom track or `gap` behind.
-//
-// `Astro.slots.has` is not enough to guard them. The compiler emits a slot
-// entry for `{cond && <el slot="x" />}` whether or not `cond` holds, so `has`
-// answers true for a conditional slot that renders nothing — which is exactly
-// how an optional logo or subheading gets passed. Ask what came out instead.
 async function slotHtml(name: string) {
   if (!Astro.slots.has(name)) {
     return "";
@@ -73,15 +65,11 @@ const style = {
     overflow: hidden;
   }
 
-  /* svh, not vh: on mobile the cover must fit the visible viewport rather
-     than sit partly under the browser chrome */
   .full {
     min-block-size: 100svh;
     padding-block: var(--space-10);
   }
 
-  /* the shorter sizes have no floor: content plus padding decides the height,
-     so there is no viewport unit left in play */
   .sized {
     padding-block: var(--cover-spacing);
   }
@@ -98,9 +86,6 @@ const style = {
     background-image: var(--color-surface-brand);
   }
 
-  /* a gradient cover is art-directed, so it needs neither the photo fallback
-     nor the scrim: `--color-overlay` over `--gradient-vivid` only muddies the
-     top band the design already controls */
   .media.gradient {
     background-image: var(--cover-surface);
   }
@@ -120,8 +105,7 @@ const style = {
     content: "";
   }
 
-  /* a grid item, so `z-index` applies without `position` — which matters,
-     because the centered logo positions against the section, not the frame */
+  /* a grid item, so `z-index` applies without `position` — which matters, because the centered logo positions against the section, not the frame */
   .frame {
     z-index: 2;
     color: var(--color-text-on-media);
@@ -138,22 +122,9 @@ const style = {
 
   .left .frame {
     inline-size: 100%;
-
-    /* the venue cover frame is 1728px wide with 240px gutters, leaving
-       1248px — which is `--size-content` exactly */
     max-inline-size: var(--size-content);
   }
 
-  /* Figma draws this row at a 1248px frame: 612px of text, 396px of logo, 240px
-     between them — 49%, 31.75% and the 19.25% left over, which is why the gap
-     is `space-between` rather than a fourth number. Ratios, not pixels, so the
-     row keeps its proportions at every frame width, not just at 1728px.
-
-     It wraps on its own, the way footer/FooterSection.astro does, rather than
-     at a breakpoint. The percentages alone never trigger it (they only sum to
-     80.75%), so the wrap comes from the two floors: 36.5rem + 12.5rem + the
-     2.5rem gap stops fitting at a 57rem container, i.e. a 60rem viewport once
-     the `--space-6` gutters are taken off. */
   .left .with-logo {
     display: flex;
     flex-wrap: wrap;
@@ -162,25 +133,14 @@ const style = {
     justify-content: space-between;
   }
 
-  /* `flex-grow` must stay 0: were the stack allowed to grow it would swallow
-     the 19.25% and leave `space-between` nothing to distribute. Its width once
-     the row has wrapped therefore comes from the floor below, which carries it
-     from 64% of the container back up to 100% as the screen narrows. */
   .left .with-logo .stack {
     flex: 0 1 49%;
-
-    /* `min-inline-size` does not shrink, hence the `100%` arm. `max-inline-size`
-       is cleared because beside a logo the width is the flex basis, not the
-       no-logo measure set further down. */
     min-inline-size: min(36.5rem, 100%);
     max-inline-size: none;
   }
 
   .left .with-logo .logo {
     flex: 0 1 31.75%;
-
-    /* `min-inline-size` does not shrink, so it needs the `100%` arm or a phone
-       narrower than the floor overflows the page sideways */
     min-inline-size: min(12.5rem, 100%);
   }
 
@@ -195,23 +155,12 @@ const style = {
     text-align: center;
   }
 
-  /* Figma gives the text 930px of the 1248px frame when no logo sits beside it
-     — 74.5% — against 612px when one does. The floor keeps the measure usable
-     once the frame is small, and the `100%` ceiling stops the floor overflowing
-     below it. `clamp()` cannot express this: it resolves to `max(MIN, min(VAL,
-     MAX))`, so on a narrow frame the floor would win over the ceiling and the
-     text would run off the page. */
   .left .stack {
     align-items: flex-start;
     max-inline-size: min(100%, max(74.5%, 36.5rem));
     text-align: left;
   }
 
-  /* Figma nests the text column's gaps: 8px badge→heading (the `gap` above),
-     16px heading→subheading, 40px →CTA. The subheading rule is the delta on
-     top of the gap; `.actions` keeps the flat `--space-10` it has always had,
-     which lands 8px over Figma — left alone so this change does not move the
-     homepage. */
   .subheading {
     margin-block-start: calc(var(--space-4) - var(--space-2));
     color: var(--color-text-on-media-muted);
@@ -221,8 +170,6 @@ const style = {
     margin-block-start: var(--space-10);
   }
 
-  /* the logo is written after the stack so the left row reads in the order it
-     renders, text then logo; the centered layout lifts it back out of flow */
   .center .logo {
     position: absolute;
     inset-block-start: var(--space-10);
@@ -232,11 +179,7 @@ const style = {
     justify-content: center;
   }
 
-  /* the logo would collide with the stack once the viewport is short. Only
-     `full` runs out of room — the other heights are sized by their content. */
   @media (height <= 40rem) {
-    /* `order`, because the logo sits after the stack in the markup so the left
-       row can read text-then-logo; dropped back into flow it belongs above */
     .center.full .logo {
       position: static;
       order: -1;
@@ -247,7 +190,4 @@ const style = {
       place-content: center;
     }
   }
-
-  /* no breakpoint stacks this row: `flex-wrap` above drops the logo under the
-     stack once the floors stop fitting, around a 60rem viewport */
 </style>

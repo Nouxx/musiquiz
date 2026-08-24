@@ -150,16 +150,6 @@ function pathToRow(price: PriceValue, field: string): Path | undefined {
   return price._key ? [{ _key: price._key }, field] : undefined;
 }
 
-/**
- * The rules a single price cannot check on its own, because they depend on how
- * many other prices there are:
- *
- * - one price applies whatever the group size, so it carries no counts
- * - several prices each need a lower bound to tell them apart
- *
- * an upper bound without a lower one is caught by the second rule, since it is
- * the missing lower bound that makes it wrong
- */
 function priceListErrors(prices: PriceValue[] | undefined) {
   if (!prices?.length) return [];
 
@@ -192,9 +182,6 @@ function priceListErrors(prices: PriceValue[] | undefined) {
     }));
 }
 
-// one price band: a player range, what it costs per player, and the condition
-// attached to it. lives here rather than in shared/ because venueGame is its
-// only consumer, the way cardsGrid keeps cardType
 export const priceType = defineType({
   name: "price",
   title: "Price",
@@ -278,9 +265,6 @@ export const priceType = defineType({
   },
 });
 
-// one document per (venue, game) pair
-// unlike a venue page the id cannot enforce the pair
-// because the editor picks the two references that would compose it
 export const venueGameType = defineType({
   name: "venueGame",
   title: "Venue Game",

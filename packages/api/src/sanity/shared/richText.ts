@@ -1,15 +1,6 @@
 import type { Lang } from "@repo/utils/lang";
 import { z } from "zod";
 
-/**
- * Authored multi-paragraph content — paragraphs, bold, links.
- *
- * The projection stays close to what Portable Text actually stores, because a
- * mark is either a decorator name (`"strong"`) or a key into `markDefs`, and
- * resolving that is a join. GROQ can express it and states it badly, so the
- * join is done in `@repo/services` instead and this layer only proves the
- * payload has the shape that join expects.
- */
 export function richTextProjection({
   field,
   lang,
