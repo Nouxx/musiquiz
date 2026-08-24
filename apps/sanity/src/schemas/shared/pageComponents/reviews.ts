@@ -43,7 +43,8 @@ export const reviewsType = defineType({
     defineField({
       name: "searchTerm",
       title: "Word filter",
-      description: "Filter reviews with a word, example: 'evjf' (case insensitive)",
+      description:
+        "Filter reviews with a word, example: 'evjf' (case insensitive)",
       type: "string",
     }),
   ],
@@ -54,7 +55,7 @@ export const reviewsType = defineType({
     prepare({ venueTitle }: { venueTitle: string | undefined }) {
       return {
         title: "Reviews",
-        subtitle: venueTitle ? `for ${venueTitle}` : "Global"
+        subtitle: venueTitle ? `for ${venueTitle}` : "Global",
       };
     },
   },
