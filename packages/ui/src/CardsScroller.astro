@@ -12,7 +12,7 @@ interface Props {
   additionalCtas?: CtaLink[];
   cta?: CtaLink;
   ctaTone?: "red" | "blue";
-  cards?: DeckCard[];
+  cards: DeckCard[];
   nextCardLabel: string;
 }
 
@@ -44,11 +44,7 @@ const {
     </div>
 
     <div slot="second">
-      {
-        cards && cards.length > 0 && (
-          <CardDeck {cards} nextLabel={nextCardLabel} />
-        )
-      }
+      <CardDeck {cards} nextLabel={nextCardLabel} />
     </div>
   </TwoBlocks>
 </Section>

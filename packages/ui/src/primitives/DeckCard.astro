@@ -9,6 +9,7 @@ export type Props = DeckCard;
 
 const { media, title, body } = Astro.props;
 ---
+
 <Card as="article" class="deck-card">
   <RemoteImage image={media} variant="deck-media" />
 

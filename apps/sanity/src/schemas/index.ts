@@ -18,7 +18,10 @@ import { findUsType } from "./shared/pageComponents/findUs";
 import { clientContactFormType } from "./shared/pageComponents/clientContactForm";
 import { logosType } from "./shared/pageComponents/logos";
 import { faqQuestionType, faqType } from "./shared/pageComponents/faq";
-import { cardsScrollerType } from "./shared/pageComponents/cardsScroller";
+import {
+  cardsScrollerType,
+  deckCardType,
+} from "./shared/pageComponents/cardsScroller";
 import { textBlockType } from "./shared/textBlock";
 
 export const schemaTypes = [
@@ -46,5 +49,6 @@ export const schemaTypes = [
   faqType,
   faqQuestionType,
   cardsScrollerType,
+  deckCardType,
   textBlockType,
 ];

@@ -4,6 +4,7 @@ import type { PageComponent } from "../pageComponent.types";
 import { toCard } from "./toCard";
 import { toCmsImage } from "./toCmsImage";
 import { toCta } from "./toCta";
+import { toDeckCard } from "./toDeckCard";
 import { toPricesGame } from "./toPricesGame";
 import { toRichText } from "./toRichText";
 import { toTextBlock } from "./toTextBlock";
@@ -113,6 +114,7 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
       return {
         type: "cardsScroller",
         textBlock: toTextBlock(data.textBlock),
+        cards: data.cards.map((card) => toDeckCard(card)),
       };
     }
 

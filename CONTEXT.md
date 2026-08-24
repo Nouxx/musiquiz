@@ -92,6 +92,10 @@ _Avoid_: accordion (that is the UI Component inside it), questions block, help s
 **Site Chrome**:
 The one kind of Feature Component that fetches its own data instead of receiving it from a Page — `Header`, `Footer`. Its content is site-wide settings, so it belongs to no single page and threading it through every Page would be noise. Any other Feature Component takes its data as props.
 
+**Card Deck**:
+A pile of **Deck Cards** stacked in one place, one in front and the rest behind it, that a visitor clicks or swipes through. It never runs out: the card dealt away goes to the back. A Deck Card is a photo over a title and a Rich Text body — it carries no badge and no call to action, which is what separates it from a Card. Two to six per deck.
+_Avoid_: carousel, slider, stack
+
 ## Layouts
 
 **Layout**:

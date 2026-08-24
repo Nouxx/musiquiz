@@ -118,9 +118,16 @@ export type TextBlock = {
   ctaTone: "red" | "blue";
 };
 
+export type DeckCard = {
+  media: CmsImage;
+  title: string;
+  body: RichText;
+};
+
 type CardsScroller = {
   type: "cardsScroller";
   textBlock: TextBlock;
+  cards: DeckCard[];
 };
 
 type Faq = {

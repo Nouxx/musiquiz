@@ -164,7 +164,12 @@ function faqProjection({ lang }: { lang: Lang }) {
 function cardsScrollerProjection({ lang }: { lang: Lang }) {
   return `
     _type == "cardsScroller" => {
-      "textBlock": ${textBlockProjection({ field: "textBlock", lang })}
+      "textBlock": ${textBlockProjection({ field: "textBlock", lang })},
+      cards[]{
+        "media": media ${imageProjection({ lang })},
+        "title": title[language == "${lang}"][0].value,
+        "body": ${richTextProjection({ field: "body", lang })}
+      }
     }
   `;
 }
@@ -315,9 +320,18 @@ const sanityFaqSchema = z.strictObject({
   images: z.array(sanityImageSchema).min(6).max(12),
 });
 
+const sanityDeckCardSchema = z.strictObject({
+  media: sanityImageSchema,
+  title: z.string().min(1),
+  body: sanityRichTextSchema,
+});
+
+export type SanityDeckCard = z.infer<typeof sanityDeckCardSchema>;
+
 const sanityCardsScrollerSchema = z.strictObject({
   _type: z.literal("cardsScroller"),
   textBlock: sanityTextBlockSchema,
+  cards: z.array(sanityDeckCardSchema).min(2).max(6),
 });
 
 export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
