@@ -1,0 +1,45 @@
+---
+import Badge from "@repo/ui/Badge";
+import PageCover from "@repo/ui/PageCover";
+import Button from "@repo/ui/primitives/Button";
+import RemoteImage from "@repo/ui/primitives/RemoteImage";
+import Text from "@repo/ui/primitives/Text";
+import type { PageCover as PageCoverData } from "@repo/services/cms/types";
+
+interface Props {
+  data: PageCoverData;
+}
+
+const { media, logo, badge, heading, subHeading, cta } = Astro.props.data;
+---
+
+<PageCover align="left">
+  <RemoteImage slot="media" image={media} variant="cover" loading="eager" />
+
+  {
+    logo && (
+      <RemoteImage
+        slot="logo"
+        image={logo}
+        variant="cover-logo-side"
+        loading="eager"
+      />
+    )
+  }
+
+  {badge && <Badge slot="badge">{badge}</Badge>}
+
+  <Text slot="heading" as="h1" variant="title-h1">{heading}</Text>
+
+  {
+    subHeading && (
+      <Text slot="subheading" variant="paragraph-base">
+        {subHeading}
+      </Text>
+    )
+  }
+
+  <Button slot="actions" as="a" href={cta.url} icon="arrow-right">
+    {cta.label}
+  </Button>
+</PageCover>

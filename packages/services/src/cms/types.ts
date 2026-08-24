@@ -10,6 +10,20 @@ export type CmsImage = {
   alt: string;
 };
 
+export type RichTextSpan = {
+  text: string;
+  bold?: boolean;
+  /** turns the span into a link */
+  href?: string;
+};
+
+export type RichTextNode = {
+  type: "paragraph";
+  spans: RichTextSpan[];
+};
+
+export type RichText = RichTextNode[];
+
 export type Homepage = {
   logo: CmsImage;
   cover: CmsImage;
@@ -23,17 +37,30 @@ export type Homepage = {
   components: PageComponent[];
 };
 
-export type VenueHomepage = {
-  pageCover: {
-    media: CmsImage;
-    badge: string | undefined;
-    heading: string;
-    subHeading: string;
-    cta: {
-      label: string;
-      url: string;
-    };
+export type PageCover = {
+  media: CmsImage;
+  // the game's own mark, not the venue logo the header carries
+  logo: CmsImage | undefined;
+  badge: string | undefined;
+  heading: string;
+  subHeading: string | undefined;
+  cta: {
+    label: string;
+    url: string;
   };
+};
+
+export type VenuePageType = "home" | "gift" | "book";
+
+export type VenuePage = {
+  pageCover: PageCover;
+  components: PageComponent[];
+};
+
+export type VenueGamePage = {
+  gameName: string;
+  pageCover: PageCover;
+  components: PageComponent[];
 };
 
 export type Header = {

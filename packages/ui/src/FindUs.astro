@@ -1,0 +1,118 @@
+---
+import Badge from "./Badge.astro";
+import ContactRow from "./findUs/ContactRow.astro";
+import Button from "./primitives/Button.astro";
+import Card from "./primitives/Card.astro";
+import TileMap from "./primitives/TileMap.astro";
+import RemoteImage from "./primitives/RemoteImage.astro";
+import Text from "./primitives/Text.astro";
+import TwoBlocks from "./primitives/TwoBlocks.astro";
+import Section from "./Section.astro";
+import type { ContactFact, CtaLink, ImageSource } from "./types";
+
+interface Props {
+  media: ImageSource;
+  badge: string;
+  title: string;
+  facts: ContactFact[];
+  cta: CtaLink;
+  map: { lat: number; lng: number; title: string };
+}
+
+const { media, badge, title, facts, cta, map } = Astro.props;
+---
+
+<Section surface="media" width="content">
+  <RemoteImage slot="media" image={media} variant="cover" />
+
+  <TwoBlocks>
+    <Card slot="first" border="translucent" surface="glass" class="panel">
+      <div class="heading">
+        <Badge color="dark">{badge}</Badge>
+
+        <Text as="h2" variant="title-h3">{title}</Text>
+      </div>
+
+      <div class="facts">
+        {
+          facts.map((fact) => (
+            <ContactRow
+              icon={fact.icon}
+              label={fact.label}
+              title={fact.title}
+              body={fact.body}
+            />
+          ))
+        }
+      </div>
+
+      <Button
+        as="a"
+        href={cta.url}
+        tone="blue"
+        target="_blank"
+        rel="noopener"
+        icon="arrow-right"
+        iconPosition="trailing"
+      >
+        {cta.label}
+      </Button>
+    </Card>
+
+    <div slot="second" class="map-block">
+      <Card border="thick" class="map-card">
+        <TileMap lat={map.lat} lng={map.lng} title={map.title} />
+      </Card>
+    </div>
+  </TwoBlocks>
+</Section>
+
+<style>
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-items: flex-start;
+    padding: var(--space-6);
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+
+  .facts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-self: stretch;
+  }
+
+  .map-block {
+    display: flex;
+    aspect-ratio: 1;
+  }
+
+  .map-card {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  /* 60rem — two columns stop fitting (styles/breakpoints.css) */
+  @media (width >= 60rem) {
+    .panel {
+      gap: var(--space-10);
+      padding: var(--space-10);
+    }
+
+    .facts {
+      gap: var(--space-4);
+    }
+
+    .map-block {
+      aspect-ratio: auto;
+    }
+  }
+</style>

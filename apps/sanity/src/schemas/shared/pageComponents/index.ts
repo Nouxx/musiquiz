@@ -6,6 +6,14 @@ export const pageComponentsType = defineType({
   type: "array",
   of: [
     defineArrayMember({ type: "rollingBanner" }),
-    defineArrayMember({ type: "dummyComponent" }),
+    defineArrayMember({ type: "cardsGrid" }),
+    defineArrayMember({ type: "carousel" }),
+    defineArrayMember({ type: "reviews" }),
+    defineArrayMember({ type: "venuePrices" }),
+    defineArrayMember({ type: "gamePrices" }),
+    defineArrayMember({ type: "findUs" }),
+    defineArrayMember({ type: "clientContactForm" }),
+    defineArrayMember({ type: "logos" }),
+    defineArrayMember({ type: "faq" }),
   ],
 });

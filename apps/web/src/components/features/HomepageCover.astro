@@ -24,8 +24,8 @@ const t = getT(getLang(Astro));
   <RemoteImage slot="media" image={cover} variant="cover" loading="eager" />
   <RemoteImage slot="logo" image={logo} variant="cover-logo" loading="eager" />
 
-  <Badge>{badgeLabel}</Badge>
-  <Text as="h1" variant="title-h1">{heading}</Text>
+  <Badge slot="badge">{badgeLabel}</Badge>
+  <Text slot="heading" as="h1" variant="title-h1">{heading}</Text>
 
   <Button slot="actions" as="a" href="#venues" icon="angle-down">
     {t("cover.chooseVenue")}

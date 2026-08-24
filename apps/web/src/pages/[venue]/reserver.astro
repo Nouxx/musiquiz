@@ -1,0 +1,16 @@
+---
+import VenuePage from "../../components/pages/VenuePage.astro";
+import VenueLayout from "../../layouts/VenueLayout.astro";
+import { getVenuesSlugParameters } from "../../libs/getVenuesSlugParameters";
+
+export async function getStaticPaths() {
+  const params = await getVenuesSlugParameters();
+  return params;
+}
+
+const { venue } = Astro.params;
+---
+
+<VenueLayout venueSlug={venue}>
+  <VenuePage venueSlug={venue} pageType="book" />
+</VenueLayout>

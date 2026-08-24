@@ -1,0 +1,34 @@
+---
+import GameOffer from "./prices/GameOffer.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { PriceOffer } from "./types";
+
+interface Props {
+  title: string;
+  surface?: "default" | "muted";
+  // the single game this section is pinned to, so there is nothing to pick
+  // between and no radio group — the offer is simply shown
+  game: PriceOffer;
+  perPersonLabel: string;
+}
+
+const { title, surface = "muted", game, perPersonLabel } = Astro.props;
+---
+
+<Section {surface} width="content">
+  <div class="prices">
+    <Text as="h2" variant="title-h2">{title}</Text>
+
+    <GameOffer offer={game} {perPersonLabel} />
+  </div>
+</Section>
+
+<style>
+  .prices {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    text-align: center;
+  }
+</style>

@@ -1,0 +1,60 @@
+---
+import Badge from "../Badge.astro";
+import Card from "../primitives/Card.astro";
+import Text from "../primitives/Text.astro";
+import type { PriceTier } from "../types";
+
+interface Props {
+  tier: PriceTier;
+  perPersonLabel: string;
+  class?: string;
+}
+
+const { tier, perPersonLabel, class: className } = Astro.props;
+---
+
+<Card border="thick" class:list={["card", className]}>
+  <Badge color="light" size="small" icon={tier.icon}>
+    {tier.label}
+  </Badge>
+
+  <div class="amount">
+    <Text as="p" variant="title-h3">
+      {tier.amountWithCurrency}
+    </Text>
+
+    <Text as="p" variant="paragraph-base">
+      {perPersonLabel}
+    </Text>
+  </div>
+
+  {
+    tier.note && (
+      <Text as="p" variant="paragraph-base">
+        {tier.note}
+      </Text>
+    )
+  }
+</Card>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    text-align: left;
+  }
+
+  .amount {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .amount p:last-child {
+    color: var(--color-text-muted);
+    text-align: right;
+  }
+</style>

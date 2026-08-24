@@ -1,0 +1,98 @@
+---
+import Card from "./Card.astro";
+import IconChip from "./IconChip.astro";
+import Text from "./Text.astro";
+
+interface Props {
+  /** the exclusive-accordion group; every item of one accordion shares it */
+  name: string;
+  question: string;
+  /** open on load. Only one item per group may set it */
+  open?: boolean;
+}
+
+const { name, question, open = false } = Astro.props;
+---
+
+{
+  /*
+   * `name` is what makes this an exclusive accordion — opening one item closes
+   * its siblings, with no script. Browsers older than the 2024 baseline ignore
+   * the attribute and simply allow several items open at once.
+   */
+}
+<li>
+  <Card as="details" border="custom" class="details" {name} {open}>
+    <summary class="summary">
+      <span class="question">
+        <Text variant="title-base">{question}</Text>
+      </span>
+
+      <span class="chevron">
+        <IconChip name="angle-down" tone="muted" size="m" />
+      </span>
+    </summary>
+
+    <div class="answer">
+      <slot />
+    </div>
+  </Card>
+</li>
+
+<style>
+  .details {
+    --card-ring-inset: 1px 3px 3px 1px;
+    --card-ring-color: var(--color-border);
+    --card-radius: var(--radius-m);
+
+    background-color: var(--color-surface);
+  }
+
+  .details[open] {
+    --card-ring-image: var(--color-border-brand);
+  }
+
+  .summary {
+    display: flex;
+    gap: var(--space-6);
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-6);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .details[open] .summary {
+    padding-block-end: var(--space-2);
+  }
+
+  .question {
+    min-inline-size: 0; /* lets a long question wrap instead of shoving the chip */
+  }
+
+  .chevron {
+    display: inline-flex;
+    flex: none;
+    transition: transform 200ms ease;
+  }
+
+  .details[open] .chevron {
+    transform: rotate(180deg);
+  }
+
+  .answer {
+    padding-inline: var(--space-6);
+    padding-block: var(--space-2) var(--space-6);
+    color: var(--color-text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chevron {
+      transition: none;
+    }
+  }
+</style>

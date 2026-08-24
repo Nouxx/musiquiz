@@ -1,0 +1,31 @@
+---
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import VenueFooter from "../features/VenueFooter.astro";
+import VenuePageCover from "../features/VenuePageCover.astro";
+import PageComponents from "../features/PageComponents.astro";
+import { getVenuePageData } from "@repo/services/cms/getVenuePageData";
+import type { VenuePageType } from "@repo/services/cms/types";
+
+interface Props {
+  venueSlug: string;
+  pageType: VenuePageType;
+}
+
+const { venueSlug, pageType } = Astro.props;
+
+const lang = getLang(Astro);
+
+const pageData = await getVenuePageData({
+  lang,
+  venueSlug,
+  pageType,
+  config: getSanityConfigFromEnvironment(),
+});
+---
+
+<VenuePageCover data={pageData.pageCover} />
+
+<PageComponents components={pageData.components} />
+
+<VenueFooter {venueSlug} />

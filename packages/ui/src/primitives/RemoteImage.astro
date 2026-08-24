@@ -30,7 +30,32 @@ const variants = {
     sizes: "(width < 48rem) 120px, 160px",
   },
   "cover-logo": { widths: [200, 400, 600], sizes: "200px" },
+  "cover-logo-side": {
+    widths: [400, 800, 1200],
+    // 78rem is where the frame stops growing and the logo settles at 396px
+    sizes: "(width < 60rem) 300px, (width < 78rem) 31.75vw, 396px",
+  },
   "payment-icon": { widths: [32, 64, 96], sizes: "32px" },
+  "card-media": {
+    widths: [300, 400, 600, 800],
+    sizes: "(width < 48rem) 100vw, (width < 78rem) 33vw, 400px",
+  },
+  "carousel-media": { widths: [282, 564, 846], sizes: "282px" },
+  // hidden below 60rem, where the contact form takes the full width
+  "mini-carousel-media": {
+    widths: [400, 700, 1000, 1400],
+    sizes: "(width < 60rem) 1px, min(604px, 47vw)",
+  },
+  // hidden below 60rem, where the tiers take the full width
+  "prices-media": {
+    widths: [400, 700, 1000, 1400],
+    sizes: "(width < 60rem) 1px, 60vw",
+  },
+  "review-avatar": { widths: [40, 80, 120], sizes: "40px" },
+  // hidden below 72rem, where the FAQ drops its image strip and the accordion takes the full width (see styles/breakpoints.css)
+  "faq-media": { widths: [260, 520, 780], sizes: "(width < 72rem) 1px, 260px" },
+  "logo-strip": { widths: [120, 240, 360], sizes: "120px" },
+  "logo-strip-large": { widths: [160, 320, 480], sizes: "160px" },
   cover: { widths: [640, 960, 1280, 1920, 2560], sizes: "100vw" },
 };
 
@@ -113,9 +138,63 @@ const srcSetWidths =
     height: auto;
   }
 
+  /* should be sized by a parent Flex */
+  .cover-logo-side {
+    width: 100%;
+    height: auto;
+  }
+
   .payment-icon {
     width: 32px;
     height: auto;
+  }
+
+  .card-media {
+    width: 100%;
+    height: 240px; /* fixed height so that every cards in a grid have the same image height */
+    object-fit: cover;
+  }
+
+  .carousel-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .mini-carousel-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .prices-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .faq-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .logo-strip {
+    width: auto;
+    height: var(--logos-box-block, 80px);
+    max-width: var(--logos-box-inline, 120px);
+    object-fit: contain;
+  }
+
+  .logo-strip-large {
+    width: auto;
+    height: var(--logos-box-block, 176px);
+    max-width: var(--logos-box-inline, 160px);
+    object-fit: contain;
   }
 
   .cover {

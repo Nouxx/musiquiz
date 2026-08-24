@@ -1,11 +1,58 @@
-<section class="page-cover">
-  <div class="media"><slot name="media" /></div>
+---
+type Props = {
+  align?: "center" | "left";
+  height?: "full" | "l" | "m";
+} & (
+  | { background?: "image" }
+  | { background: "gradient"; surface: "brand" | "vivid" }
+);
 
-  <div class="logo"><slot name="logo" /></div>
+const props = Astro.props;
 
-  <div class="stack">
-    <slot />
-    <div class="actions"><slot name="actions" /></div>
+const align = props.align ?? "center";
+const height = props.height ?? "full";
+const isGradient = props.background === "gradient";
+
+async function slotHtml(name: string) {
+  if (!Astro.slots.has(name)) {
+    return "";
+  }
+
+  return (await Astro.slots.render(name)).trim();
+}
+
+const logo = await slotHtml("logo");
+const subheading = await slotHtml("subheading");
+const actions = await slotHtml("actions");
+
+const style = {
+  ...(height === "full"
+    ? {}
+    : { "--cover-spacing": `var(--space-section-${height})` }),
+  ...(props.background === "gradient"
+    ? { "--cover-surface": `var(--color-surface-${props.surface})` }
+    : {}),
+};
+---
+
+<section
+  class:list={["page-cover", align, height === "full" ? "full" : "sized"]}
+  style={style}
+>
+  <div class:list={["media", isGradient && "gradient"]}>
+    {!isGradient && <slot name="media" />}
+  </div>
+
+  <div class:list={["frame", logo && "with-logo"]}>
+    <div class="stack">
+      <slot name="badge" />
+      <slot name="heading" />
+
+      {subheading && <div class="subheading" set:html={subheading} />}
+      {actions && <div class="actions" set:html={actions} />}
+    </div>
+
+    {logo && <div class="logo" set:html={logo} />}
   </div>
 </section>
 
@@ -14,13 +61,17 @@
     position: relative;
     display: grid;
     place-items: center;
-
-    /* svh, not vh: on mobile the cover must fit the visible viewport rather
-       than sit partly under the browser chrome */
-    min-block-size: 100svh;
-    padding-block: var(--space-10);
     padding-inline: var(--space-6);
     overflow: hidden;
+  }
+
+  .full {
+    min-block-size: 100svh;
+    padding-block: var(--space-10);
+  }
+
+  .sized {
+    padding-block: var(--cover-spacing);
   }
 
   /* three layers, top to bottom: the scrim (`::after`), the photo (the media
@@ -35,6 +86,10 @@
     background-image: var(--color-surface-brand);
   }
 
+  .media.gradient {
+    background-image: var(--cover-surface);
+  }
+
   .media :global(picture),
   .media :global(img) {
     display: block;
@@ -43,45 +98,95 @@
     object-fit: cover;
   }
 
-  .media::after {
+  .media:not(.gradient)::after {
     position: absolute;
     inset: 0;
     background-image: var(--color-overlay);
     content: "";
   }
 
-  .logo {
-    position: absolute;
-    inset-block-start: var(--space-10);
+  /* a grid item, so `z-index` applies without `position` — which matters, because the centered logo positions against the section, not the frame */
+  .frame {
     z-index: 2;
+    color: var(--color-text-on-media);
   }
 
-  .stack {
-    position: relative;
-    z-index: 2;
+  .center .frame {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
     align-items: center;
 
     /* the cover frame's content width, 1036px */
     max-inline-size: 64.75rem;
-    color: var(--color-text-on-media);
+  }
+
+  .left .frame {
+    inline-size: 100%;
+    max-inline-size: var(--size-content);
+  }
+
+  .left .with-logo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-10);
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .left .with-logo .stack {
+    flex: 0 1 49%;
+    min-inline-size: min(36.5rem, 100%);
+    max-inline-size: none;
+  }
+
+  .left .with-logo .logo {
+    flex: 0 1 31.75%;
+    min-inline-size: min(12.5rem, 100%);
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .center .stack {
+    align-items: center;
     text-align: center;
+  }
+
+  .left .stack {
+    align-items: flex-start;
+    max-inline-size: min(100%, max(74.5%, 36.5rem));
+    text-align: left;
+  }
+
+  .subheading {
+    margin-block-start: calc(var(--space-4) - var(--space-2));
+    color: var(--color-text-on-media-muted);
   }
 
   .actions {
     margin-block-start: var(--space-10);
   }
 
-  /* the logo would collide with the stack once the viewport is short */
+  .center .logo {
+    position: absolute;
+    inset-block-start: var(--space-10);
+    inset-inline: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+  }
+
   @media (height <= 40rem) {
-    .logo {
+    .center.full .logo {
       position: static;
+      order: -1;
       margin-block-end: var(--space-6);
     }
 
-    .page-cover {
+    .center.full {
       place-content: center;
     }
   }

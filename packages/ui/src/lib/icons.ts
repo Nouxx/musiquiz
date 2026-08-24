@@ -25,6 +25,7 @@ import disc from "../icons/disc.svg?raw";
 import facebook from "../icons/facebook.svg?raw";
 import flagFrance from "../icons/flag-france.svg?raw";
 import flagUK from "../icons/flag-uk.svg?raw";
+import google from "../icons/google.svg?raw";
 import hourglass from "../icons/hourglass.svg?raw";
 import house from "../icons/house.svg?raw";
 import instagram from "../icons/instagram.svg?raw";
@@ -42,6 +43,7 @@ import question from "../icons/question.svg?raw";
 import rosette from "../icons/rosette.svg?raw";
 import search from "../icons/search.svg?raw";
 import sparkles from "../icons/sparkles.svg?raw";
+import star from "../icons/star.svg?raw";
 import tiktok from "../icons/tiktok.svg?raw";
 import user from "../icons/user.svg?raw";
 import users2 from "../icons/users-2.svg?raw";
@@ -73,6 +75,7 @@ export const icons = {
   facebook,
   "flag-france": flagFrance,
   "flag-uk": flagUK,
+  google,
   hourglass,
   house,
   instagram,
@@ -90,6 +93,7 @@ export const icons = {
   rosette,
   search,
   sparkles,
+  star,
   tiktok,
   user,
   "users-2": users2,

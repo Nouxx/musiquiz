@@ -1,0 +1,124 @@
+---
+interface Props {
+  lat: number;
+  lng: number;
+  /** names for assistive tech */
+  title: string;
+  zoom?: number;
+}
+
+const { lat, lng, title, zoom = 17 } = Astro.props;
+---
+
+<div
+  class="map"
+  role="region"
+  aria-label={title}
+  data-map
+  data-lat={lat}
+  data-lng={lng}
+  data-zoom={zoom}
+>
+</div>
+
+<script>
+  const TILES =
+    "https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png";
+
+  const ATTRIBUTION = "© OpenStreetMap © CARTO";
+  const TILE_SIZE = 256;
+
+  // start fetching a little before the map is actually on screen, so it is
+  // painted by the time it arrives rather than after
+  const ROOT_MARGIN = "200px";
+
+  async function loadLeaflet() {
+    const [leaflet] = await Promise.all([
+      import("leaflet"),
+      import("leaflet/dist/leaflet.css"),
+    ]);
+
+    return leaflet;
+  }
+
+  async function renderMap(element: HTMLElement) {
+    const { lat, lng, zoom } = element.dataset;
+
+    if (!lat || !lng || !zoom) return;
+
+    const { divIcon, map: createMap, marker, tileLayer } = await loadLeaflet();
+
+    const centre: [number, number] = [Number(lat), Number(lng)];
+
+    const map = createMap(element, {
+      center: centre,
+      zoom: Number(zoom),
+      // the page must stay scrollable when the cursor crosses the map
+      scrollWheelZoom: false,
+    });
+
+    tileLayer(TILES, {
+      attribution: ATTRIBUTION,
+      tileSize: TILE_SIZE,
+      maxZoom: 20,
+      detectRetina: false,
+    }).addTo(map);
+
+    // not `marker`'s default icon: Leaflet resolves its PNGs relative to its
+    // own stylesheet, which a bundler breaks — the classic broken-marker 404.
+    // A `divIcon` is an empty element styled from the rules below.
+    marker(centre, {
+      icon: divIcon({
+        className: "musiquiz-map-pin",
+        iconSize: [18, 18],
+        iconAnchor: [9, 9],
+      }),
+    }).addTo(map);
+  }
+
+  const elements = document.querySelectorAll<HTMLElement>("[data-map]");
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+
+        // one map per element, however many times it crosses the viewport
+        observer.unobserve(entry.target);
+
+        void renderMap(entry.target as HTMLElement);
+      }
+    },
+    { rootMargin: ROOT_MARGIN },
+  );
+
+  for (const element of elements) {
+    observer.observe(element);
+  }
+</script>
+
+<style>
+  .map {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Leaflet builds its own chrome at runtime, so these never match a scoped
+     rule — but they are all inside `.map`, so `:global` stays contained to
+     this component's subtree rather than leaking to the page. */
+  .map :global(.leaflet-container) {
+    font: var(--paragraph-xs);
+    background: var(--color-surface-muted);
+  }
+
+  .map :global(.leaflet-control-attribution) {
+    font: var(--paragraph-xs);
+  }
+
+  .map :global(.musiquiz-map-pin) {
+    background: var(--color-accent);
+    border: 2px solid var(--white);
+    border-radius: var(--radius-pill);
+    box-shadow: 0 1px 6px rgb(18 5 0 / 50%);
+  }
+</style>

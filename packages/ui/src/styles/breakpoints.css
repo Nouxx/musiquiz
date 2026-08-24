@@ -30,16 +30,116 @@
    against available width) — deliberately not done.
 
    ------------------------------------------------------------
-   60rem — footer columns stacked
+   60rem — footer columns stacked / cover columns stacked
+           / reviews columns stacked / venue prices columns stacked
+           / TwoBlocks split
    ------------------------------------------------------------
    Used by footer/FooterColumn.astro and footer/FooterSection.astro.
    Figma step, no derivation recorded.
+
+   Reviews.astro lands on the same number for its text-column / track row.
+   Reused rather than derived: it is the same decision those two make, and at
+   960px the 325px text column plus the 80px gap still leaves ~1.4 cards
+   visible, so the row is doing real work right up to the flip. Below it the
+   arrows sit under the body, which is the order the mobile sheet draws.
+
+   PageCover.astro lands on the same number for `align="left"` without
+   using a query for it. That row is a wrapping flex row, like the footer
+   band above: the text and the logo carry floors of 36.5rem and 12.5rem,
+   and 36.5 + 12.5 + the 2.5rem gap stops fitting a 57rem container, which
+   is a 60rem viewport once the `--space-6` gutters come off. Change either
+   floor and the wrap moves — it is a consequence, not a setting.
+
+   VenuePrices.astro lands on the same number for its image / price-tier row.
+   Reused, not derived: it is the same "two columns stop fitting" decision.
+   Below it the image sits above the tiers, and the tiers lose their 307px
+   basis so they span the column.
+
+   primitives/TwoBlocks.astro lands on the same number for its 1 + 1 row.
+   Reused, not derived, for the same reason VenuePrices is: it is the same
+   "two columns stop fitting" decision. Deriving it instead would mean picking
+   a floor for each block, and one of the two is an image, which has none.
+
+   Three things follow TwoBlocks rather than deciding anything themselves, and
+   must move if it moves: FindUs.astro steps its card padding 24px -> 40px and
+   its row spacing there; findUs/ContactRow.astro turns its chip-over-text
+   stack into a chip-beside-text row and reveals the row's label there; and
+   RemoteImage.astro quotes it in the `map` variant's `sizes` string, which is
+   TS — below the split the map is full width, above it half.
+
+   RemoteImage.astro quotes both 60rem and 78rem in `cover-logo-side`'s
+   `sizes` string, which is TS. Neither is a media query: the logo is sized
+   by ratio (31.75% of the cover frame), 78rem is where that frame stops
+   growing and the ratio settles at 396px, and 60rem is the wrap above.
+   The string only approximates the curve — deliberately erring large,
+   since an over-large `sizes` costs bytes and an under-large one costs
+   sharpness. It needs revisiting only if those floors or the ratio move.
+
+   ------------------------------------------------------------
+   72rem — FAQ image strip shown
+   ------------------------------------------------------------
+   Used by Faq.astro for its accordion / image-strip row, and quoted by
+   RemoteImage.astro in the `faq-media` variant's `sizes` string, which is TS
+   and must be edited in step.
+
+   Derived: the strip is drawn at a fixed 544px (two 260px columns and the
+   24px between them) and sits 120px from the accordion, so the row needs
+   48px of gutters + 544 + 120 + whatever the accordion column floors at.
+   440px is that floor — roughly 60 characters at the 14px answer size, below
+   which an answer reads as a column of fragments. 48 + 544 + 120 + 440 =
+   1152px = 72rem.
+
+   Below it the strip is not rendered at all: the sheet's mobile design
+   replaces it with a carousel we deliberately do not build, so the section
+   is badge + title + accordion at full width. Move the strip width, the gap
+   or the floor and this number moves with them.
+
+   ------------------------------------------------------------
+   64rem and 88rem — carousel slot count
+   ------------------------------------------------------------
+   Used by Carousel.astro, which renders a fixed number of whole images per
+   band: 5 above 88rem, 3 between, and "as many as fit plus a peek" below.
+
+   64rem is where three full-size (281.6px) images fit exactly, so the peek
+   runs out rather than being cut off: at 1023px you see three whole images
+   and an 11px sliver, at 1024px the sliver goes and nothing resizes. The
+   earlier 48rem boundary dropped the image 281.6 → 205.6 *as the viewport
+   widened*, which reads as a bug rather than a layout change.
+
+   88rem (1408px) rather than 96rem so a 1440px laptop gets five images, with
+   32px of headroom for a classic scrollbar. The cost is a −21% step at the
+   switch, because the 3-band sits at its cap right up to the boundary —
+   inherent to changing slot count at a fixed width, not to the value.
+
+   Both also gate the valley depth (0/120/240 by slot) and, at 88rem only, the
+   header tuck. Change either number and those move with it.
 
    ------------------------------------------------------------
    48rem — footer logo step
    ------------------------------------------------------------
    Used by RemoteImage.astro for `footer-logo` (120px → 160px), in the
    stylesheet and in its `sizes` string. Figma step, no derivation recorded.
+
+   ------------------------------------------------------------
+   24rem — header CTA dropped
+   ------------------------------------------------------------
+   Used by Header.astro. Below it the collapsed header row stops fitting and
+   the row overflows the viewport, which shows as a band of page background
+   past the right edge on a 320px phone.
+
+   Derived from the collapsed row's fixed parts: `--space-6` gutter on each
+   side (3rem) + the 140px logo (8.75rem) + the row's `--space-6` gap (1.5rem)
+   + the bar's `--space-3` gap (0.75rem) + the burger chip (2.25rem) = 16.25rem,
+   leaving 7.75rem for the CTA pill. The pill measures `--space-6` of padding
+   on each side (3rem) plus its label, and the label is the static i18n string
+   `header.book` — "Réserver" in the worst case, roughly 4rem at `title-base`.
+   Rounded up half a rem because that label width is estimated, not measured:
+   a longer translation moves this number, unlike the Sanity-driven nav labels
+   above.
+
+   Effect: 320, 360 and 375px viewports drop the CTA and keep only logo +
+   burger; 390px and up keep it. Booking stays reachable below 24rem through
+   the CTA that `MobileMenu` renders inside the burger sheet.
 
    ------------------------------------------------------------
    If this list grows

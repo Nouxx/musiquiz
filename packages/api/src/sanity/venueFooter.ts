@@ -35,11 +35,10 @@ function venueFooterQuery({
       mail,
       phone,
       googleMapsLink,
-      "offerings": offerings[]{
-        "game": game->{
-          name,
-          "slug": slug.current
-        }
+      "games": *[_type == "venueGame" && venue._ref == ^._id]
+        | order(coalesce(game->displayOrder, 999) asc, game->name asc){
+        "name": game->name,
+        "slug": game->slug.current
       }
     }
   }`);
@@ -67,12 +66,10 @@ const sanityVenueFooterSchema = z.strictObject({
     mail: z.email(),
     phone: z.string().min(1),
     googleMapsLink: z.string().nullable(),
-    offerings: z.array(
+    games: z.array(
       z.strictObject({
-        game: z.strictObject({
-          name: z.string(),
-          slug: z.string(),
-        }),
+        name: z.string(),
+        slug: z.string(),
       }),
     ),
   }),

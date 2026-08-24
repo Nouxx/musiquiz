@@ -14,6 +14,7 @@
   --white: #f7f3f0;
 
   --red-900: #4c0514;
+  --red-600: #d92363;
   --red-500: #e4314b;
   --red-100: #ffe4e4;
 
@@ -104,6 +105,9 @@
   --title-base-xl: 400 clamp(1rem, 1.169rem - 0.188vw, 1.125rem) / 1.35
     var(--font-title);
 
+  --title-base-to-xl: 400 clamp(1rem, 0.956rem + 0.188vw, 1.125rem) / 1.35
+    var(--font-title);
+
   /* 16/22 */
   --title-base: 400 1rem/1.375 var(--font-title);
 
@@ -146,16 +150,32 @@
   --space-section-m: clamp(2.5rem, 1.62rem + 3.756vw, 5rem);
   --space-section-l: clamp(4rem, 2.768rem + 5.258vw, 7.5rem);
 
+  /* `pill` is 999px rather than 50%: every box that wears it is already taller
+     than it is round, so the two draw the same shape — and this one survives a
+     label wrapping to a second line */
+  --radius-s: 8px;
+  --radius-m: 16px;
+  --radius-l: 24px;
+  --radius-pill: 999px;
+
   /* ============================================================
      SEMANTIC TOKENS
      ============================================================ */
 
   --size-content: 78rem;
+  --size-content-wide: 108rem;
+
+  /* 4.63vw is 80px at 1728px */
+  --space-gutter-wide: clamp(var(--space-6), 4.63vw, var(--space-20));
 
   --color-surface: var(--white);
   --color-surface-inverse: var(--blue-900);
   --color-surface-muted: var(--grey-100);
   --color-surface-translucent: var(--black-40);
+
+  --color-scrim: var(--blue-900-40);
+
+  --color-surface-glass: var(--blue-900-40);
 
   --color-overlay: linear-gradient(
     180deg,
@@ -167,6 +187,7 @@
   --color-text-muted: var(--grey-600);
   --color-text-inverse: var(--white);
   --color-text-on-media: var(--white);
+  --color-text-on-media-muted: var(--grey-100);
   --color-surface-on-media: var(--white-20);
   --color-text-placeholder: var(--grey-400);
 
@@ -184,6 +205,11 @@
 
   --color-border: var(--grey-200);
   --color-border-brand: var(--gradient-border);
+
+  --color-border-translucent: var(--white-20);
+
+  --color-fill-indicator: var(--grey-400);
+  --color-fill-indicator-active: var(--red-600);
 
   --color-fill-red: var(--gradient-red);
 

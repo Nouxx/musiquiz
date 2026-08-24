@@ -1,0 +1,337 @@
+---
+import Badge from "./Badge.astro";
+import Button from "./primitives/Button.astro";
+import CarouselControls from "./primitives/CarouselControls.astro";
+import RemoteImage from "./primitives/RemoteImage.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { CtaLink, ImageSource } from "./types";
+
+interface Props {
+  badge?: string;
+  title: string;
+  body: string;
+  cta?: CtaLink;
+  ctaTone?: "red" | "blue";
+  images: ImageSource[];
+  previousLabel: string;
+  nextLabel: string;
+  goToImageLabel: string;
+}
+
+const {
+  badge,
+  title,
+  body,
+  cta,
+  ctaTone = "red",
+  images,
+  previousLabel,
+  nextLabel,
+  goToImageLabel,
+} = Astro.props;
+
+// the widest band shows five slots, so a set of five never overflows there:
+// no controls, and no scroll range for the valley to ride either — that case
+// falls back to the resting offsets. See `.fits-wide` below.
+const fitsWide = images.length <= 5;
+
+const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
+---
+
+<Section surface="muted" width="wide">
+  <div class:list={["carousel", { "fits-wide": fitsWide }]} data-carousel>
+    <div class="header">
+      <div class="column">
+        <div class="intro">
+          <div class="heading">
+            {badge && <Badge color="light">{badge}</Badge>}
+
+            <Text as="h2" variant="title-h2">{title}</Text>
+          </div>
+
+          <div class="body">
+            <Text as="p" variant="paragraph-base">{body}</Text>
+          </div>
+        </div>
+
+        {
+          cta && (
+            <Button as="a" href={cta.url} tone={ctaTone}>
+              {cta.label}
+            </Button>
+          )
+        }
+
+        <div class="controls-row">
+          <CarouselControls
+            count={images.length}
+            controls={trackId}
+            slots="band"
+            flank
+            {previousLabel}
+            {nextLabel}
+            {goToImageLabel}
+          />
+        </div>
+      </div>
+    </div>
+
+    <ul
+      class="track"
+      id={trackId}
+      tabindex="0"
+      aria-label={title}
+      data-carousel-track
+    >
+      {
+        images.map((image: ImageSource) => (
+          <li>
+            <RemoteImage image={image} variant="carousel-media" />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Section>
+
+<style>
+  .carousel {
+    --image-max: 281.6px;
+    --gap: var(--space-10);
+
+    /* how much of the next image shows past the last whole one */
+    --peek: 3rem;
+
+    /* how far the deepest slot sits below the shallowest */
+    --valley-depth: 0px;
+
+    --scroll-arrow-size: 2.25rem;
+  }
+
+  .header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-block-end: var(--space-10);
+    text-align: center;
+  }
+
+  .column {
+    /* the containing block the widest band hangs its arrows off */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    align-items: center;
+
+    /* the sheet's 672px text column */
+    inline-size: min(42rem, 100%);
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-items: center;
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  /* Figma said #524B47, we use the nearest token --grey-600, as ImageCard does */
+  .body {
+    color: var(--color-text-muted);
+  }
+
+  /* the row exists so the widest band can hide the controls without reaching
+     into CarouselControls, and so its `inline-size: 100%` has the column to
+     resolve against */
+  .controls-row {
+    inline-size: 100%;
+  }
+
+  /* ---- track ------------------------------------------------------------ */
+
+  /* Below 64rem the track escapes the section's gutter so the overflowing image
+     runs to the screen edge, the way the mobile sheet draws it. The gutter comes
+     back as padding, and as `scroll-padding` so a snapped image lands on the
+     gutter rather than on the screen edge. */
+  .track {
+    display: flex;
+    gap: var(--gap);
+    align-items: start;
+
+    /* the valley pushes items down out of the line box, so the scroll port has
+       to be that much taller or it clips them */
+    padding-block: 0 var(--valley-depth);
+    padding-inline: var(--space-gutter-wide);
+    margin-inline: calc(-1 * var(--space-gutter-wide));
+    overflow-x: auto;
+    overflow-y: hidden;
+    list-style: none;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--space-gutter-wide);
+    scrollbar-width: none;
+  }
+
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .track > li {
+    position: relative;
+    flex: 0 0
+      min(
+        var(--image-max),
+        100% + var(--space-gutter-wide) - var(--gap) - var(--peek)
+      );
+    aspect-ratio: 4 / 7;
+    border-radius: var(--radius-l);
+    scroll-snap-align: start;
+    overflow: hidden;
+
+    /* resting offset. the animation below overrides it whenever the scroller should have it */
+    translate: 0 0;
+  }
+
+  .track > li::before {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    padding: 1px 1px 3px;
+    background-image: var(--color-border-brand);
+    border-radius: inherit;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    content: "";
+  }
+
+  .track > li > :global(picture) {
+    display: block;
+    block-size: 100%;
+  }
+
+  /* The travelling valley.
+
+     `contain` runs the timeline from "this item's leading edge is at the start
+     of the scroll port" to "its trailing edge is at the end", which is exactly
+     the item's slot position expressed 0..1. A three-keyframe tent over that
+     range therefore lands on the sheet's offsets exactly at rest — five slots
+     put the items at 0, .25, .5, .75, 1, giving 0/120/240/120/0 — and keeps
+     drawing a V at every position in between. */
+  .track > li {
+    animation: carousel-valley linear both;
+    animation-range: contain;
+    animation-timeline: --slot;
+    view-timeline: --slot inline;
+  }
+
+  @keyframes carousel-valley {
+    from {
+      translate: 0 0;
+    }
+
+    50% {
+      translate: 0 var(--valley-depth);
+    }
+
+    to {
+      translate: 0 0;
+    }
+  }
+
+  /* 64rem — carousel slot count. see styles/breakpoints.css */
+  @media (width >= 64rem) {
+    .carousel {
+      --valley-depth: 120px;
+    }
+
+    .track {
+      inline-size: min(100%, calc(3 * var(--image-max) + 2 * var(--gap)));
+      padding-inline: 0;
+      margin-inline: auto;
+      scroll-padding-inline: 0;
+    }
+
+    .track > li {
+      flex: 0 0 calc((100% - 2 * var(--gap)) / 3);
+    }
+
+    /* an exact band has exactly `count - slots + 1` positions, so the trailing
+       dots can be trimmed here rather than waiting for the script to measure —
+       which is what keeps them from flashing on load. The peeking band has no
+       fixed slot count, so there the script is the only way */
+    .dots > li:nth-last-child(-n + 2) {
+      display: none;
+    }
+  }
+
+  /* 64rem and 88rem — carousel slot count. see styles/breakpoints.css */
+  @media (64rem <= width < 88rem) {
+    .track > li:nth-child(3n + 2) {
+      translate: 0 var(--valley-depth);
+    }
+  }
+
+  /* 88rem — carousel slot count. see styles/breakpoints.css */
+  @media (width >= 88rem) {
+    .carousel {
+      --valley-depth: 240px;
+    }
+
+    .track {
+      inline-size: min(100%, calc(5 * var(--image-max) + 4 * var(--gap)));
+    }
+
+    .track > li {
+      flex: 0 0 calc((100% - 4 * var(--gap)) / 5);
+    }
+
+    .track > li:nth-child(5n + 2),
+    .track > li:nth-child(5n + 4) {
+      translate: 0 calc(var(--valley-depth) / 2);
+    }
+
+    .track > li:nth-child(5n + 3) {
+      translate: 0 var(--valley-depth);
+    }
+
+    .header {
+      margin-block-end: calc(-1 * var(--valley-depth) / 2);
+    }
+
+    .fits-wide .header {
+      margin-block-end: calc(-1 * var(--space-20));
+    }
+
+    .fits-wide .track > li {
+      animation: none;
+    }
+
+    .fits-wide .controls-row {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .track > li {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import { mountCarousels } from "./lib/carousel";
+
+  mountCarousels("[data-carousel]");
+</script>

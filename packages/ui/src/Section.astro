@@ -1,18 +1,33 @@
 ---
 interface Props {
-  surface?: "default" | "vivid";
+  /** when `"media"`, use the `media` slot */
+  surface?: "default" | "vivid" | "muted" | "media";
   spacing?: "l" | "m";
+  width?: "content" | "wide";
   id?: string;
 }
 
-const { surface = "default", spacing = "l", id } = Astro.props;
+const {
+  surface = "default",
+  spacing = "l",
+  width = "content",
+  id,
+} = Astro.props;
 ---
 
 <section
-  class:list={["section", surface]}
+  class:list={["section", surface, `width-${width}`]}
   style={{ "--section-spacing": `var(--space-section-${spacing})` }}
   {id}
 >
+  {
+    surface === "media" && (
+      <div class="backdrop">
+        <slot name="media" />
+      </div>
+    )
+  }
+
   <div class="content"><slot /></div>
 </section>
 
@@ -20,6 +35,12 @@ const { surface = "default", spacing = "l", id } = Astro.props;
   .section {
     padding-block: var(--section-spacing);
     padding-inline: var(--space-6);
+
+    overflow-x: clip;
+  }
+
+  .width-wide {
+    padding-inline: var(--space-gutter-wide);
   }
 
   .content {
@@ -27,8 +48,53 @@ const { surface = "default", spacing = "l", id } = Astro.props;
     margin-inline: auto;
   }
 
+  .width-wide .content {
+    max-inline-size: var(--size-content-wide);
+  }
+
   .vivid {
     color: var(--color-text-on-brand);
     background-image: var(--color-surface-vivid);
+  }
+
+  .muted {
+    background-color: var(--color-surface-muted);
+  }
+
+  /* the brand gradient shows only while the photo is still loading, or if it
+     never arrives — the scrim sits over it either way, so that state degrades
+     to the same palette rather than to bare colour. Same trick PageCover uses. */
+  .media {
+    position: relative;
+    color: var(--color-text-on-media);
+    background-image: var(--color-surface-brand);
+  }
+
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .backdrop::after {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-scrim);
+    content: "";
+  }
+
+  /* the slot is handed a RemoteImage, which sizes itself for the box it is normally placed in. Here the box is the whole section, so override it. */
+  .backdrop :global(picture),
+  .backdrop :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  /* `.backdrop` is positioned, so without a stacking context of its own the content would render under it */
+  .media .content {
+    position: relative;
+    z-index: 1;
   }
 </style>

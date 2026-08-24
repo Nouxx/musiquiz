@@ -22,6 +22,7 @@ export type Props = Options &
   (
     | (HTMLAttributes<"button"> & { as?: "button" })
     | (HTMLAttributes<"a"> & { as: "a"; href: string })
+    | (HTMLAttributes<"label"> & { as: "label" })
   );
 
 const {
@@ -69,9 +70,9 @@ const textVariant = size === "s" ? "title-s" : "title-base";
 
     max-width: fit-content;
 
-    /* 999px because at 46px tall (button) the radius already exceeds half the
+    /* a pill because at 46px tall (button) the radius already exceeds half the
        height. Useful if the button has 2 lines of text */
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     box-shadow: 0 var(--lift) 0 var(--button-border);
     transform: translateY(calc(2px - var(--lift)));
 
@@ -81,15 +82,29 @@ const textVariant = size === "s" ? "title-s" : "title-base";
   }
 
   .button:hover,
-  .button:focus-visible {
+  .button:focus-visible,
+  /* the radio a label wraps is clipped, so its own ring would be invisible */
+  .button:has(input:focus-visible) {
     --lift: 1px;
   }
 
-  .button:active {
+  .button:has(input:focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .button:active,
+  .button[aria-pressed="true"],
+  .button:has(input:checked) {
     --lift: 0px;
 
     background:
       linear-gradient(var(--color-overlay-pressed) 0 0), var(--button-fill);
+  }
+
+  /* only the real press is instant. a selected button that later becomes
+     interactive should animate when selection moves */
+  .button:active {
     transition-duration: 0s;
   }
 
@@ -106,7 +121,9 @@ const textVariant = size === "s" ? "title-s" : "title-base";
     content: "";
   }
 
-  .light:active::before {
+  .light:active::before,
+  .light[aria-pressed="true"]::before,
+  .light:has(input:checked)::before {
     background: var(--color-border-brand);
   }
 

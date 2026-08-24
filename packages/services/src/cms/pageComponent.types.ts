@@ -1,11 +1,129 @@
+import type { CmsImage, RichText } from "./types";
+
 type RollingBanner = {
   type: "rollingBanner";
   message: string;
+  color: "red" | "blue";
 };
 
-type Dummy = {
-  type: "dummyComponent";
-  text: string;
+export type Cta = {
+  label: string;
+  url: string; // todo: see how we can improve authoring experience (here the url is not checked) -> ideally in sanity studio
 };
 
-export type PageComponent = RollingBanner | Dummy;
+export type Card = {
+  media: CmsImage;
+  badge: string;
+  title: string;
+  body: string | undefined;
+  cta: Cta | undefined;
+};
+
+type CardsGrid = {
+  type: "cardsGrid";
+  heading: string;
+  body: string;
+  align: "left" | "center";
+  background: "vivid" | "muted";
+  cta: Cta | undefined;
+  cards: Card[];
+};
+
+type Carousel = {
+  type: "carousel";
+  badge: string | undefined;
+  title: string;
+  body: string;
+  cta: Cta | undefined;
+  ctaTone: "red" | "blue";
+  images: CmsImage[];
+};
+
+type Reviews = {
+  type: "reviews";
+  surface: "default" | "muted";
+};
+
+export type GamePrice = {
+  playerCountFrom: number | undefined;
+  playerCountTo: number | undefined;
+  amount: number;
+  note: string | undefined;
+};
+
+export type PricesGame = {
+  name: string;
+  image: CmsImage;
+  prices: GamePrice[];
+};
+
+type VenuePrices = {
+  type: "venuePrices";
+  title: string;
+  surface: "default" | "muted";
+  cta: Cta | undefined;
+  footnote: { title: string; body: string } | undefined;
+  venueSlug: string;
+  games: PricesGame[];
+};
+
+type GamePrices = {
+  type: "gamePrices";
+  title: string;
+  surface: "default" | "muted";
+  game: PricesGame;
+};
+
+type FindUs = {
+  type: "findUs";
+  badge: string;
+  title: string;
+  media: CmsImage;
+  venueTitle: string;
+  location: { lat: number; lng: number };
+  address: string;
+  mapsUrl: string;
+  addressNote: string;
+  openingTitle: string;
+  openingNote: string;
+  contactTitle: string;
+  contactNote: string;
+};
+
+type ClientContactForm = {
+  type: "clientContactForm";
+  images: CmsImage[];
+};
+
+type Logos = {
+  type: "logos";
+  layout: "inline" | "stacked";
+  surface: "default" | "muted";
+  badge: string;
+  title: string;
+  logos: CmsImage[];
+};
+
+export type FaqQuestion = {
+  question: string;
+  answer: RichText;
+};
+
+type Faq = {
+  type: "faq";
+  title: string;
+  questions: FaqQuestion[];
+  images: CmsImage[];
+};
+
+export type PageComponent =
+  | RollingBanner
+  | CardsGrid
+  | Carousel
+  | Reviews
+  | VenuePrices
+  | GamePrices
+  | FindUs
+  | ClientContactForm
+  | Logos
+  | Faq;

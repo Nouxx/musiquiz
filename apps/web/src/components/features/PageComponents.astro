@@ -1,22 +1,211 @@
 ---
 import type { PageComponent } from "@repo/services/cms/pageComponent.types";
+import CardsGrid from "@repo/ui/CardsGrid";
+import ClientContactForm from "@repo/ui/ClientContactForm";
+import Faq from "@repo/ui/Faq";
+import Logos from "@repo/ui/Logos";
+import FindUs from "@repo/ui/FindUs";
+import Carousel from "@repo/ui/Carousel";
 import RollingBanner from "@repo/ui/RollingBanner";
+import { getLang } from "../../libs/getLang";
+import { getT } from "../../libs/i18n";
+import Reviews from "@repo/ui/Reviews";
+import VenuePrices from "@repo/ui/VenuePrices";
+import GamePrices from "@repo/ui/GamePrices";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+import { toPriceOffer } from "../../libs/toPriceOffer";
+import { toContactFacts } from "../../libs/toContactFacts";
 
 interface Props {
   components: PageComponent[];
 }
 
 const { components } = Astro.props;
+
+const lang = getLang(Astro);
+
+const t = getT(lang);
 ---
 
 {
   components.map((component) => {
     switch (component.type) {
       case "rollingBanner": {
-        return <RollingBanner message={component.message} />;
+        return (
+          <RollingBanner message={component.message} color={component.color} />
+        );
       }
-      case "dummyComponent": {
-        return <p>{component.text}</p>;
+      case "cardsGrid": {
+        return (
+          <CardsGrid
+            heading={component.heading}
+            body={component.body}
+            align={component.align}
+            background={component.background}
+            cta={component.cta}
+            cards={component.cards}
+          />
+        );
+      }
+      case "carousel": {
+        return (
+          <Carousel
+            badge={component.badge}
+            title={component.title}
+            body={component.body}
+            cta={component.cta}
+            ctaTone={component.ctaTone}
+            images={component.images}
+            previousLabel={t("carousel.previous")}
+            nextLabel={t("carousel.next")}
+            goToImageLabel={t("carousel.goToImage")}
+          />
+        );
+      }
+      case "reviews": {
+        // todo: currently dummy data, waiting on Google connection
+        const reviews = [
+          {
+            name: "Gauthier Corion",
+            body: "Très bon moment passé entre collègues et amis !",
+            score: 5,
+          },
+          {
+            name: "Alexiaa",
+            body: "Après midi au top entre copines pour un evjf!! On a bien rigolé et surtt Céline Dion n'a qu'à bien se tenir 🤣",
+            score: 5,
+          },
+          {
+            name: "Gauthier Corion",
+            body: "Un moment inoubliable. Moment incroyable, ambiance parfaite ! L'expérience fut à la fois divertissante et conviviale, idéale pour une soirée entre amis comme pour un anniversaire un peu spécial.",
+            score: 5,
+          },
+          {
+            name: "Marie-Charlotte de Villeneuve",
+            body: "Super ambiance, on a adoré le concept !",
+            score: 4,
+          },
+          {
+            name: "Tom",
+            body: "Génial.",
+            score: 3,
+          },
+          {
+            name: "Sofia B.",
+            body: "Parfait pour un team building. Les animateurs sont au top et le format télé fonctionne vraiment bien, même pour ceux qui ne connaissent rien à la musique.",
+            score: 5,
+          },
+        ];
+        const badge = "Temoignages";
+        const title = "Ils ont testé... et approuvé !";
+        const ratingLabel = "Évaluation Trustindex :";
+        const ratingValue = "5.0 sur 5, Basée sur 2 100 avis";
+        const labels = {
+          previousLabel: t("reviews.previous"),
+          nextLabel: t("reviews.next"),
+          starsLabel: (score: number) => t("reviews.stars", { score }),
+        };
+
+        return (
+          <Reviews
+            surface={component.surface}
+            {badge}
+            {title}
+            {ratingLabel}
+            {ratingValue}
+            {reviews}
+            {...labels}
+          />
+        );
+      }
+      case "venuePrices": {
+        return (
+          <VenuePrices
+            title={component.title}
+            surface={component.surface}
+            games={component.games.map((game) =>
+              toPriceOffer({ game, t, lang }),
+            )}
+            perPersonLabel={t("prices.perPerson")}
+            bookCta={{
+              label: t("prices.book"),
+              url: getRoutesForLang(lang).venueBook(component.venueSlug),
+            }}
+            cta={component.cta}
+            footnote={component.footnote}
+          />
+        );
+      }
+      case "findUs": {
+        return (
+          <FindUs
+            media={component.media}
+            badge={component.badge}
+            title={component.title}
+            facts={toContactFacts({ component, t })}
+            cta={{
+              label: t("findUs.viewOnGoogleMaps"),
+              url: component.mapsUrl,
+            }}
+            map={{
+              ...component.location,
+              title: t("findUs.mapTitle", { venue: component.venueTitle }),
+            }}
+          />
+        );
+      }
+      case "faq": {
+        return (
+          <Faq
+            badge={t("faq.badge")}
+            title={component.title}
+            questions={component.questions}
+            images={component.images}
+          />
+        );
+      }
+      case "clientContactForm": {
+        return (
+          <ClientContactForm
+            images={component.images}
+            badge={t("contactForm.badge")}
+            title={t("contactForm.title")}
+            mediaLabel={t("contactForm.mediaLabel")}
+            previousLabel={t("carousel.previous")}
+            nextLabel={t("carousel.next")}
+            goToImageLabel={t("carousel.goToImage")}
+            firstNameLabel={t("contactForm.firstName")}
+            firstNamePlaceholder={t("contactForm.firstNamePlaceholder")}
+            mailLabel={t("contactForm.mail")}
+            mailPlaceholder={t("contactForm.mailPlaceholder")}
+            phoneLabel={t("contactForm.phone")}
+            phonePlaceholder={t("contactForm.phonePlaceholder")}
+            messageLabel={t("contactForm.message")}
+            messagePlaceholder={t("contactForm.messagePlaceholder")}
+            submitLabel={t("contactForm.submit")}
+          />
+        );
+      }
+      case "logos": {
+        return (
+          <Logos
+            layout={component.layout}
+            surface={component.surface}
+            badge={component.badge}
+            title={component.title}
+            logos={component.logos}
+          />
+        );
+      }
+      case "gamePrices": {
+        return (
+          <GamePrices
+            title={component.title}
+            surface={component.surface}
+            game={toPriceOffer({ game: component.game, t, lang })}
+            perPersonLabel={t("prices.perPerson")}
+          />
+        );
       }
     }
   })

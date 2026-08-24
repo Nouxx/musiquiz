@@ -1,0 +1,82 @@
+---
+import RemoteImage from "../primitives/RemoteImage.astro";
+import PriceCard from "./PriceCard.astro";
+import type { PriceOffer } from "../types";
+
+interface Props {
+  offer: PriceOffer;
+  perPersonLabel: string;
+}
+
+const { offer, perPersonLabel } = Astro.props;
+---
+
+<div class="offer">
+  <div class="media">
+    <RemoteImage image={offer.image} variant="prices-media" />
+  </div>
+
+  <div class="tiers">
+    {
+      offer.tiers.map((tier) => (
+        <PriceCard {tier} {perPersonLabel} class="tier" />
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .offer {
+    display: flex;
+    gap: var(--space-10);
+    align-items: stretch;
+  }
+
+  .media {
+    position: relative;
+    flex: 1 1 auto;
+    border-radius: var(--radius-l);
+    overflow: hidden;
+  }
+
+  .media::before {
+    display: block;
+    aspect-ratio: 11 / 8;
+    content: "";
+  }
+
+  .media :global(img) {
+    position: absolute;
+    inset: 0;
+  }
+
+  .tiers {
+    /* max width for a price card */
+    --tier-width: 307px;
+
+    display: flex;
+    flex: 0 0 var(--tier-width);
+    flex-direction: column;
+    gap: var(--space-6);
+    justify-content: center;
+  }
+
+  .tier {
+    max-width: var(--tier-width);
+  }
+
+  @media (width < 60rem) {
+    .media {
+      display: none;
+    }
+
+    .tiers {
+      flex: 1 1 auto;
+      flex-flow: row wrap;
+    }
+
+    .tier {
+      flex: 1 1 min(var(--tier-width), 100%);
+    }
+  }
+</style>

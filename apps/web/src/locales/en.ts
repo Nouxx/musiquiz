@@ -8,6 +8,30 @@ export const en: typeof fr = {
     badge: "Our venues",
     heading: "Find a Musi'Quiz venue near you!",
   },
+  carousel: {
+    previous: "Previous image",
+    next: "Next image",
+    goToImage: "Go to image",
+  },
+  prices: {
+    perPerson: "Per person",
+    book: "Book your activity",
+    // shown when a game has a single price: it applies whatever the group size
+    unique: "Single rate",
+    range: "From {{from}} to {{to}} players",
+    fromOnly_one: "{{count}} player and up",
+    fromOnly_other: "{{count}} players and up",
+    exact_one: "{{count}} player",
+    exact_other: "{{count}} players",
+  },
+  faq: {
+    badge: "FAQ",
+  },
+  reviews: {
+    previous: "Previous review",
+    next: "Next review",
+    stars: "{{score}} out of 5",
+  },
   header: {
     home: "Home",
     concept: "Concept",
@@ -47,6 +71,27 @@ export const en: typeof fr = {
     mailAddress: "Mail address",
     mailPlaceholder: "Your mail address",
     newsletterConsent: "I agree to receive information from Musi'Quiz",
+  },
+  findUs: {
+    address: "Address",
+    openingHours: "Opening hours",
+    contact: "Contact",
+    mapTitle: "The Musi'Quiz venue in {{venue}} on the map",
+    viewOnGoogleMaps: "View on Google Maps",
+  },
+  contactForm: {
+    badge: "Contact us",
+    title: "A question?",
+    mediaLabel: "Photos of our venues",
+    firstName: "First name",
+    firstNamePlaceholder: "Your first name",
+    mail: "Mail address",
+    mailPlaceholder: "Your mail address",
+    phone: "Phone",
+    phonePlaceholder: "Your phone number",
+    message: "Message",
+    messagePlaceholder: "Your message",
+    submit: "Send",
   },
   days: {
     monday: "Monday",

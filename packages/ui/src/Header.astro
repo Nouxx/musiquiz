@@ -99,7 +99,9 @@ const hasSocials = Astro.slots.has("socials");
         </ul>
       </nav>
 
-      <Button as="a" href={cta.url} tone="red" size="m">{cta.label}</Button>
+      <Button as="a" href={cta.url} tone="red" size="m" class="cta">
+        {cta.label}
+      </Button>
 
       <button
         class="burger"
@@ -192,7 +194,7 @@ const hasSocials = Astro.slots.has("socials");
 
     padding-block: var(--space-2);
     padding-inline: var(--space-5) var(--space-2);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
   }
 
   .bar::before {
@@ -248,7 +250,7 @@ const hasSocials = Astro.slots.has("socials");
     list-style: none;
     background-color: var(--color-surface-translucent);
     backdrop-filter: blur(8px);
-    border-radius: var(--space-6);
+    border-radius: var(--radius-l);
   }
 
   .panel :global(.menu-button[aria-current]) {
@@ -281,6 +283,14 @@ const hasSocials = Astro.slots.has("socials");
 
     .burger {
       display: block;
+    }
+  }
+
+  /* 24rem = "header CTA dropped" */
+  @media (width < 24rem) {
+    /* the sheet behind the burger carries the same CTA, so nothing is lost */
+    .cta {
+      display: none;
     }
   }
 </style>

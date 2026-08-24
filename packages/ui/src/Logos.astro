@@ -1,0 +1,308 @@
+---
+import Badge from "./Badge.astro";
+import RemoteImage from "./primitives/RemoteImage.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { ImageSource } from "./types";
+
+interface Props {
+  /** `inline` puts the heading beside the strip, `stacked` centres it above */
+  layout?: "inline" | "stacked";
+  surface?: "default" | "muted";
+  badge: string;
+  title: string;
+  logos: ImageSource[];
+}
+
+const {
+  layout = "inline",
+  surface = "default",
+  badge,
+  title,
+  logos,
+} = Astro.props;
+
+/*
+ * The strip scrolls only when it overflows, and "does it overflow" is a
+ * question about rendered widths — which CSS cannot answer and a media query
+ * cannot express against CMS content. No estimate is needed here: every logo is contained in a
+ * fixed box, so its rendered width follows from its intrinsic dimensions
+ * The whole geometry is therefore exact at build time, and
+ * the breakpoint where the strip stops overflowing is emitted as a literal.
+ *
+ * Every number the arithmetic below uses is also handed to the stylesheet as a
+ * custom property, so the two cannot drift apart.
+ */
+
+const BOXES = {
+  inline: { width: 120, height: 80, gap: 80 },
+  stacked: { width: 160, height: 176, gap: 120 },
+};
+
+const box = BOXES[layout];
+
+const SCROLL_SPEED_PX_PER_SEC = 60;
+
+const CONTENT_PX = 1248;
+const GUTTER_PX = 24;
+const HEADING_COLUMN_PX = 185;
+const HEADING_GAP_PX = 80;
+
+// 60rem — inline layout stacks. see styles/breakpoints.css
+const STACK_PX = 960;
+
+function renderedWidth(logo: ImageSource) {
+  return Math.min(box.width, (box.height * logo.width) / logo.height);
+}
+
+const halfWidth = logos.reduce(
+  (total, logo) => total + renderedWidth(logo) + box.gap,
+  0,
+);
+
+const neededWidth = halfWidth - box.gap;
+
+const durationSeconds = halfWidth / SCROLL_SPEED_PX_PER_SEC;
+
+function fittingConditions() {
+  if (layout === "stacked") {
+    if (neededWidth > CONTENT_PX) {
+      return [];
+    }
+
+    return [`(width >= ${Math.ceil(neededWidth + GUTTER_PX * 2)}px)`];
+  }
+
+  const conditions: string[] = [];
+
+  const stackedFrom = Math.ceil(neededWidth + GUTTER_PX * 2);
+
+  if (stackedFrom < STACK_PX) {
+    conditions.push(`(width >= ${stackedFrom}px) and (width < ${STACK_PX}px)`);
+  }
+
+  const asideOffset = GUTTER_PX * 2 + HEADING_COLUMN_PX + HEADING_GAP_PX;
+
+  if (neededWidth <= CONTENT_PX - HEADING_COLUMN_PX - HEADING_GAP_PX) {
+    conditions.push(
+      `(width >= ${Math.max(STACK_PX, Math.ceil(neededWidth + asideOffset))}px)`,
+    );
+  }
+
+  return conditions;
+}
+
+const conditions = fittingConditions();
+
+// the rules carrying those literals cannot live in the scoped <style> below —
+// Astro only interpolates custom properties into it, and a media query
+// condition cannot read one (see styles/breakpoints.css). So they are written
+// out here and scoped by hand, through a per-instance id.
+const id = `logos-${crypto.randomUUID().slice(0, 8)}`;
+
+const gateCss = conditions
+  .map(
+    (condition) => `@media ${condition}{
+  #${id} .track{animation:none;margin-inline-end:calc(-1 * var(--logos-gap))}
+  #${id} .clone{display:none}
+  #${id} .strip{margin-inline:0}
+}`,
+  )
+  .join("\n");
+---
+
+<Section {surface} spacing="m" width="content">
+  <div
+    class:list={["logos", layout]}
+    {id}
+    style={{
+      "--logos-box-inline": `${box.width}px`,
+      "--logos-box-block": `${box.height}px`,
+      "--logos-gap": `${box.gap}px`,
+      "--logos-heading-inline": `${HEADING_COLUMN_PX}px`,
+      "--logos-heading-gap": `${HEADING_GAP_PX}px`,
+      "--logos-surface":
+        surface === "muted"
+          ? "var(--color-surface-muted)"
+          : "var(--color-surface)",
+      "--logos-duration": `${durationSeconds}s`,
+    }}
+  >
+    <div class="heading">
+      <Badge color="light">{badge}</Badge>
+
+      <Text as="h2" variant="title-h3">{title}</Text>
+    </div>
+
+    <div class="strip">
+      <div class="track">
+        <ul class="set">
+          {
+            logos.map((logo: ImageSource) => (
+              <li class="item">
+                <RemoteImage
+                  image={logo}
+                  variant={
+                    layout === "stacked" ? "logo-strip-large" : "logo-strip"
+                  }
+                />
+              </li>
+            ))
+          }
+        </ul>
+
+        {
+          /* the second half only exists to make the loop seamless, so it is
+            hidden from assistive tech rather than read out twice */
+        }
+        <ul class="set clone" aria-hidden="true">
+          {
+            logos.map((logo: ImageSource) => (
+              <li class="item">
+                <RemoteImage
+                  image={logo}
+                  variant={
+                    layout === "stacked" ? "logo-strip-large" : "logo-strip"
+                  }
+                />
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</Section>
+
+{gateCss && <style is:inline set:html={gateCss} />}
+
+<style>
+  .logos {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+
+  .stacked {
+    align-items: center;
+  }
+
+  .stacked .heading {
+    align-items: center;
+    text-align: center;
+  }
+
+  .strip {
+    display: flex;
+    min-inline-size: 0;
+    overflow: hidden; /* prevent logos from traveling on over whatever sits to their left */
+  }
+
+  /* the strip runs off the right edge of the screen rather than stopping at the
+     content gutter — the sheet draws it past the board edge. Percentage margins
+     resolve against the containing block (the content column), so `50%` is half
+     that column and the difference is exactly the gutter. Section clips it with `overflow-x: clip`. */
+  .inline .strip {
+    margin-inline: 0 calc(50% - 50vw);
+  }
+
+  /* the stacked strip escapes on both sides */
+  .stacked .strip {
+    align-self: stretch;
+    justify-content: center;
+    margin-inline: calc(50% - 50vw);
+  }
+
+  .track {
+    display: flex;
+    flex: none; /* the default `flex-shrink: 1` would squeeze logos */
+    inline-size: max-content;
+    animation: scroll var(--logos-duration) linear infinite;
+  }
+
+  .strip:hover .track,
+  .strip:focus-within .track {
+    animation-play-state: paused;
+  }
+
+  .set {
+    display: flex;
+    flex: none;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .item {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    padding-inline-end: var(--logos-gap);
+    block-size: var(--logos-box-block);
+  }
+
+  @keyframes scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* stopping the animation would leave everything past the right edge unreachable, so the strip becomes scrollable instead */
+  @media (prefers-reduced-motion: reduce) {
+    .track {
+      margin-inline-end: calc(-1 * var(--logos-gap));
+      animation: none;
+    }
+
+    .clone {
+      display: none;
+    }
+
+    .strip {
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+    }
+
+    .strip::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  /* 60rem — inline layout stacks. see styles/breakpoints.css */
+  @media (width >= 60rem) {
+    .inline {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+      align-items: center;
+    }
+
+    .inline > * {
+      grid-area: 1 / 1;
+    }
+
+    .inline .heading {
+      z-index: 1;
+      align-self: stretch;
+      justify-content: center;
+      inline-size: calc(var(--logos-heading-inline) + var(--space-10));
+      padding-inline-end: var(--space-10);
+      background-color: var(--logos-surface);
+    }
+
+    .inline .strip {
+      padding-inline-start: calc(
+        var(--logos-heading-inline) + var(--logos-heading-gap)
+      );
+    }
+  }
+</style>

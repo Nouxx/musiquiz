@@ -1,18 +1,10 @@
 import ClockIcon from "@sanity/icons/Clock";
 import EnvelopeIcon from "@sanity/icons/Envelope";
-import ImageIcon from "@sanity/icons/Image";
 import InfoOutlineIcon from "@sanity/icons/InfoOutline";
-import JoystickIcon from "@sanity/icons/Joystick";
 import PinIcon from "@sanity/icons/Pin";
 import { defineField, defineType } from "sanity";
-import type { Path, Reference, StringRule } from "sanity";
+import type { StringRule } from "sanity";
 import { HomeIcon } from "@sanity/icons/Home";
-
-type Offering = {
-  _key: string;
-  game?: Reference;
-  price?: number;
-};
 
 // todo: i18n, "Fermé" is french
 function openingTimeValidation(rule: StringRule) {
@@ -36,8 +28,6 @@ export const venueType = defineType({
       icon: InfoOutlineIcon,
       default: true,
     },
-    { name: "pageCover", title: "Page Cover", icon: ImageIcon },
-    { name: "offerings", title: "Offerings", icon: JoystickIcon },
     { name: "contact", title: "Contact", icon: EnvelopeIcon },
     { name: "location", title: "Location", icon: PinIcon },
     { name: "openHours", title: "Open Hours", icon: ClockIcon },
@@ -67,105 +57,6 @@ export const venueType = defineType({
       options: {
         source: "title",
       },
-    }),
-    defineField({
-      name: "offerings",
-      title: "Offerings",
-      type: "array",
-      group: "offerings",
-      validation: (rule) =>
-        rule.custom((offerings?: Offering[]) => {
-          if (!offerings) return true;
-
-          const seen = new Map<string, number>();
-          const duplicatePaths: Path[] = [];
-
-          offerings.forEach((offering, index) => {
-            const ref = offering?.game?._ref;
-            if (!ref) return;
-
-            if (seen.has(ref)) {
-              duplicatePaths.push([{ _key: offering._key }, "game"]);
-            } else {
-              seen.set(ref, index);
-            }
-          });
-
-          if (duplicatePaths.length === 0) return true;
-
-          return {
-            message: "This game has already been selected for this venue",
-            paths: duplicatePaths,
-          };
-        }),
-      of: [
-        defineField({
-          name: "offering",
-          title: "Offering",
-          type: "object",
-          icon: JoystickIcon,
-          fields: [
-            defineField({
-              name: "game",
-              title: "Game",
-              type: "reference",
-              to: [{ type: "gameFormat" }],
-              validation: (rule) => rule.required(),
-            }),
-            defineField({
-              name: "price",
-              title: "Price",
-              type: "number",
-              validation: (rule) => rule.required().min(0),
-            }),
-          ],
-          preview: {
-            select: {
-              title: "game.name",
-              subtitle: "price",
-            },
-            prepare({ title, subtitle }) {
-              return {
-                title: title ?? "No game selected",
-                subtitle: subtitle != null ? `${subtitle}€` : "No price",
-              };
-            },
-          },
-        }),
-      ],
-    }),
-    defineField({
-      name: "pageCoverMedia",
-      title: "Page Cover Media",
-      type: "imageWithAlt",
-      group: "pageCover",
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "pageCoverHeading",
-      title: "Page Cover Heading",
-      type: "internationalizedArrayString",
-      group: "pageCover",
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "pageCoverSubHeading",
-      title: "Page Cover Sub Heading",
-      type: "internationalizedArrayString",
-      group: "pageCover",
-    }),
-    defineField({
-      name: "pageCoverBadge",
-      title: "Page Cover Badge",
-      type: "internationalizedArrayString",
-      group: "pageCover",
-    }),
-    defineField({
-      name: "pageCoverCtaLabel",
-      title: "Page Cover CTA Label",
-      type: "internationalizedArrayString",
-      group: "pageCover",
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "mondayOpeningHours",
@@ -244,6 +135,16 @@ export const venueType = defineType({
       description:
         "Paste it from Google Maps, example: https://share.google/pfpYwPnyAXvmLJ1Su",
       group: "location",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "location",
+      title: "Location",
+      type: "geopoint",
+      description:
+        "Where the map in the Find Us section is centred. Right-click the venue in Google Maps and copy the coordinates it offers. Leave Altitude empty — it is not used.",
+      group: "location",
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "regionCode",

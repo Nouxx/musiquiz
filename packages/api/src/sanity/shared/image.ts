@@ -11,6 +11,22 @@ export function imageProjection({ lang }: { lang: Lang }) {
   }`;
 }
 
+/**
+ * For an image an editor may leave empty.
+ *
+ * Why? Sanity keeps the field object once the field has been touched even if there's no `asset`.
+ * this yields an object of null, instead of null, which is what this projection does.
+ */
+export function optionalImageProjection({
+  field,
+  lang,
+}: {
+  field: string;
+  lang: Lang;
+}) {
+  return `select(defined(${field}.asset) => ${field} ${imageProjection({ lang })})`;
+}
+
 export const sanityImageSchema = z.strictObject({
   url: z.url(),
   width: z.number().int().positive(),

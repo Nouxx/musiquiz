@@ -6,6 +6,30 @@ export const fr = {
     badge: "Nos centres",
     heading: "Retrouvez nos centres Musi'Quiz près de chez vous !",
   },
+  carousel: {
+    previous: "Image précédente",
+    next: "Image suivante",
+    goToImage: "Aller à l'image",
+  },
+  prices: {
+    perPerson: "Par personne",
+    book: "Réservez votre activité",
+    // shown when a game has a single price: it applies whatever the group size
+    unique: "Tarif unique",
+    range: "De {{from}} à {{to}} joueurs",
+    fromOnly_one: "{{count}} joueur et plus",
+    fromOnly_other: "{{count}} joueurs et plus",
+    exact_one: "{{count}} joueur",
+    exact_other: "{{count}} joueurs",
+  },
+  faq: {
+    badge: "FAQ",
+  },
+  reviews: {
+    previous: "Avis précédent",
+    next: "Avis suivant",
+    stars: "{{score}} sur 5",
+  },
   header: {
     home: "Accueil",
     concept: "Concept",
@@ -45,6 +69,27 @@ export const fr = {
     mailAddress: "Adresse mail",
     mailPlaceholder: "Votre adresse mail",
     newsletterConsent: "J'accepte de recevoir les informations de Musi'Quiz",
+  },
+  findUs: {
+    address: "Adresse",
+    openingHours: "Horaires",
+    contact: "Contact",
+    mapTitle: "Le centre Musi'Quiz de {{venue}} sur la carte",
+    viewOnGoogleMaps: "Voir dans Google Maps",
+  },
+  contactForm: {
+    badge: "Contactez-nous",
+    title: "Une question ?",
+    mediaLabel: "Photos de nos centres",
+    firstName: "Prénom",
+    firstNamePlaceholder: "Votre prénom",
+    mail: "Adresse mail",
+    mailPlaceholder: "Votre adresse mail",
+    phone: "Téléphone",
+    phonePlaceholder: "Votre numéro de téléphone",
+    message: "Message",
+    messagePlaceholder: "Votre message",
+    submit: "Envoyer",
   },
   days: {
     monday: "Lundi",
