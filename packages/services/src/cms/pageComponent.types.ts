@@ -109,6 +109,20 @@ export type FaqQuestion = {
   answer: RichText;
 };
 
+export type TextBlock = {
+  badge: string | undefined;
+  title: string;
+  body: RichText;
+  additionalCtas: Cta[];
+  cta: Cta | undefined;
+  ctaTone: "red" | "blue";
+};
+
+type CardsScroller = {
+  type: "cardsScroller";
+  textBlock: TextBlock;
+};
+
 type Faq = {
   type: "faq";
   title: string;
@@ -126,4 +140,5 @@ export type PageComponent =
   | FindUs
   | ClientContactForm
   | Logos
-  | Faq;
+  | Faq
+  | CardsScroller;

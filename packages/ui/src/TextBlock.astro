@@ -1,0 +1,104 @@
+---
+import Badge from "./Badge.astro";
+import ArrowLink from "./primitives/ArrowLink.astro";
+import Button from "./primitives/Button.astro";
+import RichText from "./primitives/RichText.astro";
+import Text from "./primitives/Text.astro";
+import type { CtaLink, RichTextNode } from "./types";
+
+interface Props {
+  badge?: string;
+  title: string;
+  headingLevel?: "h2" | "h3";
+  size?: "l" | "m";
+  body: RichTextNode[];
+  additionalCtas?: CtaLink[];
+  cta?: CtaLink;
+  ctaTone?: "red" | "blue";
+}
+
+const {
+  badge,
+  title,
+  headingLevel = "h2",
+  size = "l",
+  body,
+  additionalCtas,
+  cta,
+  ctaTone = "red",
+} = Astro.props;
+
+const links = additionalCtas ?? [];
+---
+
+<div class="text-block">
+  <div class="intro">
+    <div class="heading">
+      {badge && <Badge color="light">{badge}</Badge>}
+
+      <Text as={headingLevel} variant={size === "l" ? "title-h2" : "title-h3"}
+        >{title}</Text
+      >
+    </div>
+
+    <div class="body">
+      <RichText value={body} gap="6" />
+    </div>
+  </div>
+
+  {
+    links.length > 0 && (
+      <ul class="links">
+        {links.map((link) => (
+          <li>
+            <ArrowLink url={link.url}>{link.label}</ArrowLink>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    cta && (
+      <Button as="a" href={cta.url} tone={ctaTone}>
+        {cta.label}
+      </Button>
+    )
+  }
+</div>
+
+<style>
+  .text-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    align-items: flex-start;
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-self: stretch;
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+
+  .body {
+    color: var(--color-text-muted);
+  }
+
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: flex-start;
+    padding: 0;
+    list-style: none;
+  }
+</style>

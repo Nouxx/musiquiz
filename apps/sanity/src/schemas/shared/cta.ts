@@ -1,6 +1,12 @@
 import { defineField, defineType } from "sanity";
 
-type LocalizedEntry = { value?: string };
+type LocalizedEntry = { _key?: string; value?: string };
+
+function frenchValue(entries?: LocalizedEntry[]) {
+  return (
+    entries?.find((entry) => entry._key === "fr")?.value ?? entries?.[0]?.value
+  );
+}
 
 // `/` a page of this site, `#` a heading further down the page the button sits
 // on, `https://` somewhere else entirely. anything else — a bare `www.`, a
@@ -39,4 +45,22 @@ export const ctaType = defineType({
         }),
     }),
   ],
+  preview: {
+    select: {
+      label: "label",
+      url: "url",
+    },
+    prepare({
+      label,
+      url,
+    }: {
+      label?: LocalizedEntry[];
+      url?: LocalizedEntry[];
+    }) {
+      return {
+        title: frenchValue(label) ?? "Call to action",
+        subtitle: frenchValue(url),
+      };
+    },
+  },
 });

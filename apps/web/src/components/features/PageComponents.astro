@@ -1,6 +1,7 @@
 ---
 import type { PageComponent } from "@repo/services/cms/pageComponent.types";
 import CardsGrid from "@repo/ui/CardsGrid";
+import CardsScroller from "@repo/ui/CardsScroller";
 import ClientContactForm from "@repo/ui/ClientContactForm";
 import Faq from "@repo/ui/Faq";
 import Logos from "@repo/ui/Logos";
@@ -194,6 +195,18 @@ const t = getT(lang);
             badge={component.badge}
             title={component.title}
             logos={component.logos}
+          />
+        );
+      }
+      case "cardsScroller": {
+        return (
+          <CardsScroller
+            badge={component.textBlock.badge}
+            title={component.textBlock.title}
+            body={component.textBlock.body}
+            additionalCtas={component.textBlock.additionalCtas}
+            cta={component.textBlock.cta}
+            ctaTone={component.textBlock.ctaTone}
           />
         );
       }

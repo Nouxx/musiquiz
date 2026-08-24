@@ -14,7 +14,7 @@
 
 ## Steps
 
-1. we grill for front end
+1. we grill for front end and front end ONLY
 2. design the front-end component in zz-scratch page with stub data, I QA, we tight things up
 3. we grill for backend (sanity -> api -> services...)
 4. you implement the backend, I QA, we tight things up

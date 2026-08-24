@@ -4,6 +4,7 @@ import { z } from "zod";
 import { optionalCtaProjection, sanityCtaSchema } from "./cta";
 import { imageProjection, sanityImageSchema } from "./image";
 import { richTextProjection, sanityRichTextSchema } from "./richText";
+import { sanityTextBlockSchema, textBlockProjection } from "./textBlock";
 
 function rollingBannerProjection({ lang }: { lang: Lang }) {
   return `
@@ -160,6 +161,14 @@ function faqProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function cardsScrollerProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "cardsScroller" => {
+      "textBlock": ${textBlockProjection({ field: "textBlock", lang })}
+    }
+  `;
+}
+
 export function pageComponentsProjection({ lang }: { lang: Lang }) {
   return `
     pageComponents[]{
@@ -174,6 +183,7 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${clientContactFormProjection({ lang })},
       ${logosProjection({ lang })},
       ${faqProjection({ lang })},
+      ${cardsScrollerProjection({ lang })},
     }
   `;
 }
@@ -305,6 +315,11 @@ const sanityFaqSchema = z.strictObject({
   images: z.array(sanityImageSchema).min(6).max(12),
 });
 
+const sanityCardsScrollerSchema = z.strictObject({
+  _type: z.literal("cardsScroller"),
+  textBlock: sanityTextBlockSchema,
+});
+
 export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityRollingBannerSchema,
   sanityCardsGridSchema,
@@ -316,6 +331,7 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityClientContactFormSchema,
   sanityLogosSchema,
   sanityFaqSchema,
+  sanityCardsScrollerSchema,
 ]);
 
 export type SanityPageComponent = z.infer<typeof sanityPageComponentSchema>;

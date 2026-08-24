@@ -64,6 +64,14 @@ _Avoid_: card list, tiles, features grid
 The UI Component inside a Cards Grid — media, badge, title, optional body, optional call to action, on a light surface inside a gradient ring. Every Card in a grid is the same width and height whatever it holds; the media is a fixed 240px crop and the call to action is pinned to the bottom edge, so a row of Cards lines up whatever the bodies do.
 _Avoid_: tile, panel, box
 
+**Text Block**:
+A column of copy a Page Component holds — badge, title, Rich Text body, up to three arrow links, and one button. Not a Page Component itself: an editor never adds a Text Block to a page, they add something that holds one, which is why it is registered in Sanity but absent from the page components array. It renders no Section — the host owns the surface, the spacing and the width. The heading level and the drawn title size are decided by the host in code, not authored: an editor writes copy, they do not pick a type step.
+_Avoid_: text section, copy block, intro, prose
+
+**Cards Scroller**:
+A Page Component pairing a Text Block with a horizontally scrolling set of cards. The cards are not built yet — it renders the Text Block alone in the first half of a `TwoBlocks`, so the copy already sits at the width it keeps once they land, and the empty half reads as unfinished rather than as broken.
+_Avoid_: carousel (a different Page Component), slider, cards row
+
 **FAQ**:
 A Page Component pairing a set of questions with a strip of photos. Only one answer is open at a time, which is the `name` attribute on `<details>` doing it and not a script — so the whole section works with JavaScript off. The photo strip is decoration: it is two columns drifting past each other, it never decides how tall the section is, and it is not rendered at all below the width where it fits. Questions are authored on the page that shows them, so a venue's answers can name its city; there is no shared question set.
 _Avoid_: accordion (that is the UI Component inside it), questions block, help section

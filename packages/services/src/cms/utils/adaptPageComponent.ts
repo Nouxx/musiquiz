@@ -6,6 +6,7 @@ import { toCmsImage } from "./toCmsImage";
 import { toCta } from "./toCta";
 import { toPricesGame } from "./toPricesGame";
 import { toRichText } from "./toRichText";
+import { toTextBlock } from "./toTextBlock";
 
 export function adaptPageComponent(data: SanityPageComponent): PageComponent {
   switch (data._type) {
@@ -105,6 +106,13 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
           answer: toRichText(question.answer),
         })),
         images: data.images.map((image) => toCmsImage(image)),
+      };
+    }
+
+    case "cardsScroller": {
+      return {
+        type: "cardsScroller",
+        textBlock: toTextBlock(data.textBlock),
       };
     }
 
