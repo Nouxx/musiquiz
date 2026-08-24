@@ -2,6 +2,8 @@
 import type { PageComponent } from "@repo/services/cms/pageComponent.types";
 import CardsGrid from "@repo/ui/CardsGrid";
 import ClientContactForm from "@repo/ui/ClientContactForm";
+import Faq from "@repo/ui/Faq";
+import Logos from "@repo/ui/Logos";
 import FindUs from "@repo/ui/FindUs";
 import Carousel from "@repo/ui/Carousel";
 import RollingBanner from "@repo/ui/RollingBanner";
@@ -152,6 +154,16 @@ const t = getT(lang);
           />
         );
       }
+      case "faq": {
+        return (
+          <Faq
+            badge={t("faq.badge")}
+            title={component.title}
+            questions={component.questions}
+            images={component.images}
+          />
+        );
+      }
       case "clientContactForm": {
         return (
           <ClientContactForm
@@ -171,6 +183,17 @@ const t = getT(lang);
             messageLabel={t("contactForm.message")}
             messagePlaceholder={t("contactForm.messagePlaceholder")}
             submitLabel={t("contactForm.submit")}
+          />
+        );
+      }
+      case "logos": {
+        return (
+          <Logos
+            layout={component.layout}
+            surface={component.surface}
+            badge={component.badge}
+            title={component.title}
+            logos={component.logos}
           />
         );
       }

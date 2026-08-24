@@ -5,6 +5,7 @@ import { toCard } from "./toCard";
 import { toCmsImage } from "./toCmsImage";
 import { toCta } from "./toCta";
 import { toPricesGame } from "./toPricesGame";
+import { toRichText } from "./toRichText";
 
 export function adaptPageComponent(data: SanityPageComponent): PageComponent {
   switch (data._type) {
@@ -80,6 +81,29 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
     case "clientContactForm": {
       return {
         type: "clientContactForm",
+        images: data.images.map((image) => toCmsImage(image)),
+      };
+    }
+
+    case "logos": {
+      return {
+        type: "logos",
+        layout: data.layout,
+        surface: data.surface,
+        badge: data.badge,
+        title: data.title,
+        logos: data.logos.map((logo) => toCmsImage(logo)),
+      };
+    }
+
+    case "faq": {
+      return {
+        type: "faq",
+        title: data.title,
+        questions: data.questions.map((question) => ({
+          question: question.question,
+          answer: toRichText(question.answer),
+        })),
         images: data.images.map((image) => toCmsImage(image)),
       };
     }

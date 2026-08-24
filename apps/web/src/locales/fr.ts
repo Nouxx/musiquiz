@@ -22,6 +22,9 @@ export const fr = {
     exact_one: "{{count}} joueur",
     exact_other: "{{count}} joueurs",
   },
+  faq: {
+    badge: "FAQ",
+  },
   reviews: {
     previous: "Avis précédent",
     next: "Avis suivant",

@@ -10,6 +10,20 @@ export type CmsImage = {
   alt: string;
 };
 
+export type RichTextSpan = {
+  text: string;
+  bold?: boolean;
+  /** turns the span into a link */
+  href?: string;
+};
+
+export type RichTextNode = {
+  type: "paragraph";
+  spans: RichTextSpan[];
+};
+
+export type RichText = RichTextNode[];
+
 export type Homepage = {
   logo: CmsImage;
   cover: CmsImage;

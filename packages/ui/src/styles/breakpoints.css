@@ -76,6 +76,25 @@
    sharpness. It needs revisiting only if those floors or the ratio move.
 
    ------------------------------------------------------------
+   72rem — FAQ image strip shown
+   ------------------------------------------------------------
+   Used by Faq.astro for its accordion / image-strip row, and quoted by
+   RemoteImage.astro in the `faq-media` variant's `sizes` string, which is TS
+   and must be edited in step.
+
+   Derived: the strip is drawn at a fixed 544px (two 260px columns and the
+   24px between them) and sits 120px from the accordion, so the row needs
+   48px of gutters + 544 + 120 + whatever the accordion column floors at.
+   440px is that floor — roughly 60 characters at the 14px answer size, below
+   which an answer reads as a column of fragments. 48 + 544 + 120 + 440 =
+   1152px = 72rem.
+
+   Below it the strip is not rendered at all: the sheet's mobile design
+   replaces it with a carousel we deliberately do not build, so the section
+   is badge + title + accordion at full width. Move the strip width, the gap
+   or the floor and this number moves with them.
+
+   ------------------------------------------------------------
    64rem and 88rem — carousel slot count
    ------------------------------------------------------------
    Used by Carousel.astro, which renders a fixed number of whole images per

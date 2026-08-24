@@ -154,6 +154,7 @@
      than it is round, so the two draw the same shape — and this one survives a
      label wrapping to a second line */
   --radius-s: 8px;
+  --radius-m: 16px;
   --radius-l: 24px;
   --radius-pill: 999px;
 

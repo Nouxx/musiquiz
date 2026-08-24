@@ -13,5 +13,7 @@ export const pageComponentsType = defineType({
     defineArrayMember({ type: "gamePrices" }),
     defineArrayMember({ type: "findUs" }),
     defineArrayMember({ type: "clientContactForm" }),
+    defineArrayMember({ type: "logos" }),
+    defineArrayMember({ type: "faq" }),
   ],
 });

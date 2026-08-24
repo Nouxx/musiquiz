@@ -1,0 +1,47 @@
+---
+import Link from "./Link.astro";
+import type { TextVariant } from "./Text.astro";
+import Text from "./Text.astro";
+import type { RichTextNode } from "../types";
+
+interface Props {
+  value: RichTextNode[];
+  variant?: TextVariant;
+}
+
+const { value, variant = "paragraph-base" } = Astro.props;
+---
+
+{
+  /*
+   * Every node is a paragraph today. The type is a union so that the kinds the
+   * CMS may grow into — a list, an image — arrive as new branches here rather
+   * than as a reshape of what a caller passes.
+   */
+}
+<div class="rich-text">
+  {
+    value.map((node) => (
+      <Text as="p" variant={variant}>
+        {node.spans.map((span) => {
+          const content = span.bold ? <strong>{span.text}</strong> : span.text;
+
+          return span.href ? <Link url={span.href}>{content}</Link> : content;
+        })}
+      </Text>
+    ))
+  }
+</div>
+
+<style>
+  .rich-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  /* the body face ships 400 and 600 only (apps/web/astro.config.mjs), so the default `bold` would be synthesized */
+  .rich-text strong {
+    font-weight: 600;
+  }
+</style>

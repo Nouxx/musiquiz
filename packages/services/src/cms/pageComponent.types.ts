@@ -1,4 +1,4 @@
-import type { CmsImage } from "./types";
+import type { CmsImage, RichText } from "./types";
 
 type RollingBanner = {
   type: "rollingBanner";
@@ -95,6 +95,27 @@ type ClientContactForm = {
   images: CmsImage[];
 };
 
+type Logos = {
+  type: "logos";
+  layout: "inline" | "stacked";
+  surface: "default" | "muted";
+  badge: string;
+  title: string;
+  logos: CmsImage[];
+};
+
+export type FaqQuestion = {
+  question: string;
+  answer: RichText;
+};
+
+type Faq = {
+  type: "faq";
+  title: string;
+  questions: FaqQuestion[];
+  images: CmsImage[];
+};
+
 export type PageComponent =
   | RollingBanner
   | CardsGrid
@@ -103,4 +124,6 @@ export type PageComponent =
   | VenuePrices
   | GamePrices
   | FindUs
-  | ClientContactForm;
+  | ClientContactForm
+  | Logos
+  | Faq;

@@ -64,6 +64,10 @@ _Avoid_: card list, tiles, features grid
 The UI Component inside a Cards Grid — media, badge, title, optional body, optional call to action, on a light surface inside a gradient ring. Every Card in a grid is the same width and height whatever it holds; the media is a fixed 240px crop and the call to action is pinned to the bottom edge, so a row of Cards lines up whatever the bodies do.
 _Avoid_: tile, panel, box
 
+**FAQ**:
+A Page Component pairing a set of questions with a strip of photos. Only one answer is open at a time, which is the `name` attribute on `<details>` doing it and not a script — so the whole section works with JavaScript off. The photo strip is decoration: it is two columns drifting past each other, it never decides how tall the section is, and it is not rendered at all below the width where it fits. Questions are authored on the page that shows them, so a venue's answers can name its city; there is no shared question set.
+_Avoid_: accordion (that is the UI Component inside it), questions block, help section
+
 **Site Chrome**:
 The one kind of Feature Component that fetches its own data instead of receiving it from a Page — `Header`, `Footer`. Its content is site-wide settings, so it belongs to no single page and threading it through every Page would be noise. Any other Feature Component takes its data as props.
 
@@ -90,6 +94,10 @@ _Avoid_: query, fetcher, endpoint, resource, api feature
 **Adapted Content**:
 What `@repo/services` returns: content that came out of the CMS, reshaped for the front end — a Sanity image asset turned into a `CmsImage`, a localized array narrowed to the string for the requested language, a reference resolved into the fields that use it. Transforming it is the job; inventing it is not.
 _Avoid_: view model, DTO, presenter
+
+**Rich Text**:
+Authored content that is more than one string — paragraphs, bold, links, and nothing else. Sanity stores it as Portable Text and that format stops at `@repo/services`: what the front end receives is a flat list of paragraphs holding spans, each already carrying its own `bold` and `href`. Resolving a span's marks is a join against the block's `markDefs`, done once in services so no UI Component ever learns what a `markDef` is.
+_Avoid_: portable text, block content, body, HTML
 
 `@repo/services` returns **CMS content only, never interface copy.** A string the editor did not author — a label, a unit, a derived phrase like "De 4 à 6 joueurs" — belongs to the web app, in `apps/web/src/locales/`, reached through `getT(lang)`. So services hands over the values (`playerCountFrom`, `amount`) and the web app turns them into words. This is why `adaptPageComponent` takes no `lang`: the language decides how content is _selected_ inside a Query Module's projection, and how copy is _written_ in the web app, and nothing in between needs it.
 

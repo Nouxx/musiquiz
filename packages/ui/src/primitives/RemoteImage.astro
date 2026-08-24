@@ -52,6 +52,10 @@ const variants = {
     sizes: "(width < 60rem) 1px, 60vw",
   },
   "review-avatar": { widths: [40, 80, 120], sizes: "40px" },
+  // hidden below 72rem, where the FAQ drops its image strip and the accordion takes the full width (see styles/breakpoints.css)
+  "faq-media": { widths: [260, 520, 780], sizes: "(width < 72rem) 1px, 260px" },
+  "logo-strip": { widths: [120, 240, 360], sizes: "120px" },
+  "logo-strip-large": { widths: [160, 320, 480], sizes: "160px" },
   cover: { widths: [640, 960, 1280, 1920, 2560], sizes: "100vw" },
 };
 
@@ -170,6 +174,27 @@ const srcSetWidths =
     height: 100%;
     object-fit: cover;
     object-position: center;
+  }
+
+  .faq-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .logo-strip {
+    width: auto;
+    height: var(--logos-box-block, 80px);
+    max-width: var(--logos-box-inline, 120px);
+    object-fit: contain;
+  }
+
+  .logo-strip-large {
+    width: auto;
+    height: var(--logos-box-block, 176px);
+    max-width: var(--logos-box-inline, 160px);
+    object-fit: contain;
   }
 
   .cover {

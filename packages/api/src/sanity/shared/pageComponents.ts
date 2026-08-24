@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { optionalCtaProjection, sanityCtaSchema } from "./cta";
 import { imageProjection, sanityImageSchema } from "./image";
+import { richTextProjection, sanityRichTextSchema } from "./richText";
 
 function rollingBannerProjection({ lang }: { lang: Lang }) {
   return `
@@ -134,6 +135,31 @@ function clientContactFormProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function logosProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "logos" => {
+      "layout": coalesce(layout, "inline"),
+      "surface": coalesce(surface, "default"),
+      "badge": badge[language == "${lang}"][0].value,
+      "title": title[language == "${lang}"][0].value,
+      "logos": logos[] ${imageProjection({ lang })}
+    }
+  `;
+}
+
+function faqProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "faq" => {
+      "title": title[language == "${lang}"][0].value,
+      questions[]{
+        "question": question[language == "${lang}"][0].value,
+        "answer": ${richTextProjection({ field: "answer", lang })}
+      },
+      "images": images[] ${imageProjection({ lang })}
+    }
+  `;
+}
+
 export function pageComponentsProjection({ lang }: { lang: Lang }) {
   return `
     pageComponents[]{
@@ -146,6 +172,8 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${gamePricesProjection({ lang })},
       ${findUsProjection({ lang })},
       ${clientContactFormProjection({ lang })},
+      ${logosProjection({ lang })},
+      ${faqProjection({ lang })},
     }
   `;
 }
@@ -254,6 +282,29 @@ const sanityClientContactFormSchema = z.strictObject({
   images: z.array(sanityImageSchema).min(1).max(8),
 });
 
+const sanityLogosSchema = z.strictObject({
+  _type: z.literal("logos"),
+  layout: z.enum(["inline", "stacked"]),
+  surface: z.enum(["default", "muted"]),
+  badge: z.string().min(1),
+  title: z.string().min(1),
+  logos: z.array(sanityImageSchema).min(2).max(16),
+});
+
+const sanityFaqQuestionSchema = z.strictObject({
+  question: z.string().min(1),
+  answer: sanityRichTextSchema,
+});
+
+export type SanityFaqQuestion = z.infer<typeof sanityFaqQuestionSchema>;
+
+const sanityFaqSchema = z.strictObject({
+  _type: z.literal("faq"),
+  title: z.string().min(1),
+  questions: z.array(sanityFaqQuestionSchema).min(3).max(8),
+  images: z.array(sanityImageSchema).min(6).max(12),
+});
+
 export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityRollingBannerSchema,
   sanityCardsGridSchema,
@@ -263,6 +314,8 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityGamePricesSchema,
   sanityFindUsSchema,
   sanityClientContactFormSchema,
+  sanityLogosSchema,
+  sanityFaqSchema,
 ]);
 
 export type SanityPageComponent = z.infer<typeof sanityPageComponentSchema>;

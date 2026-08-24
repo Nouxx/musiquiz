@@ -5,6 +5,7 @@ import { schemaTypes } from "./src/schemas";
 import { myStructure } from "./structure";
 import { internationalizedArray } from "sanity-plugin-internationalized-array";
 import { dataset, projectId } from "./src/environments";
+import { richTextFieldType } from "./src/schemas/shared/richText";
 
 const singletonActions = new Set(["publish", "discardChanges", "restore"]);
 
@@ -32,7 +33,7 @@ export default defineConfig({
         { id: "fr", title: "French" },
       ],
       defaultLanguages: ["fr"],
-      fieldTypes: ["string", "text"],
+      fieldTypes: ["string", "text", richTextFieldType],
     }),
   ],
   schema: {

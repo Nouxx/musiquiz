@@ -16,6 +16,8 @@ import { venuePricesType } from "./shared/pageComponents/venuePrices";
 import { gamePricesType } from "./shared/pageComponents/gamePrices";
 import { findUsType } from "./shared/pageComponents/findUs";
 import { clientContactFormType } from "./shared/pageComponents/clientContactForm";
+import { logosType } from "./shared/pageComponents/logos";
+import { faqQuestionType, faqType } from "./shared/pageComponents/faq";
 
 export const schemaTypes = [
   homepageType,
@@ -38,4 +40,7 @@ export const schemaTypes = [
   gamePricesType,
   findUsType,
   clientContactFormType,
+  logosType,
+  faqType,
+  faqQuestionType,
 ];

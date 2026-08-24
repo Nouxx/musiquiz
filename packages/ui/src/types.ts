@@ -75,3 +75,20 @@ export type ContactFact = {
   title: string;
   body?: string;
 };
+
+export type RichTextSpan = {
+  text: string;
+  bold?: boolean;
+  /** turns the span into a link */
+  href?: string;
+};
+
+export type RichTextNode = {
+  type: "paragraph";
+  spans: RichTextSpan[];
+};
+
+export type FaqQuestion = {
+  question: string;
+  answer: RichTextNode[];
+};

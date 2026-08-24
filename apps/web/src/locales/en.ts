@@ -24,6 +24,9 @@ export const en: typeof fr = {
     exact_one: "{{count}} player",
     exact_other: "{{count}} players",
   },
+  faq: {
+    badge: "FAQ",
+  },
   reviews: {
     previous: "Previous review",
     next: "Next review",
