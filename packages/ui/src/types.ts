@@ -54,6 +54,12 @@ export type CardItem = {
   cta?: CtaLink;
 };
 
+export type DeckCard = {
+  media: ImageSource;
+  title: string;
+  body: RichTextNode[];
+};
+
 export type PriceTier = {
   /** @example "De 4 à 6 joueurs", "Tarif unique" */
   label: string;

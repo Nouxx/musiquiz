@@ -4,6 +4,19 @@ A music quiz web app. This glossary fixes the vocabulary of the `apps/web` desig
 
 Musiquiz is a entertainment business that operates in France and provide various activites around music. Its a physical business with real places and this project is just the website to advertise about it and let users reserve their sessions.
 
+## Figma
+
+The design lives in Figma and its access rules are non-obvious enough to get wrong twice.
+
+**Whenever Figma comes up — a link, a node id, a "check the design" — read these memory files first, before any `mcp__figma__*` call:**
+
+- `figma-mcp-access.md` — which fileKey to read (the duplicate, not the original) and why the original 403s
+- `figma-presentation-is-source-of-truth.md` — the `Présentation` page is the only live page, plus the node-id map of its screens
+- `figma-sheet-state-vs-variant.md` — how to read an exported sheet without mistaking states for variants
+- `qa-is-clements-job.md` — hand over a scratch route, do not self-inspect the render
+
+They sit in `~/.claude/projects/-Users-clement-GitHub-musiquiz/memory/`, indexed by `MEMORY.md`.
+
 ## Domain
 
 **Venue**:

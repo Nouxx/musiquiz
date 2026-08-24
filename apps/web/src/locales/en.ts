@@ -24,6 +24,9 @@ export const en: typeof fr = {
     exact_one: "{{count}} player",
     exact_other: "{{count}} players",
   },
+  cardsScroller: {
+    nextCard: "Next card",
+  },
   faq: {
     badge: "FAQ",
   },

@@ -41,6 +41,11 @@ const variants = {
     sizes: "(width < 48rem) 100vw, (width < 78rem) 33vw, 400px",
   },
   "carousel-media": { widths: [282, 564, 846], sizes: "282px" },
+  // 60rem is the TwoBlocks split (styles/breakpoints.css)
+  "deck-media": {
+    widths: [400, 700, 1000, 1400],
+    sizes: "(width < 60rem) 100vw, min(604px, 47vw)",
+  },
   // hidden below 60rem, where the contact form takes the full width
   "mini-carousel-media": {
     widths: [400, 700, 1000, 1400],
@@ -151,8 +156,16 @@ const srcSetWidths =
 
   .card-media {
     width: 100%;
-    height: 240px; /* fixed height so that every cards in a grid have the same image height */
+    height: 240px;
     object-fit: cover;
+  }
+
+  .deck-media {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 612 / 374;
+    object-fit: cover;
+    object-position: center;
   }
 
   .carousel-media {

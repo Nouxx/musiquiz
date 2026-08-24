@@ -1,0 +1,100 @@
+---
+import DeckCard from "./DeckCard.astro";
+import { depthStyle } from "../lib/deck";
+import type { DeckCard as DeckCardItem } from "../types";
+
+interface Props {
+  cards: DeckCardItem[];
+  nextLabel: string;
+}
+
+const { cards, nextLabel } = Astro.props;
+---
+<div class="deck" data-card-deck>
+  <ul class="pile">
+    {
+      cards.map((card, index) => (
+        <li class="slot" style={depthStyle(index)} data-deck-card>
+          <DeckCard media={card.media} title={card.title} body={card.body} />
+        </li>
+      ))
+    }
+  </ul>
+
+  <button type="button" class="next" data-deck-next>{nextLabel}</button>
+</div>
+
+<style>
+  .deck {
+    --depth-step: 14px;
+    --deck-motion: 320ms;
+
+    position: relative;
+    padding-block-end: calc(var(--depth-step) * 3);
+  }
+
+  .pile {
+    display: grid;
+    align-items: stretch;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .slot {
+    grid-area: 1 / 1;
+    z-index: calc(100 - var(--depth));
+    /* 4 = VISIBLE_DEPTH + 1 (lib/deck), so depth 3 still lands on a full 1 */
+    opacity: clamp(0, calc(4 - var(--depth)), 1);
+    transform: translateX(calc(var(--drag, 0px) + var(--exit, 0) * 130%))
+      translateY(calc(var(--depth) * var(--depth-step)))
+      rotate(calc(var(--tilt) + var(--drag-tilt, 0deg)))
+      scale(calc(1 - var(--depth) * 0.04));
+    transition:
+      transform var(--deck-motion) ease,
+      opacity var(--deck-motion) ease;
+    /* horizontal gesture is ours, vertical scrolling stays the page's */
+    touch-action: pan-y;
+    cursor: pointer;
+  }
+
+  .slot.leaving {
+    z-index: 200;
+    opacity: 0;
+    transform: translateX(calc(var(--drag, 0px) + var(--exit) * 130%))
+      rotate(calc(var(--exit) * 12deg));
+  }
+
+  /* dragging follows the finger; settling is the frame the card is put back at
+     the bottom of the pile, and would otherwise fly there from off-screen */
+  .slot.dragging,
+  .slot.settling {
+    transition: none;
+  }
+
+  /* clipped, not `display: none`: it is the only way to deal without a pointer */
+  .next {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .deck:not([data-ready]) .next {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slot {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { mountCardDecks } from "../lib/cardDeck";
+
+  mountCardDecks("[data-card-deck]");
+</script>
