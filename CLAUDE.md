@@ -19,6 +19,33 @@ Still surprising? Keep it, and make sure it explains the surprise.
 Long-form reasoning does not belong in a comment. Decisions go in
 `docs/adr/`, vocabulary goes in `CONTEXT.md`, and a comment links to them.
 
+### Examples
+
+```ts
+// GOOD: give example, good only when not self explanatory
+export type PriceTier = {
+  /** @example "De 4 à 6 joueurs", "Tarif unique" */
+  label: string;
+}
+```
+
+```ts
+// BAD: explain what it does where the code is enough
+export type DetailCard = {
+  icon: IconName;
+  title: string;
+  /** an optional lead-in above the highlight */
+  intro?: string;
+  highlight: string;
+};
+
+// BAD: add useless 
+export type DetailGroup = {
+  name: string;
+  cards: DetailCard[];
+};
+```
+
 ## Functions
 
 Declare with the `function` keyword. Never `const foo = () => {}`.
