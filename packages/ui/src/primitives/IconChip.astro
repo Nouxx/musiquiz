@@ -17,33 +17,51 @@ interface Props {
   name: IconName;
   tone?: Tone;
   size?: Size;
+  /** the chip is the whole hit area of a link or button */
+  interactive?: boolean;
 }
 
-const { name, tone = "light", size = "xl" } = Astro.props;
+const { name, tone = "light", size = "xl", interactive = false } = Astro.props;
 ---
 
-<span class:list={["icon-chip", tone, size]}>
+<span class:list={["icon-chip", tone, size, interactive && "interactive"]}>
   <Icon {name} size={iconSizes[size]} />
 </span>
 
 <style>
   .icon-chip {
     display: inline-flex;
-
-    /* the size classes set `inline-size` only: the ratio keeps the box square
-       whatever the icon inside, and `flex: none` stops a flex parent from
-       stretching or squeezing it out of round */
     flex: none;
     aspect-ratio: 1;
     align-items: center;
     justify-content: center;
     color: var(--chip-text);
     background: var(--chip-fill);
-
-    /* even on all four sides: the bottom-heavy border used elsewhere reads as
-       depth on a pill, but as a wobble on a circle this small */
     border: 1px solid var(--chip-border);
     border-radius: var(--radius-pill);
+  }
+
+  .interactive {
+    --lift: 2px;
+
+    box-shadow: 0 var(--lift) 0 var(--chip-border);
+    transform: translateY(calc(2px - var(--lift)));
+
+    transition:
+      transform 120ms ease-out,
+      box-shadow 120ms ease-out;
+  }
+
+  .interactive:hover {
+    --lift: 1px;
+  }
+
+  .interactive:active {
+    --lift: 0px;
+
+    background:
+      linear-gradient(var(--color-overlay-pressed) 0 0), var(--chip-fill);
+    transition-duration: 0s;
   }
 
   .light {
