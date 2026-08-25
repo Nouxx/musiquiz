@@ -18,6 +18,18 @@ export default defineConfig({
     // only the static build needs it, the ssr build passthrough image service
     domains: isSsrBuild ? [] : ["cdn.sanity.io"],
   },
+  vite: {
+    // the two dev servers run from this same root, so they would share one
+    // cache directory while hashing optimizeDeps differently: each start wipes
+    // the other's bundles and the browser 504s on an outdated dep URL
+    cacheDir: isSsrBuild
+      ? "./node_modules/.vite-ssr"
+      : "./node_modules/.vite-static",
+    optimizeDeps: {
+      // leaflet resolves from @repo/ui, not from here
+      include: ["@repo/ui > leaflet"],
+    },
+  },
   fonts: [
     {
       provider: fontProviders.google(),
