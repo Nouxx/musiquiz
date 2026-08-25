@@ -138,12 +138,24 @@ const group = `game-details-${crypto.randomUUID()}`;
 
   /* one rule per index because CSS cannot match a radio to a panel by value.
      six is past the point where the picker stops reading as a row */
-  .picker:has(.choice:nth-of-type(1) input:checked) + .panels > .panel:nth-child(1),
-  .picker:has(.choice:nth-of-type(2) input:checked) + .panels > .panel:nth-child(2),
-  .picker:has(.choice:nth-of-type(3) input:checked) + .panels > .panel:nth-child(3),
-  .picker:has(.choice:nth-of-type(4) input:checked) + .panels > .panel:nth-child(4),
-  .picker:has(.choice:nth-of-type(5) input:checked) + .panels > .panel:nth-child(5),
-  .picker:has(.choice:nth-of-type(6) input:checked) + .panels > .panel:nth-child(6) {
+  .picker:has(.choice:nth-of-type(1) input:checked)
+    + .panels
+    > .panel:nth-child(1),
+  .picker:has(.choice:nth-of-type(2) input:checked)
+    + .panels
+    > .panel:nth-child(2),
+  .picker:has(.choice:nth-of-type(3) input:checked)
+    + .panels
+    > .panel:nth-child(3),
+  .picker:has(.choice:nth-of-type(4) input:checked)
+    + .panels
+    > .panel:nth-child(4),
+  .picker:has(.choice:nth-of-type(5) input:checked)
+    + .panels
+    > .panel:nth-child(5),
+  .picker:has(.choice:nth-of-type(6) input:checked)
+    + .panels
+    > .panel:nth-child(6) {
     display: flex;
   }
 
