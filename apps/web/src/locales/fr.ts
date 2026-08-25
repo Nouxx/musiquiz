@@ -25,6 +25,9 @@ export const fr = {
   cardsScroller: {
     nextCard: "Carte suivante",
   },
+  detailTabs: {
+    chooseGroup: "Choisir une catégorie",
+  },
   faq: {
     badge: "FAQ",
   },

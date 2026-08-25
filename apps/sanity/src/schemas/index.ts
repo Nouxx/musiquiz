@@ -23,6 +23,11 @@ import {
   cardsScrollerType,
   deckCardType,
 } from "./shared/pageComponents/cardsScroller";
+import {
+  detailCardType,
+  detailGroupType,
+  detailTabsType,
+} from "./shared/pageComponents/detailTabs";
 import { textBlockType } from "./shared/textBlock";
 
 export const schemaTypes = [
@@ -52,5 +57,8 @@ export const schemaTypes = [
   faqQuestionType,
   cardsScrollerType,
   deckCardType,
+  detailTabsType,
+  detailGroupType,
+  detailCardType,
   textBlockType,
 ];

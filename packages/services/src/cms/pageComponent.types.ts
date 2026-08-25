@@ -145,6 +145,27 @@ type Faq = {
   images: CmsImage[];
 };
 
+type DetailIcon = "game";
+
+export type DetailCard = {
+  icon: DetailIcon;
+  title: string;
+  intro: string | undefined;
+  highlight: string;
+};
+
+export type DetailGroup = {
+  name: string;
+  cards: DetailCard[];
+};
+
+type DetailTabs = {
+  type: "detailTabs";
+  title: string;
+  groups: DetailGroup[];
+  images: CmsImage[];
+};
+
 export type PageComponent =
   | RollingBanner
   | CardsGrid
@@ -156,4 +177,5 @@ export type PageComponent =
   | ClientContactForm
   | Logos
   | Faq
-  | CardsScroller;
+  | CardsScroller
+  | DetailTabs;

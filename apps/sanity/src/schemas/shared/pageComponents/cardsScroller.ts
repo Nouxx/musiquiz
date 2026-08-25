@@ -4,14 +4,7 @@ import {
   defineType,
   type PreviewValue,
 } from "sanity";
-
-type LocalizedEntry = { _key?: string; value?: string };
-
-function frenchValue(entries?: LocalizedEntry[]) {
-  return (
-    entries?.find((entry) => entry._key === "fr")?.value ?? entries?.[0]?.value
-  );
-}
+import { frenchValue, type LocalizedEntry } from "../frenchValue";
 
 // its own type rather than `card` from cardsGrid: that one requires a badge the
 // deck never draws, and holds a plain-string body, which cannot carry the bold

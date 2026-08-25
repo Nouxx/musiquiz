@@ -79,7 +79,7 @@
    72rem — drifting image strip shown
    ------------------------------------------------------------
    Used by DriftingColumns.astro and by the rows its hosts draw beside it —
-   Faq.astro's accordion, GameDetails.astro's band — and quoted by
+   Faq.astro's accordion, DetailTabs.astro's band — and quoted by
    RemoteImage.astro in the `drifting-media` variant's `sizes` string, which is
    TS and must be edited in step.
 

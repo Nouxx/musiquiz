@@ -1,5 +1,5 @@
 ---
-import DetailCardItem from "./gameDetails/DetailCard.astro";
+import DetailCardItem from "./detailTabs/DetailCard.astro";
 import Button from "./primitives/Button.astro";
 import DriftingColumns from "./primitives/DriftingColumns.astro";
 import Text from "./primitives/Text.astro";
@@ -15,11 +15,11 @@ interface Props {
 
 const { title, groups, images, chooseGroupLabel } = Astro.props;
 
-const group = `game-details-${crypto.randomUUID()}`;
+const group = `detail-tabs-${crypto.randomUUID()}`;
 ---
 
 <Section surface="muted" spacing="l" width="content">
-  <div class="game-details">
+  <div class="detail-tabs">
     <div class="band">
       <Text as="h2" variant="title-h3">{title}</Text>
 
@@ -65,14 +65,14 @@ const group = `game-details-${crypto.randomUUID()}`;
 </Section>
 
 <style>
-  .game-details {
+  .detail-tabs {
     display: grid;
     gap: var(--space-10);
   }
 
   /* 80rem — the band holds two cards beside the strip. see styles/breakpoints.css */
   @media (width >= 80rem) {
-    .game-details {
+    .detail-tabs {
       grid-template-columns: minmax(0, 1fr) calc(260px * 2 + var(--space-6));
       gap: 80px;
       align-items: center;

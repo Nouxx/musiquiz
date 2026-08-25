@@ -6,6 +6,7 @@ import type {
   ValidationContext,
 } from "sanity";
 import { JoystickIcon } from "@sanity/icons/Joystick";
+import { frenchValue, type LocalizedEntry } from "./shared/frenchValue";
 
 const API_VERSION = "2025-02-06";
 
@@ -17,8 +18,6 @@ const MAX_PRICES = 5;
 
 type GetClient = ValidationContext["getClient"];
 
-type LocalizedEntry = { _key?: string; value?: string };
-
 type PriceValue = {
   _key?: string;
   playerCountFrom?: number;
@@ -26,12 +25,6 @@ type PriceValue = {
   amount?: number;
   note?: LocalizedEntry[];
 };
-
-function frenchValue(entries?: LocalizedEntry[]) {
-  return (
-    entries?.find((entry) => entry._key === "fr")?.value ?? entries?.[0]?.value
-  );
-}
 
 function venueRefOf(document: SanityDocument | undefined) {
   return (document?.venue as Reference | undefined)?._ref;

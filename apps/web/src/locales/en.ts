@@ -27,6 +27,9 @@ export const en: typeof fr = {
   cardsScroller: {
     nextCard: "Next card",
   },
+  detailTabs: {
+    chooseGroup: "Choose a category",
+  },
   faq: {
     badge: "FAQ",
   },

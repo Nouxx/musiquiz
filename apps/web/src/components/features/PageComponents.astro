@@ -3,6 +3,7 @@ import type { PageComponent } from "@repo/services/cms/pageComponent.types";
 import CardsGrid from "@repo/ui/CardsGrid";
 import CardsScroller from "@repo/ui/CardsScroller";
 import ClientContactForm from "@repo/ui/ClientContactForm";
+import DetailTabs from "@repo/ui/DetailTabs";
 import Faq from "@repo/ui/Faq";
 import Logos from "@repo/ui/Logos";
 import FindUs from "@repo/ui/FindUs";
@@ -208,6 +209,16 @@ const t = getT(lang);
             ctaTone={component.textBlock.ctaTone}
             cards={component.cards}
             nextCardLabel={t("cardsScroller.nextCard")}
+          />
+        );
+      }
+      case "detailTabs": {
+        return (
+          <DetailTabs
+            title={component.title}
+            groups={component.groups}
+            images={component.images}
+            chooseGroupLabel={t("detailTabs.chooseGroup")}
           />
         );
       }

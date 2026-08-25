@@ -1,21 +1,14 @@
 import { defineField, defineType } from "sanity";
 import type { Reference, ValidationContext } from "sanity";
+import { frenchValue, type LocalizedEntry } from "../frenchValue";
 
 const API_VERSION = "2025-02-06";
 
 type GetClient = ValidationContext["getClient"];
 
-type LocalizedEntry = { _key?: string; value?: string };
-
 type GamePricesParent = {
   venue?: Reference;
 };
-
-function frenchValue(entries?: LocalizedEntry[]) {
-  return (
-    entries?.find((entry) => entry._key === "fr")?.value ?? entries?.[0]?.value
-  );
-}
 
 // the reference sits in an object inside an array, so the venue it depends on is
 // on `parent` — the gamePrices object — not on `document`, which is the page holding it

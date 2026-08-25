@@ -40,10 +40,14 @@ function pricedGameProjection({ lang }: { lang: Lang }) {
 }
 
 function footnoteProjection({ lang }: { lang: Lang }) {
-  return `"footnote": select(count(footnote.title) > 0 => footnote{
-    "title": title[language == "${lang}"][0].value,
-    "body": body[language == "${lang}"][0].value
-  })`;
+  return `"footnote": select(
+    defined(footnote.title[language == "${lang}"][0].value)
+    && defined(footnote.body[language == "${lang}"][0].value)
+    => footnote{
+      "title": title[language == "${lang}"][0].value,
+      "body": body[language == "${lang}"][0].value
+    }
+  )`;
 }
 
 function venuePricesProjection({ lang }: { lang: Lang }) {
@@ -177,6 +181,24 @@ function cardsScrollerProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function detailTabsProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "detailTabs" => {
+      "title": title[language == "${lang}"][0].value,
+      groups[]{
+        "name": name[language == "${lang}"][0].value,
+        cards[]{
+          icon,
+          "title": title[language == "${lang}"][0].value,
+          "intro": intro[language == "${lang}"][0].value,
+          "highlight": highlight[language == "${lang}"][0].value
+        }
+      },
+      "images": images[] ${imageProjection({ lang })}
+    }
+  `;
+}
+
 export function pageComponentsProjection({ lang }: { lang: Lang }) {
   return `
     pageComponents[]{
@@ -192,6 +214,7 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${logosProjection({ lang })},
       ${faqProjection({ lang })},
       ${cardsScrollerProjection({ lang })},
+      ${detailTabsProjection({ lang })},
     }
   `;
 }
@@ -340,6 +363,27 @@ const sanityCardsScrollerSchema = z.strictObject({
   cards: z.array(sanityDeckCardSchema).min(2).max(6),
 });
 
+const sanityDetailCardSchema = z.strictObject({
+  icon: z.enum(["game"]),
+  title: z.string().min(1),
+  intro: z.string().min(1).nullable(),
+  highlight: z.string().min(1),
+});
+
+const sanityDetailGroupSchema = z.strictObject({
+  name: z.string().min(1),
+  cards: z.array(sanityDetailCardSchema).min(2).max(6),
+});
+
+export type SanityDetailGroup = z.infer<typeof sanityDetailGroupSchema>;
+
+const sanityDetailTabsSchema = z.strictObject({
+  _type: z.literal("detailTabs"),
+  title: z.string().min(1),
+  groups: z.array(sanityDetailGroupSchema).min(1).max(4),
+  images: z.array(sanityImageSchema).min(6).max(12),
+});
+
 export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityRollingBannerSchema,
   sanityCardsGridSchema,
@@ -352,6 +396,7 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityLogosSchema,
   sanityFaqSchema,
   sanityCardsScrollerSchema,
+  sanityDetailTabsSchema,
 ]);
 
 export type SanityPageComponent = z.infer<typeof sanityPageComponentSchema>;

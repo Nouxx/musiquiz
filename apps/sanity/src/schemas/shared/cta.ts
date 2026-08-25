@@ -1,12 +1,5 @@
 import { defineField, defineType } from "sanity";
-
-type LocalizedEntry = { _key?: string; value?: string };
-
-function frenchValue(entries?: LocalizedEntry[]) {
-  return (
-    entries?.find((entry) => entry._key === "fr")?.value ?? entries?.[0]?.value
-  );
-}
+import { frenchValue, type LocalizedEntry } from "./frenchValue";
 
 // `/` a page of this site, `#` a heading further down the page the button sits
 // on, `https://` somewhere else entirely. anything else — a bare `www.`, a
