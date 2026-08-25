@@ -26,7 +26,7 @@ Long-form reasoning does not belong in a comment. Decisions go in
 export type PriceTier = {
   /** @example "De 4 à 6 joueurs", "Tarif unique" */
   label: string;
-}
+};
 ```
 
 ```ts
@@ -39,11 +39,37 @@ export type DetailCard = {
   highlight: string;
 };
 
-// BAD: add useless 
+// BAD: add useless contextual info, this can drift with the code
 export type DetailGroup = {
+  /** the top label name */
   name: string;
   cards: DetailCard[];
 };
+```
+
+```ts
+  // BAD: too long
+  /* the strip must never decide how tall its section is: the content beside it
+     does, and a column of photos is several times taller than that. So the
+     columns are lifted out of flow — an absolutely positioned layer contributes
+     nothing to the grid row, and then fills whatever height the row settled on. */
+  .columns {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 260px);
+    gap: var(--space-6);
+  }
+
+  // GOOD
+  /* the content decides the section height, not the columns */
+  .columns {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 260px);
+    gap: var(--space-6);
+  }
 ```
 
 ## Functions
