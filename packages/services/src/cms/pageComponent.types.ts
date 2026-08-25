@@ -57,12 +57,17 @@ export type PricesGame = {
   prices: GamePrice[];
 };
 
+export type PricesFootnote = {
+  title: string;
+  body: string;
+};
+
 type VenuePrices = {
   type: "venuePrices";
   title: string;
   surface: "default" | "muted";
   cta: Cta | undefined;
-  footnote: { title: string; body: string } | undefined;
+  footnote: PricesFootnote | undefined;
   venueSlug: string;
   games: PricesGame[];
 };
@@ -71,6 +76,9 @@ type GamePrices = {
   type: "gamePrices";
   title: string;
   surface: "default" | "muted";
+  cta: Cta | undefined;
+  footnote: PricesFootnote | undefined;
+  venueSlug: string;
   game: PricesGame;
 };
 

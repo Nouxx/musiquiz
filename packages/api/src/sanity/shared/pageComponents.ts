@@ -68,6 +68,9 @@ function gamePricesProjection({ lang }: { lang: Lang }) {
     _type == "gamePrices" => {
       "title": title[language == "${lang}"][0].value,
       "surface": coalesce(surface, "muted"),
+      "cta": ${optionalCtaProjection({ field: "cta", lang })},
+      ${footnoteProjection({ lang })},
+      "venueSlug": venue->slug.current,
       "game": *[
         _type == "venueGame"
         && venue._ref == ^.venue._ref
@@ -252,17 +255,17 @@ const sanityPricedGameSchema = z.strictObject({
 
 export type SanityPricedGame = z.infer<typeof sanityPricedGameSchema>;
 
+const sanityPricesFootnoteSchema = z.strictObject({
+  title: z.string().min(1),
+  body: z.string().min(1),
+});
+
 const sanityVenuePricesSchema = z.strictObject({
   _type: z.literal("venuePrices"),
   title: z.string().min(1),
   surface: z.enum(["default", "muted"]),
   cta: sanityCtaSchema.nullable(),
-  footnote: z
-    .strictObject({
-      title: z.string().min(1),
-      body: z.string().min(1),
-    })
-    .nullable(),
+  footnote: sanityPricesFootnoteSchema.nullable(),
   venueSlug: z.string().min(1),
   games: z.array(sanityPricedGameSchema),
 });
@@ -271,6 +274,9 @@ const sanityGamePricesSchema = z.strictObject({
   _type: z.literal("gamePrices"),
   title: z.string().min(1),
   surface: z.enum(["default", "muted"]),
+  cta: sanityCtaSchema.nullable(),
+  footnote: sanityPricesFootnoteSchema.nullable(),
+  venueSlug: z.string().min(1),
   // not nullable: a section pointing at a deleted venueGame has nothing to render
   // and no other game to fall back on, so it fails the build rather than rendering a heading over nothing
   game: sanityPricedGameSchema,

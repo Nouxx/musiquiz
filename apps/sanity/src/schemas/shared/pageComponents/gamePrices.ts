@@ -94,6 +94,20 @@ export const gamePricesType = defineType({
         },
       },
     }),
+    defineField({
+      name: "footnote",
+      title: "Footnote",
+      description:
+        "An optional panel under the buttons, for something worth reassuring a visitor about. Fill both fields or neither.",
+      type: "pricesFootnote",
+    }),
+    defineField({
+      name: "cta",
+      title: "Call to action",
+      description:
+        "An optional button beside the booking one, for an offer worth pointing at. Leave it empty and only the booking button shows.",
+      type: "cta",
+    }),
   ],
   preview: {
     select: {

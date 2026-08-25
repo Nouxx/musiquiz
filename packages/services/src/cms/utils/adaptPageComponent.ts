@@ -123,6 +123,9 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         type: "gamePrices",
         title: data.title,
         surface: data.surface,
+        cta: toCta(data.cta),
+        footnote: data.footnote ?? undefined,
+        venueSlug: data.venueSlug,
         game: toPricesGame(data.game),
       };
     }

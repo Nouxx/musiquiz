@@ -11,8 +11,7 @@ import RollingBanner from "@repo/ui/RollingBanner";
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 import Reviews from "@repo/ui/Reviews";
-import VenuePrices from "@repo/ui/VenuePrices";
-import GamePrices from "@repo/ui/GamePrices";
+import Prices from "@repo/ui/Prices";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import { toPriceOffer } from "../../libs/toPriceOffer";
 import { toContactFacts } from "../../libs/toContactFacts";
@@ -121,7 +120,7 @@ const t = getT(lang);
       }
       case "venuePrices": {
         return (
-          <VenuePrices
+          <Prices
             title={component.title}
             surface={component.surface}
             games={component.games.map((game) =>
@@ -214,11 +213,17 @@ const t = getT(lang);
       }
       case "gamePrices": {
         return (
-          <GamePrices
+          <Prices
             title={component.title}
             surface={component.surface}
-            game={toPriceOffer({ game: component.game, t, lang })}
+            games={[toPriceOffer({ game: component.game, t, lang })]}
             perPersonLabel={t("prices.perPerson")}
+            bookCta={{
+              label: t("prices.book"),
+              url: getRoutesForLang(lang).venueBook(component.venueSlug),
+            }}
+            cta={component.cta}
+            footnote={component.footnote}
           />
         );
       }

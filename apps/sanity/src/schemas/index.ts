@@ -4,6 +4,7 @@ import { pageComponentsType } from "./shared/pageComponents";
 import { cardsGridType, cardType } from "./shared/pageComponents/cardsGrid";
 import { carouselType } from "./shared/pageComponents/carousel";
 import { pageCoverType } from "./shared/pageCover";
+import { pricesFootnoteType } from "./shared/pricesFootnote";
 import { gameFormatType } from "./gameFormat";
 import { homepageType } from "./homepage";
 import { siteSettingsType } from "./siteSettings";
@@ -41,6 +42,7 @@ export const schemaTypes = [
   cardType,
   carouselType,
   reviewsType,
+  pricesFootnoteType,
   venuePricesType,
   gamePricesType,
   findUsType,

@@ -46,21 +46,7 @@ export const venuePricesType = defineType({
       title: "Footnote",
       description:
         "An optional panel under the buttons, for something worth reassuring a visitor about. Fill both fields or neither.",
-      type: "object",
-      fields: [
-        defineField({
-          name: "title",
-          title: "Title",
-          type: "internationalizedArrayString",
-          validation: (rule) => rule.required(),
-        }),
-        defineField({
-          name: "body",
-          title: "Body",
-          type: "internationalizedArrayText",
-          validation: (rule) => rule.required(),
-        }),
-      ],
+      type: "pricesFootnote",
     }),
     defineField({
       name: "cta",

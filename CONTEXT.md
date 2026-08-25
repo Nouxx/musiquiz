@@ -89,6 +89,18 @@ _Avoid_: carousel (a different Page Component), slider, cards row
 A Page Component pairing a set of questions with a strip of photos. Only one answer is open at a time, which is the `name` attribute on `<details>` doing it and not a script — so the whole section works with JavaScript off. The photo strip is decoration: it is two columns drifting past each other, it never decides how tall the section is, and it is not rendered at all below the width where it fits. Questions are authored on the page that shows them, so a venue's answers can name its city; there is no shared question set.
 _Avoid_: accordion (that is the UI Component inside it), questions block, help section
 
+**Detail Tabs**:
+A Page Component that explains a thing one facet at a time — a title, several named sets of cards with one set shown at a time, and the FAQ's drifting photo strip beside them. Everything it shows is authored on the page that shows it; it references no Venue and no Game Format, which is why it is not called Game Details even though a game's mechanics are what it was drawn for. The picker is radio inputs, so switching sets needs no JavaScript, and with a single set there is nothing to pick between and no picker exists.
+_Avoid_: tabs, accordion, game details, features section
+
+**Detail Group**:
+One tab of a Detail Tabs and the Detail Cards it reveals. Its name is the tab's label and is content; the picker's accessible name is interface copy and comes from the locales.
+_Avoid_: tab, panel, section
+
+**Detail Card**:
+The card inside a Detail Group — an Icon over a title, an optional lead-in sentence and a required closing one. The closing sentence is drawn heavier on every card, so the weight is a rhythm of the design and never emphasis against its neighbours. It carries no media, no badge and no call to action, which is what separates it from a Card and from a Deck Card.
+_Avoid_: feature card, tile, item
+
 **Site Chrome**:
 The one kind of Feature Component that fetches its own data instead of receiving it from a Page — `Header`, `Footer`. Its content is site-wide settings, so it belongs to no single page and threading it through every Page would be noise. Any other Feature Component takes its data as props.
 
