@@ -76,11 +76,12 @@
    sharpness. It needs revisiting only if those floors or the ratio move.
 
    ------------------------------------------------------------
-   72rem — FAQ image strip shown
+   72rem — drifting image strip shown
    ------------------------------------------------------------
-   Used by Faq.astro for its accordion / image-strip row, and quoted by
-   RemoteImage.astro in the `faq-media` variant's `sizes` string, which is TS
-   and must be edited in step.
+   Used by DriftingColumns.astro and by the rows its hosts draw beside it —
+   Faq.astro's accordion, GameDetails.astro's band — and quoted by
+   RemoteImage.astro in the `drifting-media` variant's `sizes` string, which is
+   TS and must be edited in step.
 
    Derived: the strip is drawn at a fixed 544px (two 260px columns and the
    24px between them) and sits 120px from the accordion, so the row needs
@@ -93,6 +94,21 @@
    replaces it with a carousel we deliberately do not build, so the section
    is badge + title + accordion at full width. Move the strip width, the gap
    or the floor and this number moves with them.
+
+   ------------------------------------------------------------
+   80rem — drifting strip shown beside a Game Details band
+   ------------------------------------------------------------
+   The same strip, but its host needs a wider row than the FAQ's. Game Details
+   puts two 294px cards side by side, so its floor is 612 rather than 440, and
+   its gap is 80 rather than 120: 48px of gutters + 544 strip + 80 gap + 612
+   band = 1284px, taken at the 1280px step. That leaves the band at 608 and the
+   two cards at 292 each; the flex cap absorbs the 2px.
+
+   Between 72rem and 80rem the strip is hidden for Game Details but shown for
+   the FAQ, which is why DriftingColumns takes a `from` prop. Both hosts still
+   share the one `drifting-media` variant: its `sizes` quotes 72rem, and in the
+   band where that is optimistic the photos are `display: none` and lazy, so
+   they are never fetched anyway.
 
    ------------------------------------------------------------
    64rem and 88rem — carousel slot count

@@ -1,0 +1,60 @@
+---
+import Card from "../primitives/Card.astro";
+import Icon from "../primitives/Icon.astro";
+import Text from "../primitives/Text.astro";
+import type { DetailCard } from "../types";
+
+interface Props {
+  card: DetailCard;
+}
+
+const { card } = Astro.props;
+---
+
+<Card border="thick" class="detail-card">
+  <Icon name={card.icon} size="xxl" />
+
+  <div class="copy">
+    <Text as="h3" variant="title-h5">{card.title}</Text>
+
+    <div class="sentences">
+      {
+        card.intro && (
+          <div class="intro">
+            <Text as="p" variant="paragraph-s">
+              {card.intro}
+            </Text>
+          </div>
+        )
+      }
+
+      <Text as="p" variant="paragraph-s-sm">{card.highlight}</Text>
+    </div>
+  </div>
+</Card>
+
+<style>
+  .detail-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    text-align: left;
+    background-color: var(--color-surface);
+  }
+
+  .copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .sentences {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .intro {
+    color: var(--color-text-muted);
+  }
+</style>

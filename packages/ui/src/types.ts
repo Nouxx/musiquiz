@@ -94,6 +94,18 @@ export type RichTextNode = {
   spans: RichTextSpan[];
 };
 
+export type DetailCard = {
+  icon: IconName;
+  title: string;
+  intro?: string;
+  highlight: string;
+};
+
+export type DetailGroup = {
+  name: string;
+  cards: DetailCard[];
+};
+
 export type FaqQuestion = {
   question: string;
   answer: RichTextNode[];

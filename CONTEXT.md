@@ -96,6 +96,22 @@ The one kind of Feature Component that fetches its own data instead of receiving
 A pile of **Deck Cards** stacked in one place, one in front and the rest behind it, that a visitor clicks or swipes through. It never runs out: the card dealt away goes to the back. A Deck Card is a photo over a title and a Rich Text body — it carries no badge and no call to action, which is what separates it from a Card. Two to six per deck.
 _Avoid_: carousel, slider, stack
 
+**Prices**:
+The section that says what a game costs at a Venue — one game's Price Tiers at a time, beside a photo, over a booking button and an optional footnote panel. When it holds more than one game it grows a picker above the tiers; with a single game there is nothing to pick between and no picker exists. One UI Component serves both **Venue Prices** and **Game Prices**, which differ in what an editor picks, not in what a visitor sees.
+_Avoid_: pricing, tarifs, rates, price table
+
+**Price Tier**:
+One bracket of a game's price at a Venue — a player-count band, an amount per person, and an optional note. A game with a single flat price still has one Tier; the band is what the Tier names, never the game.
+_Avoid_: price, rate, package
+
+**Venue Prices**:
+The Page Component that shows every game a Venue runs, so a visitor picks between them. It names only the Venue — which games it lists is the set of Venue Games, never an authored list.
+_Avoid_: prices section, all prices
+
+**Game Prices**:
+The Page Component pinned to one (Venue, Game Format) pair, showing that game's Price Tiers alone. It names both, even on a Venue Game page that already asserts the pair, because a Page Component makes no assumption about the document hosting it.
+_Avoid_: single price, game price section
+
 ## Layouts
 
 **Layout**:
