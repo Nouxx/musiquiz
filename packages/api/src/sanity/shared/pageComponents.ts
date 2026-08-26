@@ -199,6 +199,16 @@ function detailTabsProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function textSlideshowProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "textSlideshow" => {
+      "textBlock": ${textBlockProjection({ field: "textBlock", lang })},
+      "surface": coalesce(surface, "default"),
+      "images": images[] ${imageProjection({ lang })}
+    }
+  `;
+}
+
 export function pageComponentsProjection({ lang }: { lang: Lang }) {
   return `
     pageComponents[]{
@@ -215,6 +225,7 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${faqProjection({ lang })},
       ${cardsScrollerProjection({ lang })},
       ${detailTabsProjection({ lang })},
+      ${textSlideshowProjection({ lang })},
     }
   `;
 }
@@ -384,6 +395,13 @@ const sanityDetailTabsSchema = z.strictObject({
   images: z.array(sanityImageSchema).min(6).max(12),
 });
 
+const sanityTextSlideshowSchema = z.strictObject({
+  _type: z.literal("textSlideshow"),
+  textBlock: sanityTextBlockSchema,
+  surface: z.enum(["default", "muted"]),
+  images: z.array(sanityImageSchema).min(1).max(8),
+});
+
 export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityRollingBannerSchema,
   sanityCardsGridSchema,
@@ -397,6 +415,7 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityFaqSchema,
   sanityCardsScrollerSchema,
   sanityDetailTabsSchema,
+  sanityTextSlideshowSchema,
 ]);
 
 export type SanityPageComponent = z.infer<typeof sanityPageComponentSchema>;

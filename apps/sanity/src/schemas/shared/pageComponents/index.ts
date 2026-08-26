@@ -17,5 +17,6 @@ export const pageComponentsType = defineType({
     defineArrayMember({ type: "faq" }),
     defineArrayMember({ type: "cardsScroller" }),
     defineArrayMember({ type: "detailTabs" }),
+    defineArrayMember({ type: "textSlideshow" }),
   ],
 });

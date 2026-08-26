@@ -4,6 +4,7 @@ import CardsGrid from "@repo/ui/CardsGrid";
 import CardsScroller from "@repo/ui/CardsScroller";
 import ClientContactForm from "@repo/ui/ClientContactForm";
 import DetailTabs from "@repo/ui/DetailTabs";
+import TextSlideshow from "@repo/ui/TextSlideshow";
 import Faq from "@repo/ui/Faq";
 import Logos from "@repo/ui/Logos";
 import FindUs from "@repo/ui/FindUs";
@@ -209,6 +210,23 @@ const t = getT(lang);
             ctaTone={component.textBlock.ctaTone}
             cards={component.cards}
             nextCardLabel={t("cardsScroller.nextCard")}
+          />
+        );
+      }
+      case "textSlideshow": {
+        return (
+          <TextSlideshow
+            badge={component.textBlock.badge}
+            title={component.textBlock.title}
+            body={component.textBlock.body}
+            additionalCtas={component.textBlock.additionalCtas}
+            cta={component.textBlock.cta}
+            ctaTone={component.textBlock.ctaTone}
+            surface={component.surface}
+            images={component.images}
+            previousLabel={t("carousel.previous")}
+            nextLabel={t("carousel.next")}
+            goToImageLabel={t("carousel.goToImage")}
           />
         );
       }

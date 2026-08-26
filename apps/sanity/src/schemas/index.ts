@@ -28,6 +28,7 @@ import {
   detailGroupType,
   detailTabsType,
 } from "./shared/pageComponents/detailTabs";
+import { textSlideshowType } from "./shared/pageComponents/textSlideshow";
 import { textBlockType } from "./shared/textBlock";
 
 export const schemaTypes = [
@@ -60,5 +61,6 @@ export const schemaTypes = [
   detailTabsType,
   detailGroupType,
   detailCardType,
+  textSlideshowType,
   textBlockType,
 ];

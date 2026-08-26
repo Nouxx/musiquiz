@@ -1,0 +1,79 @@
+---
+import TextBlock from "./TextBlock.astro";
+import MiniCarousel from "./primitives/MiniCarousel.astro";
+import TwoBlocks from "./primitives/TwoBlocks.astro";
+import Section from "./Section.astro";
+import type { CtaLink, ImageSource, RichTextNode } from "./types";
+
+interface Props {
+  badge?: string;
+  title: string;
+  body: RichTextNode[];
+  additionalCtas?: CtaLink[];
+  cta?: CtaLink;
+  ctaTone?: "red" | "blue";
+  surface?: "default" | "muted";
+  images: ImageSource[];
+  previousLabel: string;
+  nextLabel: string;
+  goToImageLabel: string;
+}
+
+const {
+  badge,
+  title,
+  body,
+  additionalCtas,
+  cta,
+  ctaTone,
+  surface = "default",
+  images,
+  previousLabel,
+  nextLabel,
+  goToImageLabel,
+} = Astro.props;
+---
+
+<Section {surface} spacing="l">
+  <TwoBlocks>
+    <div slot="first" class="copy">
+      <TextBlock
+        {badge}
+        {title}
+        {body}
+        {additionalCtas}
+        {cta}
+        {ctaTone}
+        headingLevel="h2"
+        size="l"
+      />
+    </div>
+
+    <div slot="second" class="media">
+      <MiniCarousel
+        {images}
+        label={title}
+        {previousLabel}
+        {nextLabel}
+        {goToImageLabel}
+      />
+    </div>
+  </TwoBlocks>
+</Section>
+
+<style>
+  .copy {
+    max-inline-size: 33rem;
+  }
+
+  .media {
+    display: none;
+  }
+
+  /* 60rem — the TwoBlocks split, see styles/breakpoints.css */
+  @media (width >= 60rem) {
+    .media {
+      display: block;
+    }
+  }
+</style>

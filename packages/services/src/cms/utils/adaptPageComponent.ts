@@ -119,6 +119,15 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
       };
     }
 
+    case "textSlideshow": {
+      return {
+        type: "textSlideshow",
+        textBlock: toTextBlock(data.textBlock),
+        surface: data.surface,
+        images: data.images.map((image) => toCmsImage(image)),
+      };
+    }
+
     case "detailTabs": {
       return {
         type: "detailTabs",

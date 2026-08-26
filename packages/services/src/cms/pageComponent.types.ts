@@ -166,6 +166,13 @@ type DetailTabs = {
   images: CmsImage[];
 };
 
+type TextSlideshow = {
+  type: "textSlideshow";
+  textBlock: TextBlock;
+  surface: "default" | "muted";
+  images: CmsImage[];
+};
+
 export type PageComponent =
   | RollingBanner
   | CardsGrid
@@ -178,4 +185,5 @@ export type PageComponent =
   | Logos
   | Faq
   | CardsScroller
-  | DetailTabs;
+  | DetailTabs
+  | TextSlideshow;
