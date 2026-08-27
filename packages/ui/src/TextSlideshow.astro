@@ -13,6 +13,7 @@ interface Props {
   cta?: CtaLink;
   ctaTone?: "red" | "blue";
   surface?: "default" | "muted";
+  slideshowPosition?: "left" | "right";
   images: ImageSource[];
   previousLabel: string;
   nextLabel: string;
@@ -27,16 +28,22 @@ const {
   cta,
   ctaTone,
   surface = "default",
+  slideshowPosition = "right",
   images,
   previousLabel,
   nextLabel,
   goToImageLabel,
 } = Astro.props;
+
+const slideshowFirst = slideshowPosition === "left";
 ---
 
 <Section {surface} spacing="l">
   <TwoBlocks>
-    <div slot="first" class="copy">
+    <div
+      slot={slideshowFirst ? "second" : "first"}
+      class:list={["copy", { trailing: slideshowFirst }]}
+    >
       <TextBlock
         {badge}
         {title}
@@ -49,7 +56,7 @@ const {
       />
     </div>
 
-    <div slot="second" class="media">
+    <div slot={slideshowFirst ? "first" : "second"} class="media">
       <MiniCarousel
         {images}
         label={title}
@@ -74,6 +81,10 @@ const {
   @media (width >= 60rem) {
     .media {
       display: block;
+    }
+
+    .copy.trailing {
+      margin-inline-start: auto;
     }
   }
 </style>

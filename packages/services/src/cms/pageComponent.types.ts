@@ -170,6 +170,7 @@ type TextSlideshow = {
   type: "textSlideshow";
   textBlock: TextBlock;
   surface: "default" | "muted";
+  slideshowPosition: "left" | "right";
   images: CmsImage[];
 };
 

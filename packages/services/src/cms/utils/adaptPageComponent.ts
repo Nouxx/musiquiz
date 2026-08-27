@@ -124,6 +124,7 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         type: "textSlideshow",
         textBlock: toTextBlock(data.textBlock),
         surface: data.surface,
+        slideshowPosition: data.slideshowPosition,
         images: data.images.map((image) => toCmsImage(image)),
       };
     }

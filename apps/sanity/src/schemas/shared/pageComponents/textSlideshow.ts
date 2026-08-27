@@ -26,6 +26,22 @@ export const textSlideshowType = defineType({
       // because internationalizedArrayString (array) is rendered as grid cells as well
     }),
     defineField({
+      name: "slideshowPosition",
+      title: "Slideshow position",
+      description:
+        "Which side the slideshow sits on, beside the copy. Big screens only \u2014 on a phone the copy stands alone whichever side you pick.",
+      type: "string",
+      initialValue: "right",
+      options: {
+        list: [
+          { title: "Left", value: "left" },
+          { title: "Right", value: "right" },
+        ],
+        layout: "radio",
+      },
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: "surface",
       title: "Background",
       type: "string",

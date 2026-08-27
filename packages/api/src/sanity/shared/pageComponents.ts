@@ -204,6 +204,7 @@ function textSlideshowProjection({ lang }: { lang: Lang }) {
     _type == "textSlideshow" => {
       "textBlock": ${textBlockProjection({ field: "textBlock", lang })},
       "surface": coalesce(surface, "default"),
+      "slideshowPosition": coalesce(slideshowPosition, "right"),
       "images": images[] ${imageProjection({ lang })}
     }
   `;
@@ -410,6 +411,7 @@ const sanityTextSlideshowSchema = z.strictObject({
   _type: z.literal("textSlideshow"),
   textBlock: sanityTextBlockSchema,
   surface: z.enum(["default", "muted"]),
+  slideshowPosition: z.enum(["left", "right"]),
   images: z.array(sanityImageSchema).min(1).max(8),
 });
 
