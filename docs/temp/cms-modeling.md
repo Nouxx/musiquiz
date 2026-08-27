@@ -9,7 +9,7 @@ Resolved. Rationale is [ADR 0010](../adr/0010-page-content-lives-in-documents.md
 | `venue`                    | slug, title, logo, address, regionCode, googleMapsLink, opening hours ×7, phone, mail | facts only — no page content                        |
 | `gameFormat`               | name, slug, `displayOrder`                                                            | —                                                   |
 | `eventFormat`              | name, slug, `displayOrder`                                                            | — (new)                                             |
-| `venueGame`                | venue→, game→`gameFormat`, price, pageCover, pageComponents                           | `/[venue]/jeux/[game]`                              |
+| `venueGame`                | venue→, game→`gameFormat`, prices[], pageCover, pageComponents                        | `/[venue]/jeux/[game]`                              |
 | `venueEvent`               | venue→, event→`eventFormat`, pageCover, pageComponents                                | `/[venue]/evenements/[event]`                       |
 | `venuePage`                | venue→, pageType `home\|gift\|book`, pageCover, pageComponents                        | `/[venue]/`, `/[venue]/offrir`, `/[venue]/reserver` |
 | `homepage`, `siteSettings` | unchanged                                                                             | site root, chrome                                   |
@@ -63,17 +63,17 @@ Content
 
 Per [ADR 0009](../adr/0009-sanity-query-modules.md).
 
-| Module               | Action                                                            |
-| -------------------- | ----------------------------------------------------------------- |
-| `venuePage.ts`       | new — `({ lang, venueSlug, pageType })`, backs home + gift + book |
-| `venueGamePage.ts`   | new                                                               |
-| `venueEventPage.ts`  | new                                                               |
-| `venueGameSlugs.ts`  | new — `getStaticPaths`                                            |
-| `venueEventSlugs.ts` | new — `getStaticPaths`                                            |
-| `venueHomepage.ts`   | delete — absorbed by `venuePage.ts`                               |
-| `venueFooter.ts`     | done — `offerings[]` → `venueGame` subquery                       |
-| `header.ts`          | done — same game-link change                                      |
-| `venueSlugs.ts`      | unchanged                                                         |
+| Module               | Action                                                             |
+| -------------------- | ------------------------------------------------------------------ |
+| `venuePage.ts`       | done — `({ lang, venueSlug, pageType })`, backs home + gift + book |
+| `venueGamePage.ts`   | done                                                               |
+| `venueEventPage.ts`  | done                                                               |
+| `venueGameSlugs.ts`  | done — `getStaticPaths`                                            |
+| `venueEventSlugs.ts` | done — `getStaticPaths`                                            |
+| `venueHomepage.ts`   | delete — absorbed by `venuePage.ts`                                |
+| `venueFooter.ts`     | done — `offerings[]` → `venueGame` subquery                        |
+| `header.ts`          | done — same game-link change                                       |
+| `venueSlugs.ts`      | unchanged                                                          |
 
 Footer/header game list becomes:
 
@@ -146,6 +146,21 @@ Verified anonymously: both pairs resolve in both locales, ordered by `displayOrd
 - Price moved with it: `venueGame.price` is the only place a price is authored.
 
 Consequence: a venue's games are whatever `venueGame` documents exist for it. Venues other than Lille have none yet, so their header and footer game lists render empty until those documents are authored. Old `offerings` data still sits on the venue documents in `production` as an unknown field — invisible in the Studio, read by nothing.
+
+## Tracer bullet 5 — venue event pages, shipped
+
+- `eventFormat` document type: name, slug, `displayOrder`. No `image` — `gameFormat.image` exists only for the price components, and an event carries no price.
+- `venueEvent` document type: venue (readOnly, from the template), event, Page Cover, Page Components. No price.
+- The `(venue, format)` uniqueness machinery moved out of `venueGame.ts` into `shared/venueFormatUniqueness.ts`, parameterised by document type and reference field, and both types now enforce the rule from one implementation. The field name is interpolated into the GROQ rather than passed as a parameter — a parameter binds a value, never an attribute.
+- `structure.ts` gains an "Events" list per venue; `venueEvent` joins the nested and structure-only type sets, with its own initial value template.
+- Query Modules `venueEventPage.ts` and `venueEventSlugs.ts`; services `getVenueEventPageData`, `getVenueEventSlugs`. The cover CTA points at the venue's booking page, as the game page's does.
+- `getRoutesForLang.venueEvent` emits `/[venue]/evenements/[event]` and `/en/[venue]/events/[event]`; routes mount one `VenueEventPage.astro` from both locales.
+- The header's "Occasions" item stops being `#todo`: `header.ts` gains an `events` subquery and `Header.astro` turns it into a menu, beside the games menu it already had. The item count is unchanged, so the hardcoded "header collapsed" breakpoint still holds.
+- Two Event Formats seeded — EVG / EVJF (0), Team building (1) — and Lille's two events authored with a Rolling Banner each.
+
+Verified through the site's own anonymous client: both events resolve in both locales, ordered by `displayOrder`, with CTAs on `/lille/reserver` and `/en/lille/book`. The uniqueness query returns 0 against the document itself and 1 for a would-be duplicate. A build restricted to Lille emits all four pages and links them from the header.
+
+**New build rule: a venue needs at least one game and at least one event.** `header.ts` requires `min(1)` on both arrays and `venueFooter.ts` on `games` — an empty menu is not a page worth shipping, so the build says so instead. Paris has two games and no events, and fails the build today. This is the Q11 rule reaching the format lists.
 
 ## Sequence
 

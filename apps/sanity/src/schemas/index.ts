@@ -5,11 +5,13 @@ import { cardsGridType, cardType } from "./shared/pageComponents/cardsGrid";
 import { carouselType } from "./shared/pageComponents/carousel";
 import { pageCoverType } from "./shared/pageCover";
 import { pricesFootnoteType } from "./shared/pricesFootnote";
+import { eventFormatType } from "./eventFormat";
 import { gameFormatType } from "./gameFormat";
 import { homepageType } from "./homepage";
 import { siteSettingsType } from "./siteSettings";
 import { venueType } from "./venue";
 import { priceType, venueGameType } from "./venueGame";
+import { venueEventType } from "./venueEvent";
 import { venuePageType } from "./venuePage";
 import { rollingBannerType } from "./shared/pageComponents/rollingBanner";
 import { reviewsType } from "./shared/pageComponents/reviews";
@@ -37,9 +39,11 @@ export const schemaTypes = [
   venueType,
   venuePageType,
   venueGameType,
+  venueEventType,
   priceType,
   siteSettingsType,
   gameFormatType,
+  eventFormatType,
   imageWithAltType,
   pageComponentsType,
   pageCoverType,

@@ -14,10 +14,11 @@ export const singletonIds = ["homepage", "siteSettings"];
 const singletonTypes = new Set(singletonIds);
 
 /** types that are never created from the "create new" menu */
-const structureOnlyTypes = new Set(["venuePage", "venueGame"]);
+const structureOnlyTypes = new Set(["venuePage", "venueGame", "venueEvent"]);
 
 export const venuePageTemplateId = "venuePage-by-venue";
 export const venueGameTemplateId = "venueGame-by-venue";
+export const venueEventTemplateId = "venueEvent-by-venue";
 
 export default defineConfig({
   name: "default",
@@ -69,6 +70,15 @@ export default defineConfig({
         id: venueGameTemplateId,
         title: "Venue Game",
         schemaType: "venueGame",
+        parameters: [{ name: "venueId", type: "string" }],
+        value: ({ venueId }: { venueId: string }) => ({
+          venue: { _type: "reference", _ref: venueId },
+        }),
+      },
+      {
+        id: venueEventTemplateId,
+        title: "Venue Event",
+        schemaType: "venueEvent",
         parameters: [{ name: "venueId", type: "string" }],
         value: ({ venueId }: { venueId: string }) => ({
           venue: { _type: "reference", _ref: venueId },

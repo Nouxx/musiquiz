@@ -63,6 +63,12 @@ export type VenueGamePage = {
   components: PageComponent[];
 };
 
+export type VenueEventPage = {
+  eventName: string;
+  pageCover: PageCover;
+  components: PageComponent[];
+};
+
 export type Header = {
   logo: CmsImage;
   venue: {
@@ -75,6 +81,10 @@ export type Header = {
     phoneHref: string;
   };
   experiences: {
+    label: string;
+    url: string;
+  }[];
+  events: {
     label: string;
     url: string;
   }[];
