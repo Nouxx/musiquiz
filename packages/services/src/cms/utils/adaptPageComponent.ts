@@ -128,6 +128,15 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
       };
     }
 
+    case "videoEmbed": {
+      return {
+        type: "videoEmbed",
+        videoId: data.videoId,
+        title: data.title,
+        surface: data.surface,
+      };
+    }
+
     case "detailTabs": {
       return {
         type: "detailTabs",

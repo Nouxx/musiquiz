@@ -5,6 +5,7 @@ import CardsScroller from "@repo/ui/CardsScroller";
 import ClientContactForm from "@repo/ui/ClientContactForm";
 import DetailTabs from "@repo/ui/DetailTabs";
 import TextSlideshow from "@repo/ui/TextSlideshow";
+import VideoEmbed from "@repo/ui/VideoEmbed";
 import Faq from "@repo/ui/Faq";
 import Logos from "@repo/ui/Logos";
 import FindUs from "@repo/ui/FindUs";
@@ -227,6 +228,15 @@ const t = getT(lang);
             previousLabel={t("carousel.previous")}
             nextLabel={t("carousel.next")}
             goToImageLabel={t("carousel.goToImage")}
+          />
+        );
+      }
+      case "videoEmbed": {
+        return (
+          <VideoEmbed
+            videoId={component.videoId}
+            title={component.title}
+            surface={component.surface}
           />
         );
       }

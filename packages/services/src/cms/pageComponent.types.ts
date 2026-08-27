@@ -173,6 +173,13 @@ type TextSlideshow = {
   images: CmsImage[];
 };
 
+type VideoEmbed = {
+  type: "videoEmbed";
+  videoId: string;
+  title: string;
+  surface: "default" | "muted" | "vivid";
+};
+
 export type PageComponent =
   | RollingBanner
   | CardsGrid
@@ -186,4 +193,5 @@ export type PageComponent =
   | Faq
   | CardsScroller
   | DetailTabs
-  | TextSlideshow;
+  | TextSlideshow
+  | VideoEmbed;

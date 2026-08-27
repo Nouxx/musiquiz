@@ -1,0 +1,45 @@
+---
+import Card from "./primitives/Card.astro";
+import Section from "./Section.astro";
+
+interface Props {
+  /** @example "dQw4w9WgXcQ" — the `v` parameter of a watch URL */
+  videoId: string;
+  title: string;
+  surface?: "default" | "muted" | "vivid";
+}
+
+const { videoId, title, surface = "vivid" } = Astro.props;
+
+// rel=0 scopes the end grid to our own channel; YouTube killed the full opt-out
+// in 2018, and modestbranding in 2023 — the title bar and "Watch on YouTube"
+// cannot be removed
+const src = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&playsinline=1`;
+---
+
+<Section {surface} spacing="l">
+  <Card border="thick" class="frame">
+    <iframe
+      class="player"
+      {src}
+      {title}
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen></iframe>
+  </Card>
+</Section>
+
+<style>
+  .frame {
+    max-inline-size: 65rem;
+    margin-inline: auto;
+  }
+
+  .player {
+    display: block;
+    inline-size: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+  }
+</style>

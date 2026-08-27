@@ -29,6 +29,7 @@ import {
   detailTabsType,
 } from "./shared/pageComponents/detailTabs";
 import { textSlideshowType } from "./shared/pageComponents/textSlideshow";
+import { videoEmbedType } from "./shared/pageComponents/videoEmbed";
 import { textBlockType } from "./shared/textBlock";
 
 export const schemaTypes = [
@@ -62,5 +63,6 @@ export const schemaTypes = [
   detailGroupType,
   detailCardType,
   textSlideshowType,
+  videoEmbedType,
   textBlockType,
 ];
