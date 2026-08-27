@@ -145,10 +145,10 @@ type Faq = {
   images: CmsImage[];
 };
 
-type DetailIcon = "game";
+type DetailMark = "50-50" | "mute" | "theft" | "x2";
 
 export type DetailCard = {
-  icon: DetailIcon;
+  mark: DetailMark | undefined;
   title: string;
   intro: string | undefined;
   highlight: string;

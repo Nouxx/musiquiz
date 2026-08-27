@@ -188,7 +188,7 @@ function detailTabsProjection({ lang }: { lang: Lang }) {
       groups[]{
         "name": name[language == "${lang}"][0].value,
         cards[]{
-          icon,
+          mark,
           "title": title[language == "${lang}"][0].value,
           "intro": intro[language == "${lang}"][0].value,
           "highlight": highlight[language == "${lang}"][0].value
@@ -386,7 +386,7 @@ const sanityCardsScrollerSchema = z.strictObject({
 });
 
 const sanityDetailCardSchema = z.strictObject({
-  icon: z.enum(["game"]),
+  mark: z.enum(["50-50", "mute", "theft", "x2"]).nullable(),
   title: z.string().min(1),
   intro: z.string().min(1).nullable(),
   highlight: z.string().min(1),

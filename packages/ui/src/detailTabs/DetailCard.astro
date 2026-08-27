@@ -1,6 +1,6 @@
 ---
 import Card from "../primitives/Card.astro";
-import Icon from "../primitives/Icon.astro";
+import Mark from "../primitives/Mark.astro";
 import Text from "../primitives/Text.astro";
 import type { DetailCard } from "../types";
 
@@ -12,7 +12,7 @@ const { card } = Astro.props;
 ---
 
 <Card border="thick" class="detail-card">
-  <Icon name={card.icon} size="xxl" />
+  {card.mark && <Mark name={card.mark} />}
 
   <div class="copy">
     <Text as="h3" variant="title-h5">{card.title}</Text>

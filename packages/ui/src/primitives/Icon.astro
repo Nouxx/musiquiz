@@ -6,7 +6,6 @@ const sizes = {
   m: "1.125rem", // 18px — trailing chevron in a secondary button
   l: "1.25rem", // 20px — leading flag in the language button
   xl: "1.5rem", // 24px — icon inside a 40px social chip
-  xxl: "5rem", // 80px — the mark on a Detail Card
 } as const;
 
 export interface Props {
@@ -31,7 +30,7 @@ const markup = icons[name].replace(
   .musiquiz-icon {
     display: block;
     inline-size: var(--icon-size);
-    block-size: auto;
+    block-size: var(--icon-size);
     fill: currentcolor; /* keep flags in correct colors */
     flex-shrink: 0;
   }

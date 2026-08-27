@@ -1,4 +1,5 @@
 import type { IconName } from "./lib/icons";
+import type { MarkName } from "./lib/marks";
 
 export type SpaceScale =
   | "1"
@@ -95,7 +96,7 @@ export type RichTextNode = {
 };
 
 export type DetailCard = {
-  icon: IconName;
+  mark?: MarkName;
   title: string;
   intro?: string;
   highlight: string;

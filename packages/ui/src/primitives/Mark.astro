@@ -1,0 +1,29 @@
+---
+import { marks, type MarkName } from "../lib/marks";
+
+export interface Props {
+  name: MarkName;
+}
+
+const { name } = Astro.props;
+
+const markup = marks[name].replace(
+  "<svg ",
+  `<svg class="musiquiz-mark" aria-hidden="true" focusable="false" `,
+);
+---
+
+<Fragment set:html={markup} />
+
+<style is:global>
+  /* global is necessary here because Astro stamps its `data-astro-cid-*` marker at compile
+     time onto template elements only, so a scoped rule would never match an
+     svg that arrives through `set:html`. `musiquiz-` prefixed to prevent collisions */
+  .musiquiz-mark {
+    display: block;
+    inline-size: 5rem; /* 80px — the width Figma draws the Detail Card mark at */
+    block-size: auto; /* the marks are 1.56:1, not square */
+    fill: currentcolor;
+    flex-shrink: 0;
+  }
+</style>

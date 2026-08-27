@@ -6,7 +6,7 @@ export function toDetailGroup(group: SanityDetailGroup): DetailGroup {
   return {
     name: group.name,
     cards: group.cards.map((card) => ({
-      icon: card.icon,
+      mark: card.mark ?? undefined,
       title: card.title,
       intro: card.intro ?? undefined,
       highlight: card.highlight,

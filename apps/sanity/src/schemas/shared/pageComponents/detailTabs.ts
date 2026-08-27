@@ -1,7 +1,12 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { frenchValue, type LocalizedEntry } from "../frenchValue";
 
-const DETAIL_ICONS = [{ title: "Game", value: "game" }];
+const DETAIL_MARKS = [
+  { title: "Le 50/50", value: "50-50" },
+  { title: "Le Mute", value: "mute" },
+  { title: "Le Vol", value: "theft" },
+  { title: "Le x2", value: "x2" },
+];
 
 export const detailCardType = defineType({
   name: "detailCard",
@@ -9,11 +14,12 @@ export const detailCardType = defineType({
   type: "object",
   fields: [
     defineField({
-      name: "icon",
-      title: "Icon",
+      name: "mark",
+      title: "Mark",
+      description:
+        "Optional. The drawing above the title; a card without one starts at its title.",
       type: "string",
-      options: { list: DETAIL_ICONS, layout: "dropdown" },
-      validation: (rule) => rule.required(),
+      options: { list: DETAIL_MARKS, layout: "dropdown" },
     }),
     defineField({
       name: "title",
@@ -40,12 +46,12 @@ export const detailCardType = defineType({
   preview: {
     select: {
       title: "title",
-      icon: "icon",
+      mark: "mark",
     },
-    prepare({ title, icon }: { title?: LocalizedEntry[]; icon?: string }) {
+    prepare({ title, mark }: { title?: LocalizedEntry[]; mark?: string }) {
       return {
         title: frenchValue(title) ?? "Detail card",
-        subtitle: icon,
+        subtitle: mark,
       };
     },
   },
