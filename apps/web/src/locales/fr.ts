@@ -22,6 +22,12 @@ export const fr = {
     exact_one: "{{count}} joueur",
     exact_other: "{{count}} joueurs",
   },
+  cardsScroller: {
+    nextCard: "Carte suivante",
+  },
+  detailTabs: {
+    chooseGroup: "Choisir une catégorie",
+  },
   faq: {
     badge: "FAQ",
   },

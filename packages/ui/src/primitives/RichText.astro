@@ -2,14 +2,15 @@
 import Link from "./Link.astro";
 import type { TextVariant } from "./Text.astro";
 import Text from "./Text.astro";
-import type { RichTextNode } from "../types";
+import type { RichTextNode, SpaceScale } from "../types";
 
 interface Props {
   value: RichTextNode[];
   variant?: TextVariant;
+  gap?: SpaceScale;
 }
 
-const { value, variant = "paragraph-base" } = Astro.props;
+const { value, variant = "paragraph-base", gap = "2" } = Astro.props;
 ---
 
 {
@@ -19,7 +20,7 @@ const { value, variant = "paragraph-base" } = Astro.props;
    * than as a reshape of what a caller passes.
    */
 }
-<div class="rich-text">
+<div class="rich-text" style={{ "--rich-text-gap": `var(--space-${gap})` }}>
   {
     value.map((node) => (
       <Text as="p" variant={variant}>
@@ -37,7 +38,7 @@ const { value, variant = "paragraph-base" } = Astro.props;
   .rich-text {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--rich-text-gap);
   }
 
   /* the body face ships 400 and 600 only (apps/web/astro.config.mjs), so the default `bold` would be synthesized */

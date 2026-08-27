@@ -4,6 +4,19 @@ A music quiz web app. This glossary fixes the vocabulary of the `apps/web` desig
 
 Musiquiz is a entertainment business that operates in France and provide various activites around music. Its a physical business with real places and this project is just the website to advertise about it and let users reserve their sessions.
 
+## Figma
+
+The design lives in Figma and its access rules are non-obvious enough to get wrong twice.
+
+**Whenever Figma comes up — a link, a node id, a "check the design" — read these memory files first, before any `mcp__figma__*` call:**
+
+- `figma-mcp-access.md` — which fileKey to read (the duplicate, not the original) and why the original 403s
+- `figma-presentation-is-source-of-truth.md` — the `Présentation` page is the only live page, plus the node-id map of its screens
+- `figma-sheet-state-vs-variant.md` — how to read an exported sheet without mistaking states for variants
+- `qa-is-clements-job.md` — hand over a scratch route, do not self-inspect the render
+
+They sit in `~/.claude/projects/-Users-clement-GitHub-musiquiz/memory/`, indexed by `MEMORY.md`.
+
 ## Domain
 
 **Venue**:
@@ -64,12 +77,52 @@ _Avoid_: card list, tiles, features grid
 The UI Component inside a Cards Grid — media, badge, title, optional body, optional call to action, on a light surface inside a gradient ring. Every Card in a grid is the same width and height whatever it holds; the media is a fixed 240px crop and the call to action is pinned to the bottom edge, so a row of Cards lines up whatever the bodies do.
 _Avoid_: tile, panel, box
 
+**Text Block**:
+A column of copy a Page Component holds — badge, title, Rich Text body, up to three arrow links, and one button. Not a Page Component itself: an editor never adds a Text Block to a page, they add something that holds one, which is why it is registered in Sanity but absent from the page components array. It renders no Section — the host owns the surface, the spacing and the width. The heading level and the drawn title size are decided by the host in code, not authored: an editor writes copy, they do not pick a type step.
+_Avoid_: text section, copy block, intro, prose
+
+**Cards Scroller**:
+A Page Component pairing a Text Block with a horizontally scrolling set of cards. The cards are not built yet — it renders the Text Block alone in the first half of a `TwoBlocks`, so the copy already sits at the width it keeps once they land, and the empty half reads as unfinished rather than as broken.
+_Avoid_: carousel (a different Page Component), slider, cards row
+
 **FAQ**:
 A Page Component pairing a set of questions with a strip of photos. Only one answer is open at a time, which is the `name` attribute on `<details>` doing it and not a script — so the whole section works with JavaScript off. The photo strip is decoration: it is two columns drifting past each other, it never decides how tall the section is, and it is not rendered at all below the width where it fits. Questions are authored on the page that shows them, so a venue's answers can name its city; there is no shared question set.
 _Avoid_: accordion (that is the UI Component inside it), questions block, help section
 
+**Detail Tabs**:
+A Page Component that explains a thing one facet at a time — a title, several named sets of cards with one set shown at a time, and the FAQ's drifting photo strip beside them. Everything it shows is authored on the page that shows it; it references no Venue and no Game Format, which is why it is not called Game Details even though a game's mechanics are what it was drawn for. The picker is radio inputs, so switching sets needs no JavaScript, and with a single set there is nothing to pick between and no picker exists.
+_Avoid_: tabs, accordion, game details, features section
+
+**Detail Group**:
+One tab of a Detail Tabs and the Detail Cards it reveals. Its name is the tab's label and is content; the picker's accessible name is interface copy and comes from the locales.
+_Avoid_: tab, panel, section
+
+**Detail Card**:
+The card inside a Detail Group — a Mark over a title, an optional lead-in sentence and a required closing one. The closing sentence is drawn heavier on every card, so the weight is a rhythm of the design and never emphasis against its neighbours. It carries no media, no badge and no call to action, which is what separates it from a Card and from a Deck Card.
+_Avoid_: feature card, tile, item
+
 **Site Chrome**:
 The one kind of Feature Component that fetches its own data instead of receiving it from a Page — `Header`, `Footer`. Its content is site-wide settings, so it belongs to no single page and threading it through every Page would be noise. Any other Feature Component takes its data as props.
+
+**Card Deck**:
+A pile of **Deck Cards** stacked in one place, one in front and the rest behind it, that a visitor clicks or swipes through. It never runs out: the card dealt away goes to the back. A Deck Card is a photo over a title and a Rich Text body — it carries no badge and no call to action, which is what separates it from a Card. Two to six per deck.
+_Avoid_: carousel, slider, stack
+
+**Prices**:
+The section that says what a game costs at a Venue — one game's Price Tiers at a time, beside a photo, over a booking button and an optional footnote panel. When it holds more than one game it grows a picker above the tiers; with a single game there is nothing to pick between and no picker exists. One UI Component serves both **Venue Prices** and **Game Prices**, which differ in what an editor picks, not in what a visitor sees.
+_Avoid_: pricing, tarifs, rates, price table
+
+**Price Tier**:
+One bracket of a game's price at a Venue — a player-count band, an amount per person, and an optional note. A game with a single flat price still has one Tier; the band is what the Tier names, never the game.
+_Avoid_: price, rate, package
+
+**Venue Prices**:
+The Page Component that shows every game a Venue runs, so a visitor picks between them. It names only the Venue — which games it lists is the set of Venue Games, never an authored list.
+_Avoid_: prices section, all prices
+
+**Game Prices**:
+The Page Component pinned to one (Venue, Game Format) pair, showing that game's Price Tiers alone. It names both, even on a Venue Game page that already asserts the pair, because a Page Component makes no assumption about the document hosting it.
+_Avoid_: single price, game price section
 
 ## Layouts
 
@@ -121,8 +174,12 @@ The UI Component that renders an image whose bytes come from outside the repo. I
 A brand mark of the business, owned by site settings and editable without a developer. There are exactly two — the **Header Logo** and the **Footer Logo** — and they are different artwork, not two copies of one mark. No other document owns a logo; a page that shows one shows one of these.
 
 **Icon**:
-A small vector mark committed to `packages/ui/src/icons/` and written into the page as inline SVG, so it takes its colour from whatever it sits in. Not a Local Asset: it never touches the image pipeline and never becomes an `<img>`. Icons are code, never content — anything an editor must be able to change is a CMS Image, which is why the footer's payment marks are not Icons despite looking like them.
+A small square vector drawing committed to `packages/ui/src/icons/` and written into the page as inline SVG, so it takes its colour from whatever it sits in. Not a Local Asset: it never touches the image pipeline and never becomes an `<img>`. Icons are code, never content — anything an editor must be able to change is a CMS Image, which is why the footer's payment images are not Icons despite looking like them.
 _Avoid_: glyph, symbol, pictogram, svg
+
+**Mark**:
+A wide vector drawing committed to `packages/ui/src/marks/`, inlined and coloured the same way an Icon is, and code rather than content on the same rule. A separate set because the two are not interchangeable: an Icon is a 24×24 square on a shared grid and suits any slot, a Mark is 1.56:1 and suits one — the Detail Card, at a single size. Every Mark is the jester hat with a different badge, so the badge is what the name records.
+_Avoid_: icon, logo, emblem
 
 **Image Variant**:
 A named rendering intent — `logo`, `payment-icon`, `cover` — that a call site picks when it uses a Remote Image. It says what role the image plays on the page, never what size it is. The variant is what binds an image to the layout that sizes it, so the set is closed and lives beside that layout.

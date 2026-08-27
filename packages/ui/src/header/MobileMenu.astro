@@ -60,14 +60,19 @@ const contactLines = [contact.address, contact.phone, contact.mail];
           ariaLabel={languageSwitch.label}
           underline={false}
         >
-          <IconChip name={languageSwitch.icon} tone="muted" size="l" />
+          <IconChip
+            name={languageSwitch.icon}
+            tone="muted"
+            size="l"
+            interactive
+          />
         </Link>
       )
     }
 
     <form method="dialog" class="close-form">
       <button class="close" aria-label={closeLabel}>
-        <IconChip name="cross" tone="muted" size="l" />
+        <IconChip name="cross" tone="muted" size="l" interactive />
       </button>
     </form>
   </div>

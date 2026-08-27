@@ -1,4 +1,5 @@
 import type { IconName } from "./lib/icons";
+import type { MarkName } from "./lib/marks";
 
 export type SpaceScale =
   | "1"
@@ -54,6 +55,12 @@ export type CardItem = {
   cta?: CtaLink;
 };
 
+export type DeckCard = {
+  media: ImageSource;
+  title: string;
+  body: RichTextNode[];
+};
+
 export type PriceTier = {
   /** @example "De 4 à 6 joueurs", "Tarif unique" */
   label: string;
@@ -86,6 +93,18 @@ export type RichTextSpan = {
 export type RichTextNode = {
   type: "paragraph";
   spans: RichTextSpan[];
+};
+
+export type DetailCard = {
+  mark?: MarkName;
+  title: string;
+  intro?: string;
+  highlight: string;
+};
+
+export type DetailGroup = {
+  name: string;
+  cards: DetailCard[];
 };
 
 export type FaqQuestion = {

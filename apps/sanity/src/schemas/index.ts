@@ -4,6 +4,7 @@ import { pageComponentsType } from "./shared/pageComponents";
 import { cardsGridType, cardType } from "./shared/pageComponents/cardsGrid";
 import { carouselType } from "./shared/pageComponents/carousel";
 import { pageCoverType } from "./shared/pageCover";
+import { pricesFootnoteType } from "./shared/pricesFootnote";
 import { gameFormatType } from "./gameFormat";
 import { homepageType } from "./homepage";
 import { siteSettingsType } from "./siteSettings";
@@ -18,6 +19,18 @@ import { findUsType } from "./shared/pageComponents/findUs";
 import { clientContactFormType } from "./shared/pageComponents/clientContactForm";
 import { logosType } from "./shared/pageComponents/logos";
 import { faqQuestionType, faqType } from "./shared/pageComponents/faq";
+import {
+  cardsScrollerType,
+  deckCardType,
+} from "./shared/pageComponents/cardsScroller";
+import {
+  detailCardType,
+  detailGroupType,
+  detailTabsType,
+} from "./shared/pageComponents/detailTabs";
+import { textSlideshowType } from "./shared/pageComponents/textSlideshow";
+import { videoEmbedType } from "./shared/pageComponents/videoEmbed";
+import { textBlockType } from "./shared/textBlock";
 
 export const schemaTypes = [
   homepageType,
@@ -36,6 +49,7 @@ export const schemaTypes = [
   cardType,
   carouselType,
   reviewsType,
+  pricesFootnoteType,
   venuePricesType,
   gamePricesType,
   findUsType,
@@ -43,4 +57,12 @@ export const schemaTypes = [
   logosType,
   faqType,
   faqQuestionType,
+  cardsScrollerType,
+  deckCardType,
+  detailTabsType,
+  detailGroupType,
+  detailCardType,
+  textSlideshowType,
+  videoEmbedType,
+  textBlockType,
 ];

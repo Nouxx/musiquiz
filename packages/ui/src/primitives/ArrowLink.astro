@@ -1,0 +1,50 @@
+---
+import Icon from "./Icon.astro";
+import Link from "./Link.astro";
+import Text from "./Text.astro";
+
+interface Props {
+  url: string;
+}
+
+const { url } = Astro.props;
+---
+
+<Link {url} underline={false}>
+  <span class="arrow-link">
+    <Text variant="title-base"><slot /></Text>
+
+    <span class="arrow">
+      <Icon name="arrow-right" size="l" />
+    </span>
+  </span>
+</Link>
+
+<style>
+  .arrow-link {
+    display: inline-flex;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  .arrow {
+    display: flex;
+    transition: translate 120ms ease-out;
+  }
+
+  :global(a:hover) .arrow,
+  :global(a:focus-visible) .arrow {
+    translate: 4px 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .arrow {
+      transition: none;
+    }
+
+    :global(a:hover) .arrow,
+    :global(a:focus-visible) .arrow {
+      translate: 0 0;
+    }
+  }
+</style>

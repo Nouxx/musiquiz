@@ -41,6 +41,11 @@ const variants = {
     sizes: "(width < 48rem) 100vw, (width < 78rem) 33vw, 400px",
   },
   "carousel-media": { widths: [282, 564, 846], sizes: "282px" },
+  // 60rem is the TwoBlocks split (styles/breakpoints.css)
+  "deck-media": {
+    widths: [400, 700, 1000, 1400],
+    sizes: "(width < 60rem) 100vw, min(604px, 47vw)",
+  },
   // hidden below 60rem, where the contact form takes the full width
   "mini-carousel-media": {
     widths: [400, 700, 1000, 1400],
@@ -52,8 +57,11 @@ const variants = {
     sizes: "(width < 60rem) 1px, 60vw",
   },
   "review-avatar": { widths: [40, 80, 120], sizes: "40px" },
-  // hidden below 72rem, where the FAQ drops its image strip and the accordion takes the full width (see styles/breakpoints.css)
-  "faq-media": { widths: [260, 520, 780], sizes: "(width < 72rem) 1px, 260px" },
+  // hidden below 72rem (see styles/breakpoints.css)
+  "drifting-media": {
+    widths: [260, 520, 780],
+    sizes: "(width < 72rem) 1px, 260px",
+  },
   "logo-strip": { widths: [120, 240, 360], sizes: "120px" },
   "logo-strip-large": { widths: [160, 320, 480], sizes: "160px" },
   cover: { widths: [640, 960, 1280, 1920, 2560], sizes: "100vw" },
@@ -151,8 +159,16 @@ const srcSetWidths =
 
   .card-media {
     width: 100%;
-    height: 240px; /* fixed height so that every cards in a grid have the same image height */
+    height: 240px;
     object-fit: cover;
+  }
+
+  .deck-media {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 612 / 374;
+    object-fit: cover;
+    object-position: center;
   }
 
   .carousel-media {
@@ -176,7 +192,7 @@ const srcSetWidths =
     object-position: center;
   }
 
-  .faq-media {
+  .drifting-media {
     width: 100%;
     height: 100%;
     object-fit: cover;

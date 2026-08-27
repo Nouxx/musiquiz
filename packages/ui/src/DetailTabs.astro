@@ -1,0 +1,176 @@
+---
+import DetailCardItem from "./detailTabs/DetailCard.astro";
+import Button from "./primitives/Button.astro";
+import DriftingColumns from "./primitives/DriftingColumns.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { DetailGroup, ImageSource } from "./types";
+
+interface Props {
+  title: string;
+  groups: DetailGroup[];
+  images: ImageSource[];
+  chooseGroupLabel: string;
+}
+
+const { title, groups, images, chooseGroupLabel } = Astro.props;
+
+const group = `detail-tabs-${crypto.randomUUID()}`;
+---
+
+<Section surface="muted" spacing="l" width="content">
+  <div class="detail-tabs">
+    <div class="band">
+      <Text as="h2" variant="title-h3">{title}</Text>
+
+      <fieldset class="picker">
+        <legend>{chooseGroupLabel}</legend>
+
+        {
+          groups.map((entry, index) => (
+            <Button
+              as="label"
+              tone="light"
+              class:list={["choice", groups.length === 1 && "only"]}
+            >
+              <input
+                type="radio"
+                name={group}
+                value={entry.name}
+                checked={index === 0}
+              />
+              {entry.name}
+            </Button>
+          ))
+        }
+      </fieldset>
+
+      <div class="panels">
+        {
+          groups.map((entry) => (
+            <ul class="panel">
+              {entry.cards.map((card) => (
+                <li>
+                  <DetailCardItem {card} />
+                </li>
+              ))}
+            </ul>
+          ))
+        }
+      </div>
+    </div>
+
+    <DriftingColumns {images} from="80rem" />
+  </div>
+</Section>
+
+<style>
+  .detail-tabs {
+    display: grid;
+    gap: var(--space-10);
+  }
+
+  /* 80rem — the band holds two cards beside the strip. see styles/breakpoints.css */
+  @media (width >= 80rem) {
+    .detail-tabs {
+      grid-template-columns: minmax(0, 1fr) calc(260px * 2 + var(--space-6));
+      gap: 80px;
+      align-items: center;
+    }
+  }
+
+  .band {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+
+  .picker legend {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    /* clipped rather than `display: none`, which would stop it naming the group */
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .choice {
+    cursor: pointer;
+  }
+
+  @media (width >= 80rem) {
+    .choice {
+      flex: 1 1 auto;
+      max-width: none;
+    }
+  }
+
+  /* with a single group there is nothing to choose between */
+  .choice.only {
+    display: none;
+  }
+
+  .choice input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    /* clipped rather than `display: none`, which would take the radio out of the tab order and off the accessibility tree */
+    clip-path: inset(50%);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .panel {
+    display: none;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  /* one rule per index because CSS cannot match a radio to a panel by value.
+     six is past the point where the picker stops reading as a row */
+  .picker:has(.choice:nth-of-type(1) input:checked)
+    + .panels
+    > .panel:nth-child(1),
+  .picker:has(.choice:nth-of-type(2) input:checked)
+    + .panels
+    > .panel:nth-child(2),
+  .picker:has(.choice:nth-of-type(3) input:checked)
+    + .panels
+    > .panel:nth-child(3),
+  .picker:has(.choice:nth-of-type(4) input:checked)
+    + .panels
+    > .panel:nth-child(4),
+  .picker:has(.choice:nth-of-type(5) input:checked)
+    + .panels
+    > .panel:nth-child(5),
+  .picker:has(.choice:nth-of-type(6) input:checked)
+    + .panels
+    > .panel:nth-child(6) {
+    display: flex;
+  }
+
+  .panel li {
+    display: flex;
+    flex: 1 1 min(294px, 100%);
+    max-inline-size: 294px;
+  }
+
+  /* shares the tallest cards height */
+  .panel li > :global(*) {
+    inline-size: 100%;
+  }
+</style>

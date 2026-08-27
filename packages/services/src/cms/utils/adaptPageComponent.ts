@@ -4,8 +4,11 @@ import type { PageComponent } from "../pageComponent.types";
 import { toCard } from "./toCard";
 import { toCmsImage } from "./toCmsImage";
 import { toCta } from "./toCta";
+import { toDeckCard } from "./toDeckCard";
+import { toDetailGroup } from "./toDetailGroup";
 import { toPricesGame } from "./toPricesGame";
 import { toRichText } from "./toRichText";
+import { toTextBlock } from "./toTextBlock";
 
 export function adaptPageComponent(data: SanityPageComponent): PageComponent {
   switch (data._type) {
@@ -108,11 +111,49 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
       };
     }
 
+    case "cardsScroller": {
+      return {
+        type: "cardsScroller",
+        textBlock: toTextBlock(data.textBlock),
+        cards: data.cards.map((card) => toDeckCard(card)),
+      };
+    }
+
+    case "textSlideshow": {
+      return {
+        type: "textSlideshow",
+        textBlock: toTextBlock(data.textBlock),
+        surface: data.surface,
+        images: data.images.map((image) => toCmsImage(image)),
+      };
+    }
+
+    case "videoEmbed": {
+      return {
+        type: "videoEmbed",
+        videoId: data.videoId,
+        title: data.title,
+        surface: data.surface,
+      };
+    }
+
+    case "detailTabs": {
+      return {
+        type: "detailTabs",
+        title: data.title,
+        groups: data.groups.map((group) => toDetailGroup(group)),
+        images: data.images.map((image) => toCmsImage(image)),
+      };
+    }
+
     case "gamePrices": {
       return {
         type: "gamePrices",
         title: data.title,
         surface: data.surface,
+        cta: toCta(data.cta),
+        footnote: data.footnote ?? undefined,
+        venueSlug: data.venueSlug,
         game: toPricesGame(data.game),
       };
     }

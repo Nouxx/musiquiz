@@ -1,0 +1,188 @@
+---
+import Card from "./Card.astro";
+import RemoteImage from "./RemoteImage.astro";
+import type { ImageSource } from "../types";
+
+interface Props {
+  images: ImageSource[];
+  from?: "72rem" | "80rem";
+}
+
+const { images, from = "72rem" } = Astro.props;
+
+const IMAGE_BLOCK_PX = 455;
+const IMAGE_GAP_PX = 24;
+
+const SCROLL_SPEED_PX_PER_SEC = 30;
+
+// start the same animation that many pixels early.
+const RIGHT_COLUMN_OFFSET_PX = 240;
+
+const columns = [
+  images.filter((_, index) => index % 2 === 0),
+  images.filter((_, index) => index % 2 !== 0),
+];
+
+function durationSeconds(count: number) {
+  const seconds =
+    (count * (IMAGE_BLOCK_PX + IMAGE_GAP_PX)) / SCROLL_SPEED_PX_PER_SEC;
+
+  return seconds.toFixed(2);
+}
+
+const rightColumnDelaySeconds =
+  -RIGHT_COLUMN_OFFSET_PX / SCROLL_SPEED_PX_PER_SEC;
+---
+
+<div class:list={["media", from === "72rem" ? "from-72" : "from-80"]}>
+  <div class="columns">
+    {
+      columns.map((column, columnIndex) => (
+        <div class="column">
+          <div
+            class:list={["track", columnIndex === 0 ? "down" : "up"]}
+            style={{
+              "--drift-column-duration": `${durationSeconds(column.length)}s`,
+              "--drift-column-delay":
+                columnIndex === 0 ? "0s" : `${rightColumnDelaySeconds}s`,
+            }}
+          >
+            <ul class="set">
+              {column.map((image) => (
+                <li class="item">
+                  <Card border="thick" class="frame">
+                    <RemoteImage image={image} variant="drifting-media" />
+                  </Card>
+                </li>
+              ))}
+            </ul>
+
+            {/* the second half exists only to make the loop seamless, so it is hidden from assistive tech rather than read out twice */}
+            <ul class="set clone" aria-hidden="true">
+              {column.map((image) => (
+                <li class="item">
+                  <Card border="thick" class="frame">
+                    <RemoteImage
+                      image={{ ...image, alt: "" }}
+                      variant="drifting-media"
+                    />
+                  </Card>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  /* prevent a phone from fetching any of these photos */
+  .media {
+    display: none;
+  }
+
+  /* the content decides the section height, not the columns */
+  .columns {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 260px);
+    gap: var(--space-6);
+  }
+
+  /* 72rem and 80rem — drifting strip shown. see styles/breakpoints.css */
+  @media (width >= 72rem) {
+    .from-72 {
+      position: relative;
+      display: block;
+      align-self: stretch;
+      margin-block: calc(-1 * var(--section-spacing));
+      overflow: hidden;
+    }
+  }
+
+  @media (width >= 80rem) {
+    .from-80 {
+      position: relative;
+      display: block;
+      align-self: stretch;
+      margin-block: calc(-1 * var(--section-spacing));
+      overflow: hidden;
+    }
+  }
+
+  .track {
+    animation-duration: var(--drift-column-duration);
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-delay: var(--drift-column-delay);
+  }
+
+  .down {
+    animation-name: drift-down;
+  }
+
+  .up {
+    animation-name: drift-up;
+  }
+
+  .media:hover .track {
+    animation-play-state: paused;
+  }
+
+  .column {
+    overflow: hidden;
+  }
+
+  .set {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .item {
+    padding-block-end: var(--space-6);
+  }
+
+  .frame {
+    aspect-ratio: 260 / 455;
+  }
+
+  .frame > :global(picture) {
+    display: block;
+    block-size: 100%;
+  }
+
+  @keyframes drift-down {
+    from {
+      transform: translateY(-50%);
+    }
+
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes drift-up {
+    from {
+      transform: translateY(0);
+    }
+
+    to {
+      transform: translateY(-50%);
+    }
+  }
+
+  /* no need to add a scroller: images are decorative here */
+  @media (prefers-reduced-motion: reduce) {
+    .track {
+      animation: none;
+    }
+
+    .clone {
+      display: none;
+    }
+  }
+</style>

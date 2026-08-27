@@ -4,6 +4,7 @@ import { z } from "zod";
 import { optionalCtaProjection, sanityCtaSchema } from "./cta";
 import { imageProjection, sanityImageSchema } from "./image";
 import { richTextProjection, sanityRichTextSchema } from "./richText";
+import { sanityTextBlockSchema, textBlockProjection } from "./textBlock";
 
 function rollingBannerProjection({ lang }: { lang: Lang }) {
   return `
@@ -39,10 +40,14 @@ function pricedGameProjection({ lang }: { lang: Lang }) {
 }
 
 function footnoteProjection({ lang }: { lang: Lang }) {
-  return `"footnote": select(count(footnote.title) > 0 => footnote{
-    "title": title[language == "${lang}"][0].value,
-    "body": body[language == "${lang}"][0].value
-  })`;
+  return `"footnote": select(
+    defined(footnote.title[language == "${lang}"][0].value)
+    && defined(footnote.body[language == "${lang}"][0].value)
+    => footnote{
+      "title": title[language == "${lang}"][0].value,
+      "body": body[language == "${lang}"][0].value
+    }
+  )`;
 }
 
 function venuePricesProjection({ lang }: { lang: Lang }) {
@@ -67,6 +72,9 @@ function gamePricesProjection({ lang }: { lang: Lang }) {
     _type == "gamePrices" => {
       "title": title[language == "${lang}"][0].value,
       "surface": coalesce(surface, "muted"),
+      "cta": ${optionalCtaProjection({ field: "cta", lang })},
+      ${footnoteProjection({ lang })},
+      "venueSlug": venue->slug.current,
       "game": *[
         _type == "venueGame"
         && venue._ref == ^.venue._ref
@@ -160,6 +168,57 @@ function faqProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function cardsScrollerProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "cardsScroller" => {
+      "textBlock": ${textBlockProjection({ field: "textBlock", lang })},
+      cards[]{
+        "media": media ${imageProjection({ lang })},
+        "title": title[language == "${lang}"][0].value,
+        "body": ${richTextProjection({ field: "body", lang })}
+      }
+    }
+  `;
+}
+
+function detailTabsProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "detailTabs" => {
+      "title": title[language == "${lang}"][0].value,
+      groups[]{
+        "name": name[language == "${lang}"][0].value,
+        cards[]{
+          mark,
+          "title": title[language == "${lang}"][0].value,
+          "intro": intro[language == "${lang}"][0].value,
+          "highlight": highlight[language == "${lang}"][0].value
+        }
+      },
+      "images": images[] ${imageProjection({ lang })}
+    }
+  `;
+}
+
+function textSlideshowProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "textSlideshow" => {
+      "textBlock": ${textBlockProjection({ field: "textBlock", lang })},
+      "surface": coalesce(surface, "default"),
+      "images": images[] ${imageProjection({ lang })}
+    }
+  `;
+}
+
+function videoEmbedProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "videoEmbed" => {
+      videoId,
+      "title": title[language == "${lang}"][0].value,
+      "surface": coalesce(surface, "vivid")
+    }
+  `;
+}
+
 export function pageComponentsProjection({ lang }: { lang: Lang }) {
   return `
     pageComponents[]{
@@ -174,6 +233,10 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${clientContactFormProjection({ lang })},
       ${logosProjection({ lang })},
       ${faqProjection({ lang })},
+      ${cardsScrollerProjection({ lang })},
+      ${detailTabsProjection({ lang })},
+      ${textSlideshowProjection({ lang })},
+      ${videoEmbedProjection({ lang })},
     }
   `;
 }
@@ -237,17 +300,17 @@ const sanityPricedGameSchema = z.strictObject({
 
 export type SanityPricedGame = z.infer<typeof sanityPricedGameSchema>;
 
+const sanityPricesFootnoteSchema = z.strictObject({
+  title: z.string().min(1),
+  body: z.string().min(1),
+});
+
 const sanityVenuePricesSchema = z.strictObject({
   _type: z.literal("venuePrices"),
   title: z.string().min(1),
   surface: z.enum(["default", "muted"]),
   cta: sanityCtaSchema.nullable(),
-  footnote: z
-    .strictObject({
-      title: z.string().min(1),
-      body: z.string().min(1),
-    })
-    .nullable(),
+  footnote: sanityPricesFootnoteSchema.nullable(),
   venueSlug: z.string().min(1),
   games: z.array(sanityPricedGameSchema),
 });
@@ -256,6 +319,9 @@ const sanityGamePricesSchema = z.strictObject({
   _type: z.literal("gamePrices"),
   title: z.string().min(1),
   surface: z.enum(["default", "muted"]),
+  cta: sanityCtaSchema.nullable(),
+  footnote: sanityPricesFootnoteSchema.nullable(),
+  venueSlug: z.string().min(1),
   // not nullable: a section pointing at a deleted venueGame has nothing to render
   // and no other game to fall back on, so it fails the build rather than rendering a heading over nothing
   game: sanityPricedGameSchema,
@@ -305,6 +371,55 @@ const sanityFaqSchema = z.strictObject({
   images: z.array(sanityImageSchema).min(6).max(12),
 });
 
+const sanityDeckCardSchema = z.strictObject({
+  media: sanityImageSchema,
+  title: z.string().min(1),
+  body: sanityRichTextSchema,
+});
+
+export type SanityDeckCard = z.infer<typeof sanityDeckCardSchema>;
+
+const sanityCardsScrollerSchema = z.strictObject({
+  _type: z.literal("cardsScroller"),
+  textBlock: sanityTextBlockSchema,
+  cards: z.array(sanityDeckCardSchema).min(2).max(6),
+});
+
+const sanityDetailCardSchema = z.strictObject({
+  mark: z.enum(["50-50", "mute", "theft", "x2"]).nullable(),
+  title: z.string().min(1),
+  intro: z.string().min(1).nullable(),
+  highlight: z.string().min(1),
+});
+
+const sanityDetailGroupSchema = z.strictObject({
+  name: z.string().min(1),
+  cards: z.array(sanityDetailCardSchema).min(2).max(6),
+});
+
+export type SanityDetailGroup = z.infer<typeof sanityDetailGroupSchema>;
+
+const sanityDetailTabsSchema = z.strictObject({
+  _type: z.literal("detailTabs"),
+  title: z.string().min(1),
+  groups: z.array(sanityDetailGroupSchema).min(1).max(4),
+  images: z.array(sanityImageSchema).min(6).max(12),
+});
+
+const sanityTextSlideshowSchema = z.strictObject({
+  _type: z.literal("textSlideshow"),
+  textBlock: sanityTextBlockSchema,
+  surface: z.enum(["default", "muted"]),
+  images: z.array(sanityImageSchema).min(1).max(8),
+});
+
+const sanityVideoEmbedSchema = z.strictObject({
+  _type: z.literal("videoEmbed"),
+  videoId: z.string().regex(/^[A-Za-z0-9_-]{11}$/),
+  title: z.string().min(1),
+  surface: z.enum(["default", "muted", "vivid"]),
+});
+
 export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityRollingBannerSchema,
   sanityCardsGridSchema,
@@ -316,6 +431,10 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityClientContactFormSchema,
   sanityLogosSchema,
   sanityFaqSchema,
+  sanityCardsScrollerSchema,
+  sanityDetailTabsSchema,
+  sanityTextSlideshowSchema,
+  sanityVideoEmbedSchema,
 ]);
 
 export type SanityPageComponent = z.infer<typeof sanityPageComponentSchema>;

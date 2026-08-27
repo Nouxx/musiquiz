@@ -57,12 +57,17 @@ export type PricesGame = {
   prices: GamePrice[];
 };
 
+export type PricesFootnote = {
+  title: string;
+  body: string;
+};
+
 type VenuePrices = {
   type: "venuePrices";
   title: string;
   surface: "default" | "muted";
   cta: Cta | undefined;
-  footnote: { title: string; body: string } | undefined;
+  footnote: PricesFootnote | undefined;
   venueSlug: string;
   games: PricesGame[];
 };
@@ -71,6 +76,9 @@ type GamePrices = {
   type: "gamePrices";
   title: string;
   surface: "default" | "muted";
+  cta: Cta | undefined;
+  footnote: PricesFootnote | undefined;
+  venueSlug: string;
   game: PricesGame;
 };
 
@@ -109,11 +117,67 @@ export type FaqQuestion = {
   answer: RichText;
 };
 
+export type TextBlock = {
+  badge: string | undefined;
+  title: string;
+  body: RichText;
+  additionalCtas: Cta[];
+  cta: Cta | undefined;
+  ctaTone: "red" | "blue";
+};
+
+export type DeckCard = {
+  media: CmsImage;
+  title: string;
+  body: RichText;
+};
+
+type CardsScroller = {
+  type: "cardsScroller";
+  textBlock: TextBlock;
+  cards: DeckCard[];
+};
+
 type Faq = {
   type: "faq";
   title: string;
   questions: FaqQuestion[];
   images: CmsImage[];
+};
+
+type DetailMark = "50-50" | "mute" | "theft" | "x2";
+
+export type DetailCard = {
+  mark: DetailMark | undefined;
+  title: string;
+  intro: string | undefined;
+  highlight: string;
+};
+
+export type DetailGroup = {
+  name: string;
+  cards: DetailCard[];
+};
+
+type DetailTabs = {
+  type: "detailTabs";
+  title: string;
+  groups: DetailGroup[];
+  images: CmsImage[];
+};
+
+type TextSlideshow = {
+  type: "textSlideshow";
+  textBlock: TextBlock;
+  surface: "default" | "muted";
+  images: CmsImage[];
+};
+
+type VideoEmbed = {
+  type: "videoEmbed";
+  videoId: string;
+  title: string;
+  surface: "default" | "muted" | "vivid";
 };
 
 export type PageComponent =
@@ -126,4 +190,8 @@ export type PageComponent =
   | FindUs
   | ClientContactForm
   | Logos
-  | Faq;
+  | Faq
+  | CardsScroller
+  | DetailTabs
+  | TextSlideshow
+  | VideoEmbed;

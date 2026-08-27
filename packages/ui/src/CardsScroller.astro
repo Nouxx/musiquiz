@@ -1,0 +1,50 @@
+---
+import TextBlock from "./TextBlock.astro";
+import CardDeck from "./primitives/CardDeck.astro";
+import TwoBlocks from "./primitives/TwoBlocks.astro";
+import Section from "./Section.astro";
+import type { CtaLink, DeckCard, RichTextNode } from "./types";
+
+interface Props {
+  badge?: string;
+  title: string;
+  body: RichTextNode[];
+  additionalCtas?: CtaLink[];
+  cta?: CtaLink;
+  ctaTone?: "red" | "blue";
+  cards: DeckCard[];
+  nextCardLabel: string;
+}
+
+const {
+  badge,
+  title,
+  body,
+  additionalCtas,
+  cta,
+  ctaTone,
+  cards,
+  nextCardLabel,
+} = Astro.props;
+---
+
+<Section spacing="l">
+  <TwoBlocks>
+    <div slot="first">
+      <TextBlock
+        {badge}
+        {title}
+        {body}
+        {additionalCtas}
+        {cta}
+        {ctaTone}
+        headingLevel="h2"
+        size="l"
+      />
+    </div>
+
+    <div slot="second">
+      <CardDeck {cards} nextLabel={nextCardLabel} />
+    </div>
+  </TwoBlocks>
+</Section>

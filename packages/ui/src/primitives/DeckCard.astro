@@ -1,0 +1,52 @@
+---
+import Card from "./Card.astro";
+import RemoteImage from "./RemoteImage.astro";
+import RichText from "./RichText.astro";
+import Text from "./Text.astro";
+import type { DeckCard } from "../types";
+
+export type Props = DeckCard;
+
+const { media, title, body } = Astro.props;
+---
+
+<Card as="article" class="deck-card">
+  <RemoteImage image={media} variant="deck-media" />
+
+  <div class="panel">
+    <Text as="h3" variant="title-h4">{title}</Text>
+
+    <div class="body">
+      <RichText value={body} />
+    </div>
+  </div>
+</Card>
+
+<style>
+  .deck-card {
+    display: flex;
+    flex-direction: column;
+    block-size: 100%;
+    background-color: var(--color-surface);
+  }
+
+  .panel {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-4);
+    justify-content: flex-end;
+    padding: var(--space-10);
+  }
+
+  .body {
+    color: var(--color-text-muted);
+  }
+
+  /* 60rem — TwoBlocks split */
+  @media (width < 60rem) {
+    .panel {
+      padding: var(--space-6);
+    }
+  }
+</style>

@@ -1,7 +1,11 @@
 ---
 import type { PageComponent } from "@repo/services/cms/pageComponent.types";
 import CardsGrid from "@repo/ui/CardsGrid";
+import CardsScroller from "@repo/ui/CardsScroller";
 import ClientContactForm from "@repo/ui/ClientContactForm";
+import DetailTabs from "@repo/ui/DetailTabs";
+import TextSlideshow from "@repo/ui/TextSlideshow";
+import VideoEmbed from "@repo/ui/VideoEmbed";
 import Faq from "@repo/ui/Faq";
 import Logos from "@repo/ui/Logos";
 import FindUs from "@repo/ui/FindUs";
@@ -10,8 +14,7 @@ import RollingBanner from "@repo/ui/RollingBanner";
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 import Reviews from "@repo/ui/Reviews";
-import VenuePrices from "@repo/ui/VenuePrices";
-import GamePrices from "@repo/ui/GamePrices";
+import Prices from "@repo/ui/Prices";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import { toPriceOffer } from "../../libs/toPriceOffer";
 import { toContactFacts } from "../../libs/toContactFacts";
@@ -120,7 +123,7 @@ const t = getT(lang);
       }
       case "venuePrices": {
         return (
-          <VenuePrices
+          <Prices
             title={component.title}
             surface={component.surface}
             games={component.games.map((game) =>
@@ -197,13 +200,69 @@ const t = getT(lang);
           />
         );
       }
-      case "gamePrices": {
+      case "cardsScroller": {
         return (
-          <GamePrices
+          <CardsScroller
+            badge={component.textBlock.badge}
+            title={component.textBlock.title}
+            body={component.textBlock.body}
+            additionalCtas={component.textBlock.additionalCtas}
+            cta={component.textBlock.cta}
+            ctaTone={component.textBlock.ctaTone}
+            cards={component.cards}
+            nextCardLabel={t("cardsScroller.nextCard")}
+          />
+        );
+      }
+      case "textSlideshow": {
+        return (
+          <TextSlideshow
+            badge={component.textBlock.badge}
+            title={component.textBlock.title}
+            body={component.textBlock.body}
+            additionalCtas={component.textBlock.additionalCtas}
+            cta={component.textBlock.cta}
+            ctaTone={component.textBlock.ctaTone}
+            surface={component.surface}
+            images={component.images}
+            previousLabel={t("carousel.previous")}
+            nextLabel={t("carousel.next")}
+            goToImageLabel={t("carousel.goToImage")}
+          />
+        );
+      }
+      case "videoEmbed": {
+        return (
+          <VideoEmbed
+            videoId={component.videoId}
             title={component.title}
             surface={component.surface}
-            game={toPriceOffer({ game: component.game, t, lang })}
+          />
+        );
+      }
+      case "detailTabs": {
+        return (
+          <DetailTabs
+            title={component.title}
+            groups={component.groups}
+            images={component.images}
+            chooseGroupLabel={t("detailTabs.chooseGroup")}
+          />
+        );
+      }
+      case "gamePrices": {
+        return (
+          <Prices
+            title={component.title}
+            surface={component.surface}
+            games={[toPriceOffer({ game: component.game, t, lang })]}
             perPersonLabel={t("prices.perPerson")}
+            bookCta={{
+              label: t("prices.book"),
+              url: getRoutesForLang(lang).venueBook(component.venueSlug),
+            }}
+            cta={component.cta}
+            footnote={component.footnote}
           />
         );
       }

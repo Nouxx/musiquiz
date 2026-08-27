@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --recursive --parallel dev",
+    "dev:stop": "pnpm --recursive --parallel dev:stop",
     "clean": "pnpm --recursive --parallel clean",
     "build": "pnpm --recursive --parallel build",
     "build:web:static": "pnpm --filter web build:static",

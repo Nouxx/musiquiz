@@ -4,14 +4,7 @@ import {
   defineType,
   type PreviewValue,
 } from "sanity";
-
-type LocalizedEntry = { _key?: string; value?: string };
-
-function frenchValue(entries?: LocalizedEntry[]) {
-  return (
-    entries?.find((entry) => entry._key === "fr")?.value ?? entries?.[0]?.value
-  );
-}
+import { frenchValue, type LocalizedEntry } from "../frenchValue";
 
 export const cardType = defineType({
   name: "card",
