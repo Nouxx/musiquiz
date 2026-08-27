@@ -25,7 +25,6 @@ import disc from "../icons/disc.svg?raw";
 import facebook from "../icons/facebook.svg?raw";
 import flagFrance from "../icons/flag-france.svg?raw";
 import flagUK from "../icons/flag-uk.svg?raw";
-import game from "../icons/game.svg?raw";
 import google from "../icons/google.svg?raw";
 import hourglass from "../icons/hourglass.svg?raw";
 import house from "../icons/house.svg?raw";
@@ -76,7 +75,6 @@ export const icons = {
   facebook,
   "flag-france": flagFrance,
   "flag-uk": flagUK,
-  game,
   google,
   hourglass,
   house,

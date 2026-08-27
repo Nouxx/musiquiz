@@ -6,9 +6,6 @@ import {
 } from "sanity";
 import { frenchValue, type LocalizedEntry } from "../frenchValue";
 
-// its own type rather than `card` from cardsGrid: that one requires a badge the
-// deck never draws, and holds a plain-string body, which cannot carry the bold
-// and the paragraph gaps the design writes into a deck card.
 export const deckCardType = defineType({
   name: "deckCard",
   title: "Deck card",
