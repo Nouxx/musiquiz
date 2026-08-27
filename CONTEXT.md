@@ -6,11 +6,29 @@ Musiquiz is a entertainment business that operates in France and provide various
 
 ## Figma
 
-The design lives in Figma and its access rules are non-obvious enough to get wrong twice.
+The design lives in Figma and is read over the **REST API**, not the MCP server — the MCP
+quota runs out. `scripts/figma/figma.mjs` wraps it; `pnpm figma` is the entry point:
 
-**Whenever Figma comes up — a link, a node id, a "check the design" — read these memory files first, before any `mcp__figma__*` call:**
+```
+pnpm figma tree <node>      structure only — names, types, sizes, layout
+pnpm figma inspect <node>   the above plus every style value
+pnpm figma image <node>     export a PNG next to the terminal
+pnpm figma raw <node>       untouched node JSON, for anything the distiller drops
+```
 
-- `figma-mcp-access.md` — which fileKey to read (the duplicate, not the original) and why the original 403s
+Node ids come out of a Figma link (`node-id=184-2662`) and the whole URL works as an
+argument. Every printed line carries its own `[id]`, so `tree` shallow then `inspect` the
+child you want is the way to navigate. `FIGMA_FILE_KEY` is in `.env`; the token is
+`FIGMA_TOKEN` in `.env.local`.
+
+`vars` needs the `file_variables:read` token scope, which the plan does not grant — the
+design binds no variables that survive to REST, so read values off `inspect` instead.
+
+REST needs **view** access only, so it reads the designer's original file directly — the
+duplicate the MCP server needed, and the staleness that came with it, are gone.
+
+Read these memory files before working from the design:
+
 - `figma-presentation-is-source-of-truth.md` — the `Présentation` page is the only live page, plus the node-id map of its screens
 - `figma-sheet-state-vs-variant.md` — how to read an exported sheet without mistaking states for variants
 - `qa-is-clements-job.md` — hand over a scratch route, do not self-inspect the render

@@ -24,3 +24,6 @@ yarn-error.log*
 pnpm-debug.log*
 
 tsconfig.tsbuildinfo
+
+# scripts/figma exports
+figma-out
