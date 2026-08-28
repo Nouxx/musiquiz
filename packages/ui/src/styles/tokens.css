@@ -183,6 +183,12 @@
     var(--blue-900-0) 100%
   );
 
+  --color-overlay-up: linear-gradient(
+    180deg,
+    var(--blue-900-0) 0%,
+    var(--blue-900) 100%
+  );
+
   --color-text: var(--black);
   --color-text-muted: var(--grey-600);
   --color-text-inverse: var(--white);
@@ -207,6 +213,7 @@
   --color-border-brand: var(--gradient-border);
 
   --color-border-translucent: var(--white-20);
+  --color-border-translucent-strong: var(--white-40);
 
   --color-fill-indicator: var(--grey-400);
   --color-fill-indicator-active: var(--red-600);

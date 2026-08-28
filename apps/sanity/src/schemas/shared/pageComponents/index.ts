@@ -18,6 +18,7 @@ export const pageComponentsType = defineType({
     defineArrayMember({ type: "cardsScroller" }),
     defineArrayMember({ type: "detailTabs" }),
     defineArrayMember({ type: "textSlideshow" }),
+    defineArrayMember({ type: "textCards" }),
     defineArrayMember({ type: "videoEmbed" }),
   ],
 });

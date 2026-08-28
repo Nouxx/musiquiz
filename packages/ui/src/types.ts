@@ -55,6 +55,12 @@ export type CardItem = {
   cta?: CtaLink;
 };
 
+export type TextCard = {
+  icon: IconName;
+  body: string;
+  media: ImageSource;
+};
+
 export type DeckCard = {
   media: ImageSource;
   title: string;

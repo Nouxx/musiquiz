@@ -210,6 +210,19 @@ function textSlideshowProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function textCardsProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "textCards" => {
+      "textBlock": ${textBlockProjection({ field: "textBlock", lang })},
+      cards[]{
+        icon,
+        "body": body[language == "${lang}"][0].value,
+        media ${imageProjection({ lang })}
+      }
+    }
+  `;
+}
+
 function videoEmbedProjection({ lang }: { lang: Lang }) {
   return `
     _type == "videoEmbed" => {
@@ -237,6 +250,7 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${cardsScrollerProjection({ lang })},
       ${detailTabsProjection({ lang })},
       ${textSlideshowProjection({ lang })},
+      ${textCardsProjection({ lang })},
       ${videoEmbedProjection({ lang })},
     }
   `;
@@ -415,6 +429,49 @@ const sanityTextSlideshowSchema = z.strictObject({
   images: z.array(sanityImageSchema).min(1).max(8),
 });
 
+const sanityContentIconSchema = z.enum([
+  "calendar",
+  "camera",
+  "check-circle",
+  "clock",
+  "cocktail",
+  "coins",
+  "cube",
+  "die-1",
+  "die-2",
+  "disc",
+  "hourglass",
+  "house",
+  "lock",
+  "mail",
+  "medal",
+  "music-note",
+  "phone",
+  "pin",
+  "question",
+  "rosette",
+  "sparkles",
+  "star",
+  "user",
+  "users-2",
+  "users-3",
+  "users-4",
+]);
+
+const sanityTextCardSchema = z.strictObject({
+  icon: sanityContentIconSchema,
+  body: z.string().min(1),
+  media: sanityImageSchema,
+});
+
+export type SanityTextCard = z.infer<typeof sanityTextCardSchema>;
+
+const sanityTextCardsSchema = z.strictObject({
+  _type: z.literal("textCards"),
+  textBlock: sanityTextBlockSchema,
+  cards: z.array(sanityTextCardSchema).min(3).max(4),
+});
+
 const sanityVideoEmbedSchema = z.strictObject({
   _type: z.literal("videoEmbed"),
   videoId: z.string().regex(/^[A-Za-z0-9_-]{11}$/),
@@ -436,6 +493,7 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityCardsScrollerSchema,
   sanityDetailTabsSchema,
   sanityTextSlideshowSchema,
+  sanityTextCardsSchema,
   sanityVideoEmbedSchema,
 ]);
 

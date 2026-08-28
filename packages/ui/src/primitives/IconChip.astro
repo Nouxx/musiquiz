@@ -9,6 +9,7 @@ const iconSizes = {
   m: "l", // 30px box, 20px icon
   l: "l", // 36px box, 20px icon
   xl: "xl", // 40px box, 24px icon
+  xxl: "xxl", // 60px box, 30px icon
 } as const;
 
 type Size = keyof typeof iconSizes;
@@ -95,5 +96,9 @@ const { name, tone = "light", size = "xl", interactive = false } = Astro.props;
 
   .xl {
     inline-size: 2.5rem;
+  }
+
+  .xxl {
+    inline-size: 3.75rem;
   }
 </style>

@@ -5,6 +5,7 @@ import CardsScroller from "@repo/ui/CardsScroller";
 import ClientContactForm from "@repo/ui/ClientContactForm";
 import DetailTabs from "@repo/ui/DetailTabs";
 import TextSlideshow from "@repo/ui/TextSlideshow";
+import TextCards from "@repo/ui/TextCards";
 import VideoEmbed from "@repo/ui/VideoEmbed";
 import Faq from "@repo/ui/Faq";
 import Logos from "@repo/ui/Logos";
@@ -229,6 +230,19 @@ const t = getT(lang);
             previousLabel={t("carousel.previous")}
             nextLabel={t("carousel.next")}
             goToImageLabel={t("carousel.goToImage")}
+          />
+        );
+      }
+      case "textCards": {
+        return (
+          <TextCards
+            badge={component.textBlock.badge}
+            title={component.textBlock.title}
+            body={component.textBlock.body}
+            additionalCtas={component.textBlock.additionalCtas}
+            cta={component.textBlock.cta}
+            ctaTone={component.textBlock.ctaTone}
+            cards={component.cards}
           />
         );
       }

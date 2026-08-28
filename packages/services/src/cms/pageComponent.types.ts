@@ -174,6 +174,46 @@ type TextSlideshow = {
   images: CmsImage[];
 };
 
+export type ContentIcon =
+  | "calendar"
+  | "camera"
+  | "check-circle"
+  | "clock"
+  | "cocktail"
+  | "coins"
+  | "cube"
+  | "die-1"
+  | "die-2"
+  | "disc"
+  | "hourglass"
+  | "house"
+  | "lock"
+  | "mail"
+  | "medal"
+  | "music-note"
+  | "phone"
+  | "pin"
+  | "question"
+  | "rosette"
+  | "sparkles"
+  | "star"
+  | "user"
+  | "users-2"
+  | "users-3"
+  | "users-4";
+
+export type TextCard = {
+  icon: ContentIcon;
+  body: string;
+  media: CmsImage;
+};
+
+type TextCards = {
+  type: "textCards";
+  textBlock: TextBlock;
+  cards: TextCard[];
+};
+
 type VideoEmbed = {
   type: "videoEmbed";
   videoId: string;
@@ -195,4 +235,5 @@ export type PageComponent =
   | CardsScroller
   | DetailTabs
   | TextSlideshow
+  | TextCards
   | VideoEmbed;

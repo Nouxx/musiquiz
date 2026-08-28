@@ -9,6 +9,7 @@ import { toDetailGroup } from "./toDetailGroup";
 import { toPricesGame } from "./toPricesGame";
 import { toRichText } from "./toRichText";
 import { toTextBlock } from "./toTextBlock";
+import { toTextCard } from "./toTextCard";
 
 export function adaptPageComponent(data: SanityPageComponent): PageComponent {
   switch (data._type) {
@@ -126,6 +127,14 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         surface: data.surface,
         slideshowPosition: data.slideshowPosition,
         images: data.images.map((image) => toCmsImage(image)),
+      };
+    }
+
+    case "textCards": {
+      return {
+        type: "textCards",
+        textBlock: toTextBlock(data.textBlock),
+        cards: data.cards.map((card) => toTextCard(card)),
       };
     }
 

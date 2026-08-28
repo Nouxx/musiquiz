@@ -56,6 +56,11 @@ const variants = {
     widths: [400, 700, 1000, 1400],
     sizes: "(width < 60rem) 1px, 60vw",
   },
+  // 60rem is the TwoBlocks split (styles/breakpoints.css)
+  "text-card-media": {
+    widths: [400, 700, 1000, 1400],
+    sizes: "(width < 60rem) 100vw, min(458px, 47vw)",
+  },
   "review-avatar": { widths: [40, 80, 120], sizes: "40px" },
   // hidden below 72rem (see styles/breakpoints.css)
   "drifting-media": {
@@ -186,6 +191,13 @@ const srcSetWidths =
   }
 
   .prices-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .text-card-media {
     width: 100%;
     height: 100%;
     object-fit: cover;
