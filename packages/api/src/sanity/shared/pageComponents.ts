@@ -251,7 +251,7 @@ const sanityRollingBannerSchema = z.strictObject({
 const sanityCardSchema = z.strictObject({
   media: sanityImageSchema,
   badge: z.string().min(1),
-  title: z.string().min(1),
+  title: z.string().nullable(),
   body: z.string().min(1).nullable(),
   cta: sanityCtaSchema.nullable(),
 });
