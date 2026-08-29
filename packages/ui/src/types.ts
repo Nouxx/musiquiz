@@ -93,6 +93,7 @@ export type ContactFact = {
   label: string;
   title: string;
   body?: string;
+  href?: string;
 };
 
 export type RichTextSpan = {

@@ -60,12 +60,14 @@
    "two columns stop fitting" decision. Deriving it instead would mean picking
    a floor for each block, and one of the two is an image, which has none.
 
-   Three things follow TwoBlocks rather than deciding anything themselves, and
+   Four things follow TwoBlocks rather than deciding anything themselves, and
    must move if it moves: FindUs.astro steps its card padding 24px -> 40px and
-   its row spacing there; findUs/ContactRow.astro turns its chip-over-text
-   stack into a chip-beside-text row and reveals the row's label there; and
-   RemoteImage.astro quotes it in the `map` variant's `sizes` string, which is
-   TS — below the split the map is full width, above it half.
+   its row spacing there; contact/ContactRow.astro turns its chip-over-text
+   stack into a chip-beside-text row and reveals the row's label there;
+   ContactPanels.astro splits its two panels 618/378, steps their padding, and
+   turns the questions panel's rows back into a column; and RemoteImage.astro
+   quotes it in the `map` variant's `sizes` string, which is TS — below the
+   split the map is full width, above it half.
 
    RemoteImage.astro quotes both 60rem and 78rem in `cover-logo-side`'s
    `sizes` string, which is TS. Neither is a media query: the logo is sized

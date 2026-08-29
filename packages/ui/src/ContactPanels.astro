@@ -1,0 +1,162 @@
+---
+import ContactRow from "./contact/ContactRow.astro";
+import Button from "./primitives/Button.astro";
+import Card from "./primitives/Card.astro";
+import RemoteImage from "./primitives/RemoteImage.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { ContactFact, CtaLink, ImageSource } from "./types";
+
+interface Props {
+  media: ImageSource;
+  offer: {
+    facts: ContactFact[];
+    quoteCta?: CtaLink;
+    bookCta: CtaLink;
+  };
+  questions: {
+    title: string;
+    body: string;
+    facts: ContactFact[];
+  };
+}
+
+const { media, offer, questions } = Astro.props;
+---
+
+<Section surface="media" spacing="m" width="content">
+  <RemoteImage slot="media" image={media} variant="cover" />
+
+  <div class="panels">
+    <Card border="translucent" surface="glass" class="panel offer">
+      <div class="facts">
+        {
+          offer.facts.map((fact) => (
+            <ContactRow
+              icon={fact.icon}
+              label={fact.label}
+              title={fact.title}
+              body={fact.body}
+              href={fact.href}
+              showLabelOnMobile
+            />
+          ))
+        }
+      </div>
+
+      <div class:list={["ctas", offer.quoteCta && "pair"]}>
+        {
+          offer.quoteCta && (
+            <Button as="a" href={offer.quoteCta.url} tone="blue">
+              {offer.quoteCta.label}
+            </Button>
+          )
+        }
+
+        <Button as="a" href={offer.bookCta.url} tone="red">
+          {offer.bookCta.label}
+        </Button>
+      </div>
+    </Card>
+
+    <Card border="translucent" surface="glass" class="panel questions">
+      <div class="heading">
+        <Text as="h2" variant="title-h5">{questions.title}</Text>
+
+        <span class="intro">
+          <Text variant="paragraph-s-sm">{questions.body}</Text>
+        </span>
+      </div>
+
+      <div class="facts">
+        {
+          questions.facts.map((fact) => (
+            <ContactRow
+              icon={fact.icon}
+              label={fact.label}
+              title={fact.title}
+              body={fact.body}
+              href={fact.href}
+              showLabelOnMobile
+            />
+          ))
+        }
+      </div>
+    </Card>
+  </div>
+</Section>
+
+<style>
+  .panels {
+    display: grid;
+    gap: var(--space-10);
+  }
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-6);
+  }
+
+  .offer {
+    gap: var(--space-10);
+  }
+
+  .questions {
+    gap: var(--space-6);
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .intro {
+    color: var(--color-text-on-media-muted);
+  }
+
+  .facts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .questions .facts {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .ctas {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .ctas > :global(*) {
+    max-width: none;
+  }
+
+  /* 60rem — two columns stop fitting (styles/breakpoints.css) */
+  @media (width >= 60rem) {
+    .panels {
+      grid-template-columns: 618fr 378fr;
+    }
+
+    .panel {
+      padding: var(--space-10);
+    }
+
+    .ctas {
+      justify-items: start;
+    }
+
+    .ctas.pair {
+      grid-template-columns: 1fr 1fr;
+      justify-items: stretch;
+    }
+
+    .questions .facts {
+      flex-direction: column;
+    }
+  }
+</style>
