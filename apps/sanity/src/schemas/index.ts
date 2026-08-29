@@ -30,10 +30,11 @@ import {
   detailGroupType,
   detailTabsType,
 } from "./shared/pageComponents/detailTabs";
+import { textCardsType, textCardType } from "./shared/pageComponents/textCards";
 import {
-  textCardsType,
-  textCardType,
-} from "./shared/pageComponents/textCards";
+  keywordCardType,
+  textCardsGridType,
+} from "./shared/pageComponents/textCardsGrid";
 import { textSlideshowType } from "./shared/pageComponents/textSlideshow";
 import { videoEmbedType } from "./shared/pageComponents/videoEmbed";
 import { textBlockType } from "./shared/textBlock";
@@ -72,6 +73,8 @@ export const schemaTypes = [
   detailCardType,
   textCardsType,
   textCardType,
+  textCardsGridType,
+  keywordCardType,
   textSlideshowType,
   videoEmbedType,
   textBlockType,

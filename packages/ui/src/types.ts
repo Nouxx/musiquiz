@@ -50,7 +50,7 @@ export type Review = {
 export type CardItem = {
   media: ImageSource;
   badge: string;
-  title: string;
+  title?: string;
   body?: string;
   cta?: CtaLink;
 };
@@ -59,6 +59,12 @@ export type TextCard = {
   icon: IconName;
   body: string;
   media: ImageSource;
+};
+
+export type KeywordCard = {
+  badge: string;
+  icon: IconName;
+  body: string;
 };
 
 export type DeckCard = {

@@ -49,6 +49,7 @@
   --gradient-red: linear-gradient(90deg, #d92363, #ff530a);
   --gradient-green: linear-gradient(90deg, #12c54b, #a1e513);
   --gradient-blue: linear-gradient(90deg, #5625bb, #2477b3);
+  --gradient-border-blue: linear-gradient(225deg, #2477b3, #5625bb);
   --gradient-border: conic-gradient(
     from 180deg at 50% 50%,
     #d92363 0deg,
@@ -211,6 +212,7 @@
 
   --color-border: var(--grey-200);
   --color-border-brand: var(--gradient-border);
+  --color-border-brand-blue: var(--gradient-border-blue);
 
   --color-border-translucent: var(--white-20);
   --color-border-translucent-strong: var(--white-40);

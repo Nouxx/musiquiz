@@ -8,7 +8,7 @@ export function toCard(card: SanityCard): Card {
   return {
     media: toCmsImage(card.media),
     badge: card.badge,
-    title: card.title,
+    title: card.title ?? undefined,
     body: card.body ?? undefined,
     cta: toCta(card.cta),
   };

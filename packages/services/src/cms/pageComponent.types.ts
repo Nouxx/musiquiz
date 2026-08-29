@@ -14,7 +14,7 @@ export type Cta = {
 export type Card = {
   media: CmsImage;
   badge: string;
-  title: string;
+  title: string | undefined;
   body: string | undefined;
   cta: Cta | undefined;
 };
@@ -214,6 +214,20 @@ type TextCards = {
   cards: TextCard[];
 };
 
+export type KeywordCard = {
+  badge: string;
+  icon: ContentIcon;
+  body: string;
+};
+
+type TextCardsGrid = {
+  type: "textCardsGrid";
+  heading: string;
+  body: string;
+  cta: Cta | undefined;
+  cards: KeywordCard[];
+};
+
 type VideoEmbed = {
   type: "videoEmbed";
   videoId: string;
@@ -236,4 +250,5 @@ export type PageComponent =
   | DetailTabs
   | TextSlideshow
   | TextCards
+  | TextCardsGrid
   | VideoEmbed;

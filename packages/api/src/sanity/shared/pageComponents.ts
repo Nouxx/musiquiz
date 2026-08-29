@@ -223,6 +223,21 @@ function textCardsProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function textCardsGridProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "textCardsGrid" => {
+      "heading": heading[language == "${lang}"][0].value,
+      "body": body[language == "${lang}"][0].value,
+      "cta": ${optionalCtaProjection({ field: "cta", lang })},
+      cards[]{
+        "badge": badge[language == "${lang}"][0].value,
+        icon,
+        "body": body[language == "${lang}"][0].value
+      }
+    }
+  `;
+}
+
 function videoEmbedProjection({ lang }: { lang: Lang }) {
   return `
     _type == "videoEmbed" => {
@@ -251,6 +266,7 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${detailTabsProjection({ lang })},
       ${textSlideshowProjection({ lang })},
       ${textCardsProjection({ lang })},
+      ${textCardsGridProjection({ lang })},
       ${videoEmbedProjection({ lang })},
     }
   `;
@@ -472,6 +488,22 @@ const sanityTextCardsSchema = z.strictObject({
   cards: z.array(sanityTextCardSchema).min(3).max(4),
 });
 
+const sanityKeywordCardSchema = z.strictObject({
+  badge: z.string().min(1),
+  icon: sanityContentIconSchema,
+  body: z.string().min(1),
+});
+
+export type SanityKeywordCard = z.infer<typeof sanityKeywordCardSchema>;
+
+const sanityTextCardsGridSchema = z.strictObject({
+  _type: z.literal("textCardsGrid"),
+  heading: z.string().min(1),
+  body: z.string().min(1),
+  cta: sanityCtaSchema.nullable(),
+  cards: z.array(sanityKeywordCardSchema).min(3).max(6),
+});
+
 const sanityVideoEmbedSchema = z.strictObject({
   _type: z.literal("videoEmbed"),
   videoId: z.string().regex(/^[A-Za-z0-9_-]{11}$/),
@@ -494,6 +526,7 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityDetailTabsSchema,
   sanityTextSlideshowSchema,
   sanityTextCardsSchema,
+  sanityTextCardsGridSchema,
   sanityVideoEmbedSchema,
 ]);
 

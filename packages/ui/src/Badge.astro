@@ -7,15 +7,22 @@ interface Props {
   // the sheet's Couleur axis: `dark` is the translucent pill that sits on
   // media, `light` the opaque one for plain surfaces
   color?: "dark" | "light";
+  border?: "brand" | "blue";
   size?: "large" | "small";
   tilt?: boolean;
   icon?: IconName;
 }
 
-const { color = "dark", size = "large", tilt = true, icon } = Astro.props;
+const {
+  color = "dark",
+  border = "brand",
+  size = "large",
+  tilt = true,
+  icon,
+} = Astro.props;
 ---
 
-<span class:list={["badge", color, size, { tilt }]}>
+<span class:list={["badge", color, `border-${border}`, size, { tilt }]}>
   {icon && <Icon name={icon} size={size === "large" ? "l" : "s"} />}
 
   <Text variant={size === "large" ? "paragraph-base-sm" : "paragraph-s-sm"}>
@@ -57,6 +64,14 @@ const { color = "dark", size = "large", tilt = true, icon } = Astro.props;
     background-color: var(--color-surface);
   }
 
+  .border-brand {
+    --badge-border: var(--color-border-brand);
+  }
+
+  .border-blue {
+    --badge-border: var(--color-border-brand-blue);
+  }
+
   .tilt {
     transform: rotate(-2deg);
   }
@@ -65,7 +80,7 @@ const { color = "dark", size = "large", tilt = true, icon } = Astro.props;
     position: absolute;
     inset: 0;
     padding: 1px 1px 3px;
-    background-image: var(--color-border-brand);
+    background-image: var(--badge-border);
     border-radius: inherit;
     mask:
       linear-gradient(#000 0 0) content-box,

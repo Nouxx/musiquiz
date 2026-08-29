@@ -6,6 +6,7 @@ import ClientContactForm from "@repo/ui/ClientContactForm";
 import DetailTabs from "@repo/ui/DetailTabs";
 import TextSlideshow from "@repo/ui/TextSlideshow";
 import TextCards from "@repo/ui/TextCards";
+import TextCardsGrid from "@repo/ui/TextCardsGrid";
 import VideoEmbed from "@repo/ui/VideoEmbed";
 import Faq from "@repo/ui/Faq";
 import Logos from "@repo/ui/Logos";
@@ -242,6 +243,16 @@ const t = getT(lang);
             additionalCtas={component.textBlock.additionalCtas}
             cta={component.textBlock.cta}
             ctaTone={component.textBlock.ctaTone}
+            cards={component.cards}
+          />
+        );
+      }
+      case "textCardsGrid": {
+        return (
+          <TextCardsGrid
+            heading={component.heading}
+            body={component.body}
+            cta={component.cta}
             cards={component.cards}
           />
         );

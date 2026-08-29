@@ -20,9 +20,13 @@ const { size = "large", media, badge, title, body, cta } = Astro.props;
     <div class="stack">
       <Badge color="light">{badge}</Badge>
 
-      <Text as="h3" variant={size === "large" ? "title-h5" : "title-xl"}>
-        {title}
-      </Text>
+      {
+        title && (
+          <Text as="h3" variant={size === "large" ? "title-h5" : "title-xl"}>
+            {title}
+          </Text>
+        )
+      }
 
       {
         body && (

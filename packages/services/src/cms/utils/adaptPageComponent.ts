@@ -6,6 +6,7 @@ import { toCmsImage } from "./toCmsImage";
 import { toCta } from "./toCta";
 import { toDeckCard } from "./toDeckCard";
 import { toDetailGroup } from "./toDetailGroup";
+import { toKeywordCard } from "./toKeywordCard";
 import { toPricesGame } from "./toPricesGame";
 import { toRichText } from "./toRichText";
 import { toTextBlock } from "./toTextBlock";
@@ -135,6 +136,16 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         type: "textCards",
         textBlock: toTextBlock(data.textBlock),
         cards: data.cards.map((card) => toTextCard(card)),
+      };
+    }
+
+    case "textCardsGrid": {
+      return {
+        type: "textCardsGrid",
+        heading: data.heading,
+        body: data.body,
+        cta: toCta(data.cta),
+        cards: data.cards.map((card) => toKeywordCard(card)),
       };
     }
 
