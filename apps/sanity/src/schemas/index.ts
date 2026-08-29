@@ -18,6 +18,7 @@ import { reviewsType } from "./shared/pageComponents/reviews";
 import { venuePricesType } from "./shared/pageComponents/venuePrices";
 import { gamePricesType } from "./shared/pageComponents/gamePrices";
 import { findUsType } from "./shared/pageComponents/findUs";
+import { contactPanelsType } from "./shared/pageComponents/contactPanels";
 import { clientContactFormType } from "./shared/pageComponents/clientContactForm";
 import { logosType } from "./shared/pageComponents/logos";
 import { faqQuestionType, faqType } from "./shared/pageComponents/faq";
@@ -62,6 +63,7 @@ export const schemaTypes = [
   venuePricesType,
   gamePricesType,
   findUsType,
+  contactPanelsType,
   clientContactFormType,
   logosType,
   faqType,

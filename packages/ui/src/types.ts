@@ -124,3 +124,31 @@ export type FaqQuestion = {
   question: string;
   answer: RichTextNode[];
 };
+
+export type OfferTone = "blue" | "red";
+
+export type OfferPrice = {
+  /** @example "28€", "Sur devis" */
+  amount: string;
+  /** carries its own separator @example " HT/joueur", "/enfant" */
+  label?: string;
+};
+
+export type OfferCardContent =
+  | { kind: "list"; intro?: string; items: string[] }
+  | { kind: "text"; body: RichTextNode[] };
+
+export type OfferCard = {
+  icon: IconName;
+  title: string;
+  subTitle?: string;
+  price: OfferPrice;
+  content: OfferCardContent;
+};
+
+export type OfferGroup = {
+  title: string;
+  body: RichTextNode[];
+  tone?: OfferTone;
+  cards: OfferCard[];
+};

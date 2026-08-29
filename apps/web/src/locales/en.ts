@@ -85,6 +85,14 @@ export const en: typeof fr = {
     mapTitle: "The Musi'Quiz venue in {{venue}} on the map",
     viewOnGoogleMaps: "View on Google Maps",
   },
+  contactPanels: {
+    questionsTitle: "Any questions?",
+    questionsBody:
+      "Contact the Musi'Quiz {{venue}} sales team, Monday to Saturday:",
+    phone: "By phone",
+    mail: "By email",
+    book: "Book instantly",
+  },
   contactForm: {
     badge: "Contact us",
     title: "A question?",

@@ -83,6 +83,14 @@ export const fr = {
     mapTitle: "Le centre Musi'Quiz de {{venue}} sur la carte",
     viewOnGoogleMaps: "Voir dans Google Maps",
   },
+  contactPanels: {
+    questionsTitle: "Avez-vous des questions ?",
+    questionsBody:
+      "Contactez l'équipe commerciale de Musi'Quiz {{venue}} du lundi au samedi :",
+    phone: "Par téléphone",
+    mail: "Par mail",
+    book: "Réservation immédiate",
+  },
   contactForm: {
     badge: "Contactez-nous",
     title: "Une question ?",

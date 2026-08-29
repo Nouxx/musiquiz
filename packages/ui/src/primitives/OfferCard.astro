@@ -1,0 +1,149 @@
+---
+import Card from "./Card.astro";
+import IconChip from "./IconChip.astro";
+import RichText from "./RichText.astro";
+import Text from "./Text.astro";
+import type { OfferCard, OfferTone } from "../types";
+
+interface Props extends OfferCard {
+  headingLevel: "h3" | "h4";
+  tone?: OfferTone;
+}
+
+const {
+  icon,
+  title,
+  subTitle,
+  price,
+  content,
+  headingLevel,
+  tone = "blue",
+} = Astro.props;
+---
+
+<Card as="li" border={tone} class="offer-card">
+  <div class="head">
+    <IconChip name={icon} tone="muted" size="xxxl" />
+
+    <div class="names">
+      <Text as={headingLevel} variant="title-h5">{title}</Text>
+
+      {
+        subTitle && (
+          <div class="sub-title">
+            <Text as="p" variant="paragraph-s">
+              {subTitle}
+            </Text>
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  <p class="price">
+    <Text variant="title-h4">{price.amount}</Text>{
+      price.label && (
+        <span class="label">
+          <Text>{price.label}</Text>
+        </span>
+      )
+    }
+  </p>
+
+  {
+    content.kind === "list" ? (
+      <div class="list">
+        {content.intro && (
+          <div class="intro">
+            <Text as="p" variant="title-s">
+              {content.intro}
+            </Text>
+          </div>
+        )}
+
+        <ul class="items">
+          {content.items.map((item) => (
+            <li class="item">
+              <Text variant="paragraph-s">{item}</Text>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : (
+      <div class="body">
+        <RichText value={content.body} />
+      </div>
+    )
+  }
+</Card>
+
+<style>
+  .offer-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-6);
+    background-color: var(--color-surface);
+  }
+
+  .head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .names {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sub-title,
+  .body {
+    color: var(--color-text-muted);
+  }
+
+  .price {
+    margin: 0;
+  }
+
+  .label {
+    color: var(--color-text-muted);
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .intro {
+    color: var(--color-accent-blue);
+  }
+
+  .items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .item {
+    display: flex;
+    gap: var(--space-3);
+    align-items: start;
+    color: var(--color-text-muted);
+  }
+
+  .item::before {
+    /* centres the dot on the first line: --paragraph-s draws a 1.25rem line box */
+    flex: none;
+    margin-block-start: calc((1.25rem - 6px) / 2);
+    inline-size: 6px;
+    block-size: 6px;
+    background-color: var(--color-accent-blue);
+    border-radius: var(--radius-pill);
+    content: "";
+  }
+</style>

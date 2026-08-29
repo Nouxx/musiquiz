@@ -98,6 +98,26 @@ type FindUs = {
   contactNote: string;
 };
 
+type ContactPanelRow = {
+  label: string;
+  title: string;
+  body: string;
+};
+
+type ContactPanels = {
+  type: "contactPanels";
+  media: CmsImage;
+  venueSlug: string;
+  venueTitle: string;
+  quote: ContactPanelRow;
+  booking: ContactPanelRow;
+  quoteCta: Cta | undefined;
+  phoneLabel: string;
+  phoneHref: string;
+  mailLabel: string;
+  mailHref: string;
+};
+
 type ClientContactForm = {
   type: "clientContactForm";
   images: CmsImage[];
@@ -243,6 +263,7 @@ export type PageComponent =
   | VenuePrices
   | GamePrices
   | FindUs
+  | ContactPanels
   | ClientContactForm
   | Logos
   | Faq

@@ -103,6 +103,25 @@ function findUsProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function contactPanelsProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "contactPanels" => {
+      "media": media ${imageProjection({ lang })},
+      "venueSlug": venue->slug.current,
+      "venueTitle": venue->title,
+      "phone": venue->phone,
+      "mail": venue->mail,
+      "quoteLabel": quoteLabel[language == "${lang}"][0].value,
+      "quoteTitle": quoteTitle[language == "${lang}"][0].value,
+      "quoteBody": quoteBody[language == "${lang}"][0].value,
+      "quoteCta": ${optionalCtaProjection({ field: "quoteCta", lang })},
+      "bookingLabel": bookingLabel[language == "${lang}"][0].value,
+      "bookingTitle": bookingTitle[language == "${lang}"][0].value,
+      "bookingBody": bookingBody[language == "${lang}"][0].value
+    }
+  `;
+}
+
 function cardsGridProjection({ lang }: { lang: Lang }) {
   return `
     _type == "cardsGrid" => {
@@ -259,6 +278,7 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${venuePricesProjection({ lang })},
       ${gamePricesProjection({ lang })},
       ${findUsProjection({ lang })},
+      ${contactPanelsProjection({ lang })},
       ${clientContactFormProjection({ lang })},
       ${logosProjection({ lang })},
       ${faqProjection({ lang })},
@@ -372,6 +392,22 @@ const sanityFindUsSchema = z.strictObject({
   openingNote: z.string().min(1),
   contactTitle: z.string().min(1),
   contactNote: z.string().min(1),
+});
+
+const sanityContactPanelsSchema = z.strictObject({
+  _type: z.literal("contactPanels"),
+  media: sanityImageSchema,
+  venueSlug: z.string().min(1),
+  venueTitle: z.string().min(1),
+  phone: z.string().min(1),
+  mail: z.string().min(1),
+  quoteLabel: z.string().min(1),
+  quoteTitle: z.string().min(1),
+  quoteBody: z.string().min(1),
+  quoteCta: sanityCtaSchema.nullable(),
+  bookingLabel: z.string().min(1),
+  bookingTitle: z.string().min(1),
+  bookingBody: z.string().min(1),
 });
 
 const sanityClientContactFormSchema = z.strictObject({
@@ -519,6 +555,7 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityVenuePricesSchema,
   sanityGamePricesSchema,
   sanityFindUsSchema,
+  sanityContactPanelsSchema,
   sanityClientContactFormSchema,
   sanityLogosSchema,
   sanityFaqSchema,

@@ -26,6 +26,8 @@
   --blue-600: #4e31b9;
   --blue-100: #dfe1ff;
 
+  --violet-600: #5625bb;
+
   --yellow-900: #442404;
   --yellow-600: #ffd200;
   --yellow-100: #fffec1;
@@ -50,6 +52,7 @@
   --gradient-green: linear-gradient(90deg, #12c54b, #a1e513);
   --gradient-blue: linear-gradient(90deg, #5625bb, #2477b3);
   --gradient-border-blue: linear-gradient(225deg, #2477b3, #5625bb);
+  --gradient-border-red: linear-gradient(45deg, #d92363, #ff530a);
   --gradient-border: conic-gradient(
     from 180deg at 50% 50%,
     #d92363 0deg,
@@ -209,10 +212,12 @@
   --color-overlay-pressed: var(--black-10);
 
   --color-accent: var(--red-500);
+  --color-accent-blue: var(--violet-600);
 
   --color-border: var(--grey-200);
   --color-border-brand: var(--gradient-border);
   --color-border-brand-blue: var(--gradient-border-blue);
+  --color-border-brand-red: var(--gradient-border-red);
 
   --color-border-translucent: var(--white-20);
   --color-border-translucent-strong: var(--white-40);

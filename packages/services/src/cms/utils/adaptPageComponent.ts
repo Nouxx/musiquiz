@@ -1,4 +1,6 @@
 import type { SanityPageComponent } from "@repo/api/sanity/shared/pageComponents";
+import { getMailto } from "@repo/utils/getMailto";
+import { getTel } from "@repo/utils/getTel";
 
 import type { PageComponent } from "../pageComponent.types";
 import { toCard } from "./toCard";
@@ -80,6 +82,30 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         openingNote: data.openingNote,
         contactTitle: data.contactTitle,
         contactNote: data.contactNote,
+      };
+    }
+
+    case "contactPanels": {
+      return {
+        type: "contactPanels",
+        media: toCmsImage(data.media),
+        venueSlug: data.venueSlug,
+        venueTitle: data.venueTitle,
+        quote: {
+          label: data.quoteLabel,
+          title: data.quoteTitle,
+          body: data.quoteBody,
+        },
+        booking: {
+          label: data.bookingLabel,
+          title: data.bookingTitle,
+          body: data.bookingBody,
+        },
+        quoteCta: toCta(data.quoteCta),
+        phoneLabel: data.phone,
+        phoneHref: getTel(data.phone),
+        mailLabel: data.mail,
+        mailHref: getMailto(data.mail),
       };
     }
 
