@@ -3,6 +3,7 @@ import type { PageComponent } from "@repo/services/cms/pageComponent.types";
 import CardsGrid from "@repo/ui/CardsGrid";
 import CardsScroller from "@repo/ui/CardsScroller";
 import ClientContactForm from "@repo/ui/ClientContactForm";
+import EventQuotationForm from "@repo/ui/EventQuotationForm";
 import DetailTabs from "@repo/ui/DetailTabs";
 import TextSlideshow from "@repo/ui/TextSlideshow";
 import TextCards from "@repo/ui/TextCards";
@@ -201,6 +202,35 @@ const t = getT(lang);
             messageLabel={t("contactForm.message")}
             messagePlaceholder={t("contactForm.messagePlaceholder")}
             submitLabel={t("contactForm.submit")}
+          />
+        );
+      }
+      case "eventQuotationForm": {
+        return (
+          <EventQuotationForm
+            badge={t("quotationForm.badge")}
+            title={t("quotationForm.title")}
+            lastNameLabel={t("quotationForm.lastName")}
+            lastNamePlaceholder={t("quotationForm.lastNamePlaceholder")}
+            firstNameLabel={t("quotationForm.firstName")}
+            firstNamePlaceholder={t("quotationForm.firstNamePlaceholder")}
+            phoneLabel={t("quotationForm.phone")}
+            phonePlaceholder={t("quotationForm.phonePlaceholder")}
+            mailLabel={t("quotationForm.mail")}
+            mailPlaceholder={t("quotationForm.mailPlaceholder")}
+            companyLabel={t("quotationForm.company")}
+            companyPlaceholder={t("quotationForm.companyPlaceholder")}
+            dateLabel={t("quotationForm.date")}
+            timeLabel={t("quotationForm.time")}
+            participantsLabel={t("quotationForm.participants")}
+            participantsPlaceholder={t("quotationForm.participantsPlaceholder")}
+            budgetLabel={t("quotationForm.budget")}
+            budgetPlaceholder={t("quotationForm.budgetPlaceholder")}
+            servicesLabel={t("quotationForm.services")}
+            services={component.services}
+            messageLabel={t("quotationForm.message")}
+            messagePlaceholder={t("quotationForm.messagePlaceholder")}
+            submitLabel={t("quotationForm.submit")}
           />
         );
       }

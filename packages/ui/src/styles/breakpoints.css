@@ -160,6 +160,27 @@
    the CTA that `MobileMenu` renders inside the burger sheet.
 
    ------------------------------------------------------------
+   280px — Logos heading column ceiling
+   ------------------------------------------------------------
+   Not a media query, but it decides one: `Logos.astro` emits the width at
+   which its inline strip stops scrolling, and that literal is
+   `neededWidth + 48px of gutters + the heading column + the 80px gap`. The
+   column is estimated per instance from the title's character count, so this
+   is the ceiling that estimate is clamped to.
+
+   Derived from what a two-line title costs the strip. Every px of heading is
+   a px the strip loses before it overflows, and at 280 the strip still has
+   888 of the 1248px content column. Above ~320 a long title gains no line
+   back — it wraps to two either way — and the strip starts scrolling on
+   screens where it did not need to.
+
+   The floor is the badge, not this number: a title shorter than its own pill
+   would otherwise reserve a column narrower than the pill renders, and the
+   logos would travel under it. `min-inline-size: min-content` on the heading
+   catches the remaining case the character count cannot see — a single word
+   too long to break.
+
+   ------------------------------------------------------------
    If this list grows
    ------------------------------------------------------------
    The literals become a real single source with `@custom-media`:

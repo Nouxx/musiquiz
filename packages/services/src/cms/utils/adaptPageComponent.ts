@@ -118,6 +118,13 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
       };
     }
 
+    case "eventQuotationForm": {
+      return {
+        type: "eventQuotationForm",
+        services: data.services.map((service) => service.label),
+      };
+    }
+
     case "logos": {
       return {
         type: "logos",

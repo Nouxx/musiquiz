@@ -123,6 +123,11 @@ type ClientContactForm = {
   images: CmsImage[];
 };
 
+type EventQuotationForm = {
+  type: "eventQuotationForm";
+  services: string[];
+};
+
 type Logos = {
   type: "logos";
   layout: "inline" | "stacked";
@@ -300,6 +305,7 @@ export type PageComponent =
   | FindUs
   | ContactPanels
   | ClientContactForm
+  | EventQuotationForm
   | Logos
   | Faq
   | CardsScroller

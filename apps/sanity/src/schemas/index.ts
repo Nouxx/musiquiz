@@ -9,7 +9,7 @@ import { eventFormatType } from "./eventFormat";
 import { gameFormatType } from "./gameFormat";
 import { homepageType } from "./homepage";
 import { siteSettingsType } from "./siteSettings";
-import { venueType } from "./venue";
+import { quotationServiceType, venueType } from "./venue";
 import { priceType, venueGameType } from "./venueGame";
 import { venueEventType } from "./venueEvent";
 import { venuePageType } from "./venuePage";
@@ -20,6 +20,7 @@ import { gamePricesType } from "./shared/pageComponents/gamePrices";
 import { findUsType } from "./shared/pageComponents/findUs";
 import { contactPanelsType } from "./shared/pageComponents/contactPanels";
 import { clientContactFormType } from "./shared/pageComponents/clientContactForm";
+import { eventQuotationFormType } from "./shared/pageComponents/eventQuotationForm";
 import { logosType } from "./shared/pageComponents/logos";
 import { faqQuestionType, faqType } from "./shared/pageComponents/faq";
 import {
@@ -49,6 +50,7 @@ import { textBlockType } from "./shared/textBlock";
 export const schemaTypes = [
   homepageType,
   venueType,
+  quotationServiceType,
   venuePageType,
   venueGameType,
   venueEventType,
@@ -71,6 +73,7 @@ export const schemaTypes = [
   findUsType,
   contactPanelsType,
   clientContactFormType,
+  eventQuotationFormType,
   logosType,
   faqType,
   faqQuestionType,
