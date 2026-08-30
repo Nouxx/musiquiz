@@ -1,0 +1,183 @@
+---
+import Badge from "./Badge.astro";
+import Section from "./Section.astro";
+import Button from "./primitives/Button.astro";
+import Flex from "./primitives/Flex.astro";
+import Grid from "./primitives/Grid.astro";
+import Text from "./primitives/Text.astro";
+import type { CtaLink, VenuePin } from "./types";
+import mapMarkup from "./maps/venues-map.svg?raw";
+
+interface Props {
+  badge: string;
+  heading: string;
+  venues: VenuePin[];
+  cta?: CtaLink;
+}
+
+const { badge, heading, venues, cta } = Astro.props;
+
+const id = `venues-${crypto.randomUUID().slice(0, 8)}`;
+
+const pairingCss = venues
+  .map(
+    (venue) =>
+      `#${id}:has([data-city="${venue.id}"]:is(:hover,:focus-visible)) .pin[data-city="${venue.id}"]{--pin-active:1}`,
+  )
+  .join("\n");
+---
+
+<Section surface="vivid" id="venues">
+  <Flex direction="column" gap="8">
+    <div class="venues" {id}>
+      <Flex direction="column" gap="10" class="list">
+        <Flex direction="column" gap="2">
+          <Badge>{badge}</Badge>
+          <Text as="h2" variant="title-h2">{heading}</Text>
+        </Flex>
+
+        <Grid as="ul" min="10rem" cap={3} gap="4">
+          {
+            venues.map((venue) => (
+              <li>
+                <a href={venue.url} data-city={venue.id}>
+                  <Flex gap="1">
+                    <Text variant="title-xl">{venue.title}</Text>
+                    <Text variant="paragraph-base">({venue.detail})</Text>
+                  </Flex>
+                </a>
+              </li>
+            ))
+          }
+        </Grid>
+      </Flex>
+
+      <div class="map">
+        <Fragment set:html={mapMarkup} />
+
+        {
+          venues.map((venue) => (
+            <span
+              class="pin"
+              data-city={venue.id}
+              aria-hidden="true"
+              style={{
+                "--pin-x": `${venue.position.x}%`,
+                "--pin-y": `${venue.position.y}%`,
+              }}
+            >
+              <span class="dot" />
+              <span class="label">
+                <Badge color="light">{venue.title}</Badge>
+              </span>
+            </span>
+          ))
+        }
+      </div>
+    </div>
+
+    {
+      cta && (
+        <div>
+          <Button as="a" href={cta.url} icon="arrow-right">
+            {cta.label}
+          </Button>
+        </div>
+      )
+    }
+  </Flex>
+</Section>
+
+<style is:inline set:html={pairingCss}></style>
+
+<style>
+  /* the header is `position: fixed`, so an anchor jump would otherwise land the
+     heading underneath it. `:global` because the id is on the element Section
+     renders, which never carries this component's scope marker */
+  :global(#venues) {
+    scroll-margin-block-start: var(--space-20);
+  }
+
+  .venues {
+    display: grid;
+    gap: var(--space-20);
+    align-items: center;
+  }
+
+  .list li a:hover,
+  .list li a:focus-visible {
+    text-decoration: underline;
+  }
+
+  .map {
+    display: none;
+  }
+
+  /* 60rem — map shown. see styles/breakpoints.css */
+  @media (width >= 60rem) {
+    .venues {
+      grid-template-columns: 1fr minmax(26rem, 36.5rem);
+    }
+
+    .map {
+      display: block;
+      position: relative;
+      aspect-ratio: 598 / 520;
+    }
+  }
+
+  .map :global(svg) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .pin {
+    position: absolute;
+    inset-block-start: var(--pin-y);
+    inset-inline-start: var(--pin-x);
+    display: grid;
+    place-items: center;
+    inline-size: 21px;
+    block-size: 21px;
+    translate: -50% -50%;
+    z-index: var(--pin-active, 0);
+  }
+
+  .dot {
+    inline-size: 10px;
+    block-size: 10px;
+    background-color: currentcolor;
+    border-radius: var(--radius-pill);
+    scale: calc(1 + 0.4 * var(--pin-active, 0));
+    box-shadow: 0 0 0 calc(6px * var(--pin-active, 0))
+      var(--color-surface-on-media);
+    transition:
+      scale 150ms,
+      box-shadow 150ms;
+  }
+
+  .label {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: calc(50% + 2px);
+    white-space: nowrap;
+    opacity: var(--pin-active, 0);
+    translate: 0 calc(-50% - 7px + 4px * (1 - var(--pin-active, 0)));
+    pointer-events: none;
+    transition:
+      opacity 150ms,
+      translate 150ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .label {
+      translate: 0 calc(-50% - 7px);
+      transition: opacity 150ms;
+    }
+
+    .dot {
+      transition: none;
+    }
+  }
+</style>

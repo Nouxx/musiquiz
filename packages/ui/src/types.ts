@@ -152,3 +152,14 @@ export type OfferGroup = {
   tone?: OfferTone;
   cards: OfferCard[];
 };
+
+export type VenuePin = {
+  /** pairs the list link with its dot; the venue slug */
+  id: string;
+  title: string;
+  /** @example "75", "BE" */
+  detail: string;
+  url: string;
+  /** percent of the map frame */
+  position: { x: number; y: number };
+};
