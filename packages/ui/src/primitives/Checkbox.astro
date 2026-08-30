@@ -5,14 +5,17 @@ import Text from "./Text.astro";
 
 interface Props extends Omit<HTMLAttributes<"input">, "class" | "id" | "type"> {
   id: string;
+  textSize?: "small" | "base";
 }
 
-const { id, ...rest } = Astro.props;
+const { id, textSize = "small", ...rest } = Astro.props;
 ---
 
 <label class="checkbox" for={id}>
   <input {...rest} {id} class="checkbox-control" type="checkbox" />
-  <Text variant="paragraph-xs"><slot /></Text>
+  <Text variant={textSize === "small" ? "paragraph-xs" : "paragraph-base"}>
+    <slot />
+  </Text>
 </label>
 
 <style>

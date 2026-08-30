@@ -57,13 +57,15 @@ const slideshowFirst = slideshowPosition === "left";
     </div>
 
     <div slot={slideshowFirst ? "first" : "second"} class="media">
-      <MiniCarousel
-        {images}
-        label={title}
-        {previousLabel}
-        {nextLabel}
-        {goToImageLabel}
-      />
+      <div class="media-layer">
+        <MiniCarousel
+          {images}
+          label={title}
+          {previousLabel}
+          {nextLabel}
+          {goToImageLabel}
+        />
+      </div>
     </div>
   </TwoBlocks>
 </Section>
@@ -81,6 +83,13 @@ const slideshowFirst = slideshowPosition === "left";
   @media (width >= 60rem) {
     .media {
       display: block;
+      position: relative;
+    }
+
+    /* the copy decides the row height, not the images */
+    .media-layer {
+      position: absolute;
+      inset: 0;
     }
 
     .copy.trailing {

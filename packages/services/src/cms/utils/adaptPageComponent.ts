@@ -9,6 +9,8 @@ import { toCta } from "./toCta";
 import { toDeckCard } from "./toDeckCard";
 import { toDetailGroup } from "./toDetailGroup";
 import { toKeywordCard } from "./toKeywordCard";
+import { toOfferCard } from "./toOfferCard";
+import { toOfferGroup } from "./toOfferGroup";
 import { toPricesGame } from "./toPricesGame";
 import { toRichText } from "./toRichText";
 import { toTextBlock } from "./toTextBlock";
@@ -172,6 +174,30 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         body: data.body,
         cta: toCta(data.cta),
         cards: data.cards.map((card) => toKeywordCard(card)),
+      };
+    }
+
+    case "offers": {
+      return {
+        type: "offers",
+        title: data.title,
+        subTitle: data.subTitle ?? undefined,
+        background: data.background,
+        venueSlug: data.venueSlug,
+        cta: toCta(data.cta),
+        content:
+          data.content.layout === "groups"
+            ? {
+                layout: "groups",
+                groups: [
+                  toOfferGroup(data.content.groups[0]),
+                  toOfferGroup(data.content.groups[1]),
+                ],
+              }
+            : {
+                layout: "cards",
+                cards: data.content.cards.map((card) => toOfferCard(card)),
+              },
       };
     }
 

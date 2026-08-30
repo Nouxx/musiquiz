@@ -52,7 +52,10 @@ const {
 
   {
     content.kind === "list" ? (
-      <div class="list">
+      <div
+        class="list"
+        style={{ "--offer-accent": `var(--color-accent-${tone})` }}
+      >
         {content.intro && (
           <div class="intro">
             <Text as="p" variant="title-s">
@@ -111,13 +114,15 @@ const {
   }
 
   .list {
+    --offer-accent: var(--color-accent-blue);
+
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
   }
 
   .intro {
-    color: var(--color-accent-blue);
+    color: var(--offer-accent);
   }
 
   .items {
@@ -137,12 +142,11 @@ const {
   }
 
   .item::before {
-    /* centres the dot on the first line: --paragraph-s draws a 1.25rem line box */
     flex: none;
     margin-block-start: calc((1.25rem - 6px) / 2);
     inline-size: 6px;
     block-size: 6px;
-    background-color: var(--color-accent-blue);
+    background-color: var(--offer-accent);
     border-radius: var(--radius-pill);
     content: "";
   }

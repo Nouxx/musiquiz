@@ -12,6 +12,7 @@ import Faq from "@repo/ui/Faq";
 import Logos from "@repo/ui/Logos";
 import FindUs from "@repo/ui/FindUs";
 import ContactPanels from "@repo/ui/ContactPanels";
+import Offers from "@repo/ui/Offers";
 import Carousel from "@repo/ui/Carousel";
 import RollingBanner from "@repo/ui/RollingBanner";
 import { getLang } from "../../libs/getLang";
@@ -22,6 +23,7 @@ import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import { toPriceOffer } from "../../libs/toPriceOffer";
 import { toContactFacts } from "../../libs/toContactFacts";
 import { toContactPanels } from "../../libs/toContactPanels";
+import { toOffers } from "../../libs/toOffers";
 
 interface Props {
   components: PageComponent[];
@@ -267,6 +269,9 @@ const t = getT(lang);
             cards={component.cards}
           />
         );
+      }
+      case "offers": {
+        return <Offers {...toOffers({ component, t, lang })} />;
       }
       case "videoEmbed": {
         return (

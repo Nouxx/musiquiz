@@ -21,6 +21,7 @@ export const pageComponentsType = defineType({
     defineArrayMember({ type: "textSlideshow" }),
     defineArrayMember({ type: "textCards" }),
     defineArrayMember({ type: "textCardsGrid" }),
+    defineArrayMember({ type: "offers" }),
     defineArrayMember({ type: "videoEmbed" }),
   ],
 });

@@ -91,6 +91,10 @@ export const fr = {
     mail: "Par mail",
     book: "Réservation immédiate",
   },
+  offers: {
+    book: "Réservation immédiate",
+    quotation: "Sur devis",
+  },
   contactForm: {
     badge: "Contactez-nous",
     title: "Une question ?",

@@ -1,0 +1,315 @@
+---
+import Badge from "./Badge.astro";
+import Button from "./primitives/Button.astro";
+import Card from "./primitives/Card.astro";
+import Checkbox from "./primitives/Checkbox.astro";
+import Text from "./primitives/Text.astro";
+import TextField from "./primitives/TextField.astro";
+import Section from "./Section.astro";
+
+interface Props {
+  badge: string;
+  title: string;
+  lastNameLabel: string;
+  lastNamePlaceholder: string;
+  firstNameLabel: string;
+  firstNamePlaceholder: string;
+  phoneLabel: string;
+  phonePlaceholder: string;
+  mailLabel: string;
+  mailPlaceholder: string;
+  companyLabel: string;
+  companyPlaceholder: string;
+  dateLabel: string;
+  timeLabel: string;
+  participantsLabel: string;
+  participantsPlaceholder: string;
+  budgetLabel: string;
+  budgetPlaceholder: string;
+  servicesLabel: string;
+  services: string[];
+  messageLabel: string;
+  messagePlaceholder: string;
+  submitLabel: string;
+}
+
+const {
+  badge,
+  title,
+  lastNameLabel,
+  lastNamePlaceholder,
+  firstNameLabel,
+  firstNamePlaceholder,
+  phoneLabel,
+  phonePlaceholder,
+  mailLabel,
+  mailPlaceholder,
+  companyLabel,
+  companyPlaceholder,
+  dateLabel,
+  timeLabel,
+  participantsLabel,
+  participantsPlaceholder,
+  budgetLabel,
+  budgetPlaceholder,
+  servicesLabel,
+  services,
+  messageLabel,
+  messagePlaceholder,
+  submitLabel,
+} = Astro.props;
+
+// the section can appear more than once on a page, and a label only points at
+// its own field if the ids are unique
+const uid = crypto.randomUUID().slice(0, 8);
+---
+
+<Section surface="muted" spacing="m">
+  <Card border="blue" class="panel">
+    {
+      /* the form is inert: it swallows its own submit until a quotation
+        endpoint exists. Native validation still runs first. */
+    }
+    <form class="form" data-quotation-form>
+      <div class="body">
+        <div class="heading">
+          <Badge color="light">{badge}</Badge>
+
+          <Text as="h2" variant="title-h4">{title}</Text>
+        </div>
+
+        <div class="fields">
+          <div class="row">
+            <TextField
+              id={`quotation-${uid}-last-name`}
+              name="lastName"
+              type="text"
+              autocomplete="family-name"
+              tone="plain"
+              label={lastNameLabel}
+              placeholder={lastNamePlaceholder}
+              required
+            />
+
+            <TextField
+              id={`quotation-${uid}-first-name`}
+              name="firstName"
+              type="text"
+              autocomplete="given-name"
+              tone="plain"
+              label={firstNameLabel}
+              placeholder={firstNamePlaceholder}
+              required
+            />
+          </div>
+
+          <div class="row">
+            <TextField
+              id={`quotation-${uid}-phone`}
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              tone="plain"
+              label={phoneLabel}
+              placeholder={phonePlaceholder}
+            />
+
+            <TextField
+              id={`quotation-${uid}-mail`}
+              name="mail"
+              type="email"
+              autocomplete="email"
+              tone="plain"
+              label={mailLabel}
+              placeholder={mailPlaceholder}
+              required
+            />
+          </div>
+
+          <TextField
+            id={`quotation-${uid}-company`}
+            name="company"
+            type="text"
+            autocomplete="organization"
+            tone="plain"
+            label={companyLabel}
+            placeholder={companyPlaceholder}
+          />
+
+          <div class="row">
+            <TextField
+              id={`quotation-${uid}-date`}
+              name="date"
+              type="date"
+              tone="plain"
+              label={dateLabel}
+              required
+            />
+
+            <TextField
+              id={`quotation-${uid}-time`}
+              name="time"
+              type="time"
+              tone="plain"
+              label={timeLabel}
+              required
+            />
+          </div>
+
+          <div class="row">
+            <TextField
+              id={`quotation-${uid}-participants`}
+              name="participants"
+              type="text"
+              tone="plain"
+              label={participantsLabel}
+              placeholder={participantsPlaceholder}
+            />
+
+            <TextField
+              id={`quotation-${uid}-budget`}
+              name="budget"
+              type="text"
+              tone="plain"
+              label={budgetLabel}
+              placeholder={budgetPlaceholder}
+            />
+          </div>
+
+          <fieldset class="services">
+            <legend>
+              <Text variant="title-base">{servicesLabel}</Text>
+            </legend>
+
+            <div class="options">
+              {
+                services.map((service, index) => (
+                  <Checkbox
+                    id={`quotation-${uid}-service-${index}`}
+                    name="services"
+                    value={service}
+                    textSize="base"
+                  >
+                    {service}
+                  </Checkbox>
+                ))
+              }
+            </div>
+          </fieldset>
+
+          <TextField
+            as="textarea"
+            id={`quotation-${uid}-message`}
+            name="message"
+            tone="plain"
+            label={messageLabel}
+            placeholder={messagePlaceholder}
+            required
+          />
+        </div>
+      </div>
+
+      <Button type="submit" tone="blue">{submitLabel}</Button>
+    </form>
+  </Card>
+</Section>
+
+<style>
+  .panel {
+    padding: var(--space-6);
+    background-color: var(--color-fill-light);
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    align-items: flex-start;
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-self: stretch;
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+
+  .fields {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .row {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .services {
+    min-inline-size: 0; /* a fieldset will not shrink below its content */
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .services legend {
+    margin-block-end: var(--space-3);
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+
+  /* preventing HTML native icons to be drawn */
+  .fields :global(input[type="date"]::-webkit-calendar-picker-indicator),
+  .fields :global(input[type="time"]::-webkit-calendar-picker-indicator) {
+    display: none;
+  }
+
+  .fields :global(input[type="date"]),
+  .fields :global(input[type="time"]) {
+    cursor: pointer;
+  }
+
+  /* 60rem — two columns stop fitting (styles/breakpoints.css) */
+  @media (width >= 60rem) {
+    .panel {
+      padding: var(--space-10);
+    }
+
+    .row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+<script>
+  for (const form of document.querySelectorAll("form[data-quotation-form]")) {
+    // deliberately inert until a quotation endpoint exists
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+    });
+
+    // a native date or time field opens its picker from the indicator alone,
+    // and we have hide it
+    const pickers = form.querySelectorAll<HTMLInputElement>(
+      "input[type='date'], input[type='time']",
+    );
+
+    for (const picker of pickers) {
+      picker.addEventListener("click", () => {
+        picker.showPicker();
+      });
+    }
+  }
+</script>

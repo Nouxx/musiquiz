@@ -93,6 +93,10 @@ export const en: typeof fr = {
     mail: "By email",
     book: "Book instantly",
   },
+  offers: {
+    book: "Book instantly",
+    quotation: "On quote",
+  },
   contactForm: {
     badge: "Contact us",
     title: "A question?",

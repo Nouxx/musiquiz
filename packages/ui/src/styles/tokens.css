@@ -213,6 +213,7 @@
 
   --color-accent: var(--red-500);
   --color-accent-blue: var(--violet-600);
+  --color-accent-red: var(--red-600);
 
   --color-border: var(--grey-200);
   --color-border-brand: var(--gradient-border);
