@@ -1,52 +1,24 @@
 ---
 import type { Homepage } from "@repo/services/cms/types";
-import Section from "@repo/ui/Section";
-import Flex from "@repo/ui/primitives/Flex";
-import Grid from "@repo/ui/primitives/Grid";
-import Badge from "@repo/ui/Badge";
-import Text from "@repo/ui/primitives/Text";
+import VenuesMap from "@repo/ui/VenuesMap";
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 
 export interface Props {
   venues: Homepage["venues"];
+  cta: Homepage["venuesCta"];
 }
 
-const { venues } = Astro.props;
+const { venues, cta } = Astro.props;
 
 const lang = getLang(Astro);
 
 const t = getT(lang);
 ---
 
-<Section surface="vivid" id="venues">
-  <Flex direction="column" gap="12">
-    <Flex direction="column" gap="3">
-      <Badge>{t("venues.badge")}</Badge>
-      <Text as="h2" variant="title-h2">{t("venues.heading")}</Text>
-    </Flex>
-
-    <Grid as="ul" min="10rem" cap={3} gap="5">
-      {
-        venues.map((venue) => (
-          <li>
-            <a href={venue.url}>
-              <Flex gap="1">
-                <Text variant="title-xl">{venue.title}</Text>
-                <Text variant="paragraph-base">({venue.detail})</Text>
-              </Flex>
-            </a>
-          </li>
-        ))
-      }
-    </Grid>
-  </Flex>
-</Section>
-
-<style>
-  /* the header is `position: fixed`, so an anchor jump would otherwise land the
-     heading underneath it */
-  #venues {
-    scroll-margin-block-start: var(--space-20);
-  }
-</style>
+<VenuesMap
+  badge={t("venues.badge")}
+  heading={t("venues.heading")}
+  {venues}
+  {cta}
+/>

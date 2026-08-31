@@ -3,6 +3,7 @@ import EnvelopeIcon from "@sanity/icons/Envelope";
 import InfoOutlineIcon from "@sanity/icons/InfoOutline";
 import PinIcon from "@sanity/icons/Pin";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { MapPositionInput } from "../components/MapPositionInput";
 import type { StringRule } from "sanity";
 import { frenchValue, type LocalizedEntry } from "./shared/frenchValue";
 import TagIcon from "@sanity/icons/Tag";
@@ -147,6 +148,30 @@ export const venueType = defineType({
       description:
         "Where the map in the Find Us section is centred. Right-click the venue in Google Maps and copy the coordinates it offers. Leave Altitude empty — it is not used.",
       group: "location",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "mapPosition",
+      title: "Position on the map",
+      description:
+        "Where the venue's dot sits on the homepage map. Click or drag on the map. The other venues are shown faded.",
+      type: "object",
+      group: "location",
+      components: { input: MapPositionInput },
+      fields: [
+        defineField({
+          name: "x",
+          title: "X",
+          type: "number",
+          validation: (rule) => rule.required().min(0).max(100),
+        }),
+        defineField({
+          name: "y",
+          title: "Y",
+          type: "number",
+          validation: (rule) => rule.required().min(0).max(100),
+        }),
+      ],
       validation: (rule) => rule.required(),
     }),
     defineField({

@@ -30,10 +30,15 @@ export type Homepage = {
   badgeLabel: string;
   heading: string;
   venues: {
+    /** the slug, pairs a list link with its dot on the map */
+    id: string;
     title: string;
     url: string;
     detail: string;
+    /** percent of the map frame */
+    position: { x: number; y: number };
   }[];
+  venuesCta: { label: string; url: string } | undefined;
   components: PageComponent[];
 };
 

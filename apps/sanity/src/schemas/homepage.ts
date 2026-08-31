@@ -25,6 +25,12 @@ export const homepageType = defineType({
       type: "internationalizedArrayString",
     }),
     defineField({
+      name: "venuesCta",
+      title: "Venues section call to action",
+      description: "The button under the list of venues. Leave empty for none.",
+      type: "cta",
+    }),
+    defineField({
       name: "pageComponents",
       type: "pageComponents",
     }),

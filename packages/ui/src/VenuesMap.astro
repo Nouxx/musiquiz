@@ -6,7 +6,7 @@ import Flex from "./primitives/Flex.astro";
 import Grid from "./primitives/Grid.astro";
 import Text from "./primitives/Text.astro";
 import type { CtaLink, VenuePin } from "./types";
-import mapMarkup from "./maps/venues-map.svg?raw";
+import { venuesMap } from "./lib/maps";
 
 interface Props {
   badge: string;
@@ -53,7 +53,7 @@ const pairingCss = venues
       </Flex>
 
       <div class="map">
-        <Fragment set:html={mapMarkup} />
+        <Fragment set:html={venuesMap} />
 
         {
           venues.map((venue) => (
