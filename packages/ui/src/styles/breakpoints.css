@@ -60,12 +60,14 @@
    "two columns stop fitting" decision. Deriving it instead would mean picking
    a floor for each block, and one of the two is an image, which has none.
 
-   Three things follow TwoBlocks rather than deciding anything themselves, and
+   Four things follow TwoBlocks rather than deciding anything themselves, and
    must move if it moves: FindUs.astro steps its card padding 24px -> 40px and
-   its row spacing there; findUs/ContactRow.astro turns its chip-over-text
-   stack into a chip-beside-text row and reveals the row's label there; and
-   RemoteImage.astro quotes it in the `map` variant's `sizes` string, which is
-   TS — below the split the map is full width, above it half.
+   its row spacing there; contact/ContactRow.astro turns its chip-over-text
+   stack into a chip-beside-text row and reveals the row's label there;
+   ContactPanels.astro splits its two panels 618/378, steps their padding, and
+   turns the questions panel's rows back into a column; and RemoteImage.astro
+   quotes it in the `map` variant's `sizes` string, which is TS — below the
+   split the map is full width, above it half.
 
    RemoteImage.astro quotes both 60rem and 78rem in `cover-logo-side`'s
    `sizes` string, which is TS. Neither is a media query: the logo is sized
@@ -156,6 +158,27 @@
    Effect: 320, 360 and 375px viewports drop the CTA and keep only logo +
    burger; 390px and up keep it. Booking stays reachable below 24rem through
    the CTA that `MobileMenu` renders inside the burger sheet.
+
+   ------------------------------------------------------------
+   280px — Logos heading column ceiling
+   ------------------------------------------------------------
+   Not a media query, but it decides one: `Logos.astro` emits the width at
+   which its inline strip stops scrolling, and that literal is
+   `neededWidth + 48px of gutters + the heading column + the 80px gap`. The
+   column is estimated per instance from the title's character count, so this
+   is the ceiling that estimate is clamped to.
+
+   Derived from what a two-line title costs the strip. Every px of heading is
+   a px the strip loses before it overflows, and at 280 the strip still has
+   888 of the 1248px content column. Above ~320 a long title gains no line
+   back — it wraps to two either way — and the strip starts scrolling on
+   screens where it did not need to.
+
+   The floor is the badge, not this number: a title shorter than its own pill
+   would otherwise reserve a column narrower than the pill renders, and the
+   logos would travel under it. `min-inline-size: min-content` on the heading
+   catches the remaining case the character count cannot see — a single word
+   too long to break.
 
    ------------------------------------------------------------
    If this list grows

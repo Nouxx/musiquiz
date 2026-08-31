@@ -45,11 +45,42 @@ const SCROLL_SPEED_PX_PER_SEC = 60;
 
 const CONTENT_PX = 1248;
 const GUTTER_PX = 24;
-const HEADING_COLUMN_PX = 185;
 const HEADING_GAP_PX = 80;
+
+/*
+ * The heading column is estimated from character counts, the technique ADR 0008
+ * sets out for RollingBanner. The bias is inverted here: there, under-shooting
+ * renders surplus copies and costs nothing, so the constant sits below the
+ * face's real advance. Here under-shooting renders a column too narrow and the
+ * title breaks into a stack of fragments, so 0.5 sits above Momo Trust
+ * Display's measured ~0.48. Do not harmonise it with RollingBanner's 0.45.
+ */
+const TITLE_ADVANCE_EM = 0.5;
+const BADGE_ADVANCE_EM = 0.5;
+
+// `--title-h3` at its clamp ceiling, and `--paragraph-base-sm`
+const TITLE_FONT_PX = 36;
+const BADGE_FONT_PX = 16;
+
+// the pill's `--space-5` on each side
+const BADGE_PADDING_PX = 40;
+
+// 280px — heading column ceiling. see styles/breakpoints.css
+const HEADING_CAP_PX = 280;
 
 // 60rem — inline layout stacks. see styles/breakpoints.css
 const STACK_PX = 960;
+
+const badgeWidth =
+  badge.length * BADGE_ADVANCE_EM * BADGE_FONT_PX + BADGE_PADDING_PX;
+
+// the cap limits the title only. A capped badge would render wider than the
+// column reserved for it, and the strip starts where that column ends, so the
+// logos would travel under the pill.
+const headingColumn = Math.max(
+  badgeWidth,
+  Math.min(HEADING_CAP_PX, title.length * TITLE_ADVANCE_EM * TITLE_FONT_PX),
+);
 
 function renderedWidth(logo: ImageSource) {
   return Math.min(box.width, (box.height * logo.width) / logo.height);
@@ -81,9 +112,9 @@ function fittingConditions() {
     conditions.push(`(width >= ${stackedFrom}px) and (width < ${STACK_PX}px)`);
   }
 
-  const asideOffset = GUTTER_PX * 2 + HEADING_COLUMN_PX + HEADING_GAP_PX;
+  const asideOffset = GUTTER_PX * 2 + headingColumn + HEADING_GAP_PX;
 
-  if (neededWidth <= CONTENT_PX - HEADING_COLUMN_PX - HEADING_GAP_PX) {
+  if (neededWidth <= CONTENT_PX - headingColumn - HEADING_GAP_PX) {
     conditions.push(
       `(width >= ${Math.max(STACK_PX, Math.ceil(neededWidth + asideOffset))}px)`,
     );
@@ -119,7 +150,7 @@ const gateCss = conditions
       "--logos-box-inline": `${box.width}px`,
       "--logos-box-block": `${box.height}px`,
       "--logos-gap": `${box.gap}px`,
-      "--logos-heading-inline": `${HEADING_COLUMN_PX}px`,
+      "--logos-heading-inline": `${headingColumn}px`,
       "--logos-heading-gap": `${HEADING_GAP_PX}px`,
       "--logos-surface":
         surface === "muted"
@@ -188,6 +219,10 @@ const gateCss = conditions
     flex-direction: column;
     gap: var(--space-2);
     align-items: flex-start;
+  }
+
+  .heading > :global(h2) {
+    text-wrap: balance;
   }
 
   .stacked {
@@ -294,6 +329,9 @@ const gateCss = conditions
       z-index: 1;
       align-self: stretch;
       justify-content: center;
+
+      /* the estimate cannot see a word too long to break; the browser can */
+      min-inline-size: min-content;
       inline-size: calc(var(--logos-heading-inline) + var(--space-10));
       padding-inline-end: var(--space-10);
       background-color: var(--logos-surface);

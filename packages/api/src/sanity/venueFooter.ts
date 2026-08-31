@@ -66,12 +66,14 @@ const sanityVenueFooterSchema = z.strictObject({
     mail: z.email(),
     phone: z.string().min(1),
     googleMapsLink: z.string().nullable(),
-    games: z.array(
-      z.strictObject({
-        name: z.string(),
-        slug: z.string(),
-      }),
-    ),
+    games: z
+      .array(
+        z.strictObject({
+          name: z.string(),
+          slug: z.string(),
+        }),
+      )
+      .min(1),
   }),
 });
 

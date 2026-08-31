@@ -1,0 +1,126 @@
+---
+import Badge from "./Badge.astro";
+import Button from "./primitives/Button.astro";
+import Card from "./primitives/Card.astro";
+import IconChip from "./primitives/IconChip.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { CtaLink, KeywordCard } from "./types";
+
+interface Props {
+  heading: string;
+  body: string;
+  cta?: CtaLink;
+  cards: KeywordCard[];
+}
+
+const { heading, body, cta, cards } = Astro.props;
+---
+
+<Section surface="muted" spacing="l">
+  <div class="text-cards-grid">
+    <div class="header">
+      <div class="intro">
+        <Text as="h2" variant="title-h2">{heading}</Text>
+
+        <div class="body">
+          <Text as="p" variant="paragraph-base">{body}</Text>
+        </div>
+      </div>
+
+      {
+        cta && (
+          <div class="action">
+            <Button as="a" href={cta.url}>
+              {cta.label}
+            </Button>
+          </div>
+        )
+      }
+    </div>
+
+    <ul class="grid">
+      {
+        cards.map((card) => (
+          <Card as="li" border="blue" class="card">
+            <div class="top">
+              <Badge color="light" border="blue">
+                {card.badge}
+              </Badge>
+
+              <IconChip name={card.icon} tone="muted" size="l" />
+            </div>
+
+            <Text as="p" variant="title-xl">
+              {card.body}
+            </Text>
+          </Card>
+        ))
+      }
+    </ul>
+  </div>
+</Section>
+
+<style>
+  .text-cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-10);
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .intro {
+    display: flex;
+    flex: 0 1 49%;
+    flex-direction: column;
+    gap: var(--space-4);
+
+    /* `min-inline-size` does not shrink, hence the `100%` arm */
+    min-inline-size: min(38.25rem, 100%);
+  }
+
+  .body {
+    color: var(--color-text-muted);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (width >= 40rem) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (width >= 64rem) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-6);
+  }
+
+  .top {
+    display: flex;
+    gap: var(--space-6);
+    align-items: center;
+    justify-content: space-between;
+  }
+</style>

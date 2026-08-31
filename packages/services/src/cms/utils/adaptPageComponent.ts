@@ -1,4 +1,6 @@
 import type { SanityPageComponent } from "@repo/api/sanity/shared/pageComponents";
+import { getMailto } from "@repo/utils/getMailto";
+import { getTel } from "@repo/utils/getTel";
 
 import type { PageComponent } from "../pageComponent.types";
 import { toCard } from "./toCard";
@@ -6,9 +8,13 @@ import { toCmsImage } from "./toCmsImage";
 import { toCta } from "./toCta";
 import { toDeckCard } from "./toDeckCard";
 import { toDetailGroup } from "./toDetailGroup";
+import { toKeywordCard } from "./toKeywordCard";
+import { toOfferCard } from "./toOfferCard";
+import { toOfferGroup } from "./toOfferGroup";
 import { toPricesGame } from "./toPricesGame";
 import { toRichText } from "./toRichText";
 import { toTextBlock } from "./toTextBlock";
+import { toTextCard } from "./toTextCard";
 
 export function adaptPageComponent(data: SanityPageComponent): PageComponent {
   switch (data._type) {
@@ -81,10 +87,41 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
       };
     }
 
+    case "contactPanels": {
+      return {
+        type: "contactPanels",
+        media: toCmsImage(data.media),
+        venueSlug: data.venueSlug,
+        venueTitle: data.venueTitle,
+        quote: {
+          label: data.quoteLabel,
+          title: data.quoteTitle,
+          body: data.quoteBody,
+        },
+        booking: {
+          label: data.bookingLabel,
+          title: data.bookingTitle,
+          body: data.bookingBody,
+        },
+        quoteCta: toCta(data.quoteCta),
+        phoneLabel: data.phone,
+        phoneHref: getTel(data.phone),
+        mailLabel: data.mail,
+        mailHref: getMailto(data.mail),
+      };
+    }
+
     case "clientContactForm": {
       return {
         type: "clientContactForm",
         images: data.images.map((image) => toCmsImage(image)),
+      };
+    }
+
+    case "eventQuotationForm": {
+      return {
+        type: "eventQuotationForm",
+        services: data.services.map((service) => service.label),
       };
     }
 
@@ -124,7 +161,50 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         type: "textSlideshow",
         textBlock: toTextBlock(data.textBlock),
         surface: data.surface,
+        slideshowPosition: data.slideshowPosition,
         images: data.images.map((image) => toCmsImage(image)),
+      };
+    }
+
+    case "textCards": {
+      return {
+        type: "textCards",
+        textBlock: toTextBlock(data.textBlock),
+        cards: data.cards.map((card) => toTextCard(card)),
+      };
+    }
+
+    case "textCardsGrid": {
+      return {
+        type: "textCardsGrid",
+        heading: data.heading,
+        body: data.body,
+        cta: toCta(data.cta),
+        cards: data.cards.map((card) => toKeywordCard(card)),
+      };
+    }
+
+    case "offers": {
+      return {
+        type: "offers",
+        title: data.title,
+        subTitle: data.subTitle ?? undefined,
+        background: data.background,
+        venueSlug: data.venueSlug,
+        cta: toCta(data.cta),
+        content:
+          data.content.layout === "groups"
+            ? {
+                layout: "groups",
+                groups: [
+                  toOfferGroup(data.content.groups[0]),
+                  toOfferGroup(data.content.groups[1]),
+                ],
+              }
+            : {
+                layout: "cards",
+                cards: data.content.cards.map((card) => toOfferCard(card)),
+              },
       };
     }
 

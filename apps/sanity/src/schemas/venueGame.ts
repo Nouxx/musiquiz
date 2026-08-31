@@ -1,22 +1,14 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import type {
-  Path,
-  Reference,
-  SanityDocument,
-  ValidationContext,
-} from "sanity";
+import type { Path } from "sanity";
 import { JoystickIcon } from "@sanity/icons/Joystick";
 import { frenchValue, type LocalizedEntry } from "./shared/frenchValue";
-
-const API_VERSION = "2025-02-06";
+import { findDuplicate, takenFormatIds } from "./shared/venueFormatUniqueness";
 
 /** the note sits in a narrow card beside the amount, so it has to stay short */
 const NOTE_MAX_LENGTH = 30;
 
 /** past this the tier column outgrows the image it stands next to */
 const MAX_PRICES = 5;
-
-type GetClient = ValidationContext["getClient"];
 
 type PriceValue = {
   _key?: string;
@@ -25,72 +17,6 @@ type PriceValue = {
   amount?: number;
   note?: LocalizedEntry[];
 };
-
-function venueRefOf(document: SanityDocument | undefined) {
-  return (document?.venue as Reference | undefined)?._ref;
-}
-
-function gameRefOf(document: SanityDocument | undefined) {
-  return (document?.game as Reference | undefined)?._ref;
-}
-
-/** the published id, so a draft never counts itself as its own duplicate */
-function publishedIdOf(document: SanityDocument | undefined) {
-  return (document?._id ?? "").replace(/^drafts\./, "");
-}
-
-/**
- * The games this venue already has a page for
- */
-async function takenGameIds({
-  document,
-  getClient,
-}: {
-  document: SanityDocument | undefined;
-  getClient: GetClient;
-}) {
-  const venueRef = venueRefOf(document);
-
-  if (!venueRef) return [];
-
-  return getClient({ apiVersion: API_VERSION }).fetch<string[]>(
-    `*[_type == "venueGame"
-      && venue._ref == $venueRef
-      && !(_id in [$publishedId, "drafts." + $publishedId])].game._ref`,
-    { venueRef, publishedId: publishedIdOf(document) },
-  );
-}
-
-/**
- * a document drafted before its game was taken still has to be caught
- * and the reference filter only shapes what the search offers.
- */
-async function findDuplicate({
-  document,
-  getClient,
-}: {
-  document: SanityDocument | undefined;
-  getClient: GetClient;
-}) {
-  const venueRef = venueRefOf(document);
-  const gameRef = gameRefOf(document);
-
-  if (!venueRef || !gameRef) return null;
-
-  return getClient({ apiVersion: API_VERSION }).fetch<{
-    venueTitle: string | null;
-    gameName: string | null;
-  } | null>(
-    `*[_type == "venueGame"
-      && venue._ref == $venueRef
-      && game._ref == $gameRef
-      && !(_id in [$publishedId, "drafts." + $publishedId])][0]{
-      "venueTitle": venue->title,
-      "gameName": game->name
-    }`,
-    { venueRef, gameRef, publishedId: publishedIdOf(document) },
-  );
-}
 
 /**
  * "16€" for a round amount, "21,50€" otherwise — the same shape the front
@@ -266,6 +192,8 @@ export const venueGameType = defineType({
   validation: (rule) =>
     rule.custom(async (_value, context) => {
       const duplicate = await findDuplicate({
+        documentType: "venueGame",
+        field: "game",
         document: context.document,
         getClient: context.getClient,
       });
@@ -273,7 +201,7 @@ export const venueGameType = defineType({
       if (!duplicate) return true;
 
       const venue = duplicate.venueTitle ?? "This venue";
-      const game = duplicate.gameName ?? "this game";
+      const game = duplicate.formatName ?? "this game";
 
       return {
         // anchored to the field: a document-level message with no path is difficult to find
@@ -299,7 +227,12 @@ export const venueGameType = defineType({
       validation: (rule) => rule.required(),
       options: {
         filter: async ({ document, getClient }) => {
-          const taken = await takenGameIds({ document, getClient });
+          const taken = await takenFormatIds({
+            documentType: "venueGame",
+            field: "game",
+            document,
+            getClient,
+          });
           // with nothing taken this reads `!(_id in [])`, which is every game
           return { filter: "!(_id in $taken)", params: { taken } };
         },

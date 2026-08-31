@@ -1,0 +1,64 @@
+---
+import TextBlock from "./TextBlock.astro";
+import TextCard from "./primitives/TextCard.astro";
+import TwoBlocks from "./primitives/TwoBlocks.astro";
+import Section from "./Section.astro";
+import type { CtaLink, RichTextNode, TextCard as TextCardItem } from "./types";
+
+interface Props {
+  badge?: string;
+  title: string;
+  body: RichTextNode[];
+  additionalCtas?: CtaLink[];
+  cta?: CtaLink;
+  ctaTone?: "red" | "blue";
+  cards: TextCardItem[];
+}
+
+const { badge, title, body, additionalCtas, cta, ctaTone, cards } = Astro.props;
+---
+
+<Section surface="vivid" spacing="l">
+  <TwoBlocks>
+    <div slot="first" class="copy">
+      <TextBlock
+        {badge}
+        {title}
+        {body}
+        {additionalCtas}
+        {cta}
+        {ctaTone}
+        headingLevel="h2"
+        size="l"
+      />
+    </div>
+
+    <ul slot="second" class="cards">
+      {cards.map((card) => <TextCard {...card} />)}
+    </ul>
+  </TwoBlocks>
+</Section>
+
+<style>
+  .copy {
+    --text-block-body-color: var(--color-text-on-brand);
+
+    max-inline-size: 33rem;
+  }
+
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: 0;
+    list-style: none;
+  }
+
+  /* 60rem — the TwoBlocks split, see styles/breakpoints.css */
+  @media (width >= 60rem) {
+    .copy,
+    .cards {
+      align-self: center;
+    }
+  }
+</style>

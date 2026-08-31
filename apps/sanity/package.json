@@ -18,13 +18,14 @@
     "import": "sanity dataset import production.tar.gz dev --replace"
   },
   "dependencies": {
+    "@repo/ui": "workspace:*",
+    "@sanity/icons": "^5.2.1",
     "@sanity/ui": "^3.4.5",
     "@sanity/vision": "^6.6.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "sanity": "^6.6.0",
     "sanity-plugin-internationalized-array": "^5.1.22",
-    "@sanity/icons": "^5.2.1",
     "styled-components": "^6.1.18"
   },
   "devDependencies": {

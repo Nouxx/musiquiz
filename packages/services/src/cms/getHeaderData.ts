@@ -32,6 +32,10 @@ function adaptHeader({
       label: format.name,
       url: getRoutesForLang(lang).venueGame(venueSlug, format.slug),
     })),
+    events: data.venue.events.map((format) => ({
+      label: format.name,
+      url: getRoutesForLang(lang).venueEvent(venueSlug, format.slug),
+    })),
     socials: {
       facebookUrl: data.siteSettings.facebookUrl,
       instagramUrl: data.siteSettings.instagramUrl,

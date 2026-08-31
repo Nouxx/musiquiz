@@ -2,8 +2,11 @@ import ClockIcon from "@sanity/icons/Clock";
 import EnvelopeIcon from "@sanity/icons/Envelope";
 import InfoOutlineIcon from "@sanity/icons/InfoOutline";
 import PinIcon from "@sanity/icons/Pin";
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
+import { MapPositionInput } from "../components/MapPositionInput";
 import type { StringRule } from "sanity";
+import { frenchValue, type LocalizedEntry } from "./shared/frenchValue";
+import TagIcon from "@sanity/icons/Tag";
 import { HomeIcon } from "@sanity/icons/Home";
 
 // todo: i18n, "Fermé" is french
@@ -31,6 +34,7 @@ export const venueType = defineType({
     { name: "contact", title: "Contact", icon: EnvelopeIcon },
     { name: "location", title: "Location", icon: PinIcon },
     { name: "openHours", title: "Open Hours", icon: ClockIcon },
+    { name: "quotation", title: "Quotation", icon: TagIcon },
   ],
   fields: [
     defineField({
@@ -147,6 +151,30 @@ export const venueType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "mapPosition",
+      title: "Position on the map",
+      description:
+        "Where the venue's dot sits on the homepage map. Click or drag on the map. The other venues are shown faded.",
+      type: "object",
+      group: "location",
+      components: { input: MapPositionInput },
+      fields: [
+        defineField({
+          name: "x",
+          title: "X",
+          type: "number",
+          validation: (rule) => rule.required().min(0).max(100),
+        }),
+        defineField({
+          name: "y",
+          title: "Y",
+          type: "number",
+          validation: (rule) => rule.required().min(0).max(100),
+        }),
+      ],
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: "regionCode",
       title: "Region code",
       type: "string",
@@ -163,6 +191,16 @@ export const venueType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "quotationServices",
+      title: "Prestations",
+      description:
+        "What a visitor can tick in the quotation form. Ordered as authored.",
+      type: "array",
+      of: [defineArrayMember({ type: "quotationService" })],
+      group: "quotation",
+      validation: (rule) => rule.required().min(1),
+    }),
+    defineField({
       name: "addressLine",
       title: "Address line",
       type: "string",
@@ -171,4 +209,24 @@ export const venueType = defineType({
       validation: (rule) => rule.required(),
     }),
   ],
+});
+
+export const quotationServiceType = defineType({
+  name: "quotationService",
+  title: "Prestation",
+  type: "object",
+  fields: [
+    defineField({
+      name: "label",
+      title: "Label",
+      type: "internationalizedArrayString",
+      validation: (rule) => rule.required(),
+    }),
+  ],
+  preview: {
+    select: { label: "label" },
+    prepare({ label }: { label?: LocalizedEntry[] }) {
+      return { title: frenchValue(label) ?? "Prestation" };
+    },
+  },
 });

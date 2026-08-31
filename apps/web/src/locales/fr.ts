@@ -83,6 +83,18 @@ export const fr = {
     mapTitle: "Le centre Musi'Quiz de {{venue}} sur la carte",
     viewOnGoogleMaps: "Voir dans Google Maps",
   },
+  contactPanels: {
+    questionsTitle: "Avez-vous des questions ?",
+    questionsBody:
+      "Contactez l'équipe commerciale de Musi'Quiz {{venue}} du lundi au samedi :",
+    phone: "Par téléphone",
+    mail: "Par mail",
+    book: "Réservation immédiate",
+  },
+  offers: {
+    book: "Réservation immédiate",
+    quotation: "Sur devis",
+  },
   contactForm: {
     badge: "Contactez-nous",
     title: "Une question ?",
@@ -95,6 +107,32 @@ export const fr = {
     phonePlaceholder: "Votre numéro de téléphone",
     message: "Message",
     messagePlaceholder: "Votre message",
+    submit: "Envoyer",
+  },
+  quotationForm: {
+    badge: "Devis",
+    title: "Demandez votre devis",
+    lastName: "Nom",
+    lastNamePlaceholder: "Votre nom",
+    firstName: "Prénom",
+    firstNamePlaceholder: "Votre prénom",
+    phone: "Téléphone",
+    phonePlaceholder: "Votre téléphone portable ou ligne directe",
+    mail: "Adresse mail",
+    mailPlaceholder: "Votre mail",
+    company: "Société",
+    companyPlaceholder:
+      "Entité légale de l'entreprise à faire apparaitre sur le devis / facture",
+    date: "Date souhaitée",
+    time: "Heure souhaitée",
+    participants: "Participants",
+    participantsPlaceholder: "Nombre de participants",
+    budget: "Budget",
+    budgetPlaceholder: "Avez-vous un budget",
+    services: "Quelle prestation souhaitez-vous ?",
+    message: "Message",
+    messagePlaceholder:
+      "Dites-nous ce que vous attendez de votre team building, besoins spécifiques, nom de l'entreprise à faire apparaitre sur nos écrans de bienvenue le jour J,...",
     submit: "Envoyer",
   },
   days: {

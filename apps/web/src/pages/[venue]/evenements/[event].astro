@@ -1,0 +1,16 @@
+---
+import VenueEventPage from "../../../components/pages/VenueEventPage.astro";
+import VenueLayout from "../../../layouts/VenueLayout.astro";
+import { getVenueEventsSlugParameters } from "../../../libs/getVenueEventsSlugParameters";
+
+export async function getStaticPaths() {
+  const params = await getVenueEventsSlugParameters();
+  return params;
+}
+
+const { venue, event } = Astro.params;
+---
+
+<VenueLayout venueSlug={venue}>
+  <VenueEventPage venueSlug={venue} eventSlug={event} />
+</VenueLayout>

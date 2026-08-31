@@ -26,6 +26,6 @@ const pageData = await getHomepageData({
 
 <PageComponents components={pageData.components} />
 
-<VenuesList venues={pageData.venues} />
+<VenuesList venues={pageData.venues} cta={pageData.venuesCta} />
 
 <Footer />

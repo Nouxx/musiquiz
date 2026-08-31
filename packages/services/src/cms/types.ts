@@ -30,10 +30,15 @@ export type Homepage = {
   badgeLabel: string;
   heading: string;
   venues: {
+    /** the slug, pairs a list link with its dot on the map */
+    id: string;
     title: string;
     url: string;
     detail: string;
+    /** percent of the map frame */
+    position: { x: number; y: number };
   }[];
+  venuesCta: { label: string; url: string } | undefined;
   components: PageComponent[];
 };
 
@@ -63,6 +68,12 @@ export type VenueGamePage = {
   components: PageComponent[];
 };
 
+export type VenueEventPage = {
+  eventName: string;
+  pageCover: PageCover;
+  components: PageComponent[];
+};
+
 export type Header = {
   logo: CmsImage;
   venue: {
@@ -75,6 +86,10 @@ export type Header = {
     phoneHref: string;
   };
   experiences: {
+    label: string;
+    url: string;
+  }[];
+  events: {
     label: string;
     url: string;
   }[];

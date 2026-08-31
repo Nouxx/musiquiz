@@ -1,0 +1,61 @@
+---
+import Card from "./Card.astro";
+import IconChip from "./IconChip.astro";
+import RemoteImage from "./RemoteImage.astro";
+import Text from "./Text.astro";
+import type { TextCard } from "../types";
+
+export type Props = TextCard;
+
+const { icon, body, media } = Astro.props;
+
+// no need for an alt as the image is not describing anything
+const decorative = { ...media, alt: "" };
+---
+
+<Card as="li" border="custom" class="text-card">
+  <div class="media">
+    <RemoteImage image={decorative} variant="text-card-media" />
+  </div>
+
+  <div class="content">
+    <IconChip name={icon} size="xxl" />
+
+    <Text as="p" variant="paragraph-xl">{body}</Text>
+  </div>
+</Card>
+
+<style>
+  .text-card {
+    --card-ring-inset: 6px;
+    --card-ring-color: var(--color-border-translucent-strong);
+
+    color: var(--color-text-on-media);
+  }
+
+  .media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .media::after {
+    position: absolute;
+    inset: 0;
+    background-image: var(--color-overlay-up);
+    content: "";
+  }
+
+  .media > :global(picture) {
+    display: block;
+    block-size: 100%;
+  }
+
+  .content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-items: flex-start;
+    padding: var(--space-6);
+  }
+</style>

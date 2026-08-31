@@ -103,6 +103,25 @@ function findUsProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function contactPanelsProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "contactPanels" => {
+      "media": media ${imageProjection({ lang })},
+      "venueSlug": venue->slug.current,
+      "venueTitle": venue->title,
+      "phone": venue->phone,
+      "mail": venue->mail,
+      "quoteLabel": quoteLabel[language == "${lang}"][0].value,
+      "quoteTitle": quoteTitle[language == "${lang}"][0].value,
+      "quoteBody": quoteBody[language == "${lang}"][0].value,
+      "quoteCta": ${optionalCtaProjection({ field: "quoteCta", lang })},
+      "bookingLabel": bookingLabel[language == "${lang}"][0].value,
+      "bookingTitle": bookingTitle[language == "${lang}"][0].value,
+      "bookingBody": bookingBody[language == "${lang}"][0].value
+    }
+  `;
+}
+
 function cardsGridProjection({ lang }: { lang: Lang }) {
   return `
     _type == "cardsGrid" => {
@@ -139,6 +158,16 @@ function clientContactFormProjection({ lang }: { lang: Lang }) {
   return `
     _type == "clientContactForm" => {
       "images": images[] ${imageProjection({ lang })}
+    }
+  `;
+}
+
+function eventQuotationFormProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "eventQuotationForm" => {
+      "services": venue->quotationServices[]{
+        "label": label[language == "${lang}"][0].value
+      }
     }
   `;
 }
@@ -204,7 +233,90 @@ function textSlideshowProjection({ lang }: { lang: Lang }) {
     _type == "textSlideshow" => {
       "textBlock": ${textBlockProjection({ field: "textBlock", lang })},
       "surface": coalesce(surface, "default"),
+      "slideshowPosition": coalesce(slideshowPosition, "right"),
       "images": images[] ${imageProjection({ lang })}
+    }
+  `;
+}
+
+function textCardsProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "textCards" => {
+      "textBlock": ${textBlockProjection({ field: "textBlock", lang })},
+      cards[]{
+        icon,
+        "body": body[language == "${lang}"][0].value,
+        media ${imageProjection({ lang })}
+      }
+    }
+  `;
+}
+
+function textCardsGridProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "textCardsGrid" => {
+      "heading": heading[language == "${lang}"][0].value,
+      "body": body[language == "${lang}"][0].value,
+      "cta": ${optionalCtaProjection({ field: "cta", lang })},
+      cards[]{
+        "badge": badge[language == "${lang}"][0].value,
+        icon,
+        "body": body[language == "${lang}"][0].value
+      }
+    }
+  `;
+}
+
+function offerCardProjection({ lang }: { lang: Lang }) {
+  return `{
+    icon,
+    "title": title[language == "${lang}"][0].value,
+    "subTitle": subTitle[language == "${lang}"][0].value,
+    "price": select(
+      quotation == true => { "quotation": true },
+      {
+        "quotation": false,
+        amount,
+        "label": label[language == "${lang}"][0].value
+      }
+    ),
+    "content": select(
+      contentType == "text" => {
+        "kind": "text",
+        "body": ${richTextProjection({ field: "body", lang })}
+      },
+      {
+        "kind": "list",
+        "intro": intro[language == "${lang}"][0].value,
+        "items": items[]{ "text": text[language == "${lang}"][0].value }
+      }
+    )
+  }`;
+}
+
+function offersProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "offers" => {
+      "title": title[language == "${lang}"][0].value,
+      "subTitle": subTitle[language == "${lang}"][0].value,
+      "background": coalesce(background, "default"),
+      "venueSlug": venue->slug.current,
+      "cta": ${optionalCtaProjection({ field: "cta", lang })},
+      "content": select(
+        layout == "groups" => {
+          "layout": "groups",
+          "groups": groups[]{
+            "title": title[language == "${lang}"][0].value,
+            "body": ${richTextProjection({ field: "body", lang })},
+            "tone": coalesce(tone, "blue"),
+            "cards": cards[]${offerCardProjection({ lang })}
+          }
+        },
+        {
+          "layout": "cards",
+          "cards": cards[]${offerCardProjection({ lang })}
+        }
+      )
     }
   `;
 }
@@ -230,12 +342,17 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${venuePricesProjection({ lang })},
       ${gamePricesProjection({ lang })},
       ${findUsProjection({ lang })},
+      ${contactPanelsProjection({ lang })},
       ${clientContactFormProjection({ lang })},
+      ${eventQuotationFormProjection({ lang })},
       ${logosProjection({ lang })},
       ${faqProjection({ lang })},
       ${cardsScrollerProjection({ lang })},
       ${detailTabsProjection({ lang })},
       ${textSlideshowProjection({ lang })},
+      ${textCardsProjection({ lang })},
+      ${textCardsGridProjection({ lang })},
+      ${offersProjection({ lang })},
       ${videoEmbedProjection({ lang })},
     }
   `;
@@ -250,7 +367,7 @@ const sanityRollingBannerSchema = z.strictObject({
 const sanityCardSchema = z.strictObject({
   media: sanityImageSchema,
   badge: z.string().min(1),
-  title: z.string().min(1),
+  title: z.string().nullable(),
   body: z.string().min(1).nullable(),
   cta: sanityCtaSchema.nullable(),
 });
@@ -343,9 +460,30 @@ const sanityFindUsSchema = z.strictObject({
   contactNote: z.string().min(1),
 });
 
+const sanityContactPanelsSchema = z.strictObject({
+  _type: z.literal("contactPanels"),
+  media: sanityImageSchema,
+  venueSlug: z.string().min(1),
+  venueTitle: z.string().min(1),
+  phone: z.string().min(1),
+  mail: z.string().min(1),
+  quoteLabel: z.string().min(1),
+  quoteTitle: z.string().min(1),
+  quoteBody: z.string().min(1),
+  quoteCta: sanityCtaSchema.nullable(),
+  bookingLabel: z.string().min(1),
+  bookingTitle: z.string().min(1),
+  bookingBody: z.string().min(1),
+});
+
 const sanityClientContactFormSchema = z.strictObject({
   _type: z.literal("clientContactForm"),
   images: z.array(sanityImageSchema).min(1).max(8),
+});
+
+const sanityEventQuotationFormSchema = z.strictObject({
+  _type: z.literal("eventQuotationForm"),
+  services: z.array(z.strictObject({ label: z.string().min(1) })).min(1),
 });
 
 const sanityLogosSchema = z.strictObject({
@@ -410,7 +548,122 @@ const sanityTextSlideshowSchema = z.strictObject({
   _type: z.literal("textSlideshow"),
   textBlock: sanityTextBlockSchema,
   surface: z.enum(["default", "muted"]),
+  slideshowPosition: z.enum(["left", "right"]),
   images: z.array(sanityImageSchema).min(1).max(8),
+});
+
+const sanityContentIconSchema = z.enum([
+  "calendar",
+  "camera",
+  "check-circle",
+  "clock",
+  "cocktail",
+  "coins",
+  "cube",
+  "die-1",
+  "die-2",
+  "disc",
+  "hourglass",
+  "house",
+  "lock",
+  "mail",
+  "medal",
+  "music-note",
+  "phone",
+  "pin",
+  "question",
+  "rosette",
+  "sparkles",
+  "star",
+  "user",
+  "users-2",
+  "users-3",
+  "users-4",
+]);
+
+const sanityTextCardSchema = z.strictObject({
+  icon: sanityContentIconSchema,
+  body: z.string().min(1),
+  media: sanityImageSchema,
+});
+
+export type SanityTextCard = z.infer<typeof sanityTextCardSchema>;
+
+const sanityTextCardsSchema = z.strictObject({
+  _type: z.literal("textCards"),
+  textBlock: sanityTextBlockSchema,
+  cards: z.array(sanityTextCardSchema).min(3).max(4),
+});
+
+const sanityKeywordCardSchema = z.strictObject({
+  badge: z.string().min(1),
+  icon: sanityContentIconSchema,
+  body: z.string().min(1),
+});
+
+export type SanityKeywordCard = z.infer<typeof sanityKeywordCardSchema>;
+
+const sanityTextCardsGridSchema = z.strictObject({
+  _type: z.literal("textCardsGrid"),
+  heading: z.string().min(1),
+  body: z.string().min(1),
+  cta: sanityCtaSchema.nullable(),
+  cards: z.array(sanityKeywordCardSchema).min(3).max(6),
+});
+
+const sanityOfferCardSchema = z.strictObject({
+  icon: sanityContentIconSchema,
+  title: z.string().min(1),
+  subTitle: z.string().min(1).nullable(),
+  price: z.discriminatedUnion("quotation", [
+    z.strictObject({ quotation: z.literal(true) }),
+    z.strictObject({
+      quotation: z.literal(false),
+      amount: z.number(),
+      label: z.string().min(1).nullable(),
+    }),
+  ]),
+  content: z.discriminatedUnion("kind", [
+    z.strictObject({
+      kind: z.literal("list"),
+      intro: z.string().min(1).nullable(),
+      items: z.array(z.strictObject({ text: z.string().min(1) })).min(1),
+    }),
+    z.strictObject({
+      kind: z.literal("text"),
+      body: sanityRichTextSchema,
+    }),
+  ]),
+});
+
+export type SanityOfferCard = z.infer<typeof sanityOfferCardSchema>;
+
+const sanityOfferGroupSchema = z.strictObject({
+  title: z.string().min(1),
+  body: sanityRichTextSchema,
+  tone: z.enum(["blue", "red"]),
+  cards: z.array(sanityOfferCardSchema).min(1).max(2),
+});
+
+export type SanityOfferGroup = z.infer<typeof sanityOfferGroupSchema>;
+
+const sanityOffersSchema = z.strictObject({
+  _type: z.literal("offers"),
+  title: z.string().min(1),
+  subTitle: z.string().min(1).nullable(),
+  background: z.enum(["default", "muted"]),
+  venueSlug: z.string().min(1),
+  cta: sanityCtaSchema.nullable(),
+  content: z.discriminatedUnion("layout", [
+    z.strictObject({
+      layout: z.literal("cards"),
+      cards: z.array(sanityOfferCardSchema).min(2).max(4),
+    }),
+    z.strictObject({
+      layout: z.literal("groups"),
+      groups: z.tuple([sanityOfferGroupSchema, sanityOfferGroupSchema]),
+    }),
+  ]),
 });
 
 const sanityVideoEmbedSchema = z.strictObject({
@@ -428,12 +681,17 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityVenuePricesSchema,
   sanityGamePricesSchema,
   sanityFindUsSchema,
+  sanityContactPanelsSchema,
   sanityClientContactFormSchema,
+  sanityEventQuotationFormSchema,
   sanityLogosSchema,
   sanityFaqSchema,
   sanityCardsScrollerSchema,
   sanityDetailTabsSchema,
   sanityTextSlideshowSchema,
+  sanityTextCardsSchema,
+  sanityTextCardsGridSchema,
+  sanityOffersSchema,
   sanityVideoEmbedSchema,
 ]);
 

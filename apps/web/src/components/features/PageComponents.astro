@@ -3,12 +3,17 @@ import type { PageComponent } from "@repo/services/cms/pageComponent.types";
 import CardsGrid from "@repo/ui/CardsGrid";
 import CardsScroller from "@repo/ui/CardsScroller";
 import ClientContactForm from "@repo/ui/ClientContactForm";
+import EventQuotationForm from "@repo/ui/EventQuotationForm";
 import DetailTabs from "@repo/ui/DetailTabs";
 import TextSlideshow from "@repo/ui/TextSlideshow";
+import TextCards from "@repo/ui/TextCards";
+import TextCardsGrid from "@repo/ui/TextCardsGrid";
 import VideoEmbed from "@repo/ui/VideoEmbed";
 import Faq from "@repo/ui/Faq";
 import Logos from "@repo/ui/Logos";
 import FindUs from "@repo/ui/FindUs";
+import ContactPanels from "@repo/ui/ContactPanels";
+import Offers from "@repo/ui/Offers";
 import Carousel from "@repo/ui/Carousel";
 import RollingBanner from "@repo/ui/RollingBanner";
 import { getLang } from "../../libs/getLang";
@@ -18,6 +23,8 @@ import Prices from "@repo/ui/Prices";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import { toPriceOffer } from "../../libs/toPriceOffer";
 import { toContactFacts } from "../../libs/toContactFacts";
+import { toContactPanels } from "../../libs/toContactPanels";
+import { toOffers } from "../../libs/toOffers";
 
 interface Props {
   components: PageComponent[];
@@ -157,6 +164,15 @@ const t = getT(lang);
           />
         );
       }
+      case "contactPanels": {
+        const { media, offer, questions } = toContactPanels({
+          component,
+          t,
+          lang,
+        });
+
+        return <ContactPanels {media} {offer} {questions} />;
+      }
       case "faq": {
         return (
           <Faq
@@ -186,6 +202,35 @@ const t = getT(lang);
             messageLabel={t("contactForm.message")}
             messagePlaceholder={t("contactForm.messagePlaceholder")}
             submitLabel={t("contactForm.submit")}
+          />
+        );
+      }
+      case "eventQuotationForm": {
+        return (
+          <EventQuotationForm
+            badge={t("quotationForm.badge")}
+            title={t("quotationForm.title")}
+            lastNameLabel={t("quotationForm.lastName")}
+            lastNamePlaceholder={t("quotationForm.lastNamePlaceholder")}
+            firstNameLabel={t("quotationForm.firstName")}
+            firstNamePlaceholder={t("quotationForm.firstNamePlaceholder")}
+            phoneLabel={t("quotationForm.phone")}
+            phonePlaceholder={t("quotationForm.phonePlaceholder")}
+            mailLabel={t("quotationForm.mail")}
+            mailPlaceholder={t("quotationForm.mailPlaceholder")}
+            companyLabel={t("quotationForm.company")}
+            companyPlaceholder={t("quotationForm.companyPlaceholder")}
+            dateLabel={t("quotationForm.date")}
+            timeLabel={t("quotationForm.time")}
+            participantsLabel={t("quotationForm.participants")}
+            participantsPlaceholder={t("quotationForm.participantsPlaceholder")}
+            budgetLabel={t("quotationForm.budget")}
+            budgetPlaceholder={t("quotationForm.budgetPlaceholder")}
+            servicesLabel={t("quotationForm.services")}
+            services={component.services}
+            messageLabel={t("quotationForm.message")}
+            messagePlaceholder={t("quotationForm.messagePlaceholder")}
+            submitLabel={t("quotationForm.submit")}
           />
         );
       }
@@ -224,12 +269,39 @@ const t = getT(lang);
             cta={component.textBlock.cta}
             ctaTone={component.textBlock.ctaTone}
             surface={component.surface}
+            slideshowPosition={component.slideshowPosition}
             images={component.images}
             previousLabel={t("carousel.previous")}
             nextLabel={t("carousel.next")}
             goToImageLabel={t("carousel.goToImage")}
           />
         );
+      }
+      case "textCards": {
+        return (
+          <TextCards
+            badge={component.textBlock.badge}
+            title={component.textBlock.title}
+            body={component.textBlock.body}
+            additionalCtas={component.textBlock.additionalCtas}
+            cta={component.textBlock.cta}
+            ctaTone={component.textBlock.ctaTone}
+            cards={component.cards}
+          />
+        );
+      }
+      case "textCardsGrid": {
+        return (
+          <TextCardsGrid
+            heading={component.heading}
+            body={component.body}
+            cta={component.cta}
+            cards={component.cards}
+          />
+        );
+      }
+      case "offers": {
+        return <Offers {...toOffers({ component, t, lang })} />;
       }
       case "videoEmbed": {
         return (

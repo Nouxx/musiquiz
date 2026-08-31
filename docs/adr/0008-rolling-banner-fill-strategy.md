@@ -10,6 +10,8 @@ Deriving the duration from the estimated width, rather than fixing it, is what m
 
 The three tuning constants all **bias low** deliberately, because the failure modes are asymmetric. Under-estimating a copy's width renders too many copies — harmless, they are clipped — and runs the scroll slightly fast. Over-estimating renders too few, and a visible hole opens in the strip on wide screens. So `AVG_GLYPH_WIDTH_EM` is 0.45 rather than a truthful ~0.5 for a display face, `WIDEST_VIEWPORT_PX` is 3840 rather than 2560, and `EXTRA_COPIES` adds two more on top.
 
+**Amended: the technique now has a second call site, and the bias is per-site.** `Logos.astro` estimates its heading column the same way, from the title's character count. There the asymmetry runs the other way — under-estimating renders a column too narrow and breaks the title into a stack of fragments, while over-estimating costs the logo strip a few px before it starts scrolling — so its constant sits _above_ the face's real advance, at 0.5. "Bias low" is a property of this component, not of the technique.
+
 ## Alternative: measure on the client
 
 The exact version measures the rendered width of one copy in the browser, clones until the track covers the viewport, and recomputes under a `ResizeObserver`. It is correct by construction — no font-metric guesswork, so the speed is exactly the constant and the copy count is exactly right at every width.

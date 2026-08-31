@@ -1,0 +1,187 @@
+---
+import Button from "./primitives/Button.astro";
+import OfferCard from "./primitives/OfferCard.astro";
+import RichText from "./primitives/RichText.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { CtaLink, OfferCard as OfferCardItem, OfferGroup } from "./types";
+
+type Shape =
+  | { cards: OfferCardItem[]; groups?: never }
+  | { groups: [OfferGroup, OfferGroup]; cards?: never };
+
+type Props = Shape & {
+  title: string;
+  subTitle?: string;
+  background?: "default" | "muted";
+  cta?: CtaLink;
+  bookCta: CtaLink;
+};
+
+const {
+  cards,
+  groups,
+  title,
+  subTitle,
+  background = "default",
+  cta,
+  bookCta,
+} = Astro.props;
+---
+
+<Section surface={background} spacing="l">
+  <div class="offers">
+    <div class="header">
+      <Text as="h2" variant="title-h2">{title}</Text>
+
+      {
+        subTitle && (
+          <div class="sub-title">
+            <Text as="p" variant="paragraph-xl-sm">
+              {subTitle}
+            </Text>
+          </div>
+        )
+      }
+    </div>
+
+    {
+      groups ? (
+        <div class="groups">
+          {groups.map((group) => (
+            <div class="group">
+              <div class="group-header">
+                <Text as="h3" variant="title-h5">
+                  {group.title}
+                </Text>
+
+                <div class="group-body">
+                  <RichText value={group.body} />
+                </div>
+              </div>
+
+              <ul class="group-cards">
+                {group.cards.map((card) => (
+                  <OfferCard {...card} headingLevel="h4" tone={group.tone} />
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <ul
+          class="cards"
+          style={{ "--cards-columns": String(Math.min(cards.length, 4)) }}
+        >
+          {cards.map((card) => (
+            <OfferCard {...card} headingLevel="h3" />
+          ))}
+        </ul>
+      )
+    }
+
+    <div class="actions">
+      {
+        cta && (
+          <Button as="a" href={cta.url} tone="blue">
+            {cta.label}
+          </Button>
+        )
+      }
+
+      <Button as="a" href={bookCta.url} tone="red">{bookCta.label}</Button>
+    </div>
+  </div>
+</Section>
+
+<style>
+  .offers {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    text-align: center;
+  }
+
+  .sub-title,
+  .group-body {
+    color: var(--color-text-muted);
+  }
+
+  .cards,
+  .group-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cards {
+    --cards-columns: 4;
+  }
+
+  .groups,
+  .group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .groups {
+    gap: var(--space-10);
+  }
+
+  .group {
+    gap: var(--space-6);
+  }
+
+  .group-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    justify-content: center;
+  }
+
+  @media (width >= 40rem) {
+    .cards,
+    .group-cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (width >= 64rem) {
+    .cards {
+      grid-template-columns: repeat(var(--cards-columns), 1fr);
+    }
+
+    .groups {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-6) var(--space-10);
+    }
+
+    .group {
+      display: contents;
+    }
+
+    .group-header {
+      grid-row: 1;
+    }
+
+    .group-cards {
+      grid-row: 2;
+    }
+  }
+</style>

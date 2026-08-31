@@ -5,18 +5,22 @@ import { cardsGridType, cardType } from "./shared/pageComponents/cardsGrid";
 import { carouselType } from "./shared/pageComponents/carousel";
 import { pageCoverType } from "./shared/pageCover";
 import { pricesFootnoteType } from "./shared/pricesFootnote";
+import { eventFormatType } from "./eventFormat";
 import { gameFormatType } from "./gameFormat";
 import { homepageType } from "./homepage";
 import { siteSettingsType } from "./siteSettings";
-import { venueType } from "./venue";
+import { quotationServiceType, venueType } from "./venue";
 import { priceType, venueGameType } from "./venueGame";
+import { venueEventType } from "./venueEvent";
 import { venuePageType } from "./venuePage";
 import { rollingBannerType } from "./shared/pageComponents/rollingBanner";
 import { reviewsType } from "./shared/pageComponents/reviews";
 import { venuePricesType } from "./shared/pageComponents/venuePrices";
 import { gamePricesType } from "./shared/pageComponents/gamePrices";
 import { findUsType } from "./shared/pageComponents/findUs";
+import { contactPanelsType } from "./shared/pageComponents/contactPanels";
 import { clientContactFormType } from "./shared/pageComponents/clientContactForm";
+import { eventQuotationFormType } from "./shared/pageComponents/eventQuotationForm";
 import { logosType } from "./shared/pageComponents/logos";
 import { faqQuestionType, faqType } from "./shared/pageComponents/faq";
 import {
@@ -28,6 +32,17 @@ import {
   detailGroupType,
   detailTabsType,
 } from "./shared/pageComponents/detailTabs";
+import { textCardsType, textCardType } from "./shared/pageComponents/textCards";
+import {
+  keywordCardType,
+  textCardsGridType,
+} from "./shared/pageComponents/textCardsGrid";
+import {
+  offerCardType,
+  offerGroupType,
+  offerListItemType,
+  offersType,
+} from "./shared/pageComponents/offers";
 import { textSlideshowType } from "./shared/pageComponents/textSlideshow";
 import { videoEmbedType } from "./shared/pageComponents/videoEmbed";
 import { textBlockType } from "./shared/textBlock";
@@ -35,11 +50,14 @@ import { textBlockType } from "./shared/textBlock";
 export const schemaTypes = [
   homepageType,
   venueType,
+  quotationServiceType,
   venuePageType,
   venueGameType,
+  venueEventType,
   priceType,
   siteSettingsType,
   gameFormatType,
+  eventFormatType,
   imageWithAltType,
   pageComponentsType,
   pageCoverType,
@@ -53,7 +71,9 @@ export const schemaTypes = [
   venuePricesType,
   gamePricesType,
   findUsType,
+  contactPanelsType,
   clientContactFormType,
+  eventQuotationFormType,
   logosType,
   faqType,
   faqQuestionType,
@@ -62,7 +82,15 @@ export const schemaTypes = [
   detailTabsType,
   detailGroupType,
   detailCardType,
+  textCardsType,
+  textCardType,
+  textCardsGridType,
+  keywordCardType,
   textSlideshowType,
+  offersType,
+  offerGroupType,
+  offerCardType,
+  offerListItemType,
   videoEmbedType,
   textBlockType,
 ];

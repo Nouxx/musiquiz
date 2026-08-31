@@ -15,9 +15,11 @@ function adaptVenue({
   lang: Lang;
 }): Homepage["venues"][number] {
   return {
+    id: data.slug,
     title: data.title,
     url: getRoutesForLang(lang).venueHome(data.slug),
     detail: data.regionCode,
+    position: data.mapPosition,
   };
 }
 
@@ -28,7 +30,7 @@ function adaptHomepage({
   data: SanityHomepage;
   lang: Lang;
 }): Homepage {
-  const { badge, cover, heading, logo } = data.homepage;
+  const { badge, cover, heading, logo, venuesCta } = data.homepage;
 
   return {
     logo: toCmsImage(logo),
@@ -36,6 +38,7 @@ function adaptHomepage({
     badgeLabel: badge,
     heading,
     venues: data.venues.map((venue) => adaptVenue({ data: venue, lang })),
+    venuesCta: venuesCta ?? undefined,
     components:
       data.homepage.pageComponents?.map((component) =>
         adaptPageComponent(component),

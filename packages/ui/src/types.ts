@@ -50,9 +50,21 @@ export type Review = {
 export type CardItem = {
   media: ImageSource;
   badge: string;
-  title: string;
+  title?: string;
   body?: string;
   cta?: CtaLink;
+};
+
+export type TextCard = {
+  icon: IconName;
+  body: string;
+  media: ImageSource;
+};
+
+export type KeywordCard = {
+  badge: string;
+  icon: IconName;
+  body: string;
 };
 
 export type DeckCard = {
@@ -81,6 +93,7 @@ export type ContactFact = {
   label: string;
   title: string;
   body?: string;
+  href?: string;
 };
 
 export type RichTextSpan = {
@@ -110,4 +123,43 @@ export type DetailGroup = {
 export type FaqQuestion = {
   question: string;
   answer: RichTextNode[];
+};
+
+export type OfferTone = "blue" | "red";
+
+export type OfferPrice = {
+  /** @example "28€", "Sur devis" */
+  amount: string;
+  /** carries its own separator @example " HT/joueur", "/enfant" */
+  label?: string;
+};
+
+export type OfferCardContent =
+  | { kind: "list"; intro?: string; items: string[] }
+  | { kind: "text"; body: RichTextNode[] };
+
+export type OfferCard = {
+  icon: IconName;
+  title: string;
+  subTitle?: string;
+  price: OfferPrice;
+  content: OfferCardContent;
+};
+
+export type OfferGroup = {
+  title: string;
+  body: RichTextNode[];
+  tone?: OfferTone;
+  cards: OfferCard[];
+};
+
+export type VenuePin = {
+  /** pairs the list link with its dot; the venue slug */
+  id: string;
+  title: string;
+  /** @example "75", "BE" */
+  detail: string;
+  url: string;
+  /** percent of the map frame */
+  position: { x: number; y: number };
 };

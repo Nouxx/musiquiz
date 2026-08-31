@@ -22,6 +22,11 @@ function headerQuery({ lang, venueSlug }: { lang: Lang; venueSlug: string }) {
         "name": game->name,
         "slug": game->slug.current
       },
+      "events": *[_type == "venueEvent" && venue._ref == ^._id]
+        | order(coalesce(event->displayOrder, 999) asc, event->name asc){
+        "name": event->name,
+        "slug": event->slug.current
+      },
       venueLogo ${imageProjection({ lang })},
       addressLine,
       phone,
@@ -41,12 +46,22 @@ const sanityHeaderSchema = z.strictObject({
     youtubeUrl: z.url(),
   }),
   venue: z.strictObject({
-    games: z.array(
-      z.strictObject({
-        name: z.string(),
-        slug: z.string(),
-      }),
-    ),
+    games: z
+      .array(
+        z.strictObject({
+          name: z.string(),
+          slug: z.string(),
+        }),
+      )
+      .min(1),
+    events: z
+      .array(
+        z.strictObject({
+          name: z.string(),
+          slug: z.string(),
+        }),
+      )
+      .min(1),
     venueLogo: sanityImageSchema,
     addressLine: z.string(),
     phone: z.string().min(1),

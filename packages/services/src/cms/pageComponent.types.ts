@@ -14,7 +14,7 @@ export type Cta = {
 export type Card = {
   media: CmsImage;
   badge: string;
-  title: string;
+  title: string | undefined;
   body: string | undefined;
   cta: Cta | undefined;
 };
@@ -98,9 +98,34 @@ type FindUs = {
   contactNote: string;
 };
 
+type ContactPanelRow = {
+  label: string;
+  title: string;
+  body: string;
+};
+
+type ContactPanels = {
+  type: "contactPanels";
+  media: CmsImage;
+  venueSlug: string;
+  venueTitle: string;
+  quote: ContactPanelRow;
+  booking: ContactPanelRow;
+  quoteCta: Cta | undefined;
+  phoneLabel: string;
+  phoneHref: string;
+  mailLabel: string;
+  mailHref: string;
+};
+
 type ClientContactForm = {
   type: "clientContactForm";
   images: CmsImage[];
+};
+
+type EventQuotationForm = {
+  type: "eventQuotationForm";
+  services: string[];
 };
 
 type Logos = {
@@ -170,7 +195,97 @@ type TextSlideshow = {
   type: "textSlideshow";
   textBlock: TextBlock;
   surface: "default" | "muted";
+  slideshowPosition: "left" | "right";
   images: CmsImage[];
+};
+
+export type ContentIcon =
+  | "calendar"
+  | "camera"
+  | "check-circle"
+  | "clock"
+  | "cocktail"
+  | "coins"
+  | "cube"
+  | "die-1"
+  | "die-2"
+  | "disc"
+  | "hourglass"
+  | "house"
+  | "lock"
+  | "mail"
+  | "medal"
+  | "music-note"
+  | "phone"
+  | "pin"
+  | "question"
+  | "rosette"
+  | "sparkles"
+  | "star"
+  | "user"
+  | "users-2"
+  | "users-3"
+  | "users-4";
+
+export type TextCard = {
+  icon: ContentIcon;
+  body: string;
+  media: CmsImage;
+};
+
+type TextCards = {
+  type: "textCards";
+  textBlock: TextBlock;
+  cards: TextCard[];
+};
+
+export type KeywordCard = {
+  badge: string;
+  icon: ContentIcon;
+  body: string;
+};
+
+type TextCardsGrid = {
+  type: "textCardsGrid";
+  heading: string;
+  body: string;
+  cta: Cta | undefined;
+  cards: KeywordCard[];
+};
+
+export type OfferPrice =
+  | { quotation: true }
+  | { quotation: false; amount: number; label: string | undefined };
+
+export type OfferCardContent =
+  | { kind: "list"; intro: string | undefined; items: string[] }
+  | { kind: "text"; body: RichText };
+
+export type OfferCard = {
+  icon: ContentIcon;
+  title: string;
+  subTitle: string | undefined;
+  price: OfferPrice;
+  content: OfferCardContent;
+};
+
+export type OfferGroup = {
+  title: string;
+  body: RichText;
+  tone: "blue" | "red";
+  cards: OfferCard[];
+};
+
+type Offers = {
+  type: "offers";
+  title: string;
+  subTitle: string | undefined;
+  background: "default" | "muted";
+  venueSlug: string;
+  cta: Cta | undefined;
+  content:
+    | { layout: "cards"; cards: OfferCard[] }
+    | { layout: "groups"; groups: [OfferGroup, OfferGroup] };
 };
 
 type VideoEmbed = {
@@ -188,10 +303,15 @@ export type PageComponent =
   | VenuePrices
   | GamePrices
   | FindUs
+  | ContactPanels
   | ClientContactForm
+  | EventQuotationForm
   | Logos
   | Faq
   | CardsScroller
   | DetailTabs
   | TextSlideshow
+  | TextCards
+  | TextCardsGrid
+  | Offers
   | VideoEmbed;

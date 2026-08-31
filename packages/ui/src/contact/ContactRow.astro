@@ -1,5 +1,6 @@
 ---
 import IconChip from "../primitives/IconChip.astro";
+import Link from "../primitives/Link.astro";
 import Text from "../primitives/Text.astro";
 import type { IconName } from "../lib/icons";
 
@@ -8,18 +9,37 @@ interface Props {
   label: string;
   title: string;
   body?: string;
+  href?: string;
+  showLabelOnMobile?: boolean;
 }
 
-const { icon, label, title, body } = Astro.props;
+const {
+  icon,
+  label,
+  title,
+  body,
+  href,
+  showLabelOnMobile = false,
+} = Astro.props;
 ---
 
 <div class="row">
   <IconChip name={icon} tone="light" size="l" />
 
   <div class="lines">
-    <span class="label"><Text variant="paragraph-s">{label}</Text></span>
+    <span class:list={["label", !showLabelOnMobile && "label-mobile-hidden"]}>
+      <Text variant="paragraph-s">{label}</Text>
+    </span>
 
-    <Text variant="title-base-to-xl">{title}</Text>
+    {
+      href ? (
+        <Link url={href} underline={false}>
+          <Text variant="title-base-to-xl">{title}</Text>
+        </Link>
+      ) : (
+        <Text variant="title-base-to-xl">{title}</Text>
+      )
+    }
 
     {
       body && (
@@ -51,7 +71,7 @@ const { icon, label, title, body } = Astro.props;
   }
 
   /* the mobile sheet drops the label - redundant. clipped rather than `display: none` so it stays on the accessibility tree */
-  .label {
+  .label-mobile-hidden {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -67,7 +87,7 @@ const { icon, label, title, body } = Astro.props;
       gap: var(--space-6);
     }
 
-    .label {
+    .label-mobile-hidden {
       position: static;
       width: auto;
       height: auto;

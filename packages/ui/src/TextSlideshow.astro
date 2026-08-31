@@ -13,6 +13,7 @@ interface Props {
   cta?: CtaLink;
   ctaTone?: "red" | "blue";
   surface?: "default" | "muted";
+  slideshowPosition?: "left" | "right";
   images: ImageSource[];
   previousLabel: string;
   nextLabel: string;
@@ -27,16 +28,22 @@ const {
   cta,
   ctaTone,
   surface = "default",
+  slideshowPosition = "right",
   images,
   previousLabel,
   nextLabel,
   goToImageLabel,
 } = Astro.props;
+
+const slideshowFirst = slideshowPosition === "left";
 ---
 
 <Section {surface} spacing="l">
   <TwoBlocks>
-    <div slot="first" class="copy">
+    <div
+      slot={slideshowFirst ? "second" : "first"}
+      class:list={["copy", { trailing: slideshowFirst }]}
+    >
       <TextBlock
         {badge}
         {title}
@@ -49,14 +56,16 @@ const {
       />
     </div>
 
-    <div slot="second" class="media">
-      <MiniCarousel
-        {images}
-        label={title}
-        {previousLabel}
-        {nextLabel}
-        {goToImageLabel}
-      />
+    <div slot={slideshowFirst ? "first" : "second"} class="media">
+      <div class="media-layer">
+        <MiniCarousel
+          {images}
+          label={title}
+          {previousLabel}
+          {nextLabel}
+          {goToImageLabel}
+        />
+      </div>
     </div>
   </TwoBlocks>
 </Section>
@@ -74,6 +83,17 @@ const {
   @media (width >= 60rem) {
     .media {
       display: block;
+      position: relative;
+    }
+
+    /* the copy decides the row height, not the images */
+    .media-layer {
+      position: absolute;
+      inset: 0;
+    }
+
+    .copy.trailing {
+      margin-inline-start: auto;
     }
   }
 </style>

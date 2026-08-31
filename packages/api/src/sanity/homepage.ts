@@ -4,6 +4,7 @@ import { defineQuery } from "groq";
 import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
+import { optionalCtaProjection, sanityCtaSchema } from "./shared/cta";
 import { imageProjection, sanityImageSchema } from "./shared/image";
 import {
   pageComponentsProjection,
@@ -18,11 +19,13 @@ function homepageQuery({ lang }: { lang: Lang }) {
       logo ${imageProjection({ lang })},
       cover ${imageProjection({ lang })},
       "pageComponents": ${pageComponentsProjection({ lang })},
+      "venuesCta": ${optionalCtaProjection({ field: "venuesCta", lang })},
     },
-    "venues": *[_type == "venue"]{
+    "venues": *[_type == "venue"] | order(title asc){
       "title": title,
       "slug": slug.current,
-      regionCode
+      regionCode,
+      "mapPosition": mapPosition{ x, y }
     },
   }`);
 }
@@ -34,12 +37,14 @@ const sanityHomepageSchema = z.strictObject({
     logo: sanityImageSchema,
     cover: sanityImageSchema,
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
+    venuesCta: sanityCtaSchema.nullable(),
   }),
   venues: z.array(
     z.strictObject({
       title: z.string(),
       slug: z.string(),
       regionCode: z.string(),
+      mapPosition: z.strictObject({ x: z.number(), y: z.number() }),
     }),
   ),
 });
