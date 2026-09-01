@@ -78,6 +78,12 @@ export default defineConfig({
         access: "secret",
         optional: true,
       }),
+      // the worker needs to be called from the client
+      WORKER_URL: envField.string({
+        context: "client",
+        access: "public",
+        optional: false,
+      }),
     },
   },
   i18n: {

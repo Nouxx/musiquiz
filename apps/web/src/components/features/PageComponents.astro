@@ -25,6 +25,7 @@ import { toPriceOffer } from "../../libs/toPriceOffer";
 import { toContactFacts } from "../../libs/toContactFacts";
 import { toContactPanels } from "../../libs/toContactPanels";
 import { toOffers } from "../../libs/toOffers";
+import { WORKER_URL } from "astro:env/client";
 
 interface Props {
   components: PageComponent[];
@@ -202,6 +203,7 @@ const t = getT(lang);
             messageLabel={t("contactForm.message")}
             messagePlaceholder={t("contactForm.messagePlaceholder")}
             submitLabel={t("contactForm.submit")}
+            workerUrl={WORKER_URL}
           />
         );
       }

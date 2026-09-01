@@ -25,6 +25,7 @@ interface Props {
   messageLabel: string;
   messagePlaceholder: string;
   submitLabel: string;
+  workerUrl: string;
 }
 
 const {
@@ -44,6 +45,7 @@ const {
   messageLabel,
   messagePlaceholder,
   submitLabel,
+  workerUrl,
 } = Astro.props;
 
 // the section can appear more than once on a page, and a label only points at
@@ -70,57 +72,55 @@ const uid = crypto.randomUUID().slice(0, 8);
         <Text as="h2" variant="title-h4">{title}</Text>
       </div>
 
-      {
-        /* the form is inert: it swallows its own submit until a contact
-          endpoint exists. Native validation still runs first. */
-      }
-      <form class="form" data-contact-form>
-        <div class="fields">
-          <TextField
-            id={`contact-${uid}-first-name`}
-            name="firstName"
-            type="text"
-            autocomplete="given-name"
-            tone="plain"
-            label={firstNameLabel}
-            placeholder={firstNamePlaceholder}
-            required
-          />
+      <musiquiz-contact-form data-worker-url={workerUrl}>
+        <form class="form">
+          <div class="fields">
+            <TextField
+              id={`contact-${uid}-first-name`}
+              name="firstName"
+              type="text"
+              autocomplete="given-name"
+              tone="plain"
+              label={firstNameLabel}
+              placeholder={firstNamePlaceholder}
+              required
+            />
 
-          <TextField
-            id={`contact-${uid}-mail`}
-            name="mail"
-            type="email"
-            autocomplete="email"
-            tone="plain"
-            label={mailLabel}
-            placeholder={mailPlaceholder}
-            required
-          />
+            <TextField
+              id={`contact-${uid}-mail`}
+              name="mail"
+              type="email"
+              autocomplete="email"
+              tone="plain"
+              label={mailLabel}
+              placeholder={mailPlaceholder}
+              required
+            />
 
-          <TextField
-            id={`contact-${uid}-phone`}
-            name="phone"
-            type="tel"
-            autocomplete="tel"
-            tone="plain"
-            label={phoneLabel}
-            placeholder={phonePlaceholder}
-          />
+            <TextField
+              id={`contact-${uid}-phone`}
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              tone="plain"
+              label={phoneLabel}
+              placeholder={phonePlaceholder}
+            />
 
-          <TextField
-            as="textarea"
-            id={`contact-${uid}-message`}
-            name="message"
-            tone="plain"
-            label={messageLabel}
-            placeholder={messagePlaceholder}
-            required
-          />
-        </div>
+            <TextField
+              as="textarea"
+              id={`contact-${uid}-message`}
+              name="message"
+              tone="plain"
+              label={messageLabel}
+              placeholder={messagePlaceholder}
+              required
+            />
+          </div>
 
-        <Button type="submit" tone="blue">{submitLabel}</Button>
-      </form>
+          <Button type="submit" tone="blue">{submitLabel}</Button>
+        </form>
+      </musiquiz-contact-form>
     </div>
   </TwoBlocks>
 </Section>
@@ -144,6 +144,10 @@ const uid = crypto.randomUUID().slice(0, 8);
     flex-direction: column;
     gap: var(--space-2);
     align-items: flex-start;
+  }
+
+  musiquiz-contact-form {
+    display: contents;
   }
 
   .form {
@@ -173,10 +177,25 @@ const uid = crypto.randomUUID().slice(0, 8);
 </style>
 
 <script>
-  // deliberately inert until a contact endpoint exists
-  for (const form of document.querySelectorAll("form[data-contact-form]")) {
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-    });
+  class MusiquizContactForm extends HTMLElement {
+    connectedCallback() {
+      const workerUrl = this.dataset.workerUrl;
+      const form = this.querySelector("form");
+      if (!workerUrl || !form) return;
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        console.log("workerUrl", workerUrl);
+
+        try {
+          const response = await fetch(workerUrl);
+          console.log(response.status, await response.text());
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    }
   }
+
+  customElements.define("musiquiz-contact-form", MusiquizContactForm);
 </script>
