@@ -26,6 +26,7 @@ interface Props {
   messagePlaceholder: string;
   submitLabel: string;
   workerUrl: string;
+  venueSlug: string;
 }
 
 const {
@@ -46,6 +47,7 @@ const {
   messagePlaceholder,
   submitLabel,
   workerUrl,
+  venueSlug,
 } = Astro.props;
 
 // the section can appear more than once on a page, and a label only points at
@@ -72,7 +74,11 @@ const uid = crypto.randomUUID().slice(0, 8);
         <Text as="h2" variant="title-h4">{title}</Text>
       </div>
 
-      <musiquiz-contact-form data-worker-url={workerUrl}>
+      <musiquiz-contact-form
+        data-worker-url={workerUrl}
+        data-venue-slug={venueSlug}
+        data-uid={uid}
+      >
         <form class="form">
           <div class="fields">
             <TextField
@@ -177,18 +183,33 @@ const uid = crypto.randomUUID().slice(0, 8);
 </style>
 
 <script>
+  // todo: move this logic to web: packages/ui must stay presentational only
   class MusiquizContactForm extends HTMLElement {
     connectedCallback() {
       const workerUrl = this.dataset.workerUrl;
+      const venueSlug = this.dataset.venueSlug;
       const form = this.querySelector("form");
-      if (!workerUrl || !form) return;
+      if (!workerUrl || !venueSlug || !form) return;
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
-        console.log("workerUrl", workerUrl);
+
+        const data = new FormData(form);
+
+        const payload = {
+          venueSlug,
+          firstName: String(data.get("firstName") ?? ""),
+          mail: String(data.get("mail") ?? ""),
+          phone: String(data.get("phone") ?? ""),
+          message: String(data.get("message") ?? ""),
+        };
 
         try {
-          const response = await fetch(workerUrl);
+          const response = await fetch(workerUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
           console.log(response.status, await response.text());
         } catch (error) {
           console.error(error);

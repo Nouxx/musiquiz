@@ -1,19 +1,23 @@
 {
-  "name": "worker",
-  "private": true,
-  "scripts": {
-    "clean": "rm -rf .wrangler node_modules",
-    "deploy": "wrangler deploy",
-    "dev": "wrangler dev",
-    "start": "wrangler dev",
-    "test": "vitest",
-    "typegen": "wrangler types"
-  },
-  "devDependencies": {
-    "@cloudflare/vitest-plugin": "^1.0.0",
-    "@types/node": "^26.4.0",
-    "typescript": "^5.5.2",
-    "vitest": "~4.1.0",
-    "wrangler": "^4.128.0"
-  }
+	"name": "worker",
+	"private": true,
+	"scripts": {
+		"clean": "rm -rf .wrangler node_modules",
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev",
+		"test": "vitest",
+		"typegen": "wrangler types"
+	},
+	"dependencies": {
+		"@repo/api": "workspace:*"
+	},
+	"devDependencies": {
+		"@dotenvx/dotenvx": "catalog:",
+		"@cloudflare/vitest-plugin": "^1.0.0",
+		"@types/node": "^26.4.0",
+		"typescript": "^5.5.2",
+		"vitest": "~4.1.0",
+		"wrangler": "^4.128.0"
+	}
 }
