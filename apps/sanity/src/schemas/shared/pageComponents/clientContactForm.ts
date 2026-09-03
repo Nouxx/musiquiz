@@ -17,6 +17,14 @@ export const clientContactFormType = defineType({
       // this makes the alt un-authorable
       // because internationalizedArrayString (array) is rendered as grid cells as well
     }),
+    defineField({
+      name: "venue",
+      title: "Venue",
+      description: "Pick the venue before the game.",
+      type: "reference",
+      to: [{ type: "venue" }],
+      validation: (rule) => rule.required(),
+    }),
   ],
   preview: {
     select: {

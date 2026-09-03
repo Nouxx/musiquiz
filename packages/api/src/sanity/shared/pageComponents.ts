@@ -157,7 +157,8 @@ function carouselProjection({ lang }: { lang: Lang }) {
 function clientContactFormProjection({ lang }: { lang: Lang }) {
   return `
     _type == "clientContactForm" => {
-      "images": images[] ${imageProjection({ lang })}
+      "images": images[] ${imageProjection({ lang })},
+      "venueSlug": venue->slug.current
     }
   `;
 }
@@ -479,6 +480,7 @@ const sanityContactPanelsSchema = z.strictObject({
 const sanityClientContactFormSchema = z.strictObject({
   _type: z.literal("clientContactForm"),
   images: z.array(sanityImageSchema).min(1).max(8),
+  venueSlug: z.string().min(1),
 });
 
 const sanityEventQuotationFormSchema = z.strictObject({

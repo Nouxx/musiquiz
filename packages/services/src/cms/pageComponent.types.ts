@@ -121,6 +121,7 @@ type ContactPanels = {
 type ClientContactForm = {
   type: "clientContactForm";
   images: CmsImage[];
+  venueSlug: string;
 };
 
 type EventQuotationForm = {
