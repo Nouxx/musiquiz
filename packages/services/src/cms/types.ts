@@ -42,18 +42,35 @@ export type Homepage = {
   components: PageComponent[];
 };
 
-export type PageCover = {
-  media: CmsImage;
+export type CoverBackground =
+  | { kind: "image"; media: CmsImage }
+  | { kind: "brand" }
+  | { kind: "vivid" };
+
+export type CoverAside =
+  | { kind: "none" }
   // the game's own mark, not the venue logo the header carries
-  logo: CmsImage | undefined;
+  | { kind: "logo"; logo: CmsImage }
+  | { kind: "columns"; images: CmsImage[] };
+
+export type PageCover = {
+  background: CoverBackground;
+  aside: CoverAside;
   badge: string | undefined;
   heading: string;
   subHeading: string | undefined;
-  cta: {
-    label: string;
-    url: string;
-    icon: "arrow-right" | "arrow-down";
-  };
+  cta:
+    | {
+        label: string;
+        url: string;
+      }
+    | undefined;
+  secondaryCta:
+    | {
+        label: string;
+        url: string;
+      }
+    | undefined;
 };
 
 export type VenuePageType = "home" | "gift" | "book";
@@ -103,6 +120,14 @@ export type ContactPage = {
 export type VenuePage = {
   pageCover: PageCover;
   components: PageComponent[];
+};
+
+export type VenueWidgetPageType = "gift" | "book";
+
+export type VenueWidgetPage = {
+  pageCover: PageCover;
+  componentsBeforeWidget: PageComponent[];
+  componentsAfterWidget: PageComponent[];
 };
 
 export type VenueGamePage = {

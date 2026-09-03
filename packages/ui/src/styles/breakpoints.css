@@ -112,6 +112,17 @@
    band where that is optimistic the photos are `display: none` and lazy, so
    they are never fetched anyway.
 
+   PageCover's `columns` slot is the third host at this number, and it rounds
+   down to reach it. Its row is the 1248px content column: the strip at 544,
+   the design's 120px gap taken at `--space-24` (96), and the text column as
+   the `1fr` that remains. 48px of gutters puts the exact step at 1296px =
+   81rem; the 16px is taken off the text column instead of adding a fourth
+   literal here, which at 608px is far above the 36.5rem floor the wrap below
+   uses. The cover pairs the step with a 47.375rem (758px) floor on the
+   section — the design's height, so the strip has something to run in. Below
+   the step the strip is not rendered and that floor is not applied, so the
+   cover is text over the gradient at its natural height.
+
    ------------------------------------------------------------
    64rem and 88rem — carousel slot count
    ------------------------------------------------------------

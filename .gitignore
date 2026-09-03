@@ -27,3 +27,6 @@ tsconfig.tsbuildinfo
 
 # scripts/figma exports
 figma-out
+
+# local QA playground, never committed
+apps/web/src/pages/zz-scratch.astro

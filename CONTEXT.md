@@ -58,7 +58,7 @@ A Venue Game for Event Formats, serving `/[venue]/evenements/[event]`. It carrie
 _Avoid_: offering, event page
 
 **Venue Page**:
-The document holding one of a Venue's three fixed screens — its home page, its gift page, its booking page — distinguished by a `pageType`. All three have identical shape, so they are one document type; the enum names a route, never a field that only some of them have. It is content, and the component that renders it is a Page.
+The document holding one of a Venue's three fixed screens — its home page, its gift page, its booking page — distinguished by a `pageType`. One document type for all three: the home page carries a single Page Component array, the gift and booking pages carry two that bracket their Widget, and nothing else differs. It is content, and the component that renders it is a Page. [ADR 0011](./docs/adr/0011-widget-pages-bracket-their-widget.md).
 _Avoid_: page, page document, venue content, screen
 
 ## Page Content
@@ -70,8 +70,12 @@ The block at the top of every page — media, badge, heading, sub-heading, and a
 _Avoid_: hero, banner, header, masthead
 
 **Page Component**:
-One entry in the ordered array an editor composes a page body from — a Rolling Banner or a Cards Grid today, more later. The array is the same shared dictionary on every content document, so a component written for one page works on all of them.
+One entry in the ordered array an editor composes a page body from — a Rolling Banner or a Cards Grid today, more later. The array is the same shared dictionary on every content document, so a component written for one page works on all of them. Never a Widget: that word names the thing below, which no editor composes.
 _Avoid_: block, section, module, widget
+
+**Widget**:
+The booking or gifting interface 4escape hosts, mounted at runtime into a container `apps/web` renders and themes. It is not content and not a Page Component — an editor cannot add one, remove one, or move one, and each of the two pages that has one has exactly one. The **Booking Widget** sells sessions and anchors at `#booking`; the **Gifting Widget** sells vouchers and anchors at `#gifting`. Editors write around it, in the Page Component arrays named for the sides of it. [ADR 0011](./docs/adr/0011-widget-pages-bracket-their-widget.md).
+_Avoid_: embed, iframe, booking form, 4escape (the vendor, not the thing)
 
 ## Components
 

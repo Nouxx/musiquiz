@@ -1,5 +1,5 @@
 ---
-import VenuePage from "../../../components/pages/VenuePage.astro";
+import VenueBookingPage from "../../../components/pages/VenueBookingPage.astro";
 import VenueLayout from "../../../layouts/VenueLayout.astro";
 import { getVenuesSlugParameters } from "../../../libs/getVenuesSlugParameters";
 
@@ -12,5 +12,5 @@ const { venue } = Astro.params;
 ---
 
 <VenueLayout venueSlug={venue}>
-  <VenuePage venueSlug={venue} pageType="book" />
+  <VenueBookingPage venueSlug={venue} />
 </VenueLayout>

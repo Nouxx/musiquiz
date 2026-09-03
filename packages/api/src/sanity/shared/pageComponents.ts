@@ -334,9 +334,15 @@ function videoEmbedProjection({ lang }: { lang: Lang }) {
   `;
 }
 
-export function pageComponentsProjection({ lang }: { lang: Lang }) {
+export function pageComponentsProjection({
+  field,
+  lang,
+}: {
+  field: string;
+  lang: Lang;
+}) {
   return `
-    pageComponents[]{
+    ${field}[]{
       _type,
       ${rollingBannerProjection({ lang })},
       ${cardsGridProjection({ lang })},

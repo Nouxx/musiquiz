@@ -10,30 +10,26 @@ import {
 } from "./shared/pageComponents";
 import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
 
-export type VenuePageType = "home" | "gift" | "book";
-
 function venuePageQuery({
   lang,
   venueSlug,
-  pageType,
 }: {
   lang: Lang;
   venueSlug: string;
-  pageType: VenuePageType;
 }) {
   return defineQuery(`{
     "venuePage": *[_type == "venuePage"
       && venue->slug.current == "${venueSlug}"
-      && pageType == "${pageType}"][0]{
+      && pageType == "home"][0]{
       pageCover ${pageCoverProjection({ lang })},
-      "pageComponents": ${pageComponentsProjection({ lang })},
+      "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
     }
   }`);
 }
 
 const sanityVenuePageSchema = z.strictObject({
   venuePage: z.strictObject({
-    pageCover: sanityPageCoverSchema,
+    pageCover: sanityPageCoverSchema({ hasCta: true }),
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
   }),
 });
@@ -44,15 +40,13 @@ export async function fetchVenuePage({
   config,
   lang,
   venueSlug,
-  pageType,
 }: {
   config: SanityConfig;
   lang: Lang;
   venueSlug: string;
-  pageType: VenuePageType;
 }) {
   return fetchSanityData({
-    query: venuePageQuery({ lang, venueSlug, pageType }),
+    query: venuePageQuery({ lang, venueSlug }),
     schema: sanityVenuePageSchema,
     config,
   });

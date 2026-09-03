@@ -1,0 +1,176 @@
+---
+import Section from "@repo/ui/Section";
+import { forEscapeSetting } from "./config";
+
+interface Props {
+  widgetId: string;
+  /** the cover's cta links to it */
+  anchor: string;
+}
+
+const { widgetId, anchor } = Astro.props;
+---
+
+<Section id={anchor}>
+  <div
+    class="forescape-catalog"
+    data-widget-id={widgetId}
+    data-settings={forEscapeSetting}
+  >
+  </div>
+</Section>
+
+<div class="forescape-cart" data-settings={forEscapeSetting}></div>
+
+<script>
+  /* 4escape widget: injected at runtime, per vendor instructions */
+  const stylesheet = document.createElement("link");
+  stylesheet.href = "https://widgets.4escape.app/main.css";
+  stylesheet.rel = "stylesheet";
+  stylesheet.crossOrigin = "anonymous";
+  document.head.append(stylesheet);
+
+  const script = document.createElement("script");
+  script.type = "module";
+  script.src = "https://widgets.4escape.app/main.js";
+  document.body.append(script);
+</script>
+
+<style is:global>
+  /* the widget mounts into these at runtime, so Astro's scoping would never
+     match: the catalog holds its own height once filled, and `:empty` reserves
+     it until then */
+  .forescape-catalog:empty {
+    min-block-size: 60vh;
+  }
+
+  /* 4escape injects the theme edited in its backoffice as `:root .forescape {}`
+     into a style element appended to the head at runtime, so it outranks a single
+     class and always lands after this file. Repeating the class buys the
+     specificity back. Once `theme` and `widget_css` are emptied on their side,
+     one class is enough. */
+  .forescape.forescape.forescape {
+    --f-primary: var(--color-accent);
+    --f-primary-hover: var(--red-600);
+    --f-secondary: var(--color-surface-muted);
+    --f-secondary-hover: var(--color-border);
+    --f-text-base-color: var(--color-text);
+
+    /* both backoffice themes set leaf tokens rather than the roots above, so
+       every leaf they touch has to be answered here by name */
+    --f-text-secondary-color: var(--color-text-muted);
+    --f-card-text-color: var(--color-text);
+    --f-cart-panel-text-color: var(--color-text);
+    --f-button-secondary-bg-color: var(--color-surface-muted);
+    --f-button-secondary-bg-color-hover: var(--color-border);
+    --f-button-secondary-text-color: var(--color-text);
+    --f-modal-button-secondary-bg-color: var(--color-surface-muted);
+    --f-radiogroup-bg-color: transparent;
+    --f-panel-bg-color: var(--color-surface);
+    --f-card-bg-color: var(--color-surface);
+    --f-card-border-color: var(--color-border);
+    --f-card-border-width: 6px;
+    --f-card-border-radius: var(--radius-l);
+    --f-radiogroup-option-bg-color: var(--color-surface-muted);
+    --f-radiogroup-option-border-color: var(--color-border);
+    --f-radiogroup-option-border-width: 6px;
+    --f-radiogroup-option-border-radius: var(--radius-l);
+    --f-radiogroup-option-text-color: var(--color-text);
+    --f-radiogroup-option-selected-color: var(--color-accent);
+    --f-input-bg-color: var(--color-surface);
+    --f-input-text-color: var(--color-text);
+    --f-input-placeholder-color: var(--color-text-placeholder);
+    --f-input-border-color: var(--color-text);
+    --f-input-border-radius: var(--radius-s);
+    --f-input-error-border-color: var(--red-600);
+    --f-input-error-text-color: var(--red-600);
+    --f-button-primary-text-color: var(--color-text-on-blue);
+    --f-button-primary-border-radius: var(--radius-pill);
+    --f-button-primary-border-width: 0;
+
+    /* the widget draws its own drop shadows, the design system does not */
+    --f-button-primary-shadow: none;
+    --f-input-shadow: none;
+  }
+
+  /* stylelint-disable selector-class-pattern -- 4escape's own classnames */
+
+  /* the price picker rings in rainbow, the send-method picker in blue. The two
+     share every class, so the price line is what tells them apart — confirm on
+     the live widget before trusting it. */
+  .forescape.forescape.forescape .f-radiogroup-option {
+    --selected-ring: var(--color-border-brand-blue);
+  }
+
+  .forescape.forescape.forescape
+    .f-radiogroup-option:has(.f-radiogroup-option-price) {
+    --selected-ring: var(--color-border-brand);
+  }
+
+  /* the selected option wears a gradient ring, which `border-color` cannot hold.
+     The widget already lays an absolute overlay over each option to draw that
+     ring, so it carries the mask instead (same trick as Badge.astro). */
+  .forescape.forescape.forescape
+    .f-radiogroup-option--checked
+    .f-radiogroup-option-inset {
+    inset: calc(-1 * var(--f-radiogroup-option-border-width));
+    padding: var(--f-radiogroup-option-border-width);
+    background: var(--selected-ring);
+    border: 0;
+    border-radius: calc(
+      var(--f-radiogroup-option-border-radius) +
+        var(--f-radiogroup-option-border-width)
+    );
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+  }
+
+  /* the booking widget's backoffice `widget_css` still paints labels white for
+     the old dark site, and it lands unscoped */
+  .forescape.forescape.forescape label {
+    color: inherit;
+  }
+
+  /* `--f-button-primary-bg-color` is consumed as `background-color`, so the
+     gradient has to arrive as an image on top of it */
+  .forescape.forescape.forescape .f-bg-buttonPrimaryBg {
+    background-image: var(--color-fill-blue);
+    box-shadow: 0 2px 0 var(--color-border-blue);
+  }
+
+  .forescape.forescape.forescape .f-radiogroup-title {
+    font: var(--title-h4);
+    text-align: center;
+  }
+
+  .forescape.forescape.forescape .f-radiogroup-option-price {
+    font: var(--title-h2);
+  }
+
+  /* the option label is drawn as the design system's badge */
+  .forescape.forescape.forescape .f-radiogroup-option-label {
+    position: relative;
+    align-self: start;
+    padding: var(--space-2) var(--space-5);
+    font: var(--paragraph-base-sm);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-l);
+  }
+
+  .forescape.forescape.forescape .f-radiogroup-option-label::before {
+    position: absolute;
+    inset: 0;
+    padding: 2px;
+    background: var(--selected-ring);
+    border-radius: inherit;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    content: "";
+  }
+
+  /* stylelint-enable selector-class-pattern */
+</style>

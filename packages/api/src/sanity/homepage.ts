@@ -18,7 +18,7 @@ function homepageQuery({ lang }: { lang: Lang }) {
       "heading": heading[language == "${lang}"][0].value,
       logo ${imageProjection({ lang })},
       cover ${imageProjection({ lang })},
-      "pageComponents": ${pageComponentsProjection({ lang })},
+      "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
       "venuesCta": ${optionalCtaProjection({ field: "venuesCta", lang })},
     },
     "venues": *[_type == "venue"] | order(title asc){

@@ -25,7 +25,7 @@ function venueGamePageQuery({
       && game->slug.current == "${gameSlug}"][0]{
       "gameName": game->name,
       pageCover ${pageCoverProjection({ lang })},
-      "pageComponents": ${pageComponentsProjection({ lang })},
+      "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
     }
   }`);
 }
@@ -33,7 +33,7 @@ function venueGamePageQuery({
 const sanityVenueGamePageSchema = z.strictObject({
   venueGame: z.strictObject({
     gameName: z.string().min(1),
-    pageCover: sanityPageCoverSchema,
+    pageCover: sanityPageCoverSchema({ hasCta: true }),
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
   }),
 });
