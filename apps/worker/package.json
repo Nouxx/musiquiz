@@ -13,7 +13,6 @@
 		"@repo/api": "workspace:*"
 	},
 	"devDependencies": {
-		"@dotenvx/dotenvx": "catalog:",
 		"@cloudflare/vitest-plugin": "^1.0.0",
 		"@types/node": "^26.4.0",
 		"typescript": "^5.5.2",
