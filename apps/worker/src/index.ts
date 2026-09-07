@@ -1,4 +1,4 @@
-import { sendEmail } from "@repo/api/zeptomail/sendEmail";
+import { routes } from "./routes";
 
 const ALLOWED_ORIGINS = new Set([
 	"http://localhost:4321",
@@ -15,44 +15,56 @@ function corsHeaders(request: Request): Record<string, string> {
 		"Access-Control-Allow-Methods": "POST, OPTIONS",
 		"Access-Control-Allow-Headers": "Content-Type",
 		"Access-Control-Max-Age": "86400",
-		// the response differs per origin, so a shared cache must key on it
-		Vary: "Origin",
+		Vary: "Origin", // the response differs per origin, so a shared cache must key on it
 	};
 }
 
-type ClientContactFormData = {
-	venueSlug: string;
-	firstName: string;
-	mail: string;
-	phone: string;
-	message: string;
-};
+function withCors(response: Response, request: Request) {
+	const headers = Object.entries(corsHeaders(request));
+	for (const [key, value] of headers) {
+		response.headers.set(key, value);
+	}
+	return response;
+}
 
 export default {
-	async fetch(request, env, ctx): Promise<Response> {
+	// eslint-disable-next-line unicorn/name-replacements -- cloudflare requirement
+	async fetch(request, env): Promise<Response> {
 		if (request.method === "OPTIONS") {
-			return new Response(null, { status: 204, headers: corsHeaders(request) });
+			return new Response(undefined, {
+				status: 204,
+				headers: corsHeaders(request),
+			});
 		}
 
-		// todo: rename
-		const zeptomailToken = env.ZOHO_API_KEY;
+		const { pathname } = new URL(request.url);
+		const route = routes[pathname];
 
-		const { venueSlug, firstName, mail, phone, message } =
-			await request.json<ClientContactFormData>();
-
-		const response = await sendEmail({
-			venueSlug,
-			firstName,
-			mail,
-			phone,
-			message,
-			token: zeptomailToken,
-		});
-
-		for (const [key, value] of Object.entries(corsHeaders(request))) {
-			response.headers.set(key, value);
+		if (!route) {
+			return withCors(
+				Response.json({ error: "Not found" }, { status: 404 }),
+				request,
+			);
 		}
 
-		return response;
+		if (request.method !== "POST") {
+			return withCors(
+				Response.json(
+					{ error: "Method not allowed" },
+					{ status: 405, headers: { Allow: "POST" } },
+				),
+				request,
+			);
+		}
+
+		try {
+			return withCors(await route(request, env), request);
+		} catch (error) {
+			console.error(pathname, error);
+			return withCors(
+				Response.json({ error: "Internal error" }, { status: 500 }),
+				request,
+			);
+		}
 	},
 } satisfies ExportedHandler<Env>;

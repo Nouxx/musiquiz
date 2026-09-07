@@ -8,3 +8,4 @@ catalog:
   "@dotenvx/dotenvx": ^2.18.0
   eslint: ^10.5.0
   vitest: ^4.1.10
+  zod: ^4.4.3
