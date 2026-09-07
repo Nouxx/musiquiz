@@ -6,3 +6,6 @@
 pnpm-lock.yaml
 **/.claude
 **/.vscode
+
+# generated cloudflare typing file
+apps/worker/worker-configuration.d.ts
