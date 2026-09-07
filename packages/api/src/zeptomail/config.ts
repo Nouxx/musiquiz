@@ -1,2 +1,2 @@
-export const senderEmail = "noreply@yourdomain.com";
-export const senderName = "Website contact form";
+export const senderEmail = "lille@musiquiz.co"; // todo: change
+export const senderName = "Musiquiz";

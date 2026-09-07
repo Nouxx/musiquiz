@@ -2,7 +2,7 @@ import { buildVenueEmail } from "./buildVenueEmail";
 import { senderEmail, senderName } from "./config";
 
 function buildUrl() {
-  return new URL("https://api.zeptomail.com/v1.1/email");
+  return new URL("https://api.zeptomail.eu/v1.1/email");
 }
 
 function buildHeaders({ token }: { token: string }) {
@@ -36,7 +36,7 @@ function buildBody({
         },
       },
     ],
-    subject: `New lead: ${firstName}`,
+    subject: `Test: ${firstName}`,
     htmlbody: `<p>
         <b>Name:</b> ${firstName}</p>
         <p><b>Email:</b> ${mail}</p>
@@ -70,6 +70,8 @@ export async function sendEmail({
     headers,
     body,
   });
+
+  console.log("DEBUG response", response);
 
   if (!response.ok) {
     return Response.json(
