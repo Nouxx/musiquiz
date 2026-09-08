@@ -1,11 +1,21 @@
 ---
+import { clientContactFormLimits } from "@repo/services/contactForm/clientContact";
 import ClientContactForm from "@repo/ui/ClientContactForm";
 import type { ComponentProps } from "astro/types";
 
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 
-type Props = ComponentProps<typeof ClientContactForm> & {
+type Props = Omit<
+  ComponentProps<typeof ClientContactForm>,
+  | "pendingLabel"
+  | "successMessage"
+  | "failureMessage"
+  | "firstNameMaxLength"
+  | "mailMaxLength"
+  | "phoneMaxLength"
+  | "messageMaxLength"
+> & {
   workerUrl: string;
   venueSlug: string;
 };
@@ -17,6 +27,9 @@ const t = getT(getLang(Astro));
 const messages = {
   required: t("form.errors.required"),
   invalidMail: t("contactForm.errors.mail"),
+  // the numbers change per keystroke, so the script does the substitution;
+  // `used` rather than `count`, which i18next reads as a plural selector
+  counter: t("form.counter", { used: "__USED__", max: "__MAX__" }),
 };
 
 // a `<` inside the copy would close the script element early
@@ -27,7 +40,16 @@ const serializedMessages = JSON.stringify(messages).replaceAll("<", "\\u003c");
   data-worker-url={`${workerUrl}/form/client-contact`}
   data-venue-slug={venueSlug}
 >
-  <ClientContactForm {...rest} />
+  <ClientContactForm
+    {...rest}
+    pendingLabel={t("contactForm.pending")}
+    successMessage={t("contactForm.success")}
+    failureMessage={t("contactForm.failure")}
+    firstNameMaxLength={clientContactFormLimits.firstName}
+    mailMaxLength={clientContactFormLimits.mail}
+    phoneMaxLength={clientContactFormLimits.phone}
+    messageMaxLength={clientContactFormLimits.message}
+  />
   <script
     is:inline
     type="application/json"

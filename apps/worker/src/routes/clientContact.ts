@@ -17,11 +17,6 @@ export async function clientContactRoute(request: Request, env: Env) {
 		);
 	}
 
-	// return Response.json(
-	// 				{ error: "Fake error" },
-	// 				{ status: 400 },
-	// 			),
-
 	const { confirmationError } = await processClientContactForm({
 		body: parsedBody.data,
 		zeptomailToken: env.ZOHO_API_KEY,

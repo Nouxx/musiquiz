@@ -5,6 +5,13 @@ import z from "zod";
 import { buildVenueEmail } from "./buildVenueEmail";
 import { buildVenueName } from "./buildVenueName";
 
+export const clientContactFormLimits = {
+  firstName: 80,
+  mail: 254,
+  phone: 30,
+  message: 2000,
+};
+
 export const clientContactFormBodySchema = z.strictObject({
   // buildVenueEmail turns this into the mailbox the enquiry is sent to, so a
   // slug that is anything but a bare slug lets the request pick the recipient
@@ -12,10 +19,10 @@ export const clientContactFormBodySchema = z.strictObject({
     .string()
     .max(40)
     .regex(/^[a-z][a-z0-9-]*$/),
-  firstName: z.string().min(1).max(80),
-  mail: z.email().max(254),
-  phone: z.string().max(30),
-  message: z.string().min(1).max(2000),
+  firstName: z.string().min(1).max(clientContactFormLimits.firstName),
+  mail: z.email().max(clientContactFormLimits.mail),
+  phone: z.string().max(clientContactFormLimits.phone),
+  message: z.string().min(1).max(clientContactFormLimits.message),
 });
 
 type ClientContactFormBody = z.infer<typeof clientContactFormBodySchema>;

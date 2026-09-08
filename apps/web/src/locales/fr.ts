@@ -99,6 +99,7 @@ export const fr = {
     errors: {
       required: "Champ requis",
     },
+    counter: "{{used}} / {{max}} caractères",
   },
   contactForm: {
     badge: "Contactez-nous",
@@ -113,6 +114,10 @@ export const fr = {
     message: "Message",
     messagePlaceholder: "Votre message",
     submit: "Envoyer",
+    pending: "Envoi…",
+    success:
+      "Merci, votre message est bien arrivé. Nous vous répondons rapidement.",
+    failure: "Une erreur est survenue. Merci de réessayer.",
     errors: {
       mail: "Adresse mail invalide",
     },

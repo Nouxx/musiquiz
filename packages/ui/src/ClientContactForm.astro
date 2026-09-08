@@ -25,6 +25,13 @@ interface Props {
   messageLabel: string;
   messagePlaceholder: string;
   submitLabel: string;
+  pendingLabel: string;
+  successMessage: string;
+  failureMessage: string;
+  firstNameMaxLength: number;
+  mailMaxLength: number;
+  phoneMaxLength: number;
+  messageMaxLength: number;
 }
 
 const {
@@ -44,6 +51,13 @@ const {
   messageLabel,
   messagePlaceholder,
   submitLabel,
+  pendingLabel,
+  successMessage,
+  failureMessage,
+  firstNameMaxLength,
+  mailMaxLength,
+  phoneMaxLength,
+  messageMaxLength,
 } = Astro.props;
 
 // the section can appear more than once on a page, and a label only points at
@@ -80,6 +94,7 @@ const uid = crypto.randomUUID().slice(0, 8);
             tone="plain"
             label={firstNameLabel}
             placeholder={firstNamePlaceholder}
+            maxlength={firstNameMaxLength}
             required
           />
 
@@ -91,6 +106,7 @@ const uid = crypto.randomUUID().slice(0, 8);
             tone="plain"
             label={mailLabel}
             placeholder={mailPlaceholder}
+            maxlength={mailMaxLength}
             required
           />
 
@@ -102,21 +118,44 @@ const uid = crypto.randomUUID().slice(0, 8);
             tone="plain"
             label={phoneLabel}
             placeholder={phonePlaceholder}
+            maxlength={phoneMaxLength}
           />
 
-          <TextField
-            as="textarea"
-            id={`contact-${uid}-message`}
-            name="message"
-            tone="plain"
-            label={messageLabel}
-            placeholder={messagePlaceholder}
-            required
-          />
+          <div class="message-field">
+            <TextField
+              as="textarea"
+              id={`contact-${uid}-message`}
+              name="message"
+              tone="plain"
+              label={messageLabel}
+              placeholder={messagePlaceholder}
+              maxlength={messageMaxLength}
+              required
+            />
+
+            <p class="counter" data-counter aria-hidden="true"></p>
+          </div>
         </div>
 
-        <Button type="submit" tone="blue">{submitLabel}</Button>
+        <Button type="submit" tone="blue" data-submit>
+          <span data-submit-label>{submitLabel}</span>
+          <span data-pending-label hidden>{pendingLabel}</span>
+        </Button>
+
+        <p
+          class="status failure"
+          role="alert"
+          tabindex="-1"
+          data-failure
+          hidden
+        >
+          {failureMessage}
+        </p>
       </form>
+
+      <p class="status" role="status" tabindex="-1" data-success hidden>
+        {successMessage}
+      </p>
     </div>
   </TwoBlocks>
 </Section>
@@ -154,6 +193,30 @@ const uid = crypto.randomUUID().slice(0, 8);
     flex-direction: column;
     gap: var(--space-3);
     align-self: stretch;
+  }
+
+  .message-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    align-items: flex-end;
+  }
+
+  .counter {
+    font: var(--paragraph-s);
+    color: var(--color-text-muted);
+  }
+
+  .counter[data-near-cap] {
+    color: var(--color-text-error);
+  }
+
+  .status {
+    font: var(--paragraph-base);
+  }
+
+  .failure {
+    color: var(--color-text-error);
   }
 
   /* 60rem — two columns stop fitting (styles/breakpoints.css) */

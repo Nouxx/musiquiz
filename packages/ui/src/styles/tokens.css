@@ -246,6 +246,7 @@
 
   --color-fill-muted: var(--grey-200);
 
+  --color-text-error: var(--red-900);
   --color-border-error: var(--red-600);
 
   --color-border-light: var(--black);

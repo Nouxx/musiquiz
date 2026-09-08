@@ -101,6 +101,7 @@ export const en: typeof fr = {
     errors: {
       required: "Required field",
     },
+    counter: "{{used}} / {{max}} characters",
   },
   contactForm: {
     badge: "Contact us",
@@ -115,6 +116,9 @@ export const en: typeof fr = {
     message: "Message",
     messagePlaceholder: "Your message",
     submit: "Send",
+    pending: "Sending…",
+    success: "Thanks, your message has arrived. We'll get back to you shortly.",
+    failure: "Something went wrong. Please try again.",
     errors: {
       mail: "Invalid mail address",
     },

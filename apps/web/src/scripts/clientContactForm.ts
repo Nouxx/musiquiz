@@ -1,6 +1,7 @@
 type Messages = {
   required: string;
   invalidMail: string;
+  counter: string;
 };
 
 type Field = HTMLInputElement | HTMLTextAreaElement;
@@ -35,6 +36,39 @@ function refreshValidity(field: Field, messages: Messages) {
   }
 }
 
+function refreshCounter(field: Field, counter: HTMLElement, template: string) {
+  const used = field.value.length;
+  const max = field.maxLength;
+
+  // replacer functions: a plain string replacement would read `$&` and friends
+  counter.textContent = template
+    .replaceAll("__USED__", () => String(used))
+    .replaceAll("__MAX__", () => String(max));
+
+  counter.toggleAttribute("data-near-cap", used >= max * 0.9);
+}
+
+function setPending({
+  submit,
+  submitLabel,
+  pendingLabel,
+  pending,
+}: {
+  submit: HTMLButtonElement;
+  submitLabel: HTMLElement;
+  pendingLabel: HTMLElement;
+  pending: boolean;
+}) {
+  submit.disabled = pending;
+  submitLabel.hidden = pending;
+  pendingLabel.hidden = !pending;
+}
+
+function reveal(node: HTMLElement) {
+  node.hidden = false;
+  node.focus();
+}
+
 async function submitForm({
   form,
   workerUrl,
@@ -60,9 +94,22 @@ async function submitForm({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    console.log(response.status, await response.text());
+
+    if (response.ok) return true;
+
+    // a rejection after the browser accepted the form is our bug, not the
+    // visitor's, so it stays in the console rather than on the page
+    console.error(
+      "contact form rejected",
+      response.status,
+      await response.text(),
+    );
+
+    return false;
   } catch (error) {
     console.error(error);
+
+    return false;
   }
 }
 
@@ -74,11 +121,36 @@ class MusiquizContactForm extends HTMLElement {
     const messages = readMessages(this);
     if (!workerUrl || !venueSlug || !form || !messages) return;
 
+    const submit = form.querySelector<HTMLButtonElement>("[data-submit]");
+    const submitLabel = form.querySelector<HTMLElement>("[data-submit-label]");
+    const pendingLabel = form.querySelector<HTMLElement>(
+      "[data-pending-label]",
+    );
+    const failure = form.querySelector<HTMLElement>("[data-failure]");
+    const success = this.querySelector<HTMLElement>("[data-success]");
+    const counter = form.querySelector<HTMLElement>("[data-counter]");
+    const messageField = form.querySelector<HTMLTextAreaElement>(
+      "textarea[name='message']",
+    );
+    if (
+      !submit ||
+      !submitLabel ||
+      !pendingLabel ||
+      !failure ||
+      !success ||
+      !counter ||
+      !messageField
+    ) {
+      return;
+    }
+
     // the browser reads the message off the field, so it has to be in place
     // before the first submit and not only after a keystroke
     for (const field of getFields(form)) {
       refreshValidity(field, messages);
     }
+
+    refreshCounter(messageField, counter, messages.counter);
 
     // `invalid` does not bubble
     form.addEventListener(
@@ -98,13 +170,29 @@ class MusiquizContactForm extends HTMLElement {
       if (field.validity.valid) {
         field.removeAttribute("aria-invalid");
       }
+
+      if (field === messageField) {
+        refreshCounter(messageField, counter, messages.counter);
+      }
     });
 
     // the browser blocks an invalid submit, so this only runs on a valid form
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
-      await submitForm({ form, workerUrl, venueSlug });
+      failure.hidden = true;
+      setPending({ submit, submitLabel, pendingLabel, pending: true });
+
+      const sent = await submitForm({ form, workerUrl, venueSlug });
+
+      setPending({ submit, submitLabel, pendingLabel, pending: false });
+
+      if (sent) {
+        form.hidden = true;
+        reveal(success);
+      } else {
+        reveal(failure);
+      }
     });
   }
 }
