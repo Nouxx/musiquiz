@@ -27,11 +27,8 @@ const {
   label,
   tone = "light",
   rows = 3,
-  "aria-describedby": describedBy,
   ...rest
 } = Astro.props;
-
-const errorId = `${id}-error`;
 ---
 
 <div class:list={["field", tone]}>
@@ -42,12 +39,8 @@ const errorId = `${id}-error`;
     {...rest}
     {id}
     class="input"
-    aria-describedby={[describedBy, errorId].filter(Boolean).join(" ")}
     rows={Tag === "textarea" ? rows : undefined}
   />
-  <!-- always rendered so a client script only sets its text: a node created at
-       runtime gets none of Astro's scoped styles -->
-  <p id={errorId} class="error" hidden></p>
 </div>
 
 <style>
@@ -86,11 +79,6 @@ const errorId = `${id}-error`;
 
   .input[aria-invalid="true"] {
     border-color: var(--color-border-error);
-  }
-
-  .error {
-    font: var(--paragraph-s);
-    color: var(--color-text-error);
   }
 
   .input:focus-visible {

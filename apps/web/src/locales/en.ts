@@ -97,6 +97,11 @@ export const en: typeof fr = {
     book: "Book instantly",
     quotation: "On quote",
   },
+  form: {
+    errors: {
+      required: "Required field",
+    },
+  },
   contactForm: {
     badge: "Contact us",
     title: "A question?",
@@ -110,6 +115,9 @@ export const en: typeof fr = {
     message: "Message",
     messagePlaceholder: "Your message",
     submit: "Send",
+    errors: {
+      mail: "Invalid mail address",
+    },
   },
   quotationForm: {
     badge: "Quote",

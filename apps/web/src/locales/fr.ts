@@ -95,6 +95,11 @@ export const fr = {
     book: "Réservation immédiate",
     quotation: "Sur devis",
   },
+  form: {
+    errors: {
+      required: "Champ requis",
+    },
+  },
   contactForm: {
     badge: "Contactez-nous",
     title: "Une question ?",
@@ -108,6 +113,9 @@ export const fr = {
     message: "Message",
     messagePlaceholder: "Votre message",
     submit: "Envoyer",
+    errors: {
+      mail: "Adresse mail invalide",
+    },
   },
   quotationForm: {
     badge: "Devis",
