@@ -2,7 +2,6 @@
 import type { PageComponent } from "@repo/services/cms/pageComponent.types";
 import CardsGrid from "@repo/ui/CardsGrid";
 import CardsScroller from "@repo/ui/CardsScroller";
-import ClientContactForm from "@repo/ui/ClientContactForm";
 import EventQuotationForm from "@repo/ui/EventQuotationForm";
 import DetailTabs from "@repo/ui/DetailTabs";
 import TextSlideshow from "@repo/ui/TextSlideshow";
@@ -25,6 +24,7 @@ import { toPriceOffer } from "../../libs/toPriceOffer";
 import { toContactFacts } from "../../libs/toContactFacts";
 import { toContactPanels } from "../../libs/toContactPanels";
 import { toOffers } from "../../libs/toOffers";
+import ClientContactForm from "./ClientContactForm.astro";
 import { WORKER_URL } from "astro:env/client";
 
 interface Props {

@@ -1,0 +1,28 @@
+---
+import ClientContactForm from "@repo/ui/ClientContactForm";
+import type { ComponentProps } from "astro/types";
+
+type Props = ComponentProps<typeof ClientContactForm> & {
+  workerUrl: string;
+  venueSlug: string;
+};
+
+const { workerUrl, venueSlug, ...rest } = Astro.props;
+---
+
+<musiquiz-contact-form
+  data-worker-url={`${workerUrl}/form/client-contact`}
+  data-venue-slug={venueSlug}
+>
+  <ClientContactForm {...rest} />
+</musiquiz-contact-form>
+
+<style>
+  musiquiz-contact-form {
+    display: contents;
+  }
+</style>
+
+<script>
+  import "../../scripts/clientContactForm";
+</script>
