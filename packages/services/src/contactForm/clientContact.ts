@@ -6,11 +6,16 @@ import { buildVenueEmail } from "./buildVenueEmail";
 import { buildVenueName } from "./buildVenueName";
 
 export const clientContactFormBodySchema = z.strictObject({
-  venueSlug: z.string().min(1),
-  firstName: z.string().min(1),
-  mail: z.email(),
-  phone: z.string(),
-  message: z.string(),
+  // buildVenueEmail turns this into the mailbox the enquiry is sent to, so a
+  // slug that is anything but a bare slug lets the request pick the recipient
+  venueSlug: z
+    .string()
+    .max(40)
+    .regex(/^[a-z][a-z0-9-]*$/),
+  firstName: z.string().min(1).max(80),
+  mail: z.email().max(254),
+  phone: z.string().max(30),
+  message: z.string().min(1).max(2000),
 });
 
 type ClientContactFormBody = z.infer<typeof clientContactFormBodySchema>;
@@ -43,7 +48,7 @@ export async function processClientContactForm({
   const { internalMailTemplateKey, clientTemplateKey } =
     emailTemplateKeys.clientContact;
 
-  await Promise.all([
+  const [internalResult, clientResult] = await Promise.allSettled([
     sendEmailWithTemplate({
       templateKey: internalMailTemplateKey,
       mergeInfo,
@@ -63,4 +68,16 @@ export async function processClientContactForm({
       destinationName: firstName,
     }),
   ]);
+
+  // the enquiry reaching the venue is the point of the form; the client
+  // confirmation is a courtesy, and failing the request over it invites a
+  // duplicate send
+  if (internalResult.status === "rejected") {
+    throw internalResult.reason;
+  }
+
+  return {
+    confirmationError:
+      clientResult.status === "rejected" ? clientResult.reason : undefined,
+  };
 }

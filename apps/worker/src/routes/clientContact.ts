@@ -17,10 +17,19 @@ export async function clientContactRoute(request: Request, env: Env) {
 		);
 	}
 
-	await processClientContactForm({
+	// return Response.json(
+	// 				{ error: "Fake error" },
+	// 				{ status: 400 },
+	// 			),
+
+	const { confirmationError } = await processClientContactForm({
 		body: parsedBody.data,
 		zeptomailToken: env.ZOHO_API_KEY,
 	});
+
+	if (confirmationError) {
+		console.error("client confirmation mail failed", confirmationError);
+	}
 
 	return Response.json({ ok: true });
 }
