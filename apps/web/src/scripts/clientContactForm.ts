@@ -127,7 +127,8 @@ class MusiquizContactForm extends HTMLElement {
       "[data-pending-label]",
     );
     const failure = form.querySelector<HTMLElement>("[data-failure]");
-    const success = this.querySelector<HTMLElement>("[data-success]");
+    const success = form.querySelector<HTMLElement>("[data-success]");
+    const fields = form.querySelector<HTMLFieldSetElement>("[data-fields]");
     const counter = form.querySelector<HTMLElement>("[data-counter]");
     const messageField = form.querySelector<HTMLTextAreaElement>(
       "textarea[name='message']",
@@ -138,6 +139,7 @@ class MusiquizContactForm extends HTMLElement {
       !pendingLabel ||
       !failure ||
       !success ||
+      !fields ||
       !counter ||
       !messageField
     ) {
@@ -188,7 +190,9 @@ class MusiquizContactForm extends HTMLElement {
       setPending({ submit, submitLabel, pendingLabel, pending: false });
 
       if (sent) {
-        form.hidden = true;
+        // a finished form should not be able to send a second copy
+        fields.disabled = true;
+        submit.disabled = true;
         reveal(success);
       } else {
         reveal(failure);

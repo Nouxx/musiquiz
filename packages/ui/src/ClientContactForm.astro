@@ -85,7 +85,7 @@ const uid = crypto.randomUUID().slice(0, 8);
       </div>
 
       <form class="form" data-contact-form>
-        <div class="fields">
+        <fieldset class="fields" data-fields>
           <TextField
             id={`contact-${uid}-first-name`}
             name="firstName"
@@ -135,27 +135,29 @@ const uid = crypto.randomUUID().slice(0, 8);
 
             <p class="counter" data-counter aria-hidden="true"></p>
           </div>
+        </fieldset>
+
+        <div class="submit-row">
+          <Button type="submit" tone="blue" data-submit>
+            <span data-submit-label>{submitLabel}</span>
+            <span data-pending-label hidden>{pendingLabel}</span>
+          </Button>
+
+          <p
+            class="status failure"
+            role="alert"
+            tabindex="-1"
+            data-failure
+            hidden
+          >
+            {failureMessage}
+          </p>
+
+          <p class="status" role="status" tabindex="-1" data-success hidden>
+            {successMessage}
+          </p>
         </div>
-
-        <Button type="submit" tone="blue" data-submit>
-          <span data-submit-label>{submitLabel}</span>
-          <span data-pending-label hidden>{pendingLabel}</span>
-        </Button>
-
-        <p
-          class="status failure"
-          role="alert"
-          tabindex="-1"
-          data-failure
-          hidden
-        >
-          {failureMessage}
-        </p>
       </form>
-
-      <p class="status" role="status" tabindex="-1" data-success hidden>
-        {successMessage}
-      </p>
     </div>
   </TwoBlocks>
 </Section>
@@ -193,6 +195,22 @@ const uid = crypto.randomUUID().slice(0, 8);
     flex-direction: column;
     gap: var(--space-3);
     align-self: stretch;
+
+    /* a fieldset carries UA chrome and a min-inline-size of min-content, which
+       would stop the fields shrinking */
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  /* the message sits beside the button rather than under it: the row is already
+     as tall as the button, so revealing it moves nothing */
+  .submit-row {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+    align-self: stretch;
   }
 
   .message-field {
@@ -212,6 +230,7 @@ const uid = crypto.randomUUID().slice(0, 8);
   }
 
   .status {
+    min-inline-size: 0;
     font: var(--paragraph-base);
   }
 
