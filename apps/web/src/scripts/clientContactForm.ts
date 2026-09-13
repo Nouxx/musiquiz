@@ -40,7 +40,7 @@ function refreshCounter(field: Field, counter: HTMLElement, template: string) {
   const used = field.value.length;
   const max = field.maxLength;
 
-  // replacer functions: a plain string replacement would read `$&` and friends
+  // replacer functions: a plain string replacement would read `$&` etc
   counter.textContent = template
     .replaceAll("__USED__", () => String(used))
     .replaceAll("__MAX__", () => String(max));

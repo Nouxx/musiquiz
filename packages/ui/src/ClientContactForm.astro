@@ -153,7 +153,13 @@ const uid = crypto.randomUUID().slice(0, 8);
             {failureMessage}
           </p>
 
-          <p class="status" role="status" tabindex="-1" data-success hidden>
+          <p
+            class="status success"
+            role="status"
+            tabindex="-1"
+            data-success
+            hidden
+          >
             {successMessage}
           </p>
         </div>
@@ -236,6 +242,10 @@ const uid = crypto.randomUUID().slice(0, 8);
 
   .failure {
     color: var(--color-text-error);
+  }
+
+  .success {
+    color: var(--color-text-success);
   }
 
   /* 60rem — two columns stop fitting (styles/breakpoints.css) */
