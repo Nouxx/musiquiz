@@ -201,26 +201,28 @@ const uid = crypto.randomUUID().slice(0, 8);
             />
           </div>
 
-          <fieldset class="services">
-            <legend>
-              <Text variant="title-base">{servicesLabel}</Text>
-            </legend>
+          {
+            services.length > 0 && (
+              <fieldset class="services">
+                <legend>
+                  <Text variant="title-base">{servicesLabel}</Text>
+                </legend>
 
-            <div class="options">
-              {
-                services.map((service, index) => (
-                  <Checkbox
-                    id={`quotation-${uid}-service-${index}`}
-                    name="services"
-                    value={service}
-                    textSize="base"
-                  >
-                    {service}
-                  </Checkbox>
-                ))
-              }
-            </div>
-          </fieldset>
+                <div class="options">
+                  {services.map((service, index) => (
+                    <Checkbox
+                      id={`quotation-${uid}-service-${index}`}
+                      name="services"
+                      value={service}
+                      textSize="base"
+                    >
+                      {service}
+                    </Checkbox>
+                  ))}
+                </div>
+              </fieldset>
+            )
+          }
 
           <div class="message-field">
             <TextField

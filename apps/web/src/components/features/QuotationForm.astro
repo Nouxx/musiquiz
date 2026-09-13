@@ -1,13 +1,13 @@
 ---
-import { teamBuildingQuotationFormLimits } from "@repo/services/contactForm/teamBuildingQuotation";
-import TeamBuildingQuotationForm from "@repo/ui/TeamBuildingQuotationForm";
+import { quotationFormLimits } from "@repo/services/contactForm/quotation";
+import QuotationForm from "@repo/ui/QuotationForm";
 import type { ComponentProps } from "astro/types";
 
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 
 type Props = Omit<
-  ComponentProps<typeof TeamBuildingQuotationForm>,
+  ComponentProps<typeof QuotationForm>,
   | "pendingLabel"
   | "successMessage"
   | "failureMessage"
@@ -22,11 +22,14 @@ type Props = Omit<
 > & {
   workerUrl: string;
   venueSlug: string;
+  audience: "teamBuilding" | "musiTeens";
 };
 
-const { workerUrl, venueSlug, ...rest } = Astro.props;
+const { workerUrl, venueSlug, audience, ...rest } = Astro.props;
 
 const t = getT(getLang(Astro));
+
+const copy = `quotationForm.${audience}` as const;
 
 const messages = {
   required: t("form.errors.required"),
@@ -41,22 +44,23 @@ const serializedMessages = JSON.stringify(messages).replaceAll("<", "\\u003c");
 ---
 
 <musiquiz-quotation-form
-  data-worker-url={`${workerUrl}/form/team-building-quotation`}
+  data-worker-url={`${workerUrl}/form/quotation`}
   data-venue-slug={venueSlug}
+  data-audience={audience}
 >
-  <TeamBuildingQuotationForm
+  <QuotationForm
     {...rest}
-    pendingLabel={t("teamBuildingQuotationForm.pending")}
-    successMessage={t("teamBuildingQuotationForm.success")}
-    failureMessage={t("teamBuildingQuotationForm.failure")}
-    lastNameMaxLength={teamBuildingQuotationFormLimits.lastName}
-    firstNameMaxLength={teamBuildingQuotationFormLimits.firstName}
-    phoneMaxLength={teamBuildingQuotationFormLimits.phone}
-    mailMaxLength={teamBuildingQuotationFormLimits.mail}
-    companyMaxLength={teamBuildingQuotationFormLimits.company}
-    participantsMaxLength={teamBuildingQuotationFormLimits.participants}
-    budgetMaxLength={teamBuildingQuotationFormLimits.budget}
-    messageMaxLength={teamBuildingQuotationFormLimits.message}
+    pendingLabel={t(`${copy}.pending`)}
+    successMessage={t(`${copy}.success`)}
+    failureMessage={t(`${copy}.failure`)}
+    lastNameMaxLength={quotationFormLimits.lastName}
+    firstNameMaxLength={quotationFormLimits.firstName}
+    phoneMaxLength={quotationFormLimits.phone}
+    mailMaxLength={quotationFormLimits.mail}
+    companyMaxLength={quotationFormLimits.company}
+    participantsMaxLength={quotationFormLimits.participants}
+    budgetMaxLength={quotationFormLimits.budget}
+    messageMaxLength={quotationFormLimits.message}
   />
   <script
     is:inline
@@ -73,5 +77,5 @@ const serializedMessages = JSON.stringify(messages).replaceAll("<", "\\u003c");
 </style>
 
 <script>
-  import "../../scripts/teamBuildingQuotationForm";
+  import "../../scripts/quotationForm";
 </script>

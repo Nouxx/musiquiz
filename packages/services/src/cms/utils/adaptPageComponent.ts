@@ -119,9 +119,10 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
       };
     }
 
-    case "teamBuildingQuotationForm": {
+    case "quotationForm": {
       return {
-        type: "teamBuildingQuotationForm",
+        type: "quotationForm",
+        audience: data.audience,
         services: data.services.map((service) => service.label),
         venueSlug: data.venueSlug,
       };

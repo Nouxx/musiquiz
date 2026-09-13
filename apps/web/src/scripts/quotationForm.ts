@@ -8,6 +8,7 @@ defineFormElement({
 
     return {
       venueSlug: element.dataset.venueSlug ?? "",
+      audience: element.dataset.audience ?? "",
       lastName: String(data.get("lastName") ?? ""),
       firstName: String(data.get("firstName") ?? ""),
       mail: String(data.get("mail") ?? ""),

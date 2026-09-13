@@ -17,7 +17,7 @@ export const emailTemplateKeys = {
     internalMailTemplateKey:
       "13ef.34e5f5b7aef4f343.k1.675c92d0-aac7-11f1-819f-66e0c45c7bae.1a07c3ec47d",
   },
-  kidsQuotation: {
+  musiTeens: {
     clientTemplateKey:
       "13ef.34e5f5b7aef4f343.k1.9d81f670-aac7-11f1-819f-66e0c45c7bae.1a07c402757",
     internalMailTemplateKey:

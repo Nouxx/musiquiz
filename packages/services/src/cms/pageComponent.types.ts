@@ -124,8 +124,9 @@ type ClientContactForm = {
   venueSlug: string;
 };
 
-type TeamBuildingQuotationForm = {
-  type: "teamBuildingQuotationForm";
+type QuotationForm = {
+  type: "quotationForm";
+  audience: "teamBuilding" | "musiTeens";
   services: string[];
   venueSlug: string;
 };
@@ -307,7 +308,7 @@ export type PageComponent =
   | FindUs
   | ContactPanels
   | ClientContactForm
-  | TeamBuildingQuotationForm
+  | QuotationForm
   | Logos
   | Faq
   | CardsScroller

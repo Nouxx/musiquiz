@@ -1,14 +1,12 @@
 import {
-	processTeamBuildingQuotationForm,
-	teamBuildingQuotationFormBodySchema,
-} from "@repo/services/contactForm/teamBuildingQuotation";
+	processQuotationForm,
+	quotationFormBodySchema,
+} from "@repo/services/contactForm/quotation";
 import { z } from "zod";
 
 // eslint-disable-next-line unicorn/name-replacements -- cloudflare requirements for `env`
-export async function teamBuildingQuotationRoute(request: Request, env: Env) {
-	const parsedBody = teamBuildingQuotationFormBodySchema.safeParse(
-		await request.json(),
-	);
+export async function quotationRoute(request: Request, env: Env) {
+	const parsedBody = quotationFormBodySchema.safeParse(await request.json());
 
 	if (!parsedBody.success) {
 		return Response.json(
@@ -17,7 +15,7 @@ export async function teamBuildingQuotationRoute(request: Request, env: Env) {
 		);
 	}
 
-	const { confirmationError } = await processTeamBuildingQuotationForm({
+	const { confirmationError } = await processQuotationForm({
 		body: parsedBody.data,
 		zeptomailToken: env.ZOHO_API_KEY,
 	});

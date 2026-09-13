@@ -1,13 +1,21 @@
-import { expect, it } from "vitest";
+import { emailTemplateKeys } from "@repo/api/zeptomail/emailTemplateKeys";
+import { sendEmailWithTemplate } from "@repo/api/zeptomail/sendEmailWithTemplate";
+import { expect, it, vi } from "vitest";
 
 import {
-  adaptTeamBuildingQuotationMergeInfo,
-  teamBuildingQuotationFormBodySchema,
-} from "./teamBuildingQuotation";
+  adaptQuotationMergeInfo,
+  processQuotationForm,
+  quotationFormBodySchema,
+} from "./quotation";
+
+vi.mock("@repo/api/zeptomail/sendEmailWithTemplate", () => ({
+  sendEmailWithTemplate: vi.fn(),
+}));
 
 function buildBody(overrides: Record<string, unknown> = {}) {
   return {
     venueSlug: "paris",
+    audience: "teamBuilding",
     lastName: "Durand",
     firstName: "Camille",
     mail: "camille@example.com",
@@ -24,8 +32,7 @@ function buildBody(overrides: Record<string, unknown> = {}) {
 }
 
 function accepts(overrides: Record<string, unknown> = {}) {
-  return teamBuildingQuotationFormBodySchema.safeParse(buildBody(overrides))
-    .success;
+  return quotationFormBodySchema.safeParse(buildBody(overrides)).success;
 }
 
 it("accepts a filled body", () => {
@@ -42,9 +49,15 @@ it("accepts no ticked service", () => {
   expect(accepts({ services: [] })).toBe(true);
 });
 
+it("rejects an audience with no template of its own", () => {
+  expect(accepts({ audience: "musiTeens" })).toBe(true);
+  expect(accepts({ audience: "evgEvjf" })).toBe(false);
+  expect(accepts({ audience: "" })).toBe(false);
+});
+
 it("rejects an unknown key", () => {
   expect(
-    teamBuildingQuotationFormBodySchema.safeParse({
+    quotationFormBodySchema.safeParse({
       ...buildBody(),
       admin: true,
     }).success,
@@ -95,11 +108,25 @@ it("requires a message and caps it", () => {
 });
 
 it("joins the ticked services into one merge field", () => {
-  const body = teamBuildingQuotationFormBodySchema.parse(
+  const body = quotationFormBodySchema.parse(
     buildBody({ services: ["Blind test", "Karaoké"] }),
   );
 
-  expect(adaptTeamBuildingQuotationMergeInfo(body).prestations).toBe(
-    "Blind test, Karaoké",
-  );
+  expect(adaptQuotationMergeInfo(body).prestations).toBe("Blind test, Karaoké");
+});
+
+it("sends with the template pair of the audience", async () => {
+  const sent = vi.mocked(sendEmailWithTemplate);
+  sent.mockClear();
+  sent.mockResolvedValue(undefined as never);
+
+  await processQuotationForm({
+    body: quotationFormBodySchema.parse(buildBody({ audience: "musiTeens" })),
+    zeptomailToken: "token",
+  });
+
+  expect(sent.mock.calls.map(([call]) => call.templateKey)).toEqual([
+    emailTemplateKeys.musiTeens.internalMailTemplateKey,
+    emailTemplateKeys.musiTeens.clientTemplateKey,
+  ]);
 });

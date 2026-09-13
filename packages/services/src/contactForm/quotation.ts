@@ -6,7 +6,7 @@ import { buildVenueEmail } from "./buildVenueEmail";
 import { buildVenueName } from "./buildVenueName";
 import { venueSlugSchema } from "./venueSlugSchema";
 
-export const teamBuildingQuotationFormLimits = {
+export const quotationFormLimits = {
   lastName: 80,
   firstName: 80,
   mail: 254,
@@ -19,31 +19,29 @@ export const teamBuildingQuotationFormLimits = {
   services: 20,
 };
 
-export const teamBuildingQuotationFormBodySchema = z.strictObject({
+export const quotationFormBodySchema = z.strictObject({
   venueSlug: venueSlugSchema,
-  lastName: z.string().min(1).max(teamBuildingQuotationFormLimits.lastName),
-  firstName: z.string().min(1).max(teamBuildingQuotationFormLimits.firstName),
-  mail: z.email().max(teamBuildingQuotationFormLimits.mail),
-  phone: z.string().max(teamBuildingQuotationFormLimits.phone),
-  company: z.string().max(teamBuildingQuotationFormLimits.company),
+  // picks the mail template only; the recipient comes from the venue slug
+  audience: z.enum(["teamBuilding", "musiTeens"]),
+  lastName: z.string().min(1).max(quotationFormLimits.lastName),
+  firstName: z.string().min(1).max(quotationFormLimits.firstName),
+  mail: z.email().max(quotationFormLimits.mail),
+  phone: z.string().max(quotationFormLimits.phone),
+  company: z.string().max(quotationFormLimits.company),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   time: z.string().regex(/^\d{2}:\d{2}$/),
-  participants: z.string().max(teamBuildingQuotationFormLimits.participants),
-  budget: z.string().max(teamBuildingQuotationFormLimits.budget),
+  participants: z.string().max(quotationFormLimits.participants),
+  budget: z.string().max(quotationFormLimits.budget),
   services: z
-    .array(z.string().min(1).max(teamBuildingQuotationFormLimits.service))
-    .max(teamBuildingQuotationFormLimits.services),
-  message: z.string().min(1).max(teamBuildingQuotationFormLimits.message),
+    .array(z.string().min(1).max(quotationFormLimits.service))
+    .max(quotationFormLimits.services),
+  message: z.string().min(1).max(quotationFormLimits.message),
 });
 
-type TeamBuildingQuotationFormBody = z.infer<
-  typeof teamBuildingQuotationFormBodySchema
->;
+type QuotationFormBody = z.infer<typeof quotationFormBodySchema>;
 
 // todo: check with Lionel
-export function adaptTeamBuildingQuotationMergeInfo(
-  body: TeamBuildingQuotationFormBody,
-) {
+export function adaptQuotationMergeInfo(body: QuotationFormBody) {
   const {
     lastName,
     firstName,
@@ -73,22 +71,22 @@ export function adaptTeamBuildingQuotationMergeInfo(
   };
 }
 
-export async function processTeamBuildingQuotationForm({
+export async function processQuotationForm({
   body,
   zeptomailToken,
 }: {
-  body: TeamBuildingQuotationFormBody;
+  body: QuotationFormBody;
   zeptomailToken: string;
 }) {
-  const { venueSlug, firstName, mail: clientMail } = body;
+  const { venueSlug, audience, firstName, mail: clientMail } = body;
 
   const venueEmail = buildVenueEmail(venueSlug);
   const venueName = buildVenueName(venueSlug);
 
-  const mergeInfo = adaptTeamBuildingQuotationMergeInfo(body);
+  const mergeInfo = adaptQuotationMergeInfo(body);
 
   const { internalMailTemplateKey, clientTemplateKey } =
-    emailTemplateKeys.teamBuilding;
+    emailTemplateKeys[audience];
 
   const [internalResult, clientResult] = await Promise.allSettled([
     sendEmailWithTemplate({

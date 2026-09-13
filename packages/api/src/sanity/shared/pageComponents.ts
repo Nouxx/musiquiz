@@ -163,10 +163,11 @@ function clientContactFormProjection({ lang }: { lang: Lang }) {
   `;
 }
 
-function teamBuildingQuotationFormProjection({ lang }: { lang: Lang }) {
+function quotationFormProjection({ lang }: { lang: Lang }) {
   return `
-    _type == "teamBuildingQuotationForm" => {
-      "services": venue->quotationServices[]{
+    _type == "quotationForm" => {
+      audience,
+      "services": venue->quotationServices[^.audience in audiences]{
         "label": label[language == "${lang}"][0].value
       },
       "venueSlug": venue->slug.current
@@ -346,7 +347,7 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${findUsProjection({ lang })},
       ${contactPanelsProjection({ lang })},
       ${clientContactFormProjection({ lang })},
-      ${teamBuildingQuotationFormProjection({ lang })},
+      ${quotationFormProjection({ lang })},
       ${logosProjection({ lang })},
       ${faqProjection({ lang })},
       ${cardsScrollerProjection({ lang })},
@@ -484,9 +485,11 @@ const sanityClientContactFormSchema = z.strictObject({
   venueSlug: z.string().min(1),
 });
 
-const sanityTeamBuildingQuotationFormSchema = z.strictObject({
-  _type: z.literal("teamBuildingQuotationForm"),
-  services: z.array(z.strictObject({ label: z.string().min(1) })).min(1),
+const sanityQuotationFormSchema = z.strictObject({
+  _type: z.literal("quotationForm"),
+  audience: z.enum(["teamBuilding", "musiTeens"]),
+  // a venue offering nothing for this audience still takes enquiries
+  services: z.array(z.strictObject({ label: z.string().min(1) })),
   venueSlug: z.string().min(1),
 });
 
@@ -687,7 +690,7 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityFindUsSchema,
   sanityContactPanelsSchema,
   sanityClientContactFormSchema,
-  sanityTeamBuildingQuotationFormSchema,
+  sanityQuotationFormSchema,
   sanityLogosSchema,
   sanityFaqSchema,
   sanityCardsScrollerSchema,
