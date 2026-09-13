@@ -1,0 +1,122 @@
+---
+import Button from "./primitives/Button.astro";
+import Card from "./primitives/Card.astro";
+import ProgressBar from "./primitives/ProgressBar.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { VenueOpeningCopy, VenueOpeningLimits } from "./types";
+import Step from "./venueOpening/Step.astro";
+import Step1 from "./venueOpening/Step1.astro";
+import Step2 from "./venueOpening/Step2.astro";
+import Step3 from "./venueOpening/Step3.astro";
+import Step4 from "./venueOpening/Step4.astro";
+
+interface Props {
+  copy: VenueOpeningCopy;
+  limits: VenueOpeningLimits;
+}
+
+const { copy, limits } = Astro.props;
+
+// the section can appear more than once on a page, and a label only points at
+// its own field if the ids are unique
+const uid = crypto.randomUUID().slice(0, 8);
+
+const { fields } = copy;
+---
+
+<Section surface="muted" spacing="m">
+  <Card border="blue" class="panel">
+    <form class="form" data-venue-opening-form>
+      <div class="heading">
+        <Text as="h2" variant="title-h4">{copy.title}</Text>
+        <Text as="p" variant="paragraph-xl-sm">{copy.intro}</Text>
+      </div>
+
+      <div class="progress" data-progress hidden>
+        <ProgressBar current={1} total={4} label={copy.progressLabel} />
+      </div>
+
+      <fieldset class="steps" data-fields>
+        <Step index={1} step={copy.steps[0]}>
+          <Step1 {uid} {fields} />
+        </Step>
+
+        <Step index={2} step={copy.steps[1]}>
+          <Step2 {uid} {fields} {limits} />
+        </Step>
+
+        <Step index={3} step={copy.steps[2]}>
+          <Step3 {uid} {fields} />
+        </Step>
+
+        <Step index={4} step={copy.steps[3]}>
+          <Step4 {uid} {fields} {limits} />
+        </Step>
+      </fieldset>
+
+      <div class="nav">
+        <Button tone="light" data-previous hidden>{copy.previous}</Button>
+        <Button tone="blue" data-next hidden>{copy.next}</Button>
+        <Button type="submit" tone="blue" data-submit>{copy.submit}</Button>
+      </div>
+    </form>
+  </Card>
+</Section>
+
+<style>
+  .panel {
+    padding: var(--space-6);
+    background-color: var(--color-fill-light);
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-items: flex-start;
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    align-self: stretch;
+  }
+
+  .heading p {
+    color: var(--color-text-muted);
+  }
+
+  .progress {
+    align-self: stretch;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    align-self: stretch;
+
+    /* a fieldset carries UA chrome and a min-inline-size of min-content, which
+       would stop the fields shrinking */
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    align-items: center;
+  }
+
+  /* 60rem — two columns stop fitting (styles/breakpoints.css) */
+  @media (width >= 60rem) {
+    .panel {
+      padding: var(--space-10);
+    }
+  }
+</style>

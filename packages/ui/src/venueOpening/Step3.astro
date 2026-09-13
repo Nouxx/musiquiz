@@ -1,0 +1,64 @@
+---
+import Radio from "../primitives/Radio.astro";
+import RadioGroup from "../primitives/RadioGroup.astro";
+import Select from "../primitives/Select.astro";
+import type { VenueOpeningCopy } from "../types";
+
+interface Props {
+  uid: string;
+  fields: VenueOpeningCopy["fields"];
+}
+
+const { uid, fields } = Astro.props;
+---
+
+<div class="step">
+  <Select
+    id={`venue-opening-${uid}-contribution`}
+    name="contribution"
+    tone="plain"
+    label={fields.contribution.label}
+    placeholder={fields.contribution.placeholder}
+    options={fields.contribution.options}
+    requiredMarker
+    required
+  />
+
+  <RadioGroup legend={fields.experience.label} requiredMarker>
+    {
+      fields.experience.options.map((option) => (
+        <Radio
+          id={`venue-opening-${uid}-experience-${option.value}`}
+          name="experience"
+          value={option.value}
+          required
+        >
+          {option.label}
+        </Radio>
+      ))
+    }
+  </RadioGroup>
+
+  <RadioGroup legend={fields.partners.label} requiredMarker>
+    {
+      fields.partners.options.map((option) => (
+        <Radio
+          id={`venue-opening-${uid}-partners-${option.value}`}
+          name="partners"
+          value={option.value}
+          required
+        >
+          {option.label}
+        </Radio>
+      ))
+    }
+  </RadioGroup>
+</div>
+
+<style>
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+</style>

@@ -182,6 +182,161 @@ export const en: typeof fr = {
       failure: "Something went wrong. Please try again.",
     },
   },
+  venueOpeningForm: {
+    title: "Request our brochure",
+    intro:
+      "Are you an entrepreneur, or would you like to become one? Do you have a project to create or grow a leisure brand in a city in France or abroad?",
+    progressLabel: "Form progress",
+    steps: {
+      profile: {
+        title: "Tell us about yourself",
+        description: "Two quick questions so we understand your project.",
+      },
+      area: {
+        title: "Your area and your timing",
+        description: "Your project makes more sense once we know its context.",
+      },
+      finance: {
+        title: "The financial and entrepreneurial side",
+        description:
+          "No commitment — this is simply to understand your investment capacity.",
+      },
+      contact: {
+        title: "Let's stay in touch",
+        description:
+          "Leave your full details here so we can get back to you quickly!",
+      },
+    },
+    fields: {
+      profile: {
+        label: "You are",
+        options: {
+          projectHolder: "A project founder, I want to start my own business",
+          establishedEntrepreneur:
+            "An entrepreneur already established in another sector",
+          leisureCentreManager:
+            "The manager of an existing leisure or multi-activity centre",
+          investor: "An investor",
+          other: "Other",
+        },
+      },
+      intent: {
+        label: "Your intention",
+        options: {
+          dedicatedCentre:
+            "Open a dedicated Musi'Quiz centre (single activity)",
+          multiActivityCentre: "Open a multi-activity centre",
+          integrateExisting: "Add Musi'Quiz to an existing centre",
+          exploring: "Just exploring, I want to know more first",
+        },
+      },
+      city: {
+        label: "City or area considered",
+        placeholder: "E.g. Marseille, Bordeaux, Madrid",
+      },
+      population: {
+        label: "Population of the catchment area",
+        placeholder: "Choose",
+        options: {
+          under50k: "Under 50,000 inhabitants",
+          from50kTo150k: "50,000 to 150,000 inhabitants",
+          from150kTo500k: "150,000 to 500,000 inhabitants",
+          over500k: "Over 500,000 inhabitants",
+        },
+      },
+      premises: {
+        label: "Your commercial premises",
+        options: {
+          secured: "I already have premises",
+          shortlisted: "I have shortlisted some options",
+          searching: "I still have to find some",
+          notNeeded: "I don't need any (existing centre)",
+        },
+      },
+      horizon: {
+        label: "Launch horizon",
+        placeholder: "Your horizon",
+        options: {
+          within6Months: "Within the next 6 months",
+          from6To12Months: "In 6 to 12 months",
+          from12To24Months: "In 12 to 24 months",
+          undecided: "Not decided yet",
+        },
+      },
+      contribution: {
+        label: "Personal funds available",
+        placeholder: "Your personal funds?",
+        options: {
+          under5k: "Under €5,000",
+          from5kTo10k: "€5,000 to €10,000",
+          from10kTo20k: "€10,000 to €20,000",
+          from20kTo50k: "€20,000 to €50,000",
+          from50kTo80k: "€50,000 to €80,000",
+          over80k: "Over €80,000",
+        },
+      },
+      experience: {
+        label: "Entrepreneurial experience",
+        options: {
+          firstVenture: "This would be my first venture",
+          previousVentures:
+            "I have already founded or run one or more businesses",
+          industryInsider:
+            "I currently work in the leisure, hospitality or events industry",
+        },
+      },
+      partners: {
+        label: "Partners on this project",
+        options: {
+          alone: "On my own",
+          onePartner: "With 1 partner",
+          group: "As a group (3+)",
+          undecided: "Not decided yet",
+        },
+      },
+      firstName: {
+        label: "First name",
+        placeholder: "Your first name",
+      },
+      lastName: {
+        label: "Last name",
+        placeholder: "Your last name",
+      },
+      mail: {
+        label: "Email address",
+        placeholder: "Your email address",
+      },
+      phone: {
+        label: "Phone",
+        placeholder: "Your phone number",
+      },
+      source: {
+        label: "How did you hear about Musi'Quiz?",
+        placeholder: "Choose",
+        options: {
+          played: "I played at a Musi'Quiz venue",
+          recommendation: "Recommendation",
+          google: "Google search",
+          socialMedia: "Social media",
+          press: "Press",
+          event: "Trade show or event",
+          other: "Other",
+        },
+      },
+      message: {
+        label: "Anything to add?",
+        placeholder: "Optional",
+      },
+      rgpd: {
+        label: "GDPR",
+        consent:
+          "I agree to receive communications from Musi'Quiz regarding my project.",
+      },
+    },
+    previous: "Previous",
+    next: "Next",
+    submit: "Send my request",
+  },
   days: {
     monday: "Monday",
     tuesday: "Tuesday",

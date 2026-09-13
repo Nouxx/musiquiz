@@ -1,0 +1,44 @@
+---
+import Text from "../primitives/Text.astro";
+import type { VenueOpeningStep } from "../types";
+
+interface Props {
+  index: number;
+  step: VenueOpeningStep;
+}
+
+const { index, step } = Astro.props;
+---
+
+<section class="step" data-step={index}>
+  {/* focus lands here on a step change, so the new heading is announced */}
+  <div class="step-heading" tabindex="-1" data-step-heading>
+    <Text as="h3" variant="title-h5">{step.title}</Text>
+    <Text as="p" variant="paragraph-base">{step.description}</Text>
+  </div>
+
+  <slot />
+</section>
+
+<style>
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .step-heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .step-heading p {
+    color: var(--color-text-muted);
+  }
+
+  .step-heading:focus-visible {
+    outline: 2px solid var(--color-border-on-brand);
+    outline-offset: 4px;
+  }
+</style>

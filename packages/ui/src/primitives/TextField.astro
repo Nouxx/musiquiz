@@ -10,6 +10,8 @@ type Options = {
   tone?: "light" | "plain";
   /** only read when rendering a textarea */
   rows?: number;
+  /** draws the red asterisk beside the label; `required` alone draws nothing */
+  requiredMarker?: boolean;
 };
 
 // exported because rendering through a dynamic `<Tag>` leaves Astro's
@@ -27,13 +29,17 @@ const {
   label,
   tone = "light",
   rows = 3,
+  requiredMarker = false,
   ...rest
 } = Astro.props;
 ---
 
 <div class:list={["field", tone]}>
   <label for={id}>
-    <Text variant="title-base">{label}</Text>
+    <Text variant="title-base">
+      {label}
+      {requiredMarker && <span class="marker" aria-hidden="true">*</span>}
+    </Text>
   </label>
   <Tag
     {...rest}
@@ -71,6 +77,10 @@ const {
 
   .plain .input {
     background: transparent;
+  }
+
+  .marker {
+    color: var(--color-text-error);
   }
 
   .input::placeholder {

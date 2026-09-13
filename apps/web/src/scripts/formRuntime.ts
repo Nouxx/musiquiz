@@ -1,21 +1,26 @@
-type Messages = {
+export type ValidationMessages = {
   required: string;
   invalidMail: string;
+};
+
+type Messages = ValidationMessages & {
   counter: string;
 };
 
 type Field = HTMLInputElement | HTMLTextAreaElement;
+
+export type ValidatableField = Field | HTMLSelectElement;
 
 type BuildPayload = (input: {
   form: HTMLFormElement;
   element: HTMLElement;
 }) => unknown;
 
-function readMessages(root: HTMLElement) {
+export function readMessages<T = Messages>(root: HTMLElement) {
   const node = root.querySelector("[data-messages]");
   if (!node?.textContent) return;
 
-  return JSON.parse(node.textContent) as Messages;
+  return JSON.parse(node.textContent) as T;
 }
 
 function getFields(form: HTMLFormElement) {
@@ -29,7 +34,10 @@ function toField(target: EventTarget | null) {
   return;
 }
 
-function refreshValidity(field: Field, messages: Messages) {
+export function refreshValidity(
+  field: ValidatableField,
+  messages: ValidationMessages,
+) {
   // a custom validity string is sticky: without the clear, a field that failed
   // once stays invalid whatever it holds afterwards
   field.setCustomValidity("");

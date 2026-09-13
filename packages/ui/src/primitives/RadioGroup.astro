@@ -1,0 +1,48 @@
+---
+import Text from "./Text.astro";
+
+interface Props {
+  legend: string;
+  /** draws the red asterisk beside the legend; it sets nothing on the inputs */
+  requiredMarker?: boolean;
+}
+
+const { legend, requiredMarker = false } = Astro.props;
+---
+
+<fieldset class="group">
+  <legend>
+    <Text variant="title-base">
+      {legend}
+      {requiredMarker && <span class="marker" aria-hidden="true">*</span>}
+    </Text>
+  </legend>
+
+  <div class="options">
+    <slot />
+  </div>
+</fieldset>
+
+<style>
+  .group {
+    min-inline-size: 0; /* a fieldset will not shrink below its content */
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .group legend {
+    margin-block-end: var(--space-4);
+  }
+
+  .marker {
+    color: var(--color-text-error);
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+</style>

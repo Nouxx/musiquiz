@@ -1,0 +1,54 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+import Text from "./Text.astro";
+
+interface Props extends Omit<HTMLAttributes<"input">, "class" | "id" | "type"> {
+  id: string;
+  textSize?: "small" | "base";
+}
+
+const { id, textSize = "base", ...rest } = Astro.props;
+---
+
+<label class="radio" for={id}>
+  <input {...rest} {id} class="radio-control" type="radio" />
+  <Text variant={textSize === "small" ? "paragraph-xs" : "paragraph-base"}>
+    <slot />
+  </Text>
+</label>
+
+<style>
+  .radio {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  /* square, not round: the sheet draws the radio as a 16px r4 tile */
+  .radio-control {
+    position: relative;
+    flex-shrink: 0;
+    inline-size: 1rem;
+    block-size: 1rem;
+    appearance: none;
+    background: var(--color-fill-light);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+  }
+
+  .radio-control:checked::after {
+    position: absolute;
+    inset: 3px;
+    background: var(--color-text-on-light);
+    border-radius: 1px;
+    content: "";
+  }
+
+  .radio-control:focus-visible {
+    outline: 2px solid var(--color-border-on-brand);
+    outline-offset: 2px;
+  }
+</style>

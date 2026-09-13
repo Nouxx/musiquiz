@@ -1,0 +1,143 @@
+---
+import Checkbox from "../primitives/Checkbox.astro";
+import Select from "../primitives/Select.astro";
+import Text from "../primitives/Text.astro";
+import TextField from "../primitives/TextField.astro";
+import type { VenueOpeningCopy, VenueOpeningLimits } from "../types";
+
+interface Props {
+  uid: string;
+  fields: VenueOpeningCopy["fields"];
+  limits: VenueOpeningLimits;
+}
+
+const { uid, fields, limits } = Astro.props;
+---
+
+<div class="step">
+  <div class="row">
+    <TextField
+      id={`venue-opening-${uid}-first-name`}
+      name="firstName"
+      type="text"
+      autocomplete="given-name"
+      tone="plain"
+      label={fields.firstName.label}
+      placeholder={fields.firstName.placeholder}
+      maxlength={limits.firstName}
+      requiredMarker
+      required
+    />
+
+    <TextField
+      id={`venue-opening-${uid}-last-name`}
+      name="lastName"
+      type="text"
+      autocomplete="family-name"
+      tone="plain"
+      label={fields.lastName.label}
+      placeholder={fields.lastName.placeholder}
+      maxlength={limits.lastName}
+      requiredMarker
+      required
+    />
+  </div>
+
+  <div class="row">
+    <TextField
+      id={`venue-opening-${uid}-mail`}
+      name="mail"
+      type="email"
+      autocomplete="email"
+      tone="plain"
+      label={fields.mail.label}
+      placeholder={fields.mail.placeholder}
+      maxlength={limits.mail}
+      requiredMarker
+      required
+    />
+
+    <TextField
+      id={`venue-opening-${uid}-phone`}
+      name="phone"
+      type="tel"
+      autocomplete="tel"
+      tone="plain"
+      label={fields.phone.label}
+      placeholder={fields.phone.placeholder}
+      maxlength={limits.phone}
+      requiredMarker
+      required
+    />
+  </div>
+
+  <Select
+    id={`venue-opening-${uid}-source`}
+    name="source"
+    tone="plain"
+    label={fields.source.label}
+    placeholder={fields.source.placeholder}
+    options={fields.source.options}
+    requiredMarker
+    required
+  />
+
+  <div class="row">
+    <TextField
+      as="textarea"
+      id={`venue-opening-${uid}-message`}
+      name="message"
+      tone="plain"
+      label={fields.message.label}
+      placeholder={fields.message.placeholder}
+      maxlength={limits.message}
+    />
+
+    <div class="consent">
+      <Text variant="title-base">
+        {fields.rgpd.label}
+        <span class="marker" aria-hidden="true">*</span>
+      </Text>
+
+      <Checkbox
+        id={`venue-opening-${uid}-rgpd`}
+        name="rgpd"
+        value="true"
+        textSize="base"
+        required
+      >
+        {fields.rgpd.consent}
+      </Checkbox>
+    </div>
+  </div>
+</div>
+
+<style>
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .row {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .consent {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .marker {
+    color: var(--color-text-error);
+  }
+
+  /* 60rem — two columns stop fitting (styles/breakpoints.css) */
+  @media (width >= 60rem) {
+    .row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

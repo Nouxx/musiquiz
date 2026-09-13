@@ -1,0 +1,89 @@
+---
+import Radio from "../primitives/Radio.astro";
+import RadioGroup from "../primitives/RadioGroup.astro";
+import Select from "../primitives/Select.astro";
+import TextField from "../primitives/TextField.astro";
+import type { VenueOpeningCopy, VenueOpeningLimits } from "../types";
+
+interface Props {
+  uid: string;
+  fields: VenueOpeningCopy["fields"];
+  limits: VenueOpeningLimits;
+}
+
+const { uid, fields, limits } = Astro.props;
+---
+
+<div class="step">
+  <div class="row">
+    <TextField
+      id={`venue-opening-${uid}-city`}
+      name="city"
+      type="text"
+      autocomplete="address-level2"
+      tone="plain"
+      label={fields.city.label}
+      placeholder={fields.city.placeholder}
+      maxlength={limits.city}
+      requiredMarker
+      required
+    />
+
+    <Select
+      id={`venue-opening-${uid}-population`}
+      name="population"
+      tone="plain"
+      label={fields.population.label}
+      placeholder={fields.population.placeholder}
+      options={fields.population.options}
+      requiredMarker
+      required
+    />
+  </div>
+
+  <RadioGroup legend={fields.premises.label} requiredMarker>
+    {
+      fields.premises.options.map((option) => (
+        <Radio
+          id={`venue-opening-${uid}-premises-${option.value}`}
+          name="premises"
+          value={option.value}
+          required
+        >
+          {option.label}
+        </Radio>
+      ))
+    }
+  </RadioGroup>
+
+  <Select
+    id={`venue-opening-${uid}-horizon`}
+    name="horizon"
+    tone="plain"
+    label={fields.horizon.label}
+    placeholder={fields.horizon.placeholder}
+    options={fields.horizon.options}
+    requiredMarker
+    required
+  />
+</div>
+
+<style>
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .row {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  /* 60rem — two columns stop fitting (styles/breakpoints.css) */
+  @media (width >= 60rem) {
+    .row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

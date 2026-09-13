@@ -163,3 +163,69 @@ export type VenuePin = {
   /** percent of the map frame */
   position: { x: number; y: number };
 };
+
+export type VenueOpeningOption = {
+  value: string;
+  label: string;
+};
+
+export type VenueOpeningTextField = {
+  label: string;
+  placeholder?: string;
+};
+
+export type VenueOpeningChoiceField = {
+  label: string;
+  options: VenueOpeningOption[];
+};
+
+export type VenueOpeningSelectField = VenueOpeningChoiceField & {
+  placeholder: string;
+};
+
+export type VenueOpeningStep = {
+  title: string;
+  description: string;
+};
+
+export type VenueOpeningCopy = {
+  title: string;
+  intro: string;
+  progressLabel: string;
+  steps: [
+    VenueOpeningStep,
+    VenueOpeningStep,
+    VenueOpeningStep,
+    VenueOpeningStep,
+  ];
+  fields: {
+    profile: VenueOpeningChoiceField;
+    intent: VenueOpeningChoiceField;
+    city: VenueOpeningTextField;
+    population: VenueOpeningSelectField;
+    premises: VenueOpeningChoiceField;
+    horizon: VenueOpeningSelectField;
+    contribution: VenueOpeningSelectField;
+    experience: VenueOpeningChoiceField;
+    partners: VenueOpeningChoiceField;
+    firstName: VenueOpeningTextField;
+    lastName: VenueOpeningTextField;
+    mail: VenueOpeningTextField;
+    phone: VenueOpeningTextField;
+    source: VenueOpeningSelectField;
+    message: VenueOpeningTextField;
+    rgpd: { label: string; consent: string };
+  };
+  previous: string;
+  next: string;
+  submit: string;
+};
+
+export type VenueOpeningLimits = {
+  city: number;
+  firstName: number;
+  lastName: number;
+  mail: number;
+  phone: number;
+  message: number;
+};

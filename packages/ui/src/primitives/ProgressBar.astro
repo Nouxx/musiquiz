@@ -1,0 +1,58 @@
+---
+import Text from "./Text.astro";
+
+interface Props {
+  current: number;
+  total: number;
+  /** names the bar for assistive tech @example "Progression du formulaire" */
+  label: string;
+}
+
+const { current, total, label } = Astro.props;
+
+const percent = Math.round((Math.min(current, total) / total) * 100);
+---
+
+<div
+  class="track"
+  role="progressbar"
+  aria-label={label}
+  aria-valuenow={percent}
+  aria-valuemin={0}
+  aria-valuemax={100}
+  data-progress-bar
+>
+  <div class="fill" style={{ inlineSize: `${percent}%` }} data-progress-fill>
+    <Text variant="paragraph-base-sm">
+      <span data-progress-label>{percent}%</span>
+    </Text>
+  </div>
+</div>
+
+<style>
+  .track {
+    display: flex;
+    inline-size: 100%;
+    background: var(--color-fill-indicator);
+    border-radius: var(--radius-pill);
+  }
+
+  .fill {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    min-inline-size: fit-content;
+    padding-block: var(--space-1);
+    padding-inline: var(--space-4);
+    color: var(--color-text-on-brand);
+    background: var(--color-fill-blue);
+    border-radius: var(--radius-pill);
+    transition: inline-size 300ms ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fill {
+      transition: none;
+    }
+  }
+</style>
