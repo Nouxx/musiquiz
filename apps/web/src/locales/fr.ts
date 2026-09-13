@@ -98,6 +98,7 @@ export const fr = {
   form: {
     errors: {
       required: "Champ requis",
+      mail: "Adresse mail invalide",
     },
     counter: "{{used}} / {{max}} caractères",
   },
@@ -118,11 +119,8 @@ export const fr = {
     success:
       "Merci, votre message est bien arrivé. Nous vous répondons rapidement.",
     failure: "Une erreur est survenue. Merci de réessayer.",
-    errors: {
-      mail: "Adresse mail invalide",
-    },
   },
-  quotationForm: {
+  teamBuildingQuotationForm: {
     badge: "Devis",
     title: "Demandez votre devis",
     lastName: "Nom",
@@ -147,6 +145,10 @@ export const fr = {
     messagePlaceholder:
       "Dites-nous ce que vous attendez de votre team building, besoins spécifiques, nom de l'entreprise à faire apparaitre sur nos écrans de bienvenue le jour J,...",
     submit: "Envoyer",
+    pending: "Envoi…",
+    success:
+      "Merci, votre demande de devis est bien arrivée. Nous revenons vers vous rapidement.",
+    failure: "Une erreur est survenue. Merci de réessayer.",
   },
   days: {
     monday: "Lundi",

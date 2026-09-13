@@ -26,7 +26,7 @@ const t = getT(getLang(Astro));
 
 const messages = {
   required: t("form.errors.required"),
-  invalidMail: t("contactForm.errors.mail"),
+  invalidMail: t("form.errors.mail"),
   // the numbers change per keystroke, so the script does the substitution;
   // `used` rather than `count`, which i18next reads as a plural selector
   counter: t("form.counter", { used: "__USED__", max: "__MAX__" }),

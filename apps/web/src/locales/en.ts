@@ -100,6 +100,7 @@ export const en: typeof fr = {
   form: {
     errors: {
       required: "Required field",
+      mail: "Invalid mail address",
     },
     counter: "{{used}} / {{max}} characters",
   },
@@ -119,11 +120,8 @@ export const en: typeof fr = {
     pending: "Sending…",
     success: "Thanks, your message has arrived. We'll get back to you shortly.",
     failure: "Something went wrong. Please try again.",
-    errors: {
-      mail: "Invalid mail address",
-    },
   },
-  quotationForm: {
+  teamBuildingQuotationForm: {
     badge: "Quote",
     title: "Request your quote",
     lastName: "Last name",
@@ -147,6 +145,10 @@ export const en: typeof fr = {
     messagePlaceholder:
       "Tell us what you expect from your team building, any specific needs, the company name to show on our welcome screens on the day,...",
     submit: "Send",
+    pending: "Sending…",
+    success:
+      "Thanks, your quote request has arrived. We'll get back to you shortly.",
+    failure: "Something went wrong. Please try again.",
   },
   days: {
     monday: "Monday",

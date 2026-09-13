@@ -2,7 +2,6 @@
 import type { PageComponent } from "@repo/services/cms/pageComponent.types";
 import CardsGrid from "@repo/ui/CardsGrid";
 import CardsScroller from "@repo/ui/CardsScroller";
-import EventQuotationForm from "@repo/ui/EventQuotationForm";
 import DetailTabs from "@repo/ui/DetailTabs";
 import TextSlideshow from "@repo/ui/TextSlideshow";
 import TextCards from "@repo/ui/TextCards";
@@ -25,6 +24,7 @@ import { toContactFacts } from "../../libs/toContactFacts";
 import { toContactPanels } from "../../libs/toContactPanels";
 import { toOffers } from "../../libs/toOffers";
 import ClientContactForm from "./ClientContactForm.astro";
+import TeamBuildingQuotationForm from "./TeamBuildingQuotationForm.astro";
 import { WORKER_URL } from "astro:env/client";
 
 interface Props {
@@ -208,32 +208,44 @@ const t = getT(lang);
           />
         );
       }
-      case "eventQuotationForm": {
+      case "teamBuildingQuotationForm": {
         return (
-          <EventQuotationForm
-            badge={t("quotationForm.badge")}
-            title={t("quotationForm.title")}
-            lastNameLabel={t("quotationForm.lastName")}
-            lastNamePlaceholder={t("quotationForm.lastNamePlaceholder")}
-            firstNameLabel={t("quotationForm.firstName")}
-            firstNamePlaceholder={t("quotationForm.firstNamePlaceholder")}
-            phoneLabel={t("quotationForm.phone")}
-            phonePlaceholder={t("quotationForm.phonePlaceholder")}
-            mailLabel={t("quotationForm.mail")}
-            mailPlaceholder={t("quotationForm.mailPlaceholder")}
-            companyLabel={t("quotationForm.company")}
-            companyPlaceholder={t("quotationForm.companyPlaceholder")}
-            dateLabel={t("quotationForm.date")}
-            timeLabel={t("quotationForm.time")}
-            participantsLabel={t("quotationForm.participants")}
-            participantsPlaceholder={t("quotationForm.participantsPlaceholder")}
-            budgetLabel={t("quotationForm.budget")}
-            budgetPlaceholder={t("quotationForm.budgetPlaceholder")}
-            servicesLabel={t("quotationForm.services")}
+          <TeamBuildingQuotationForm
+            badge={t("teamBuildingQuotationForm.badge")}
+            title={t("teamBuildingQuotationForm.title")}
+            lastNameLabel={t("teamBuildingQuotationForm.lastName")}
+            lastNamePlaceholder={t(
+              "teamBuildingQuotationForm.lastNamePlaceholder",
+            )}
+            firstNameLabel={t("teamBuildingQuotationForm.firstName")}
+            firstNamePlaceholder={t(
+              "teamBuildingQuotationForm.firstNamePlaceholder",
+            )}
+            phoneLabel={t("teamBuildingQuotationForm.phone")}
+            phonePlaceholder={t("teamBuildingQuotationForm.phonePlaceholder")}
+            mailLabel={t("teamBuildingQuotationForm.mail")}
+            mailPlaceholder={t("teamBuildingQuotationForm.mailPlaceholder")}
+            companyLabel={t("teamBuildingQuotationForm.company")}
+            companyPlaceholder={t(
+              "teamBuildingQuotationForm.companyPlaceholder",
+            )}
+            dateLabel={t("teamBuildingQuotationForm.date")}
+            timeLabel={t("teamBuildingQuotationForm.time")}
+            participantsLabel={t("teamBuildingQuotationForm.participants")}
+            participantsPlaceholder={t(
+              "teamBuildingQuotationForm.participantsPlaceholder",
+            )}
+            budgetLabel={t("teamBuildingQuotationForm.budget")}
+            budgetPlaceholder={t("teamBuildingQuotationForm.budgetPlaceholder")}
+            servicesLabel={t("teamBuildingQuotationForm.services")}
             services={component.services}
-            messageLabel={t("quotationForm.message")}
-            messagePlaceholder={t("quotationForm.messagePlaceholder")}
-            submitLabel={t("quotationForm.submit")}
+            messageLabel={t("teamBuildingQuotationForm.message")}
+            messagePlaceholder={t(
+              "teamBuildingQuotationForm.messagePlaceholder",
+            )}
+            submitLabel={t("teamBuildingQuotationForm.submit")}
+            workerUrl={WORKER_URL}
+            venueSlug={component.venueSlug}
           />
         );
       }

@@ -124,9 +124,10 @@ type ClientContactForm = {
   venueSlug: string;
 };
 
-type EventQuotationForm = {
-  type: "eventQuotationForm";
+type TeamBuildingQuotationForm = {
+  type: "teamBuildingQuotationForm";
   services: string[];
+  venueSlug: string;
 };
 
 type Logos = {
@@ -306,7 +307,7 @@ export type PageComponent =
   | FindUs
   | ContactPanels
   | ClientContactForm
-  | EventQuotationForm
+  | TeamBuildingQuotationForm
   | Logos
   | Faq
   | CardsScroller

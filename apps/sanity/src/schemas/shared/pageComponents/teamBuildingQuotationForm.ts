@@ -1,15 +1,15 @@
 import { defineField, defineType } from "sanity";
 
-export const eventQuotationFormType = defineType({
-  name: "eventQuotationForm",
-  title: "Event Quotation Form",
+export const teamBuildingQuotationFormType = defineType({
+  name: "teamBuildingQuotationForm",
+  title: "Team Building Quotation Form",
   type: "object",
   fields: [
     defineField({
       name: "venue",
       title: "Venue",
       description:
-        "The prestations a visitor can tick are the ones listed on this venue.",
+        "The prestations a visitor can tick are the ones listed on this venue, and the enquiry is sent to its mailbox.",
       type: "reference",
       to: [{ type: "venue" }],
       validation: (rule) => rule.required(),
@@ -21,8 +21,8 @@ export const eventQuotationFormType = defineType({
     },
     prepare({ venueTitle }: { venueTitle?: string }) {
       return {
-        title: "Demande de devis",
-        subtitle: ["Event Quotation Form", venueTitle]
+        title: "Devis team building",
+        subtitle: ["Team Building Quotation Form", venueTitle]
           .filter(Boolean)
           .join(" · "),
       };

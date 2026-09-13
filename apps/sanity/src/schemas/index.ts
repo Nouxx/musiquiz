@@ -20,7 +20,7 @@ import { gamePricesType } from "./shared/pageComponents/gamePrices";
 import { findUsType } from "./shared/pageComponents/findUs";
 import { contactPanelsType } from "./shared/pageComponents/contactPanels";
 import { clientContactFormType } from "./shared/pageComponents/clientContactForm";
-import { eventQuotationFormType } from "./shared/pageComponents/eventQuotationForm";
+import { teamBuildingQuotationFormType } from "./shared/pageComponents/teamBuildingQuotationForm";
 import { logosType } from "./shared/pageComponents/logos";
 import { faqQuestionType, faqType } from "./shared/pageComponents/faq";
 import {
@@ -73,7 +73,7 @@ export const schemaTypes = [
   findUsType,
   contactPanelsType,
   clientContactFormType,
-  eventQuotationFormType,
+  teamBuildingQuotationFormType,
   logosType,
   faqType,
   faqQuestionType,

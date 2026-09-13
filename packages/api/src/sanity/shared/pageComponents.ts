@@ -163,12 +163,13 @@ function clientContactFormProjection({ lang }: { lang: Lang }) {
   `;
 }
 
-function eventQuotationFormProjection({ lang }: { lang: Lang }) {
+function teamBuildingQuotationFormProjection({ lang }: { lang: Lang }) {
   return `
-    _type == "eventQuotationForm" => {
+    _type == "teamBuildingQuotationForm" => {
       "services": venue->quotationServices[]{
         "label": label[language == "${lang}"][0].value
-      }
+      },
+      "venueSlug": venue->slug.current
     }
   `;
 }
@@ -345,7 +346,7 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${findUsProjection({ lang })},
       ${contactPanelsProjection({ lang })},
       ${clientContactFormProjection({ lang })},
-      ${eventQuotationFormProjection({ lang })},
+      ${teamBuildingQuotationFormProjection({ lang })},
       ${logosProjection({ lang })},
       ${faqProjection({ lang })},
       ${cardsScrollerProjection({ lang })},
@@ -483,9 +484,10 @@ const sanityClientContactFormSchema = z.strictObject({
   venueSlug: z.string().min(1),
 });
 
-const sanityEventQuotationFormSchema = z.strictObject({
-  _type: z.literal("eventQuotationForm"),
+const sanityTeamBuildingQuotationFormSchema = z.strictObject({
+  _type: z.literal("teamBuildingQuotationForm"),
   services: z.array(z.strictObject({ label: z.string().min(1) })).min(1),
+  venueSlug: z.string().min(1),
 });
 
 const sanityLogosSchema = z.strictObject({
@@ -685,7 +687,7 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityFindUsSchema,
   sanityContactPanelsSchema,
   sanityClientContactFormSchema,
-  sanityEventQuotationFormSchema,
+  sanityTeamBuildingQuotationFormSchema,
   sanityLogosSchema,
   sanityFaqSchema,
   sanityCardsScrollerSchema,
