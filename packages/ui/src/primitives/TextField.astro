@@ -38,7 +38,13 @@ const {
   <label for={id}>
     <Text variant="title-base">
       {label}
-      {requiredMarker && <span class="marker" aria-hidden="true">*</span>}
+      {
+        requiredMarker && (
+          <span class="marker" aria-hidden="true">
+            *
+          </span>
+        )
+      }
     </Text>
   </label>
   <Tag

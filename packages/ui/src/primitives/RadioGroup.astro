@@ -14,7 +14,13 @@ const { legend, requiredMarker = false } = Astro.props;
   <legend>
     <Text variant="title-base">
       {legend}
-      {requiredMarker && <span class="marker" aria-hidden="true">*</span>}
+      {
+        requiredMarker && (
+          <span class="marker" aria-hidden="true">
+            *
+          </span>
+        )
+      }
     </Text>
   </legend>
 

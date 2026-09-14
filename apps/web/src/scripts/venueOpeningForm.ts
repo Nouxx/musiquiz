@@ -92,7 +92,8 @@ class MusiquizVenueOpeningForm extends HTMLElement {
     const previous = form.querySelector<HTMLButtonElement>("[data-previous]");
     const next = form.querySelector<HTMLButtonElement>("[data-next]");
     const submit = form.querySelector<HTMLButtonElement>("[data-submit]");
-    if (!progress || !previous || !next || !submit || steps.length === 0) return;
+    if (!progress || !previous || !next || !submit || steps.length === 0)
+      return;
 
     let current = 0;
 
