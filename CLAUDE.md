@@ -82,3 +82,23 @@ Applies across the monorepo, no exceptions.
 - `CONTEXT.md` — the domain and design-system glossary, and the Figma access rules
 - `docs/adr/` — decisions, with the alternatives that were rejected
 - `packages/ui/src/styles/breakpoints.css` — every media-query literal and its derivation
+
+## Filling data gaps in the build
+
+Trigger: "check the build for data gap".
+
+1. Run `pnpm build`. It must pass.
+2. A failure is usually missing content in Sanity, not a code bug. Read the
+   failing query and document with the Sanity MCP.
+3. Fill the gap:
+   - Missing `en` or `fr` translation — translate the value that exists.
+   - Missing field — read the component that consumes it and write something
+     plausible.
+4. Re-run `pnpm build` until it passes.
+
+Rules:
+
+- The `production` dataset is not live yet. Writing to it is safe.
+- Never delete existing content without asking.
+- Clearing values of dropped schema fields is fine; the schema still moves.
+- No need to confirm each fix. Ask when something looks sensitive.
