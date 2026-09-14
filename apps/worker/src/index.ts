@@ -3,19 +3,24 @@ import { routes } from "./routes";
 const ALLOWED_ORIGINS = new Set([
 	"http://localhost:4321",
 	"http://localhost:4322",
+	"https://musiquiz-worker.clement-vnnq.workers.dev",
 ]);
 
-// todo: add prod origins, find a way to configure it properly, checks for best practices
 function corsHeaders(request: Request): Record<string, string> {
 	const origin = request.headers.get("Origin");
-	if (!origin || !ALLOWED_ORIGINS.has(origin)) return {};
+
+	if (!origin || !ALLOWED_ORIGINS.has(origin)) {
+		// returning systematically the Vary: Origin header prevents cache poisoning attacks
+		// https://security.stackexchange.com/a/151596
+		return { Vary: "Origin" };
+	}
 
 	return {
 		"Access-Control-Allow-Origin": origin,
 		"Access-Control-Allow-Methods": "POST, OPTIONS",
 		"Access-Control-Allow-Headers": "Content-Type",
 		"Access-Control-Max-Age": "86400",
-		Vary: "Origin", // the response differs per origin, so a shared cache must key on it
+		Vary: "Origin",
 	};
 }
 
