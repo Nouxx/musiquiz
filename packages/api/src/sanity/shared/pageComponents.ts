@@ -157,17 +157,20 @@ function carouselProjection({ lang }: { lang: Lang }) {
 function clientContactFormProjection({ lang }: { lang: Lang }) {
   return `
     _type == "clientContactForm" => {
-      "images": images[] ${imageProjection({ lang })}
+      "images": images[] ${imageProjection({ lang })},
+      "venueSlug": venue->slug.current
     }
   `;
 }
 
-function eventQuotationFormProjection({ lang }: { lang: Lang }) {
+function quotationFormProjection({ lang }: { lang: Lang }) {
   return `
-    _type == "eventQuotationForm" => {
-      "services": venue->quotationServices[]{
+    _type == "quotationForm" => {
+      audience,
+      "services": venue->quotationServices[^.audience in audiences]{
         "label": label[language == "${lang}"][0].value
-      }
+      },
+      "venueSlug": venue->slug.current
     }
   `;
 }
@@ -344,7 +347,7 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${findUsProjection({ lang })},
       ${contactPanelsProjection({ lang })},
       ${clientContactFormProjection({ lang })},
-      ${eventQuotationFormProjection({ lang })},
+      ${quotationFormProjection({ lang })},
       ${logosProjection({ lang })},
       ${faqProjection({ lang })},
       ${cardsScrollerProjection({ lang })},
@@ -479,11 +482,15 @@ const sanityContactPanelsSchema = z.strictObject({
 const sanityClientContactFormSchema = z.strictObject({
   _type: z.literal("clientContactForm"),
   images: z.array(sanityImageSchema).min(1).max(8),
+  venueSlug: z.string().min(1),
 });
 
-const sanityEventQuotationFormSchema = z.strictObject({
-  _type: z.literal("eventQuotationForm"),
-  services: z.array(z.strictObject({ label: z.string().min(1) })).min(1),
+const sanityQuotationFormSchema = z.strictObject({
+  _type: z.literal("quotationForm"),
+  audience: z.enum(["teamBuilding", "musiTeens"]),
+  // a venue offering nothing for this audience still takes enquiries
+  services: z.array(z.strictObject({ label: z.string().min(1) })),
+  venueSlug: z.string().min(1),
 });
 
 const sanityLogosSchema = z.strictObject({
@@ -683,7 +690,7 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityFindUsSchema,
   sanityContactPanelsSchema,
   sanityClientContactFormSchema,
-  sanityEventQuotationFormSchema,
+  sanityQuotationFormSchema,
   sanityLogosSchema,
   sanityFaqSchema,
   sanityCardsScrollerSchema,

@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@repo/api": "workspace:*",
-    "@repo/utils": "workspace:*"
+    "@repo/utils": "workspace:*",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "eslint": "catalog:",

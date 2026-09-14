@@ -93,3 +93,11 @@ a {
   }
   /* eslint-enable css/no-important */
 }
+
+/* eslint-disable css/no-important --
+   the attribute's `display: none` comes from the UA sheet, so any author
+   `display` rule beats it and `hidden` silently does nothing */
+[hidden] {
+  display: none !important;
+}
+/* eslint-enable css/no-important */

@@ -52,7 +52,7 @@ export const reviewsType = defineType({
     select: {
       venueTitle: "venue.title",
     },
-    prepare({ venueTitle }: { venueTitle: string | undefined }) {
+    prepare({ venueTitle }: { venueTitle?: string }) {
       return {
         title: "Reviews",
         subtitle: venueTitle ? `for ${venueTitle}` : "Global",

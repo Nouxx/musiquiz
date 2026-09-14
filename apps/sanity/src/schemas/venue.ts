@@ -222,6 +222,21 @@ export const quotationServiceType = defineType({
       type: "internationalizedArrayString",
       validation: (rule) => rule.required(),
     }),
+    defineField({
+      name: "audiences",
+      title: "Applies to",
+      description: "The quotation forms this prestation is offered in.",
+      type: "array",
+      of: [{ type: "string" }],
+      options: {
+        layout: "grid",
+        list: [
+          { value: "teamBuilding", title: "Team building" },
+          { value: "musiTeens", title: "Musi'Teens" },
+        ],
+      },
+      validation: (rule) => rule.required().min(1),
+    }),
   ],
   preview: {
     select: { label: "label" },

@@ -1,0 +1,244 @@
+---
+import {
+  venueOpeningContributionValues,
+  venueOpeningExperienceValues,
+  venueOpeningFormLimits,
+  venueOpeningHorizonValues,
+  venueOpeningIntentValues,
+  venueOpeningPartnersValues,
+  venueOpeningPopulationValues,
+  venueOpeningPremisesValues,
+  venueOpeningProfileValues,
+  venueOpeningSourceValues,
+} from "@repo/services/contactForm/venueOpening";
+import type { VenueOpeningCopy, VenueOpeningOption } from "@repo/ui/types";
+import VenueOpeningForm from "@repo/ui/VenueOpeningForm";
+
+import { getLang } from "../../libs/getLang";
+import { getT } from "../../libs/i18n";
+
+const t = getT(getLang(Astro));
+
+// the schema decides the order and the set; `Record` then makes a value with no
+// label a type error rather than a blank option at runtime
+function buildOptions<T extends string>(
+  values: readonly T[],
+  labels: Record<T, string>,
+): VenueOpeningOption[] {
+  return values.map((value) => ({ value, label: labels[value] }));
+}
+
+const copy: VenueOpeningCopy = {
+  title: t("venueOpeningForm.title"),
+  intro: t("venueOpeningForm.intro"),
+  progressLabel: t("venueOpeningForm.progressLabel"),
+  steps: [
+    {
+      title: t("venueOpeningForm.steps.profile.title"),
+      description: t("venueOpeningForm.steps.profile.description"),
+    },
+    {
+      title: t("venueOpeningForm.steps.area.title"),
+      description: t("venueOpeningForm.steps.area.description"),
+    },
+    {
+      title: t("venueOpeningForm.steps.finance.title"),
+      description: t("venueOpeningForm.steps.finance.description"),
+    },
+    {
+      title: t("venueOpeningForm.steps.contact.title"),
+      description: t("venueOpeningForm.steps.contact.description"),
+    },
+  ],
+  fields: {
+    profile: {
+      label: t("venueOpeningForm.fields.profile.label"),
+      options: buildOptions(venueOpeningProfileValues, {
+        projectHolder: t(
+          "venueOpeningForm.fields.profile.options.projectHolder",
+        ),
+        establishedEntrepreneur: t(
+          "venueOpeningForm.fields.profile.options.establishedEntrepreneur",
+        ),
+        leisureCentreManager: t(
+          "venueOpeningForm.fields.profile.options.leisureCentreManager",
+        ),
+        investor: t("venueOpeningForm.fields.profile.options.investor"),
+        other: t("venueOpeningForm.fields.profile.options.other"),
+      }),
+    },
+    intent: {
+      label: t("venueOpeningForm.fields.intent.label"),
+      options: buildOptions(venueOpeningIntentValues, {
+        dedicatedCentre: t(
+          "venueOpeningForm.fields.intent.options.dedicatedCentre",
+        ),
+        multiActivityCentre: t(
+          "venueOpeningForm.fields.intent.options.multiActivityCentre",
+        ),
+        integrateExisting: t(
+          "venueOpeningForm.fields.intent.options.integrateExisting",
+        ),
+        exploring: t("venueOpeningForm.fields.intent.options.exploring"),
+      }),
+    },
+    city: {
+      label: t("venueOpeningForm.fields.city.label"),
+      placeholder: t("venueOpeningForm.fields.city.placeholder"),
+    },
+    population: {
+      label: t("venueOpeningForm.fields.population.label"),
+      placeholder: t("venueOpeningForm.fields.population.placeholder"),
+      options: buildOptions(venueOpeningPopulationValues, {
+        under50k: t("venueOpeningForm.fields.population.options.under50k"),
+        from50kTo150k: t(
+          "venueOpeningForm.fields.population.options.from50kTo150k",
+        ),
+        from150kTo500k: t(
+          "venueOpeningForm.fields.population.options.from150kTo500k",
+        ),
+        over500k: t("venueOpeningForm.fields.population.options.over500k"),
+      }),
+    },
+    premises: {
+      label: t("venueOpeningForm.fields.premises.label"),
+      options: buildOptions(venueOpeningPremisesValues, {
+        secured: t("venueOpeningForm.fields.premises.options.secured"),
+        shortlisted: t("venueOpeningForm.fields.premises.options.shortlisted"),
+        searching: t("venueOpeningForm.fields.premises.options.searching"),
+        notNeeded: t("venueOpeningForm.fields.premises.options.notNeeded"),
+      }),
+    },
+    horizon: {
+      label: t("venueOpeningForm.fields.horizon.label"),
+      placeholder: t("venueOpeningForm.fields.horizon.placeholder"),
+      options: buildOptions(venueOpeningHorizonValues, {
+        within6Months: t(
+          "venueOpeningForm.fields.horizon.options.within6Months",
+        ),
+        from6To12Months: t(
+          "venueOpeningForm.fields.horizon.options.from6To12Months",
+        ),
+        from12To24Months: t(
+          "venueOpeningForm.fields.horizon.options.from12To24Months",
+        ),
+        undecided: t("venueOpeningForm.fields.horizon.options.undecided"),
+      }),
+    },
+    contribution: {
+      label: t("venueOpeningForm.fields.contribution.label"),
+      placeholder: t("venueOpeningForm.fields.contribution.placeholder"),
+      options: buildOptions(venueOpeningContributionValues, {
+        under5k: t("venueOpeningForm.fields.contribution.options.under5k"),
+        from5kTo10k: t(
+          "venueOpeningForm.fields.contribution.options.from5kTo10k",
+        ),
+        from10kTo20k: t(
+          "venueOpeningForm.fields.contribution.options.from10kTo20k",
+        ),
+        from20kTo50k: t(
+          "venueOpeningForm.fields.contribution.options.from20kTo50k",
+        ),
+        from50kTo80k: t(
+          "venueOpeningForm.fields.contribution.options.from50kTo80k",
+        ),
+        over80k: t("venueOpeningForm.fields.contribution.options.over80k"),
+      }),
+    },
+    experience: {
+      label: t("venueOpeningForm.fields.experience.label"),
+      options: buildOptions(venueOpeningExperienceValues, {
+        firstVenture: t(
+          "venueOpeningForm.fields.experience.options.firstVenture",
+        ),
+        previousVentures: t(
+          "venueOpeningForm.fields.experience.options.previousVentures",
+        ),
+        industryInsider: t(
+          "venueOpeningForm.fields.experience.options.industryInsider",
+        ),
+      }),
+    },
+    partners: {
+      label: t("venueOpeningForm.fields.partners.label"),
+      options: buildOptions(venueOpeningPartnersValues, {
+        alone: t("venueOpeningForm.fields.partners.options.alone"),
+        onePartner: t("venueOpeningForm.fields.partners.options.onePartner"),
+        group: t("venueOpeningForm.fields.partners.options.group"),
+        undecided: t("venueOpeningForm.fields.partners.options.undecided"),
+      }),
+    },
+    firstName: {
+      label: t("venueOpeningForm.fields.firstName.label"),
+      placeholder: t("venueOpeningForm.fields.firstName.placeholder"),
+    },
+    lastName: {
+      label: t("venueOpeningForm.fields.lastName.label"),
+      placeholder: t("venueOpeningForm.fields.lastName.placeholder"),
+    },
+    mail: {
+      label: t("venueOpeningForm.fields.mail.label"),
+      placeholder: t("venueOpeningForm.fields.mail.placeholder"),
+    },
+    phone: {
+      label: t("venueOpeningForm.fields.phone.label"),
+      placeholder: t("venueOpeningForm.fields.phone.placeholder"),
+    },
+    source: {
+      label: t("venueOpeningForm.fields.source.label"),
+      placeholder: t("venueOpeningForm.fields.source.placeholder"),
+      options: buildOptions(venueOpeningSourceValues, {
+        played: t("venueOpeningForm.fields.source.options.played"),
+        recommendation: t(
+          "venueOpeningForm.fields.source.options.recommendation",
+        ),
+        google: t("venueOpeningForm.fields.source.options.google"),
+        socialMedia: t("venueOpeningForm.fields.source.options.socialMedia"),
+        press: t("venueOpeningForm.fields.source.options.press"),
+        event: t("venueOpeningForm.fields.source.options.event"),
+        other: t("venueOpeningForm.fields.source.options.other"),
+      }),
+    },
+    message: {
+      label: t("venueOpeningForm.fields.message.label"),
+      placeholder: t("venueOpeningForm.fields.message.placeholder"),
+    },
+    rgpd: {
+      label: t("venueOpeningForm.fields.rgpd.label"),
+      consent: t("venueOpeningForm.fields.rgpd.consent"),
+    },
+  },
+  previous: t("venueOpeningForm.previous"),
+  next: t("venueOpeningForm.next"),
+  submit: t("venueOpeningForm.submit"),
+};
+
+const messages = {
+  required: t("form.errors.required"),
+  invalidMail: t("form.errors.mail"),
+};
+
+// a `<` inside the copy would close the script element early
+const serializedMessages = JSON.stringify(messages).replaceAll("<", "\\u003c");
+---
+
+<musiquiz-venue-opening-form>
+  <VenueOpeningForm {copy} limits={venueOpeningFormLimits} />
+
+  <script
+    is:inline
+    type="application/json"
+    data-messages
+    set:html={serializedMessages}
+  />
+</musiquiz-venue-opening-form>
+
+<style>
+  musiquiz-venue-opening-form {
+    display: contents;
+  }
+</style>
+
+<script>
+  import "../../scripts/venueOpeningForm";
+</script>

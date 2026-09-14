@@ -115,13 +115,16 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
       return {
         type: "clientContactForm",
         images: data.images.map((image) => toCmsImage(image)),
+        venueSlug: data.venueSlug,
       };
     }
 
-    case "eventQuotationForm": {
+    case "quotationForm": {
       return {
-        type: "eventQuotationForm",
+        type: "quotationForm",
+        audience: data.audience,
         services: data.services.map((service) => service.label),
+        venueSlug: data.venueSlug,
       };
     }
 

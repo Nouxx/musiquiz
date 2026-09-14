@@ -64,6 +64,14 @@ Public config (`SANITY_STUDIO_PROJECT_ID`, `SANITY_STUDIO_DATASET`) lives in the
 
 `SANITY_API_READ_TOKEN` is a real secret and is entered by hand in two places: `.env.local` for local dev, and a Cloudflare Secret on `musiquiz-ssr`. It is never needed by `musiquiz-static`, which only reads published content, and never by CI.
 
+`ZOHO_API_KEY` is the contact-form worker's secret. Same two-store rule, different local store: `apps/worker/.dev.vars` for local dev, and a Cloudflare Secret on `musiquiz-worker`. `.dev.vars` is the only local file `wrangler dev` loads into the `env` binding — a key in the root `.env.local` reaches the wrangler process but never the worker, and `env` comes back empty. Copy `.dev.vars.example`, fill it in, then:
+
+```sh
+cd apps/worker && npx wrangler secret put ZOHO_API_KEY
+```
+
+Adding a key means rerunning `pnpm --filter worker typegen`, which writes it into `Env` in `worker-configuration.d.ts`.
+
 `SANITY_AUTH_TOKEN` is the one secret CI holds, as a GitHub repository secret read by `deploy-sanity.yaml`. It is an **organization-level** robot token created in Sanity Manage under the organization's _Settings → API → Tokens_ (org tokens cannot be created from the CLI), and it needs **two** roles:
 
 | Role                   | Manage label    | Grants                                               |

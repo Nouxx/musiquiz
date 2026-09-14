@@ -1,0 +1,52 @@
+---
+import Radio from "../primitives/Radio.astro";
+import RadioGroup from "../primitives/RadioGroup.astro";
+import type { VenueOpeningCopy } from "../types";
+
+interface Props {
+  uid: string;
+  fields: VenueOpeningCopy["fields"];
+}
+
+const { uid, fields } = Astro.props;
+---
+
+<div class="step">
+  <RadioGroup legend={fields.profile.label} requiredMarker>
+    {
+      fields.profile.options.map((option) => (
+        <Radio
+          id={`venue-opening-${uid}-profile-${option.value}`}
+          name="profile"
+          value={option.value}
+          required
+        >
+          {option.label}
+        </Radio>
+      ))
+    }
+  </RadioGroup>
+
+  <RadioGroup legend={fields.intent.label} requiredMarker>
+    {
+      fields.intent.options.map((option) => (
+        <Radio
+          id={`venue-opening-${uid}-intent-${option.value}`}
+          name="intent"
+          value={option.value}
+          required
+        >
+          {option.label}
+        </Radio>
+      ))
+    }
+  </RadioGroup>
+</div>
+
+<style>
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+</style>

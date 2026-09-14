@@ -102,6 +102,13 @@ const textVariant = size === "s" ? "title-s" : "title-base";
       linear-gradient(var(--color-overlay-pressed) 0 0), var(--button-fill);
   }
 
+  .button:disabled {
+    --lift: 0px;
+
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
   /* only the real press is instant. a selected button that later becomes
      interactive should animate when selection moves */
   .button:active {

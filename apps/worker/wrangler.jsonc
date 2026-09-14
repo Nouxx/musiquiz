@@ -1,0 +1,11 @@
+// https://developers.cloudflare.com/workers/wrangler/configuration/
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "musiquiz-worker",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-08-31",
+	"observability": {
+		"enabled": true
+	},
+	"upload_source_maps": true
+}

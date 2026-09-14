@@ -1,0 +1,81 @@
+---
+import { quotationFormLimits } from "@repo/services/contactForm/quotation";
+import QuotationForm from "@repo/ui/QuotationForm";
+import type { ComponentProps } from "astro/types";
+
+import { getLang } from "../../libs/getLang";
+import { getT } from "../../libs/i18n";
+
+type Props = Omit<
+  ComponentProps<typeof QuotationForm>,
+  | "pendingLabel"
+  | "successMessage"
+  | "failureMessage"
+  | "lastNameMaxLength"
+  | "firstNameMaxLength"
+  | "phoneMaxLength"
+  | "mailMaxLength"
+  | "companyMaxLength"
+  | "participantsMaxLength"
+  | "budgetMaxLength"
+  | "messageMaxLength"
+> & {
+  workerUrl: string;
+  venueSlug: string;
+  audience: "teamBuilding" | "musiTeens";
+};
+
+const { workerUrl, venueSlug, audience, ...rest } = Astro.props;
+
+const t = getT(getLang(Astro));
+
+const copy = `quotationForm.${audience}` as const;
+
+const messages = {
+  required: t("form.errors.required"),
+  invalidMail: t("form.errors.mail"),
+  // the numbers change per keystroke, so the script does the substitution;
+  // `used` rather than `count`, which i18next reads as a plural selector
+  counter: t("form.counter", { used: "__USED__", max: "__MAX__" }),
+};
+
+// a `<` inside the copy would close the script element early
+const serializedMessages = JSON.stringify(messages).replaceAll("<", "\\u003c");
+---
+
+<musiquiz-quotation-form
+  data-worker-url={`${workerUrl}/form/quotation`}
+  data-venue-slug={venueSlug}
+  data-audience={audience}
+>
+  <QuotationForm
+    {...rest}
+    pendingLabel={t(`${copy}.pending`)}
+    successMessage={t(`${copy}.success`)}
+    failureMessage={t(`${copy}.failure`)}
+    lastNameMaxLength={quotationFormLimits.lastName}
+    firstNameMaxLength={quotationFormLimits.firstName}
+    phoneMaxLength={quotationFormLimits.phone}
+    mailMaxLength={quotationFormLimits.mail}
+    companyMaxLength={quotationFormLimits.company}
+    participantsMaxLength={quotationFormLimits.participants}
+    budgetMaxLength={quotationFormLimits.budget}
+    messageMaxLength={quotationFormLimits.message}
+  />
+  <script
+    is:inline
+    type="application/json"
+    data-messages
+    set:html={serializedMessages}
+  />
+</musiquiz-quotation-form>
+
+<style>
+  musiquiz-quotation-form {
+    display: contents;
+  }
+</style>
+
+<script>
+  import "../../scripts/quotationForm";
+</script>

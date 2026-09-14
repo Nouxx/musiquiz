@@ -17,5 +17,8 @@
     "**/dist",
     "**/.astro",
     "**/.git"
+  ],
+  "cSpell.words": [
+    "zeptomail"
   ]
 }

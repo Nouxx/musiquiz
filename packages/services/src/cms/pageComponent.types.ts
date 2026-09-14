@@ -121,11 +121,14 @@ type ContactPanels = {
 type ClientContactForm = {
   type: "clientContactForm";
   images: CmsImage[];
+  venueSlug: string;
 };
 
-type EventQuotationForm = {
-  type: "eventQuotationForm";
+type QuotationForm = {
+  type: "quotationForm";
+  audience: "teamBuilding" | "musiTeens";
   services: string[];
+  venueSlug: string;
 };
 
 type Logos = {
@@ -305,7 +308,7 @@ export type PageComponent =
   | FindUs
   | ContactPanels
   | ClientContactForm
-  | EventQuotationForm
+  | QuotationForm
   | Logos
   | Faq
   | CardsScroller

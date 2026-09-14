@@ -13,3 +13,5 @@
 - center star.svg
 - add custom venue page (slug authored from Sanity) - not accessible from the header
 - game price: support exact count: ex: 2 joueurs
+- burger mobile menu: book must be visible at the thumb area
+- scrollable

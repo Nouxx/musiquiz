@@ -9,7 +9,6 @@
     "deploy": "dotenvx run -f ../../.env -- sanity deploy --yes",
     "dev": "dotenvx run -f ../../.env.local -f ../../.env -- sanity dev",
     "start": "sanity start",
-    "typegen": "sanity schema extract && sanity typegen generate",
     "validate": "sanity documents validate -y",
     "migration:new": "sanity migration create",
     "migration:list": "sanity migration list",

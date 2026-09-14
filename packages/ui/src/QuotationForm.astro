@@ -31,6 +31,17 @@ interface Props {
   messageLabel: string;
   messagePlaceholder: string;
   submitLabel: string;
+  pendingLabel: string;
+  successMessage: string;
+  failureMessage: string;
+  lastNameMaxLength: number;
+  firstNameMaxLength: number;
+  phoneMaxLength: number;
+  mailMaxLength: number;
+  companyMaxLength: number;
+  participantsMaxLength: number;
+  budgetMaxLength: number;
+  messageMaxLength: number;
 }
 
 const {
@@ -57,6 +68,17 @@ const {
   messageLabel,
   messagePlaceholder,
   submitLabel,
+  pendingLabel,
+  successMessage,
+  failureMessage,
+  lastNameMaxLength,
+  firstNameMaxLength,
+  phoneMaxLength,
+  mailMaxLength,
+  companyMaxLength,
+  participantsMaxLength,
+  budgetMaxLength,
+  messageMaxLength,
 } = Astro.props;
 
 // the section can appear more than once on a page, and a label only points at
@@ -66,10 +88,6 @@ const uid = crypto.randomUUID().slice(0, 8);
 
 <Section surface="muted" spacing="m">
   <Card border="blue" class="panel">
-    {
-      /* the form is inert: it swallows its own submit until a quotation
-        endpoint exists. Native validation still runs first. */
-    }
     <form class="form" data-quotation-form>
       <div class="body">
         <div class="heading">
@@ -78,7 +96,7 @@ const uid = crypto.randomUUID().slice(0, 8);
           <Text as="h2" variant="title-h4">{title}</Text>
         </div>
 
-        <div class="fields">
+        <fieldset class="fields" data-fields>
           <div class="row">
             <TextField
               id={`quotation-${uid}-last-name`}
@@ -88,6 +106,7 @@ const uid = crypto.randomUUID().slice(0, 8);
               tone="plain"
               label={lastNameLabel}
               placeholder={lastNamePlaceholder}
+              maxlength={lastNameMaxLength}
               required
             />
 
@@ -99,6 +118,7 @@ const uid = crypto.randomUUID().slice(0, 8);
               tone="plain"
               label={firstNameLabel}
               placeholder={firstNamePlaceholder}
+              maxlength={firstNameMaxLength}
               required
             />
           </div>
@@ -112,6 +132,7 @@ const uid = crypto.randomUUID().slice(0, 8);
               tone="plain"
               label={phoneLabel}
               placeholder={phonePlaceholder}
+              maxlength={phoneMaxLength}
             />
 
             <TextField
@@ -122,6 +143,7 @@ const uid = crypto.randomUUID().slice(0, 8);
               tone="plain"
               label={mailLabel}
               placeholder={mailPlaceholder}
+              maxlength={mailMaxLength}
               required
             />
           </div>
@@ -134,6 +156,7 @@ const uid = crypto.randomUUID().slice(0, 8);
             tone="plain"
             label={companyLabel}
             placeholder={companyPlaceholder}
+            maxlength={companyMaxLength}
           />
 
           <div class="row">
@@ -164,6 +187,7 @@ const uid = crypto.randomUUID().slice(0, 8);
               tone="plain"
               label={participantsLabel}
               placeholder={participantsPlaceholder}
+              maxlength={participantsMaxLength}
             />
 
             <TextField
@@ -173,43 +197,76 @@ const uid = crypto.randomUUID().slice(0, 8);
               tone="plain"
               label={budgetLabel}
               placeholder={budgetPlaceholder}
+              maxlength={budgetMaxLength}
             />
           </div>
 
-          <fieldset class="services">
-            <legend>
-              <Text variant="title-base">{servicesLabel}</Text>
-            </legend>
+          {
+            services.length > 0 && (
+              <fieldset class="services">
+                <legend>
+                  <Text variant="title-base">{servicesLabel}</Text>
+                </legend>
 
-            <div class="options">
-              {
-                services.map((service, index) => (
-                  <Checkbox
-                    id={`quotation-${uid}-service-${index}`}
-                    name="services"
-                    value={service}
-                    textSize="base"
-                  >
-                    {service}
-                  </Checkbox>
-                ))
-              }
-            </div>
-          </fieldset>
+                <div class="options">
+                  {services.map((service, index) => (
+                    <Checkbox
+                      id={`quotation-${uid}-service-${index}`}
+                      name="services"
+                      value={service}
+                      textSize="base"
+                    >
+                      {service}
+                    </Checkbox>
+                  ))}
+                </div>
+              </fieldset>
+            )
+          }
 
-          <TextField
-            as="textarea"
-            id={`quotation-${uid}-message`}
-            name="message"
-            tone="plain"
-            label={messageLabel}
-            placeholder={messagePlaceholder}
-            required
-          />
-        </div>
+          <div class="message-field">
+            <TextField
+              as="textarea"
+              id={`quotation-${uid}-message`}
+              name="message"
+              tone="plain"
+              label={messageLabel}
+              placeholder={messagePlaceholder}
+              maxlength={messageMaxLength}
+              required
+            />
+
+            <p class="counter" data-counter aria-hidden="true"></p>
+          </div>
+        </fieldset>
       </div>
 
-      <Button type="submit" tone="blue">{submitLabel}</Button>
+      <div class="submit-row">
+        <Button type="submit" tone="blue" data-submit>
+          <span data-submit-label>{submitLabel}</span>
+          <span data-pending-label hidden>{pendingLabel}</span>
+        </Button>
+
+        <p
+          class="status failure"
+          role="alert"
+          tabindex="-1"
+          data-failure
+          hidden
+        >
+          {failureMessage}
+        </p>
+
+        <p
+          class="status success"
+          role="status"
+          tabindex="-1"
+          data-success
+          hidden
+        >
+          {successMessage}
+        </p>
+      </div>
     </form>
   </Card>
 </Section>
@@ -245,6 +302,13 @@ const uid = crypto.randomUUID().slice(0, 8);
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
+
+    /* a fieldset carries UA chrome and a min-inline-size of min-content, which
+       would stop the fields shrinking */
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
   }
 
   .row {
@@ -268,6 +332,44 @@ const uid = crypto.randomUUID().slice(0, 8);
     flex-direction: column;
     gap: var(--space-2);
     align-items: flex-start;
+  }
+
+  .message-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    align-items: flex-end;
+  }
+
+  .counter {
+    font: var(--paragraph-s);
+    color: var(--color-text-muted);
+  }
+
+  .counter[data-near-cap] {
+    color: var(--color-text-error);
+  }
+
+  /* the message sits beside the button rather than under it: the row is already
+     as tall as the button, so revealing it moves nothing */
+  .submit-row {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+    align-self: stretch;
+  }
+
+  .status {
+    min-inline-size: 0;
+    font: var(--paragraph-base);
+  }
+
+  .failure {
+    color: var(--color-text-error);
+  }
+
+  .success {
+    color: var(--color-text-success);
   }
 
   /* preventing HTML native icons to be drawn */
@@ -295,11 +397,6 @@ const uid = crypto.randomUUID().slice(0, 8);
 
 <script>
   for (const form of document.querySelectorAll("form[data-quotation-form]")) {
-    // deliberately inert until a quotation endpoint exists
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-    });
-
     // a native date or time field opens its picker from the indicator alone,
     // and we have hide it
     const pickers = form.querySelectorAll<HTMLInputElement>(

@@ -2,8 +2,6 @@
 import type { PageComponent } from "@repo/services/cms/pageComponent.types";
 import CardsGrid from "@repo/ui/CardsGrid";
 import CardsScroller from "@repo/ui/CardsScroller";
-import ClientContactForm from "@repo/ui/ClientContactForm";
-import EventQuotationForm from "@repo/ui/EventQuotationForm";
 import DetailTabs from "@repo/ui/DetailTabs";
 import TextSlideshow from "@repo/ui/TextSlideshow";
 import TextCards from "@repo/ui/TextCards";
@@ -25,6 +23,9 @@ import { toPriceOffer } from "../../libs/toPriceOffer";
 import { toContactFacts } from "../../libs/toContactFacts";
 import { toContactPanels } from "../../libs/toContactPanels";
 import { toOffers } from "../../libs/toOffers";
+import ClientContactForm from "./ClientContactForm.astro";
+import QuotationForm from "./QuotationForm.astro";
+import { WORKER_URL } from "astro:env/client";
 
 interface Props {
   components: PageComponent[];
@@ -202,35 +203,42 @@ const t = getT(lang);
             messageLabel={t("contactForm.message")}
             messagePlaceholder={t("contactForm.messagePlaceholder")}
             submitLabel={t("contactForm.submit")}
+            workerUrl={WORKER_URL}
+            venueSlug={component.venueSlug}
           />
         );
       }
-      case "eventQuotationForm": {
+      case "quotationForm": {
+        const copy = `quotationForm.${component.audience}` as const;
+
         return (
-          <EventQuotationForm
-            badge={t("quotationForm.badge")}
-            title={t("quotationForm.title")}
-            lastNameLabel={t("quotationForm.lastName")}
-            lastNamePlaceholder={t("quotationForm.lastNamePlaceholder")}
-            firstNameLabel={t("quotationForm.firstName")}
-            firstNamePlaceholder={t("quotationForm.firstNamePlaceholder")}
-            phoneLabel={t("quotationForm.phone")}
-            phonePlaceholder={t("quotationForm.phonePlaceholder")}
-            mailLabel={t("quotationForm.mail")}
-            mailPlaceholder={t("quotationForm.mailPlaceholder")}
-            companyLabel={t("quotationForm.company")}
-            companyPlaceholder={t("quotationForm.companyPlaceholder")}
-            dateLabel={t("quotationForm.date")}
-            timeLabel={t("quotationForm.time")}
-            participantsLabel={t("quotationForm.participants")}
-            participantsPlaceholder={t("quotationForm.participantsPlaceholder")}
-            budgetLabel={t("quotationForm.budget")}
-            budgetPlaceholder={t("quotationForm.budgetPlaceholder")}
-            servicesLabel={t("quotationForm.services")}
+          <QuotationForm
+            badge={t(`${copy}.badge`)}
+            title={t(`${copy}.title`)}
+            lastNameLabel={t(`${copy}.lastName`)}
+            lastNamePlaceholder={t(`${copy}.lastNamePlaceholder`)}
+            firstNameLabel={t(`${copy}.firstName`)}
+            firstNamePlaceholder={t(`${copy}.firstNamePlaceholder`)}
+            phoneLabel={t(`${copy}.phone`)}
+            phonePlaceholder={t(`${copy}.phonePlaceholder`)}
+            mailLabel={t(`${copy}.mail`)}
+            mailPlaceholder={t(`${copy}.mailPlaceholder`)}
+            companyLabel={t(`${copy}.company`)}
+            companyPlaceholder={t(`${copy}.companyPlaceholder`)}
+            dateLabel={t(`${copy}.date`)}
+            timeLabel={t(`${copy}.time`)}
+            participantsLabel={t(`${copy}.participants`)}
+            participantsPlaceholder={t(`${copy}.participantsPlaceholder`)}
+            budgetLabel={t(`${copy}.budget`)}
+            budgetPlaceholder={t(`${copy}.budgetPlaceholder`)}
+            servicesLabel={t(`${copy}.services`)}
             services={component.services}
-            messageLabel={t("quotationForm.message")}
-            messagePlaceholder={t("quotationForm.messagePlaceholder")}
-            submitLabel={t("quotationForm.submit")}
+            messageLabel={t(`${copy}.message`)}
+            messagePlaceholder={t(`${copy}.messagePlaceholder`)}
+            submitLabel={t(`${copy}.submit`)}
+            workerUrl={WORKER_URL}
+            venueSlug={component.venueSlug}
+            audience={component.audience}
           />
         );
       }
