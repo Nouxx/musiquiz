@@ -20,7 +20,8 @@ export const clientContactFormType = defineType({
     defineField({
       name: "venue",
       title: "Venue",
-      description: "Pick the venue before the game.",
+      description:
+        "Pick the correct venue so that the form response is sent to the proper venue",
       type: "reference",
       to: [{ type: "venue" }],
       validation: (rule) => rule.required(),
