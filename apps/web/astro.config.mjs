@@ -83,6 +83,7 @@ export default defineConfig({
         context: "client",
         access: "public",
         optional: false,
+        url: true,
       }),
     },
   },
