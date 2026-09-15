@@ -3,7 +3,8 @@ import { routes } from "./routes";
 const ALLOWED_ORIGINS = new Set([
 	"http://localhost:4321",
 	"http://localhost:4322",
-	"https://musiquiz-worker.clement-vnnq.workers.dev",
+	"https://musiquiz-static.clement-vnnq.workers.dev",
+	"https://musiquiz-ssr.clement-vnnq.workers.dev",
 ]);
 
 function corsHeaders(request: Request): Record<string, string> {
