@@ -14,8 +14,14 @@ export const singletonIds = ["homepage", "siteSettings"];
 const singletonTypes = new Set(singletonIds);
 
 /** types that are never created from the "create new" menu */
-const structureOnlyTypes = new Set(["venuePage", "venueGame", "venueEvent"]);
+const structureOnlyTypes = new Set([
+  "globalPage",
+  "venuePage",
+  "venueGame",
+  "venueEvent",
+]);
 
+export const globalPageTemplateId = "globalPage-by-type";
 export const venuePageTemplateId = "venuePage-by-venue";
 export const venueGameTemplateId = "venueGame-by-venue";
 export const venueEventTemplateId = "venueEvent-by-venue";
@@ -47,6 +53,13 @@ export default defineConfig({
           !structureOnlyTypes.has(schemaType),
       ),
       // make sure venue and page type fields are filled before the editor sees the document
+      {
+        id: globalPageTemplateId,
+        title: "Global Page",
+        schemaType: "globalPage",
+        parameters: [{ name: "pageType", type: "string" }],
+        value: ({ pageType }: { pageType: string }) => ({ pageType }),
+      },
       {
         id: venuePageTemplateId,
         title: "Venue Page",

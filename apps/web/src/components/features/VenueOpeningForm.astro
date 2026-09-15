@@ -2,6 +2,7 @@
 import {
   venueOpeningContributionValues,
   venueOpeningExperienceValues,
+  venueOpeningFormId,
   venueOpeningFormLimits,
   venueOpeningHorizonValues,
   venueOpeningIntentValues,
@@ -223,7 +224,11 @@ const serializedMessages = JSON.stringify(messages).replaceAll("<", "\\u003c");
 ---
 
 <musiquiz-venue-opening-form>
-  <VenueOpeningForm {copy} limits={venueOpeningFormLimits} />
+  <VenueOpeningForm
+    {copy}
+    limits={venueOpeningFormLimits}
+    id={venueOpeningFormId}
+  />
 
   <script
     is:inline

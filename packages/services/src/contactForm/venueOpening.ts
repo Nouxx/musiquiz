@@ -1,5 +1,8 @@
 import z from "zod";
 
+// anchor the page cover CTA scrolls to
+export const venueOpeningFormId = "venue-opening-form";
+
 export const venueOpeningFormLimits = {
   city: 120,
   firstName: 80,

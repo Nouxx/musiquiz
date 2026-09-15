@@ -369,7 +369,7 @@ const sanityRollingBannerSchema = z.strictObject({
 
 const sanityCardSchema = z.strictObject({
   media: sanityImageSchema,
-  badge: z.string().min(1),
+  badge: z.string().min(1).nullable(),
   title: z.string().nullable(),
   body: z.string().min(1).nullable(),
   cta: sanityCtaSchema.nullable(),
@@ -384,7 +384,7 @@ const sanityCardsGridSchema = z.strictObject({
   align: z.enum(["left", "center"]),
   background: z.enum(["vivid", "muted"]),
   cta: sanityCtaSchema.nullable(),
-  cards: z.array(sanityCardSchema).min(3).max(4),
+  cards: z.array(sanityCardSchema).min(3).max(8),
 });
 
 const sanityCarouselSchema = z.strictObject({

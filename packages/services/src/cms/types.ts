@@ -52,10 +52,18 @@ export type PageCover = {
   cta: {
     label: string;
     url: string;
+    icon: "arrow-right" | "arrow-down";
   };
 };
 
 export type VenuePageType = "home" | "gift" | "book";
+
+export type GlobalPageType = "franchise";
+
+export type GlobalPage = {
+  pageCover: PageCover;
+  components: PageComponent[];
+};
 
 export type VenuePage = {
   pageCover: PageCover;

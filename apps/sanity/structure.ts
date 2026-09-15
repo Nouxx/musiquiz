@@ -3,11 +3,13 @@ import {
   type StructureResolver,
 } from "sanity/structure";
 import { ControlsIcon } from "@sanity/icons/Controls";
+import { DocumentIcon } from "@sanity/icons/Document";
 import { HomeIcon } from "@sanity/icons/Home";
 import { InfoOutlineIcon } from "@sanity/icons/InfoOutline";
 import { JoystickIcon } from "@sanity/icons/Joystick";
 import { ConfettiIcon } from "@sanity/icons/Confetti";
 import {
+  globalPageTemplateId,
   singletonIds,
   venueEventTemplateId,
   venueGameTemplateId,
@@ -15,7 +17,14 @@ import {
 } from "./sanity.config";
 
 // venuePage, venueGame and venueEvent belong to a venue, only reachable from there
-const nestedTypeIds = ["venue", "venuePage", "venueGame", "venueEvent"];
+// globalPage has one document per page type, listed by name
+const nestedTypeIds = [
+  "venue",
+  "venuePage",
+  "venueGame",
+  "venueEvent",
+  "globalPage",
+];
 
 function venuePageId({
   venueId,
@@ -54,6 +63,28 @@ function venuePageItem({
           venueId: publishedVenueId,
           pageType,
         }),
+    );
+}
+
+function globalPageItem({
+  S,
+  pageType,
+  title,
+}: {
+  S: StructureBuilder;
+  pageType: string;
+  title: string;
+}) {
+  return S.listItem()
+    .title(title)
+    .id(`globalPage-${pageType}`)
+    .icon(DocumentIcon)
+    .child(
+      S.document()
+        .schemaType("globalPage")
+        .documentId(`globalPage-${pageType}`)
+        .title(title)
+        .initialValueTemplate(globalPageTemplateId, { pageType }),
     );
 }
 
@@ -115,6 +146,12 @@ export const myStructure: StructureResolver = (S: StructureBuilder) =>
         .title("Homepage")
         .id("homepage")
         .child(S.document().schemaType("homepage").documentId("homepage")),
+
+      globalPageItem({
+        S,
+        pageType: "franchise",
+        title: "Join the network page",
+      }),
 
       S.listItem()
         .title("Venues")

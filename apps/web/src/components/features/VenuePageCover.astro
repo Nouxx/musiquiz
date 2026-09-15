@@ -39,7 +39,7 @@ const { media, logo, badge, heading, subHeading, cta } = Astro.props.data;
     )
   }
 
-  <Button slot="actions" as="a" href={cta.url} icon="arrow-right">
+  <Button slot="actions" as="a" href={cta.url} icon={cta.icon}>
     {cta.label}
   </Button>
 </PageCover>

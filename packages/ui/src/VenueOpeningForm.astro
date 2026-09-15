@@ -14,9 +14,10 @@ import Step4 from "./venueOpening/Step4.astro";
 interface Props {
   copy: VenueOpeningCopy;
   limits: VenueOpeningLimits;
+  id?: string;
 }
 
-const { copy, limits } = Astro.props;
+const { copy, limits, id } = Astro.props;
 
 // the section can appear more than once on a page, and a label only points at
 // its own field if the ids are unique
@@ -25,7 +26,7 @@ const uid = crypto.randomUUID().slice(0, 8);
 const { fields } = copy;
 ---
 
-<Section surface="muted" spacing="m">
+<Section surface="muted" spacing="m" {id}>
   <Card border="blue" class="panel">
     <form class="form" data-venue-opening-form>
       <div class="heading">

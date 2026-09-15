@@ -7,6 +7,7 @@ import { pageCoverType } from "./shared/pageCover";
 import { pricesFootnoteType } from "./shared/pricesFootnote";
 import { eventFormatType } from "./eventFormat";
 import { gameFormatType } from "./gameFormat";
+import { globalPageType } from "./globalPage";
 import { homepageType } from "./homepage";
 import { siteSettingsType } from "./siteSettings";
 import { quotationServiceType, venueType } from "./venue";
@@ -49,6 +50,7 @@ import { textBlockType } from "./shared/textBlock";
 
 export const schemaTypes = [
   homepageType,
+  globalPageType,
   venueType,
   quotationServiceType,
   venuePageType,

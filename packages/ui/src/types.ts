@@ -49,7 +49,7 @@ export type Review = {
 
 export type CardItem = {
   media: ImageSource;
-  badge: string;
+  badge?: string;
   title?: string;
   body?: string;
   cta?: CtaLink;
