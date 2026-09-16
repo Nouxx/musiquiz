@@ -335,6 +335,10 @@ export const fr = {
     previous: "Précédent",
     next: "Suivant",
     submit: "Envoyer ma demande",
+    pending: "Envoi…",
+    success:
+      "Merci, votre demande est bien arrivée. Nous vous recontactons rapidement.",
+    failure: "Une erreur est survenue. Merci de réessayer.",
   },
   days: {
     monday: "Lundi",

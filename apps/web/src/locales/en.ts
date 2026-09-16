@@ -336,6 +336,10 @@ export const en: typeof fr = {
     previous: "Previous",
     next: "Next",
     submit: "Send my request",
+    pending: "Sending…",
+    success:
+      "Thank you, we have received your request. We will get back to you shortly.",
+    failure: "Something went wrong. Please try again.",
   },
   days: {
     monday: "Monday",

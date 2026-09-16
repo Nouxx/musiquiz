@@ -219,6 +219,9 @@ export type VenueOpeningCopy = {
   previous: string;
   next: string;
   submit: string;
+  pending: string;
+  success: string;
+  failure: string;
 };
 
 export type VenueOpeningLimits = {

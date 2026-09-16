@@ -61,7 +61,7 @@ function refreshCounter(field: Field, counter: HTMLElement, template: string) {
   counter.toggleAttribute("data-near-cap", used >= max * 0.9);
 }
 
-function setPending({
+export function setPending({
   submit,
   submitLabel,
   pendingLabel,
@@ -77,12 +77,12 @@ function setPending({
   pendingLabel.hidden = !pending;
 }
 
-function reveal(node: HTMLElement) {
+export function reveal(node: HTMLElement) {
   node.hidden = false;
   node.focus();
 }
 
-async function postPayload({
+export async function postPayload({
   workerUrl,
   payload,
 }: {

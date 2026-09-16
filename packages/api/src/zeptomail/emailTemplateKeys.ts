@@ -22,7 +22,7 @@ export const emailTemplateKeys: Record<string, EmailTemplateKey> = {
     internalMailTemplateKey:
       "13ef.34e5f5b7aef4f343.k1.9203c350-aac7-11f1-819f-66e0c45c7bae.1a07c3fdc05",
   },
-  newVenue: {
+  venueOpening: {
     clientTemplateKey:
       "13ef.34e5f5b7aef4f343.k1.60f89490-a6d3-11f1-a4b9-dad70ff08860.1a062565c59",
     internalMailTemplateKey:

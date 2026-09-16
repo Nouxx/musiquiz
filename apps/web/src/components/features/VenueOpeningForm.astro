@@ -14,6 +14,7 @@ import {
 } from "@repo/services/contactForm/venueOpening";
 import type { VenueOpeningCopy, VenueOpeningOption } from "@repo/ui/types";
 import VenueOpeningForm from "@repo/ui/VenueOpeningForm";
+import { WORKER_URL } from "astro:env/client";
 
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
@@ -212,6 +213,9 @@ const copy: VenueOpeningCopy = {
   previous: t("venueOpeningForm.previous"),
   next: t("venueOpeningForm.next"),
   submit: t("venueOpeningForm.submit"),
+  pending: t("venueOpeningForm.pending"),
+  success: t("venueOpeningForm.success"),
+  failure: t("venueOpeningForm.failure"),
 };
 
 const messages = {
@@ -223,7 +227,9 @@ const messages = {
 const serializedMessages = JSON.stringify(messages).replaceAll("<", "\\u003c");
 ---
 
-<musiquiz-venue-opening-form>
+<musiquiz-venue-opening-form
+  data-worker-url={`${WORKER_URL}/form/venue-opening`}
+>
   <VenueOpeningForm
     {copy}
     limits={venueOpeningFormLimits}
