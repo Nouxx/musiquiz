@@ -25,13 +25,14 @@ const {
 
 const count = cards.length;
 const size = count <= 3 ? "large" : "small";
+const columns = Math.min(count, 4);
 ---
 
 <Section surface={background} spacing="l">
   <div
     class:list={["cards-grid", align, background]}
     style={{
-      "--cards-count": count,
+      "--cards-columns": columns,
       "--cards-gap": size === "large" ? "var(--space-10)" : "var(--space-6)",
     }}
   >
@@ -115,6 +116,11 @@ const size = count <= 3 ? "large" : "small";
     max-inline-size: 44rem;
   }
 
+  /* a blank line in the CMS is a paragraph break */
+  .body {
+    white-space: pre-line;
+  }
+
   /* QA: on vivid the sheet fills this text #EFEAE7, which is --grey-100, i.e.
      --color-text-on-media-muted — not --color-text-on-brand-muted (--blue-100),
      which is the token the name would suggest. Confirm which the design means. */
@@ -130,6 +136,7 @@ const size = count <= 3 ? "large" : "small";
     because: with `auto-fill` a four-card grid passes through a 3 + 1 orphan row on the way down.
     four goes 4 -> 2x2 -> stacked;
     three goes 3 -> 2 + 1 -> stacked,
+    more than four wraps in rows of four
   */
   .grid {
     display: grid;
@@ -147,7 +154,7 @@ const size = count <= 3 ? "large" : "small";
 
   @media (width >= 64rem) {
     .grid {
-      grid-template-columns: repeat(var(--cards-count), 1fr);
+      grid-template-columns: repeat(var(--cards-columns), 1fr);
     }
   }
 

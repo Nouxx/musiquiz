@@ -1,0 +1,33 @@
+---
+import { getGlobalPageData } from "@repo/services/cms/getGlobalPageData";
+import type { GlobalPageType } from "@repo/services/cms/types";
+
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import Footer from "../features/Footer.astro";
+import PageComponents from "../features/PageComponents.astro";
+import VenueOpeningForm from "../features/VenueOpeningForm.astro";
+import VenuePageCover from "../features/VenuePageCover.astro";
+
+interface Props {
+  pageType: GlobalPageType;
+}
+
+const { pageType } = Astro.props;
+
+const lang = getLang(Astro);
+
+const pageData = await getGlobalPageData({
+  lang,
+  pageType,
+  config: getSanityConfigFromEnvironment(),
+});
+---
+
+<VenuePageCover data={pageData.pageCover} />
+
+<PageComponents components={pageData.components} />
+
+{pageType === "joinTheNetwork" && <VenueOpeningForm />}
+
+<Footer />

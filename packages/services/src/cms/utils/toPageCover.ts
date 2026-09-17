@@ -6,9 +6,11 @@ import { toCmsImage } from "./toCmsImage";
 export function toPageCover({
   data,
   ctaUrl,
+  ctaIcon = "arrow-right",
 }: {
   data: SanityPageCover;
   ctaUrl: string;
+  ctaIcon?: PageCover["cta"]["icon"];
 }): PageCover {
   const { media, logo, heading, subHeading, badge, ctaLabel } = data;
 
@@ -21,6 +23,7 @@ export function toPageCover({
     cta: {
       label: ctaLabel,
       url: ctaUrl,
+      icon: ctaIcon,
     },
   };
 }

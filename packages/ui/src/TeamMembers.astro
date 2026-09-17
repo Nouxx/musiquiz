@@ -1,0 +1,41 @@
+---
+import SectionHeading from "./SectionHeading.astro";
+import Section from "./Section.astro";
+import TeamMemberCard from "./team/TeamMemberCard.astro";
+import type { TeamMember } from "./types";
+
+interface Props {
+  title: string;
+  intro?: string;
+  members: TeamMember[];
+  mailAriaLabel: string;
+}
+
+const { title, intro, members, mailAriaLabel } = Astro.props;
+---
+
+<Section>
+  <div class="team">
+    <SectionHeading {title} {intro} />
+
+    <ul class="members">
+      {members.map((member) => <TeamMemberCard {member} {mailAriaLabel} />)}
+    </ul>
+  </div>
+</Section>
+
+<style>
+  .team {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .members {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(30rem, 100%), 1fr));
+    gap: var(--space-10);
+    padding: 0;
+    list-style: none;
+  }
+</style>

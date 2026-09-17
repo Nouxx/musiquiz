@@ -7,7 +7,7 @@ import { toCta } from "./toCta";
 export function toCard(card: SanityCard): Card {
   return {
     media: toCmsImage(card.media),
-    badge: card.badge,
+    badge: card.badge ?? undefined,
     title: card.title ?? undefined,
     body: card.body ?? undefined,
     cta: toCta(card.cta),

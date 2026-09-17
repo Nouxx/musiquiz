@@ -1,0 +1,135 @@
+---
+import Badge from "../Badge.astro";
+import Card from "../primitives/Card.astro";
+import IconChip from "../primitives/IconChip.astro";
+import Link from "../primitives/Link.astro";
+import RemoteImage from "../primitives/RemoteImage.astro";
+import Text from "../primitives/Text.astro";
+import type { TeamMember } from "../types";
+
+interface Props {
+  member: TeamMember;
+  mailAriaLabel: string;
+}
+
+const { member, mailAriaLabel } = Astro.props;
+---
+
+<li class:list={["member", member.tone]}>
+  <div class="photo">
+    <RemoteImage image={member.photo} variant="team-photo" />
+  </div>
+
+  <Card border={member.tone} class="card">
+    <div class="top">
+      <Badge color="light" border={member.tone} icon="pin">{member.role}</Badge>
+
+      <Link url={member.mailHref} underline={false} ariaLabel={mailAriaLabel}>
+        <IconChip name="mail" tone="muted" size="l" interactive />
+      </Link>
+    </div>
+
+    <div class="lines">
+      <div class="identity">
+        <Text as="p" variant="title-xl">{member.name}</Text>
+
+        <span class="job">
+          <Text variant="paragraph-base">{member.jobTitle}</Text>
+        </span>
+      </div>
+
+      <span class="mail">
+        <Link url={member.mailHref} underline={false}>
+          <Text variant="paragraph-base-sm">{member.mailLabel}</Text>
+        </Link>
+      </span>
+    </div>
+  </Card>
+</li>
+
+<style>
+  .member {
+    display: flex;
+    max-inline-size: 39rem;
+    flex-direction: column;
+    gap: var(--space-6);
+    align-items: center;
+  }
+
+  .photo {
+    flex: none;
+    inline-size: 200px;
+    block-size: 200px;
+    padding: 2px 6px 6px 2px;
+    background-image: var(--ring);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+
+  .photo :global(picture),
+  .photo :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    border-radius: inherit;
+  }
+
+  .photo :global(img) {
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .card {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-6);
+    inline-size: 100%;
+    padding: var(--space-6);
+    background-color: var(--color-surface-muted);
+  }
+
+  .top {
+    display: flex;
+    gap: var(--space-6);
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .lines {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .identity {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .job {
+    color: var(--accent);
+  }
+
+  .blue {
+    --ring: var(--color-border-brand-blue);
+    --accent: var(--color-accent-blue);
+  }
+
+  .red {
+    --ring: var(--color-border-brand-red);
+    --accent: var(--color-accent-red);
+  }
+
+  .mail {
+    color: var(--color-text-muted);
+    overflow-wrap: anywhere;
+  }
+
+  /* 40rem — a member row: photo beside the card (styles/breakpoints.css) */
+  @media (width >= 40rem) {
+    .member {
+      flex-direction: row;
+    }
+  }
+</style>

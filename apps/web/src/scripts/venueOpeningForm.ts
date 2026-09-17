@@ -1,6 +1,9 @@
 import {
+  postPayload,
   readMessages,
   refreshValidity,
+  reveal,
+  setPending,
   type ValidatableField,
   type ValidationMessages,
 } from "./formRuntime";
@@ -32,6 +35,33 @@ function getFields(root: HTMLElement) {
   return [...root.querySelectorAll("input[name], textarea[name], select[name]")]
     .map((node) => toField(node))
     .filter((field) => field !== undefined);
+}
+
+function buildPayload(form: HTMLFormElement) {
+  const data = new FormData(form);
+
+  function read(name: string) {
+    return String(data.get(name) ?? "");
+  }
+
+  return {
+    profile: read("profile"),
+    intent: read("intent"),
+    city: read("city"),
+    population: read("population"),
+    premises: read("premises"),
+    horizon: read("horizon"),
+    contribution: read("contribution"),
+    experience: read("experience"),
+    partners: read("partners"),
+    firstName: read("firstName"),
+    lastName: read("lastName"),
+    mail: read("mail"),
+    phone: read("phone"),
+    source: read("source"),
+    message: read("message"),
+    rgpd: data.has("rgpd"),
+  };
 }
 
 function setProgress(progress: HTMLElement, current: number, total: number) {
@@ -81,19 +111,39 @@ function showStep({
 
 class MusiquizVenueOpeningForm extends HTMLElement {
   connectedCallback() {
+    const workerUrl = this.dataset.workerUrl;
     const form = this.querySelector<HTMLFormElement>(
       "form[data-venue-opening-form]",
     );
     const messages = readMessages<ValidationMessages>(this);
-    if (!form || !messages) return;
+    if (!workerUrl || !form || !messages) return;
 
     const steps = [...form.querySelectorAll<HTMLElement>("[data-step]")];
     const progress = form.querySelector<HTMLElement>("[data-progress]");
     const previous = form.querySelector<HTMLButtonElement>("[data-previous]");
     const next = form.querySelector<HTMLButtonElement>("[data-next]");
     const submit = form.querySelector<HTMLButtonElement>("[data-submit]");
-    if (!progress || !previous || !next || !submit || steps.length === 0)
+    const submitLabel = form.querySelector<HTMLElement>("[data-submit-label]");
+    const pendingLabel = form.querySelector<HTMLElement>(
+      "[data-pending-label]",
+    );
+    const failure = form.querySelector<HTMLElement>("[data-failure]");
+    const success = form.querySelector<HTMLElement>("[data-success]");
+    const fields = form.querySelector<HTMLFieldSetElement>("[data-fields]");
+    if (
+      !progress ||
+      !previous ||
+      !next ||
+      !submit ||
+      !submitLabel ||
+      !pendingLabel ||
+      !failure ||
+      !success ||
+      !fields ||
+      steps.length === 0
+    ) {
       return;
+    }
 
     let current = 0;
 
@@ -155,8 +205,29 @@ class MusiquizVenueOpeningForm extends HTMLElement {
       });
     });
 
-    form.addEventListener("submit", (event) => {
+    // the browser blocks an invalid submit, so this only runs on a valid form
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
+
+      failure.hidden = true;
+      setPending({ submit, submitLabel, pendingLabel, pending: true });
+
+      const sent = await postPayload({
+        workerUrl,
+        payload: buildPayload(form),
+      });
+
+      setPending({ submit, submitLabel, pendingLabel, pending: false });
+
+      if (sent) {
+        // a finished form should not be able to send a second copy
+        fields.disabled = true;
+        previous.disabled = true;
+        submit.disabled = true;
+        reveal(success);
+      } else {
+        reveal(failure);
+      }
     });
 
     progress.hidden = false;

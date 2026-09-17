@@ -13,7 +13,7 @@ export type Cta = {
 
 export type Card = {
   media: CmsImage;
-  badge: string;
+  badge: string | undefined;
   title: string | undefined;
   body: string | undefined;
   cta: Cta | undefined;

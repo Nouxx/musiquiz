@@ -14,9 +14,10 @@ import Step4 from "./venueOpening/Step4.astro";
 interface Props {
   copy: VenueOpeningCopy;
   limits: VenueOpeningLimits;
+  id?: string;
 }
 
-const { copy, limits } = Astro.props;
+const { copy, limits, id } = Astro.props;
 
 // the section can appear more than once on a page, and a label only points at
 // its own field if the ids are unique
@@ -25,7 +26,7 @@ const uid = crypto.randomUUID().slice(0, 8);
 const { fields } = copy;
 ---
 
-<Section surface="muted" spacing="m">
+<Section surface="muted" spacing="m" {id}>
   <Card border="blue" class="panel">
     <form class="form" data-venue-opening-form>
       <div class="heading">
@@ -58,7 +59,30 @@ const { fields } = copy;
       <div class="nav">
         <Button tone="light" data-previous hidden>{copy.previous}</Button>
         <Button tone="blue" data-next hidden>{copy.next}</Button>
-        <Button type="submit" tone="blue" data-submit>{copy.submit}</Button>
+        <Button type="submit" tone="blue" data-submit>
+          <span data-submit-label>{copy.submit}</span>
+          <span data-pending-label hidden>{copy.pending}</span>
+        </Button>
+
+        <p
+          class="status failure"
+          role="alert"
+          tabindex="-1"
+          data-failure
+          hidden
+        >
+          {copy.failure}
+        </p>
+
+        <p
+          class="status success"
+          role="status"
+          tabindex="-1"
+          data-success
+          hidden
+        >
+          {copy.success}
+        </p>
       </div>
     </form>
   </Card>
@@ -111,6 +135,19 @@ const { fields } = copy;
     flex-wrap: wrap;
     gap: var(--space-4);
     align-items: center;
+  }
+
+  .status {
+    min-inline-size: 0;
+    font: var(--paragraph-base);
+  }
+
+  .failure {
+    color: var(--color-text-error);
+  }
+
+  .success {
+    color: var(--color-text-success);
   }
 
   /* 60rem — two columns stop fitting (styles/breakpoints.css) */

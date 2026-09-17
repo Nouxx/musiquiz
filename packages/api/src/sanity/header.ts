@@ -27,7 +27,7 @@ function headerQuery({ lang, venueSlug }: { lang: Lang; venueSlug: string }) {
         "name": event->name,
         "slug": event->slug.current
       },
-      venueLogo ${imageProjection({ lang })},
+      venueLogoLight ${imageProjection({ lang })},
       addressLine,
       phone,
       mail,
@@ -62,7 +62,7 @@ const sanityHeaderSchema = z.strictObject({
         }),
       )
       .min(1),
-    venueLogo: sanityImageSchema,
+    venueLogoLight: sanityImageSchema,
     addressLine: z.string(),
     phone: z.string().min(1),
     mail: z.email(),

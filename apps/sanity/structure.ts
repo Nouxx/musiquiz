@@ -3,11 +3,16 @@ import {
   type StructureResolver,
 } from "sanity/structure";
 import { ControlsIcon } from "@sanity/icons/Controls";
+import { DocumentIcon } from "@sanity/icons/Document";
 import { HomeIcon } from "@sanity/icons/Home";
 import { InfoOutlineIcon } from "@sanity/icons/InfoOutline";
 import { JoystickIcon } from "@sanity/icons/Joystick";
 import { ConfettiIcon } from "@sanity/icons/Confetti";
+import { EnvelopeIcon } from "@sanity/icons/Envelope";
+import { RocketIcon } from "@sanity/icons/Rocket";
+import type { ComponentType } from "react";
 import {
+  globalPageTemplateId,
   singletonIds,
   venueEventTemplateId,
   venueGameTemplateId,
@@ -15,7 +20,14 @@ import {
 } from "./sanity.config";
 
 // venuePage, venueGame and venueEvent belong to a venue, only reachable from there
-const nestedTypeIds = ["venue", "venuePage", "venueGame", "venueEvent"];
+// globalPage has one document per page type, listed by name
+const nestedTypeIds = [
+  "venue",
+  "venuePage",
+  "venueGame",
+  "venueEvent",
+  "globalPage",
+];
 
 function venuePageId({
   venueId,
@@ -54,6 +66,30 @@ function venuePageItem({
           venueId: publishedVenueId,
           pageType,
         }),
+    );
+}
+
+function globalPageItem({
+  S,
+  pageType,
+  title,
+  icon = DocumentIcon,
+}: {
+  S: StructureBuilder;
+  pageType: string;
+  title: string;
+  icon?: ComponentType;
+}) {
+  return S.listItem()
+    .title(title)
+    .id(`globalPage-${pageType}`)
+    .icon(icon)
+    .child(
+      S.document()
+        .schemaType("globalPage")
+        .documentId(`globalPage-${pageType}`)
+        .title(title)
+        .initialValueTemplate(globalPageTemplateId, { pageType }),
     );
 }
 
@@ -115,6 +151,20 @@ export const myStructure: StructureResolver = (S: StructureBuilder) =>
         .title("Homepage")
         .id("homepage")
         .child(S.document().schemaType("homepage").documentId("homepage")),
+
+      globalPageItem({
+        S,
+        pageType: "joinTheNetwork",
+        title: "Join the network page",
+        icon: RocketIcon,
+      }),
+
+      globalPageItem({
+        S,
+        pageType: "contact",
+        title: "Contact page",
+        icon: EnvelopeIcon,
+      }),
 
       S.listItem()
         .title("Venues")

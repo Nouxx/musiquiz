@@ -20,9 +20,9 @@ export const cardType = defineType({
     defineField({
       name: "badge",
       title: "Badge",
-      description: "The small tilted pill above the title.",
+      description:
+        "The small tilted pill above the title. Leave empty for none.",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "title",
@@ -78,7 +78,8 @@ export const cardsGridType = defineType({
     defineField({
       name: "body",
       title: "Body",
-      type: "internationalizedArrayString",
+      description: "A blank line starts a new paragraph.",
+      type: "internationalizedArrayText",
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -120,10 +121,10 @@ export const cardsGridType = defineType({
       name: "cards",
       title: "Cards",
       description:
-        "Three or four. Three gives the larger card, with room for a body and a button; four gives the shorter one.",
+        "Three to eight. Three gives the larger card, with room for a body and a button; four or more gives the shorter one, four to a row.",
       type: "array",
       of: [defineArrayMember({ type: "card" })],
-      validation: (rule) => rule.required().min(3).max(4),
+      validation: (rule) => rule.required().min(3).max(8),
     }),
   ],
   preview: {

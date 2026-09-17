@@ -40,6 +40,29 @@ export type CtaLink = {
   url: string;
 };
 
+export type TeamMember = {
+  photo: ImageSource;
+  name: string;
+  /** @example "C.E.O" */
+  role: string;
+  jobTitle: string;
+  tone: Tone;
+  mailLabel: string;
+  mailHref: string;
+};
+
+export type VenueContact = {
+  name: string;
+  /** the badge, the venue title alone */
+  city: string;
+  logo: ImageSource;
+  address: string;
+  mailLabel: string;
+  mailHref: string;
+  phoneLabel: string;
+  phoneHref: string;
+};
+
 export type Review = {
   name: string;
   body: string;
@@ -49,7 +72,7 @@ export type Review = {
 
 export type CardItem = {
   media: ImageSource;
-  badge: string;
+  badge?: string;
   title?: string;
   body?: string;
   cta?: CtaLink;
@@ -125,7 +148,7 @@ export type FaqQuestion = {
   answer: RichTextNode[];
 };
 
-export type OfferTone = "blue" | "red";
+export type Tone = "blue" | "red";
 
 export type OfferPrice = {
   /** @example "28€", "Sur devis" */
@@ -149,7 +172,7 @@ export type OfferCard = {
 export type OfferGroup = {
   title: string;
   body: RichTextNode[];
-  tone?: OfferTone;
+  tone?: Tone;
   cards: OfferCard[];
 };
 
@@ -219,6 +242,9 @@ export type VenueOpeningCopy = {
   previous: string;
   next: string;
   submit: string;
+  pending: string;
+  success: string;
+  failure: string;
 };
 
 export type VenueOpeningLimits = {

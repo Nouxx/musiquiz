@@ -3,11 +3,11 @@ import Card from "./Card.astro";
 import IconChip from "./IconChip.astro";
 import RichText from "./RichText.astro";
 import Text from "./Text.astro";
-import type { OfferCard, OfferTone } from "../types";
+import type { OfferCard, Tone } from "../types";
 
 interface Props extends OfferCard {
   headingLevel: "h3" | "h4";
-  tone?: OfferTone;
+  tone?: Tone;
 }
 
 const {

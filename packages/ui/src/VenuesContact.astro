@@ -1,0 +1,49 @@
+---
+import SectionHeading from "./SectionHeading.astro";
+import Section from "./Section.astro";
+import type { VenueContact } from "./types";
+import VenueContactCard from "./venuesContact/VenueContactCard.astro";
+
+interface Props {
+  id?: string;
+  title: string;
+  intro?: string;
+  venues: VenueContact[];
+}
+
+const { id, title, intro, venues } = Astro.props;
+---
+
+<Section {id}>
+  <div class="venues-contact">
+    <SectionHeading {title} {intro} />
+
+    <ul class="grid">
+      {venues.map((venue) => <VenueContactCard {venue} />)}
+    </ul>
+  </div>
+</Section>
+
+<style>
+  .venues-contact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-10);
+    padding: 0;
+    list-style: none;
+  }
+
+  /* 60rem — two columns stop fitting (styles/breakpoints.css) */
+  @media (width >= 60rem) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: var(--space-20);
+    }
+  }
+</style>

@@ -53,7 +53,7 @@ export const en: typeof fr = {
     contact: "Contact",
     blog: "Blog",
     press: "Press",
-    franchise: "Open your Musi'quiz franchise",
+    joinTheNetwork: "Open your Musi'quiz franchise",
     termsAndConditions: "T&C",
     gdpr: "GDPR",
     legalsNotice: "Legal Notices",
@@ -77,6 +77,10 @@ export const en: typeof fr = {
     mailAddress: "Mail address",
     mailPlaceholder: "Your mail address",
     newsletterConsent: "I agree to receive information from Musi'Quiz",
+  },
+  contactPage: {
+    writeTo: "Send an email",
+    venueName: "Musi'Quiz {{city}}",
   },
   findUs: {
     address: "Address",
@@ -336,6 +340,10 @@ export const en: typeof fr = {
     previous: "Previous",
     next: "Next",
     submit: "Send my request",
+    pending: "Sending…",
+    success:
+      "Thank you, we have received your request. We will get back to you shortly.",
+    failure: "Something went wrong. Please try again.",
   },
   days: {
     monday: "Monday",

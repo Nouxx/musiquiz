@@ -20,7 +20,7 @@ function adaptHeader({
   return {
     logo: toCmsImage(data.siteSettings.headerLogo),
     venue: {
-      logo: toCmsImage(data.venue.venueLogo),
+      logo: toCmsImage(data.venue.venueLogoLight),
       address: data.venue.addressLine,
       mapsLink: data.venue.googleMapsLink,
       mailLabel: data.venue.mail,

@@ -51,7 +51,7 @@ export const fr = {
     contact: "Contact",
     blog: "Blog",
     press: "Presse",
-    franchise: "Ouvrez votre salle Musi'quiz",
+    joinTheNetwork: "Ouvrez votre salle Musi'quiz",
     termsAndConditions: "CGV",
     gdpr: "RGPD",
     legalsNotice: "Mentions légales",
@@ -75,6 +75,10 @@ export const fr = {
     mailAddress: "Adresse mail",
     mailPlaceholder: "Votre adresse mail",
     newsletterConsent: "J'accepte de recevoir les informations de Musi'Quiz",
+  },
+  contactPage: {
+    writeTo: "Écrire un mail",
+    venueName: "Musi'Quiz {{city}}",
   },
   findUs: {
     address: "Adresse",
@@ -335,6 +339,10 @@ export const fr = {
     previous: "Précédent",
     next: "Suivant",
     submit: "Envoyer ma demande",
+    pending: "Envoi…",
+    success:
+      "Merci, votre demande est bien arrivée. Nous vous recontactons rapidement.",
+    failure: "Une erreur est survenue. Merci de réessayer.",
   },
   days: {
     monday: "Lundi",

@@ -1,0 +1,44 @@
+---
+import {
+  getContactPageData,
+  venuesContactId,
+} from "@repo/services/cms/getContactPageData";
+import TeamMembers from "@repo/ui/TeamMembers";
+import VenuesContact from "@repo/ui/VenuesContact";
+
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getT } from "../../libs/i18n";
+import Footer from "../features/Footer.astro";
+import VenuePageCover from "../features/VenuePageCover.astro";
+
+const lang = getLang(Astro);
+const t = getT(lang);
+
+const { pageCover, team, venues } = await getContactPageData({
+  lang,
+  config: getSanityConfigFromEnvironment(),
+});
+---
+
+<VenuePageCover data={pageCover} height="m" />
+
+<TeamMembers
+  title={team.title}
+  intro={team.intro}
+  members={team.members}
+  mailAriaLabel={t("contactPage.writeTo")}
+/>
+
+<VenuesContact
+  id={venuesContactId}
+  title={venues.title}
+  intro={venues.intro}
+  venues={venues.items.map((venue) => ({
+    ...venue,
+    city: venue.title,
+    name: t("contactPage.venueName", { city: venue.title }),
+  }))}
+/>
+
+<Footer />

@@ -1,4 +1,12 @@
+import { emailTemplateKeys } from "@repo/api/zeptomail/emailTemplateKeys";
+import { sendEmailWithTemplate } from "@repo/api/zeptomail/sendEmailWithTemplate";
+import { venueOpeningMergeLabels } from "@repo/api/zeptomail/venueOpeningMergeLabels";
 import z from "zod";
+
+import { scoreVenueOpeningLead } from "./scoreVenueOpeningLead";
+
+// anchor the page cover CTA scrolls to
+export const venueOpeningFormId = "venue-opening-form";
 
 export const venueOpeningFormLimits = {
   city: 120,
@@ -97,3 +105,85 @@ export const venueOpeningFormBodySchema = z.strictObject({
 });
 
 export type VenueOpeningFormBody = z.infer<typeof venueOpeningFormBodySchema>;
+
+// the page belongs to no venue, so the lead goes to the network address
+// todo: check with Lionel
+const venueOpeningEmail = "contact@musiquiz.co";
+const venueOpeningName = "Musi'Quiz";
+
+// keys are the client's merge tags
+export function adaptVenueOpeningMergeInfo(body: VenueOpeningFormBody) {
+  const labels = venueOpeningMergeLabels;
+  const { score, qualification } = scoreVenueOpeningLead(body);
+
+  return {
+    profil: labels.profile[body.profile],
+    intention: labels.intent[body.intent],
+    ville_projet: body.city,
+    population: labels.population[body.population],
+    local: labels.premises[body.premises],
+    horizon: labels.horizon[body.horizon],
+    apport: labels.contribution[body.contribution],
+    experience: labels.experience[body.experience],
+    associes: labels.partners[body.partners],
+    prenom: body.firstName,
+    nom: body.lastName,
+    email: body.mail,
+    telephone: body.phone,
+    source: labels.source[body.source],
+    message: body.message,
+    rgpd: "Oui",
+    lead_score: String(score),
+    lead_qualification: labels.qualification[qualification],
+  };
+}
+
+export async function processVenueOpeningForm({
+  body,
+  zeptomailToken,
+}: {
+  body: VenueOpeningFormBody;
+  zeptomailToken: string;
+}) {
+  const { firstName, mail: applicantMail } = body;
+
+  const mergeInfo = adaptVenueOpeningMergeInfo(body);
+
+  const { internalMailTemplateKey, clientTemplateKey } =
+    emailTemplateKeys.venueOpening;
+
+  const [internalResult, applicantResult] = await Promise.allSettled([
+    sendEmailWithTemplate({
+      templateKey: internalMailTemplateKey,
+      mergeInfo,
+      token: zeptomailToken,
+      senderAddress: venueOpeningEmail,
+      senderName: venueOpeningName,
+      destinationAddress: venueOpeningEmail,
+      destinationName: venueOpeningName,
+    }),
+    sendEmailWithTemplate({
+      templateKey: clientTemplateKey,
+      mergeInfo,
+      token: zeptomailToken,
+      senderAddress: venueOpeningEmail,
+      senderName: venueOpeningName,
+      destinationAddress: applicantMail,
+      destinationName: firstName,
+    }),
+  ]);
+
+  // the lead reaching the network is the point of the form; the applicant
+  // confirmation is a courtesy, and failing the request over it invites a
+  // duplicate send
+  if (internalResult.status === "rejected") {
+    throw internalResult.reason;
+  }
+
+  return {
+    confirmationError:
+      applicantResult.status === "rejected"
+        ? applicantResult.reason
+        : undefined,
+  };
+}
