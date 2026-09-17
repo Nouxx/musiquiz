@@ -53,7 +53,7 @@ export const en: typeof fr = {
     contact: "Contact",
     blog: "Blog",
     press: "Press",
-    franchise: "Open your Musi'quiz franchise",
+    joinTheNetwork: "Open your Musi'quiz franchise",
     termsAndConditions: "T&C",
     gdpr: "GDPR",
     legalsNotice: "Legal Notices",

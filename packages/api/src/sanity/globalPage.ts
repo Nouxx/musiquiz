@@ -10,7 +10,7 @@ import {
 } from "./shared/pageComponents";
 import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
 
-export type GlobalPageType = "franchise";
+export type GlobalPageType = "joinTheNetwork";
 
 function globalPageQuery({
   lang,

@@ -51,7 +51,7 @@ export const fr = {
     contact: "Contact",
     blog: "Blog",
     press: "Presse",
-    franchise: "Ouvrez votre salle Musi'quiz",
+    joinTheNetwork: "Ouvrez votre salle Musi'quiz",
     termsAndConditions: "CGV",
     gdpr: "RGPD",
     legalsNotice: "Mentions légales",

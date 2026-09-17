@@ -154,7 +154,7 @@ export const myStructure: StructureResolver = (S: StructureBuilder) =>
 
       globalPageItem({
         S,
-        pageType: "franchise",
+        pageType: "joinTheNetwork",
         title: "Join the network page",
         icon: RocketIcon,
       }),

@@ -58,7 +58,7 @@ export type PageCover = {
 
 export type VenuePageType = "home" | "gift" | "book";
 
-export type GlobalPageType = "franchise";
+export type GlobalPageType = "joinTheNetwork";
 
 export type GlobalPage = {
   pageCover: PageCover;

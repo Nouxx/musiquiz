@@ -7,7 +7,7 @@ import {
 import { DocumentIcon } from "@sanity/icons/Document";
 
 export const globalPageTypes = [
-  { value: "franchise", title: "Join the network page" },
+  { value: "joinTheNetwork", title: "Join the network page" },
   { value: "contact", title: "Contact page" },
 ] as const;
 
