@@ -63,4 +63,10 @@ export const venueOpeningMergeLabels = {
     event: "Salon ou événement",
     other: "Autre",
   },
+  qualification: {
+    hot: "🔥 LEAD CHAUD",
+    warm: "🟡 LEAD TIÈDE",
+    nurturing: "🌱 NURTURING",
+    low: "❄️ LOW PRIORITY",
+  },
 } as const;

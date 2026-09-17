@@ -86,6 +86,8 @@ it("merges the client's tags with the French wording", () => {
     source: "Recherche Google",
     message: "",
     rgpd: "Oui",
+    lead_score: "60",
+    lead_qualification: "🟡 LEAD TIÈDE",
   });
 });
 

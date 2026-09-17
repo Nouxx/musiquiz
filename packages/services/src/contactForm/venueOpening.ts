@@ -3,6 +3,8 @@ import { sendEmailWithTemplate } from "@repo/api/zeptomail/sendEmailWithTemplate
 import { venueOpeningMergeLabels } from "@repo/api/zeptomail/venueOpeningMergeLabels";
 import z from "zod";
 
+import { scoreVenueOpeningLead } from "./scoreVenueOpeningLead";
+
 // anchor the page cover CTA scrolls to
 export const venueOpeningFormId = "venue-opening-form";
 
@@ -109,11 +111,10 @@ export type VenueOpeningFormBody = z.infer<typeof venueOpeningFormBodySchema>;
 const venueOpeningEmail = "contact@musiquiz.co";
 const venueOpeningName = "Musi'Quiz";
 
-// keys are the client's merge tags; lead_score and lead_qualification wait on
-// the weights the client never sent
-// todo: the actual scoring
+// keys are the client's merge tags
 export function adaptVenueOpeningMergeInfo(body: VenueOpeningFormBody) {
   const labels = venueOpeningMergeLabels;
+  const { score, qualification } = scoreVenueOpeningLead(body);
 
   return {
     profil: labels.profile[body.profile],
@@ -132,6 +133,8 @@ export function adaptVenueOpeningMergeInfo(body: VenueOpeningFormBody) {
     source: labels.source[body.source],
     message: body.message,
     rgpd: "Oui",
+    lead_score: String(score),
+    lead_qualification: labels.qualification[qualification],
   };
 }
 
