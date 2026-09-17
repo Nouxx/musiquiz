@@ -105,11 +105,13 @@ export const venueOpeningFormBodySchema = z.strictObject({
 export type VenueOpeningFormBody = z.infer<typeof venueOpeningFormBodySchema>;
 
 // the page belongs to no venue, so the lead goes to the network address
+// todo: check with Lionel
 const venueOpeningEmail = "contact@musiquiz.co";
 const venueOpeningName = "Musi'Quiz";
 
 // keys are the client's merge tags; lead_score and lead_qualification wait on
 // the weights the client never sent
+// todo: the actual scoring
 export function adaptVenueOpeningMergeInfo(body: VenueOpeningFormBody) {
   const labels = venueOpeningMergeLabels;
 
