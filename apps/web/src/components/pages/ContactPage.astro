@@ -1,8 +1,6 @@
 ---
-import {
-  getContactPageData,
-  venuesContactId,
-} from "@repo/services/cms/getContactPageData";
+import { getContactPageData } from "@repo/services/cms/getContactPageData";
+import type { PageCover as PageCoverData } from "@repo/services/cms/types";
 import TeamMembers from "@repo/ui/TeamMembers";
 import VenuesContact from "@repo/ui/VenuesContact";
 
@@ -19,9 +17,18 @@ const { pageCover, team, venues } = await getContactPageData({
   lang,
   config: getSanityConfigFromEnvironment(),
 });
+
+const venuesContactAnchor = "venues-contact";
+
+const pageCoverData: PageCoverData = pageCover.cta
+  ? {
+      ...pageCover,
+      cta: { ...pageCover.cta, url: `#${venuesContactAnchor}` },
+    }
+  : pageCover;
 ---
 
-<VenuePageCover data={pageCover} height="m" />
+<VenuePageCover data={pageCoverData} height="m" ctaIcon="arrow-down" />
 
 <TeamMembers
   title={team.title}
@@ -31,7 +38,7 @@ const { pageCover, team, venues } = await getContactPageData({
 />
 
 <VenuesContact
-  id={venuesContactId}
+  id={venuesContactAnchor}
   title={venues.title}
   intro={venues.intro}
   venues={venues.items.map((venue) => ({

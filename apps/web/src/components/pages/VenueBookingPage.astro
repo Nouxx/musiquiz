@@ -7,6 +7,7 @@ import PageComponents from "../features/PageComponents.astro";
 import { getVenueWidgetPageData } from "@repo/services/cms/getVenueWidgetPageData";
 import type { PageCover as PageCoverData } from "@repo/services/cms/types";
 import BookingWidget from "../features/4espace/BookingWidget.astro";
+import { bookingAnchor } from "../features/4espace/config";
 
 interface Props {
   venueSlug: string;
@@ -27,7 +28,7 @@ const pageCoverData: PageCoverData = {
   ...pageData.pageCover,
   cta: {
     label: "Choisir mon activité",
-    url: "#booking",
+    url: `#${bookingAnchor}`,
   },
   secondaryCta: {
     label: "Tarifs",

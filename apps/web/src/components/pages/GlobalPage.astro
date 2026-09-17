@@ -1,6 +1,9 @@
 ---
 import { getGlobalPageData } from "@repo/services/cms/getGlobalPageData";
-import type { GlobalPageType } from "@repo/services/cms/types";
+import type {
+  GlobalPageType,
+  PageCover as PageCoverData,
+} from "@repo/services/cms/types";
 
 import { getLang } from "../../libs/getLang";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
@@ -8,6 +11,7 @@ import Footer from "../features/Footer.astro";
 import PageComponents from "../features/PageComponents.astro";
 import VenueOpeningForm from "../features/VenueOpeningForm.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
+import { venueOpeningFormId } from "@repo/services/contactForm/venueOpening";
 
 interface Props {
   pageType: GlobalPageType;
@@ -22,9 +26,17 @@ const pageData = await getGlobalPageData({
   pageType,
   config: getSanityConfigFromEnvironment(),
 });
+
+const pageCoverData: PageCoverData =
+  pageType === "joinTheNetwork" && pageData.pageCover.cta
+    ? {
+        ...pageData.pageCover,
+        cta: { ...pageData.pageCover.cta, url: `#${venueOpeningFormId}` },
+      }
+    : pageData.pageCover;
 ---
 
-<VenuePageCover data={pageData.pageCover} />
+<VenuePageCover data={pageCoverData} ctaIcon="arrow-down" />
 
 <PageComponents components={pageData.components} />
 

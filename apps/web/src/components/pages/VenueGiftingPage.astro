@@ -7,6 +7,7 @@ import PageComponents from "../features/PageComponents.astro";
 import { getVenueWidgetPageData } from "@repo/services/cms/getVenueWidgetPageData";
 import type { PageCover as PageCoverData } from "@repo/services/cms/types";
 import GiftingWidget from "../features/4espace/GiftingWidget.astro";
+import { giftingAnchor } from "../features/4espace/config";
 
 interface Props {
   venueSlug: string;
@@ -27,11 +28,7 @@ const pageCoverData: PageCoverData = {
   ...pageData.pageCover,
   cta: {
     label: "Choisir mon activité",
-    url: "#booking",
-  },
-  secondaryCta: {
-    label: "Tarifs",
-    url: "#prices",
+    url: `#${giftingAnchor}`,
   },
 };
 ---

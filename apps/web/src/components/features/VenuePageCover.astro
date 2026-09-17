@@ -11,9 +11,10 @@ import type { ComponentProps } from "astro/types";
 interface Props {
   data: PageCoverData;
   height?: "full" | "m";
+  ctaIcon?: "arrow-down" | "arrow-left";
 }
 
-const { data, height = "full" } = Astro.props;
+const { data, height = "full", ctaIcon } = Astro.props;
 
 const { background, aside, badge, heading, subHeading, cta, secondaryCta } =
   data;
@@ -28,6 +29,8 @@ const coverProps: ComponentProps<typeof PageCover> =
         background: "gradient",
         surface: background.kind,
       };
+
+// todo: rename this component to PageCover (not only tied to venue now)
 ---
 
 <PageCover {...coverProps}>
@@ -75,7 +78,7 @@ const coverProps: ComponentProps<typeof PageCover> =
     (cta || secondaryCta) && (
       <Fragment slot="actions">
         {cta && (
-          <Button as="a" href={cta.url} icon="arrow-right">
+          <Button as="a" href={cta.url} icon={ctaIcon}>
             {cta.label}
           </Button>
         )}

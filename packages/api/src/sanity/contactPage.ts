@@ -36,7 +36,7 @@ function contactPageQuery({ lang }: { lang: Lang }) {
 
 const sanityContactPageSchema = z.strictObject({
   page: z.strictObject({
-    pageCover: sanityPageCoverSchema,
+    pageCover: sanityPageCoverSchema({ hasCta: true }),
     teamTitle: z.string().min(1),
     teamIntro: z.string().min(1).nullable(),
     venuesTitle: z.string().min(1),

@@ -5,8 +5,10 @@ export const forEscapeSetting =
   "b64.eyJkb21haW4iOiJtdXNpcXVpei40ZXNjYXBlLmlvIn0=";
 
 export const bookingWidgetId = "fa25b722-264c-4644-b65e-5e8aeb60f7b3";
+export const bookingAnchor = "booking";
 
 export const giftingWidgetId = "e2cfe1e4-7b09-45ef-bc8b-6269605b367f";
+export const giftingAnchor = "gifting";
 
 // data-settings only carries the tenant API base: the widget picks `instance`
 // and `domain` out of the decoded JSON and drops everything else. The venue is

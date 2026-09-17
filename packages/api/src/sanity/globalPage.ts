@@ -22,14 +22,14 @@ function globalPageQuery({
   return defineQuery(`{
     "globalPage": *[_type == "globalPage" && pageType == "${pageType}"][0]{
       pageCover ${pageCoverProjection({ lang })},
-      "pageComponents": ${pageComponentsProjection({ lang })},
+      "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
     }
   }`);
 }
 
 const sanityGlobalPageSchema = z.strictObject({
   globalPage: z.strictObject({
-    pageCover: sanityPageCoverSchema,
+    pageCover: sanityPageCoverSchema({ hasCta: true }),
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
   }),
 });

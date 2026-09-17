@@ -11,17 +11,11 @@ import type { ContactPage } from "./types";
 import { toCmsImage } from "./utils/toCmsImage";
 import { toPageCover } from "./utils/toPageCover";
 
-export const venuesContactId = "venues-contact";
-
 function adaptContactPage(data: SanityContactPage): ContactPage {
   const { page, teamMembers, venues } = data;
 
   return {
-    pageCover: toPageCover({
-      data: page.pageCover,
-      ctaUrl: `#${venuesContactId}`,
-      ctaIcon: "arrow-down",
-    }),
+    pageCover: toPageCover({ data: page.pageCover }),
     team: {
       title: page.teamTitle,
       intro: page.teamIntro ?? undefined,

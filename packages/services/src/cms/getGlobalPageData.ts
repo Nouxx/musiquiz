@@ -5,7 +5,6 @@ import {
 import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
-import { venueOpeningFormId } from "../contactForm/venueOpening";
 import type { GlobalPage, GlobalPageType } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
 import { toPageCover } from "./utils/toPageCover";
@@ -20,11 +19,7 @@ function adaptGlobalPage({
   switch (pageType) {
     case "joinTheNetwork": {
       return {
-        pageCover: toPageCover({
-          data: data.globalPage.pageCover,
-          ctaUrl: `#${venueOpeningFormId}`,
-          ctaIcon: "arrow-down",
-        }),
+        pageCover: toPageCover({ data: data.globalPage.pageCover }),
         components:
           data.globalPage.pageComponents?.map((component) =>
             adaptPageComponent(component),
