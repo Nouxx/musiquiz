@@ -1,5 +1,5 @@
-// the client's team reads the mail, so each key merges as the French wording
-// they wrote in their brief, not as the value the form posts
+// values are in french because the business is French
+// passing this through in English is not what we want
 export const venueOpeningMergeLabels = {
   profile: {
     projectHolder: "Porteur·se de projet, je veux créer mon activité",
