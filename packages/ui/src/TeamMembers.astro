@@ -31,12 +31,10 @@ const { title, intro, members, mailAriaLabel } = Astro.props;
     gap: var(--space-10);
   }
 
-  /* flex, not grid: an orphan on the last row sits centered */
   .members {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-6);
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(30rem, 100%), 1fr));
+    gap: var(--space-10);
     padding: 0;
     list-style: none;
   }
