@@ -7,7 +7,7 @@ interface Props {
   // the sheet's Couleur axis: `dark` is the translucent pill that sits on
   // media, `light` the opaque one for plain surfaces
   color?: "dark" | "light";
-  border?: "brand" | "blue";
+  border?: "brand" | "blue" | "red";
   size?: "large" | "small";
   tilt?: boolean;
   icon?: IconName;
@@ -70,6 +70,10 @@ const {
 
   .border-blue {
     --badge-border: var(--color-border-brand-blue);
+  }
+
+  .border-red {
+    --badge-border: var(--color-border-brand-red);
   }
 
   .tilt {

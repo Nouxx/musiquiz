@@ -129,6 +129,17 @@ function boundVariables(node, variableNames) {
   return names.size ? [`var:${[...names].join(",")}`] : [];
 }
 
+// strokeWeight is a single number even when the sides differ
+function strokeWeight(node) {
+  const sides = node.individualStrokeWeights;
+  const weight = sides
+    ? `${sides.top}/${sides.right}/${sides.bottom}/${sides.left}`
+    : node.strokeWeight;
+  if (!weight) return "";
+  const align = node.strokeAlign ? ` ${node.strokeAlign.toLowerCase()}` : "";
+  return ` ${weight}${align}`;
+}
+
 function describe(node, options) {
   const box = node.absoluteBoundingBox;
   const parts = [];
@@ -139,10 +150,7 @@ function describe(node, options) {
     const fill = paints(node.fills);
     if (fill) parts.push(`fill:${fill}`);
     const stroke = paints(node.strokes);
-    if (stroke)
-      parts.push(
-        `stroke:${stroke}${node.strokeWeight ? ` ${node.strokeWeight}` : ""}`,
-      );
+    if (stroke) parts.push(`stroke:${stroke}${strokeWeight(node)}`);
     const corner = radius(node);
     if (corner) parts.push(corner);
     if (node.opacity !== undefined && node.opacity < 1)

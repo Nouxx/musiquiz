@@ -133,6 +133,15 @@
    header tuck. Change either number and those move with it.
 
    ------------------------------------------------------------
+   40rem — team member row
+   ------------------------------------------------------------
+   Used by team/TeamMemberCard.astro: the 200px photo sits beside the card
+   instead of above it. Derived: 40rem minus the `--space-6` gutters is 37rem,
+   minus the 12.5rem photo and the 1.5rem gap leaves 23rem for the card,
+   enough for the badge + mail chip row and an email address at
+   `paragraph-base-sm` on one line.
+
+   ------------------------------------------------------------
    48rem — footer logo step
    ------------------------------------------------------------
    Used by RemoteImage.astro for `footer-logo` (120px → 160px), in the

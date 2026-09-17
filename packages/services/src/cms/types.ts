@@ -65,6 +65,41 @@ export type GlobalPage = {
   components: PageComponent[];
 };
 
+export type TeamMember = {
+  photo: CmsImage;
+  name: string;
+  /** @example "C.E.O" */
+  role: string;
+  jobTitle: string;
+  tone: "blue" | "red";
+  mailLabel: string;
+  mailHref: string;
+};
+
+export type VenueContact = {
+  title: string;
+  logo: CmsImage;
+  address: string;
+  mailLabel: string;
+  mailHref: string;
+  phoneLabel: string;
+  phoneHref: string;
+};
+
+export type ContactPage = {
+  pageCover: PageCover;
+  team: {
+    title: string;
+    intro: string | undefined;
+    members: TeamMember[];
+  };
+  venues: {
+    title: string;
+    intro: string | undefined;
+    items: VenueContact[];
+  };
+};
+
 export type VenuePage = {
   pageCover: PageCover;
   components: PageComponent[];

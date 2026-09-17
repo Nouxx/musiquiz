@@ -1,9 +1,26 @@
-import { defineField, defineType } from "sanity";
+import {
+  defineField,
+  defineType,
+  type Rule,
+  type SanityDocument,
+} from "sanity";
 import { DocumentIcon } from "@sanity/icons/Document";
 
 export const globalPageTypes = [
   { value: "franchise", title: "Join the network page" },
+  { value: "contact", title: "Contact page" },
 ] as const;
+
+function isContactPage(document: SanityDocument | undefined) {
+  return document?.pageType === "contact";
+}
+
+// only required on the contact page: `rule.required()` cannot see the page type
+function requiredOnContactPage(rule: Rule) {
+  return rule.custom<unknown[] | undefined>((value, context) =>
+    isContactPage(context.document) && !value?.length ? "Required" : true,
+  );
+}
 
 export const globalPageType = defineType({
   name: "globalPage",
@@ -31,6 +48,33 @@ export const globalPageType = defineType({
     defineField({
       name: "pageComponents",
       type: "pageComponents",
+      hidden: ({ document }) => isContactPage(document),
+    }),
+    defineField({
+      name: "teamTitle",
+      title: "Team section title",
+      type: "internationalizedArrayString",
+      hidden: ({ document }) => !isContactPage(document),
+      validation: requiredOnContactPage,
+    }),
+    defineField({
+      name: "teamIntro",
+      title: "Team section intro",
+      type: "internationalizedArrayString",
+      hidden: ({ document }) => !isContactPage(document),
+    }),
+    defineField({
+      name: "venuesTitle",
+      title: "Venues section title",
+      type: "internationalizedArrayString",
+      hidden: ({ document }) => !isContactPage(document),
+      validation: requiredOnContactPage,
+    }),
+    defineField({
+      name: "venuesIntro",
+      title: "Venues section intro",
+      type: "internationalizedArrayString",
+      hidden: ({ document }) => !isContactPage(document),
     }),
   ],
   preview: {

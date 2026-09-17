@@ -78,6 +78,10 @@ export const en: typeof fr = {
     mailPlaceholder: "Your mail address",
     newsletterConsent: "I agree to receive information from Musi'Quiz",
   },
+  contactPage: {
+    writeTo: "Send an email",
+    venueName: "Musi'Quiz {{city}}",
+  },
   findUs: {
     address: "Address",
     openingHours: "Opening hours",

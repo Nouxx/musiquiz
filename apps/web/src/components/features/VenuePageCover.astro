@@ -8,12 +8,14 @@ import type { PageCover as PageCoverData } from "@repo/services/cms/types";
 
 interface Props {
   data: PageCoverData;
+  height?: "full" | "m";
 }
 
-const { media, logo, badge, heading, subHeading, cta } = Astro.props.data;
+const { data, height = "full" } = Astro.props;
+const { media, logo, badge, heading, subHeading, cta } = data;
 ---
 
-<PageCover align="left">
+<PageCover align="left" {height}>
   <RemoteImage slot="media" image={media} variant="cover" loading="eager" />
 
   {

@@ -183,10 +183,19 @@ export const venueType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "venueLogo",
-      title: "Venue Logo",
+      name: "venueLogoLight",
+      title: "Venue Logo, light",
       type: "imageWithAlt",
-      description: "Prefer SVG files",
+      description:
+        "White version, shown on photos and dark surfaces. Prefer SVG files",
+      group: "general",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "venueLogoDark",
+      title: "Venue Logo, dark",
+      type: "imageWithAlt",
+      description: "Black version, shown on plain surfaces. Prefer SVG files",
       group: "general",
       validation: (rule) => rule.required(),
     }),

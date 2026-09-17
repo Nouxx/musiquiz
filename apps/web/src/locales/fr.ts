@@ -76,6 +76,10 @@ export const fr = {
     mailPlaceholder: "Votre adresse mail",
     newsletterConsent: "J'accepte de recevoir les informations de Musi'Quiz",
   },
+  contactPage: {
+    writeTo: "Écrire un mail",
+    venueName: "Musi'Quiz {{city}}",
+  },
   findUs: {
     address: "Adresse",
     openingHours: "Horaires",

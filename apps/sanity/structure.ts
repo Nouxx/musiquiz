@@ -8,6 +8,9 @@ import { HomeIcon } from "@sanity/icons/Home";
 import { InfoOutlineIcon } from "@sanity/icons/InfoOutline";
 import { JoystickIcon } from "@sanity/icons/Joystick";
 import { ConfettiIcon } from "@sanity/icons/Confetti";
+import { EnvelopeIcon } from "@sanity/icons/Envelope";
+import { RocketIcon } from "@sanity/icons/Rocket";
+import type { ComponentType } from "react";
 import {
   globalPageTemplateId,
   singletonIds,
@@ -70,15 +73,17 @@ function globalPageItem({
   S,
   pageType,
   title,
+  icon = DocumentIcon,
 }: {
   S: StructureBuilder;
   pageType: string;
   title: string;
+  icon?: ComponentType;
 }) {
   return S.listItem()
     .title(title)
     .id(`globalPage-${pageType}`)
-    .icon(DocumentIcon)
+    .icon(icon)
     .child(
       S.document()
         .schemaType("globalPage")
@@ -151,6 +156,14 @@ export const myStructure: StructureResolver = (S: StructureBuilder) =>
         S,
         pageType: "franchise",
         title: "Join the network page",
+        icon: RocketIcon,
+      }),
+
+      globalPageItem({
+        S,
+        pageType: "contact",
+        title: "Contact page",
+        icon: EnvelopeIcon,
       }),
 
       S.listItem()

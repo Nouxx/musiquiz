@@ -1,0 +1,93 @@
+---
+import Badge from "../Badge.astro";
+import IconChip from "../primitives/IconChip.astro";
+import Link from "../primitives/Link.astro";
+import RemoteImage from "../primitives/RemoteImage.astro";
+import Text from "../primitives/Text.astro";
+import type { VenueContact } from "../types";
+
+interface Props {
+  venue: VenueContact;
+}
+
+const { venue } = Astro.props;
+---
+
+<li class="venue">
+  <RemoteImage image={venue.logo} variant="menu-logo" />
+
+  <div class="details">
+    <div class="identity">
+      <Badge color="light" icon="pin">{venue.city}</Badge>
+
+      <div class="lines">
+        <Text as="p" variant="title-base">{venue.name}</Text>
+        <Text as="p" variant="paragraph-base">{venue.address}</Text>
+      </div>
+    </div>
+
+    <ul class="contacts">
+      <li class="contact">
+        <IconChip name="phone" tone="light" size="s" />
+        <Link url={venue.phoneHref} underline={false}>
+          <Text variant="paragraph-base">{venue.phoneLabel}</Text>
+        </Link>
+      </li>
+
+      <li class="contact">
+        <IconChip name="mail" tone="light" size="s" />
+        <Link url={venue.mailHref} underline={false}>
+          <Text variant="paragraph-base">{venue.mailLabel}</Text>
+        </Link>
+      </li>
+    </ul>
+  </div>
+</li>
+
+<style>
+  .venue {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-10);
+    align-items: center;
+  }
+
+  .details {
+    display: flex;
+    flex: 1 1 20rem;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .identity {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+
+  .lines {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .lines > :last-child,
+  .contacts {
+    color: var(--color-text-muted);
+  }
+
+  .contacts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: 0;
+    list-style: none;
+  }
+
+  .contact {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+  }
+</style>

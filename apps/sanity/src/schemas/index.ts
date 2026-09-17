@@ -9,7 +9,7 @@ import { eventFormatType } from "./eventFormat";
 import { gameFormatType } from "./gameFormat";
 import { globalPageType } from "./globalPage";
 import { homepageType } from "./homepage";
-import { siteSettingsType } from "./siteSettings";
+import { siteSettingsType, teamMemberType } from "./siteSettings";
 import { quotationServiceType, venueType } from "./venue";
 import { priceType, venueGameType } from "./venueGame";
 import { venueEventType } from "./venueEvent";
@@ -58,6 +58,7 @@ export const schemaTypes = [
   venueEventType,
   priceType,
   siteSettingsType,
+  teamMemberType,
   gameFormatType,
   eventFormatType,
   imageWithAltType,

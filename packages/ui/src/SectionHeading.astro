@@ -1,0 +1,37 @@
+---
+import Text from "./primitives/Text.astro";
+
+interface Props {
+  title: string;
+  intro?: string;
+}
+
+const { title, intro } = Astro.props;
+---
+
+<div class="heading">
+  <Text as="h2" variant="title-h2">{title}</Text>
+
+  {
+    intro && (
+      <div class="intro">
+        <Text as="p" variant="paragraph-base">
+          {intro}
+        </Text>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    max-inline-size: 51.5rem;
+  }
+
+  .intro {
+    color: var(--color-text-muted);
+  }
+</style>
