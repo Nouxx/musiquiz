@@ -51,7 +51,7 @@ const { member, mailAriaLabel } = Astro.props;
   .member {
     display: flex;
     flex: 1 1 30rem;
-    /* max-inline-size: 39rem; */
+    max-inline-size: 39rem;
     flex-direction: column;
     gap: var(--space-6);
     align-items: center;
@@ -124,6 +124,7 @@ const { member, mailAriaLabel } = Astro.props;
 
   .mail {
     color: var(--color-text-muted);
+    overflow-wrap: anywhere;
   }
 
   /* 40rem — a member row: photo beside the card (styles/breakpoints.css) */
