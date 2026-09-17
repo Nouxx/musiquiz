@@ -6,9 +6,7 @@ import { z } from "zod";
 
 // eslint-disable-next-line unicorn/name-replacements -- cloudflare requirements for `env`
 export async function venueOpeningRoute(request: Request, env: Env) {
-	const parsedBody = venueOpeningFormBodySchema.safeParse(
-		await request.json(),
-	);
+	const parsedBody = venueOpeningFormBodySchema.safeParse(await request.json());
 
 	if (!parsedBody.success) {
 		return Response.json(

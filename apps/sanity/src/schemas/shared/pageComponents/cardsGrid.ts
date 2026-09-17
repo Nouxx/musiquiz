@@ -20,7 +20,8 @@ export const cardType = defineType({
     defineField({
       name: "badge",
       title: "Badge",
-      description: "The small tilted pill above the title. Leave empty for none.",
+      description:
+        "The small tilted pill above the title. Leave empty for none.",
       type: "internationalizedArrayString",
     }),
     defineField({
