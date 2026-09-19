@@ -1,0 +1,36 @@
+---
+import { getWhereToFindUsPageData } from "@repo/services/cms/getWhereToFindUsPageData";
+import type { PageCover as PageCoverData } from "@repo/services/cms/types";
+
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import Footer from "../features/Footer.astro";
+import PageComponents from "../features/PageComponents.astro";
+import VenuePageCover from "../features/VenuePageCover.astro";
+import VenuesList from "../features/VenuesList.astro";
+
+const lang = getLang(Astro);
+
+const pageData = await getWhereToFindUsPageData({
+  lang,
+  config: getSanityConfigFromEnvironment(),
+});
+
+// the button scrolls to the map, whose anchor VenuesMap owns
+const pageCoverData: PageCoverData = pageData.pageCover.cta
+  ? {
+      ...pageData.pageCover,
+      cta: { ...pageData.pageCover.cta, url: "#venues" },
+    }
+  : pageData.pageCover;
+---
+
+<VenuePageCover data={pageCoverData} ctaIcon="arrow-down" />
+
+<PageComponents components={pageData.componentsBeforeMap} />
+
+<VenuesList venues={pageData.venues} cta={pageData.venuesCta} />
+
+<PageComponents components={pageData.componentsAfterMap} />
+
+<Footer />

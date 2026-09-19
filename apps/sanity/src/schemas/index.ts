@@ -45,6 +45,7 @@ import {
   offersType,
 } from "./shared/pageComponents/offers";
 import { textSlideshowType } from "./shared/pageComponents/textSlideshow";
+import { textStripType } from "./shared/pageComponents/textStrip";
 import { videoEmbedType } from "./shared/pageComponents/videoEmbed";
 import { textBlockType } from "./shared/textBlock";
 
@@ -90,6 +91,7 @@ export const schemaTypes = [
   textCardsGridType,
   keywordCardType,
   textSlideshowType,
+  textStripType,
   offersType,
   offerGroupType,
   offerCardType,

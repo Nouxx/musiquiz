@@ -47,7 +47,7 @@ export const fr = {
     closeLabel: "Fermer",
   },
   footer: {
-    faq: "FAQ",
+    whereToFindUs: "Ou nous trouver",
     contact: "Contact",
     blog: "Blog",
     press: "Presse",

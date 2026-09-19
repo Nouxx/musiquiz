@@ -49,7 +49,7 @@ export const en: typeof fr = {
     closeLabel: "Close",
   },
   footer: {
-    faq: "FAQ",
+    whereToFindUs: "Where to find us",
     contact: "Contact",
     blog: "Blog",
     press: "Press",

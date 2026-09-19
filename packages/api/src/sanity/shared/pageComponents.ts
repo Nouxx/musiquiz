@@ -242,6 +242,15 @@ function textSlideshowProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function textStripProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "textStrip" => {
+      "textBlock": ${textBlockProjection({ field: "textBlock", lang })},
+      "images": images[] ${imageProjection({ lang })}
+    }
+  `;
+}
+
 function textCardsProjection({ lang }: { lang: Lang }) {
   return `
     _type == "textCards" => {
@@ -359,6 +368,7 @@ export function pageComponentsProjection({
       ${cardsScrollerProjection({ lang })},
       ${detailTabsProjection({ lang })},
       ${textSlideshowProjection({ lang })},
+      ${textStripProjection({ lang })},
       ${textCardsProjection({ lang })},
       ${textCardsGridProjection({ lang })},
       ${offersProjection({ lang })},
@@ -565,6 +575,12 @@ const sanityTextSlideshowSchema = z.strictObject({
   images: z.array(sanityImageSchema).min(1).max(8),
 });
 
+const sanityTextStripSchema = z.strictObject({
+  _type: z.literal("textStrip"),
+  textBlock: sanityTextBlockSchema,
+  images: z.array(sanityImageSchema).min(6).max(12),
+});
+
 const sanityContentIconSchema = z.enum([
   "calendar",
   "camera",
@@ -702,6 +718,7 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityCardsScrollerSchema,
   sanityDetailTabsSchema,
   sanityTextSlideshowSchema,
+  sanityTextStripSchema,
   sanityTextCardsSchema,
   sanityTextCardsGridSchema,
   sanityOffersSchema,

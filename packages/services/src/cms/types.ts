@@ -24,20 +24,22 @@ export type RichTextNode = {
 
 export type RichText = RichTextNode[];
 
+export type VenuePin = {
+  /** the slug, pairs a list link with its dot on the map */
+  id: string;
+  title: string;
+  url: string;
+  detail: string;
+  /** percent of the map frame */
+  position: { x: number; y: number };
+};
+
 export type Homepage = {
   logo: CmsImage;
   cover: CmsImage;
   badgeLabel: string;
   heading: string;
-  venues: {
-    /** the slug, pairs a list link with its dot on the map */
-    id: string;
-    title: string;
-    url: string;
-    detail: string;
-    /** percent of the map frame */
-    position: { x: number; y: number };
-  }[];
+  venues: VenuePin[];
   venuesCta: { label: string; url: string } | undefined;
   components: PageComponent[];
 };
@@ -80,6 +82,14 @@ export type GlobalPageType = "joinTheNetwork";
 export type GlobalPage = {
   pageCover: PageCover;
   components: PageComponent[];
+};
+
+export type WhereToFindUsPage = {
+  pageCover: PageCover;
+  componentsBeforeMap: PageComponent[];
+  venues: VenuePin[];
+  venuesCta: { label: string; url: string } | undefined;
+  componentsAfterMap: PageComponent[];
 };
 
 export type TeamMember = {

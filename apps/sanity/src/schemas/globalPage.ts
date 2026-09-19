@@ -9,10 +9,15 @@ import { DocumentIcon } from "@sanity/icons/Document";
 export const globalPageTypes = [
   { value: "joinTheNetwork", title: "Join the network page" },
   { value: "contact", title: "Contact page" },
+  { value: "whereToFindUs", title: "Where to find us page" },
 ] as const;
 
 function isContactPage(document: SanityDocument | undefined) {
   return document?.pageType === "contact";
+}
+
+function hasMap(document: SanityDocument | undefined) {
+  return document?.pageType === "whereToFindUs";
 }
 
 // only required on the contact page: `rule.required()` cannot see the page type
@@ -48,7 +53,26 @@ export const globalPageType = defineType({
     defineField({
       name: "pageComponents",
       type: "pageComponents",
-      hidden: ({ document }) => isContactPage(document),
+      hidden: ({ document }) => isContactPage(document) || hasMap(document),
+    }),
+    defineField({
+      name: "componentsBeforeMap",
+      title: "Before the map",
+      type: "pageComponents",
+      hidden: ({ document }) => !hasMap(document),
+    }),
+    defineField({
+      name: "venuesCta",
+      title: "Map section call to action",
+      description: "The button under the list of venues. Leave empty for none.",
+      type: "cta",
+      hidden: ({ document }) => !hasMap(document),
+    }),
+    defineField({
+      name: "componentsAfterMap",
+      title: "After the map",
+      type: "pageComponents",
+      hidden: ({ document }) => !hasMap(document),
     }),
     defineField({
       name: "teamTitle",

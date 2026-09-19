@@ -1,0 +1,52 @@
+---
+import DriftingColumns from "./primitives/DriftingColumns.astro";
+import Section from "./Section.astro";
+import TextBlock from "./TextBlock.astro";
+import type { CtaLink, ImageSource, RichTextNode } from "./types";
+
+interface Props {
+  badge?: string;
+  title: string;
+  body: RichTextNode[];
+  additionalCtas?: CtaLink[];
+  cta?: CtaLink;
+  ctaTone?: "red" | "blue";
+  images: ImageSource[];
+}
+
+const { badge, title, body, additionalCtas, cta, ctaTone, images } =
+  Astro.props;
+---
+
+<Section spacing="m">
+  <div class="text-strip">
+    <TextBlock
+      {badge}
+      {title}
+      {body}
+      {additionalCtas}
+      {cta}
+      {ctaTone}
+      headingLevel="h2"
+      size="l"
+    />
+
+    <DriftingColumns {images} />
+  </div>
+</Section>
+
+<style>
+  .text-strip {
+    display: grid;
+    gap: var(--space-10);
+  }
+
+  /* 72rem — image strip shown, same row as the FAQ. see styles/breakpoints.css */
+  @media (width >= 72rem) {
+    .text-strip {
+      grid-template-columns: minmax(0, 1fr) calc(260px * 2 + var(--space-6));
+      gap: 120px;
+      align-items: center;
+    }
+  }
+</style>

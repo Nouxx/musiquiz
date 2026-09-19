@@ -81,9 +81,9 @@
    72rem — drifting image strip shown
    ------------------------------------------------------------
    Used by DriftingColumns.astro and by the rows its hosts draw beside it —
-   Faq.astro's accordion, DetailTabs.astro's band — and quoted by
-   RemoteImage.astro in the `drifting-media` variant's `sizes` string, which is
-   TS and must be edited in step.
+   Faq.astro's accordion, TextStrip.astro's copy, DetailTabs.astro's band —
+   and quoted by RemoteImage.astro in the `drifting-media` variant's `sizes`
+   string, which is TS and must be edited in step.
 
    Derived: the strip is drawn at a fixed 544px (two 260px columns and the
    24px between them) and sits 120px from the accordion, so the row needs

@@ -4,6 +4,7 @@ import CardsGrid from "@repo/ui/CardsGrid";
 import CardsScroller from "@repo/ui/CardsScroller";
 import DetailTabs from "@repo/ui/DetailTabs";
 import TextSlideshow from "@repo/ui/TextSlideshow";
+import TextStrip from "@repo/ui/TextStrip";
 import TextCards from "@repo/ui/TextCards";
 import TextCardsGrid from "@repo/ui/TextCardsGrid";
 import VideoEmbed from "@repo/ui/VideoEmbed";
@@ -283,6 +284,19 @@ const t = getT(lang);
             previousLabel={t("carousel.previous")}
             nextLabel={t("carousel.next")}
             goToImageLabel={t("carousel.goToImage")}
+          />
+        );
+      }
+      case "textStrip": {
+        return (
+          <TextStrip
+            badge={component.textBlock.badge}
+            title={component.textBlock.title}
+            body={component.textBlock.body}
+            additionalCtas={component.textBlock.additionalCtas}
+            cta={component.textBlock.cta}
+            ctaTone={component.textBlock.ctaTone}
+            images={component.images}
           />
         );
       }

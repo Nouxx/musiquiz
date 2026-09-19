@@ -169,6 +169,14 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
       };
     }
 
+    case "textStrip": {
+      return {
+        type: "textStrip",
+        textBlock: toTextBlock(data.textBlock),
+        images: data.images.map((image) => toCmsImage(image)),
+      };
+    }
+
     case "textCards": {
       return {
         type: "textCards",

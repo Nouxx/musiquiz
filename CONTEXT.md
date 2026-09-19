@@ -111,6 +111,10 @@ _Avoid_: carousel (a different Page Component), slider, cards row
 A Page Component pairing a set of questions with a strip of photos. Only one answer is open at a time, which is the `name` attribute on `<details>` doing it and not a script — so the whole section works with JavaScript off. The photo strip is decoration: it is two columns drifting past each other, it never decides how tall the section is, and it is not rendered at all below the width where it fits. Questions are authored on the page that shows them, so a venue's answers can name its city; there is no shared question set.
 _Avoid_: accordion (that is the UI Component inside it), questions block, help section
 
+**Text Strip**:
+A Page Component pairing a Text Block with the FAQ's drifting photo strip. The strip is the same decoration under the same rule — it never decides the section height and is not rendered below the width where it fits — so below that width the section is the Text Block alone. Nothing else: no surface, no side option, because no design has asked for one.
+_Avoid_: text columns, text photos, photo strip (that is the decoration, not the component)
+
 **Detail Tabs**:
 A Page Component that explains a thing one facet at a time — a title, several named sets of cards with one set shown at a time, and the FAQ's drifting photo strip beside them. Everything it shows is authored on the page that shows it; it references no Venue and no Game Format, which is why it is not called Game Details even though a game's mechanics are what it was drawn for. The picker is radio inputs, so switching sets needs no JavaScript, and with a single set there is nothing to pick between and no picker exists.
 _Avoid_: tabs, accordion, game details, features section

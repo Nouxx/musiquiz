@@ -202,6 +202,12 @@ type TextSlideshow = {
   images: CmsImage[];
 };
 
+type TextStrip = {
+  type: "textStrip";
+  textBlock: TextBlock;
+  images: CmsImage[];
+};
+
 export type ContentIcon =
   | "calendar"
   | "camera"
@@ -314,6 +320,7 @@ export type PageComponent =
   | CardsScroller
   | DetailTabs
   | TextSlideshow
+  | TextStrip
   | TextCards
   | TextCardsGrid
   | Offers
