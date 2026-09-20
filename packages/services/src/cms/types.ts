@@ -84,7 +84,7 @@ export type JoinTheNetworkPage = {
 
 export type LegalNoticePage = {
   pageCover: PageCover;
-  components: PageComponent[];
+  body: RichText;
 };
 
 export type WhereToFindUsPage = {

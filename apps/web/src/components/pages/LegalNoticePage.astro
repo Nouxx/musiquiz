@@ -1,10 +1,10 @@
 ---
 import { getLegalNoticePageData } from "@repo/services/cms/getLegalNoticePageData";
+import TextBody from "@repo/ui/TextBody";
 
 import { getLang } from "../../libs/getLang";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import Footer from "../features/Footer.astro";
-import PageComponents from "../features/PageComponents.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
 
 const lang = getLang(Astro);
@@ -17,6 +17,6 @@ const pageData = await getLegalNoticePageData({
 
 <VenuePageCover data={pageData.pageCover} height="m" />
 
-<PageComponents components={pageData.components} />
+<TextBody body={pageData.body} />
 
 <Footer />

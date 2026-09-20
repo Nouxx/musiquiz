@@ -14,8 +14,12 @@ export const termsAndConditionsPageType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "pageComponents",
-      type: "pageComponents",
+      name: "body",
+      title: "Body",
+      description:
+        "Paragraphs, bold and links, nothing else — no title, no button. An empty line between two paragraphs is drawn as a real gap, so break the copy up rather than writing one block.",
+      type: "internationalizedArrayRichText",
+      validation: (rule) => rule.required(),
     }),
   ],
   preview: {

@@ -4,17 +4,14 @@ import { defineQuery } from "groq";
 import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
-import {
-  pageComponentsProjection,
-  sanityPageComponentSchema,
-} from "./shared/pageComponents";
 import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
+import { richTextProjection, sanityRichTextSchema } from "./shared/richText";
 
 function legalNoticePageQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
     "page": *[_type == "legalNoticePage"][0]{
       pageCover ${pageCoverProjection({ lang })},
-      "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
+      "body": ${richTextProjection({ field: "body", lang })},
     }
   }`);
 }
@@ -22,7 +19,7 @@ function legalNoticePageQuery({ lang }: { lang: Lang }) {
 const sanityLegalNoticePageSchema = z.strictObject({
   page: z.strictObject({
     pageCover: sanityPageCoverSchema({ hasCta: false }),
-    pageComponents: z.array(sanityPageComponentSchema).nullable(),
+    body: sanityRichTextSchema,
   }),
 });
 

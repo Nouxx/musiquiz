@@ -6,8 +6,8 @@ import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { LegalNoticePage } from "./types";
-import { adaptPageComponent } from "./utils/adaptPageComponent";
 import { toPageCover } from "./utils/toPageCover";
+import { toRichText } from "./utils/toRichText";
 
 function adaptLegalNoticePage({
   data,
@@ -16,10 +16,7 @@ function adaptLegalNoticePage({
 }): LegalNoticePage {
   return {
     pageCover: toPageCover({ data: data.page.pageCover }),
-    components:
-      data.page.pageComponents?.map((component) =>
-        adaptPageComponent(component),
-      ) ?? [],
+    body: toRichText(data.page.body),
   };
 }
 

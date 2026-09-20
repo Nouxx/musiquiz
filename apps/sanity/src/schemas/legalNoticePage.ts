@@ -13,10 +13,13 @@ export const legalNoticePageType = defineType({
       type: "pageCover",
       validation: (rule) => rule.required(),
     }),
-    // todo: should remove this, only a textBody is allowed
     defineField({
-      name: "pageComponents",
-      type: "pageComponents",
+      name: "body",
+      title: "Body",
+      description:
+        "Paragraphs, bold and links, nothing else — no title, no button. An empty line between two paragraphs is drawn as a real gap, so break the copy up rather than writing one block.",
+      type: "internationalizedArrayRichText",
+      validation: (rule) => rule.required(),
     }),
   ],
   preview: {
