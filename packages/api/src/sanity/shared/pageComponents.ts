@@ -251,6 +251,14 @@ function textStripProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function textBodyProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "textBody" => {
+      "body": ${richTextProjection({ field: "body", lang })}
+    }
+  `;
+}
+
 function textCardsProjection({ lang }: { lang: Lang }) {
   return `
     _type == "textCards" => {
@@ -369,6 +377,7 @@ export function pageComponentsProjection({
       ${detailTabsProjection({ lang })},
       ${textSlideshowProjection({ lang })},
       ${textStripProjection({ lang })},
+      ${textBodyProjection({ lang })},
       ${textCardsProjection({ lang })},
       ${textCardsGridProjection({ lang })},
       ${offersProjection({ lang })},
@@ -581,6 +590,11 @@ const sanityTextStripSchema = z.strictObject({
   images: z.array(sanityImageSchema).min(6).max(12),
 });
 
+const sanityTextBodySchema = z.strictObject({
+  _type: z.literal("textBody"),
+  body: sanityRichTextSchema,
+});
+
 const sanityContentIconSchema = z.enum([
   "calendar",
   "camera",
@@ -719,6 +733,7 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityDetailTabsSchema,
   sanityTextSlideshowSchema,
   sanityTextStripSchema,
+  sanityTextBodySchema,
   sanityTextCardsSchema,
   sanityTextCardsGridSchema,
   sanityOffersSchema,

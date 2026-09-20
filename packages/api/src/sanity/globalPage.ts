@@ -10,7 +10,14 @@ import {
 } from "./shared/pageComponents";
 import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
 
-export type GlobalPageType = "joinTheNetwork";
+export type GlobalPageType =
+  | "joinTheNetwork"
+  | "legalNotice"
+  | "termsAndConditions";
+
+function hasCta(pageType: GlobalPageType) {
+  return pageType === "joinTheNetwork";
+}
 
 function globalPageQuery({
   lang,
@@ -27,14 +34,18 @@ function globalPageQuery({
   }`);
 }
 
-const sanityGlobalPageSchema = z.strictObject({
-  globalPage: z.strictObject({
-    pageCover: sanityPageCoverSchema({ hasCta: true }),
-    pageComponents: z.array(sanityPageComponentSchema).nullable(),
-  }),
-});
+function sanityGlobalPageSchema({ pageType }: { pageType: GlobalPageType }) {
+  return z.strictObject({
+    globalPage: z.strictObject({
+      pageCover: sanityPageCoverSchema({ hasCta: hasCta(pageType) }),
+      pageComponents: z.array(sanityPageComponentSchema).nullable(),
+    }),
+  });
+}
 
-export type SanityGlobalPage = z.infer<typeof sanityGlobalPageSchema>;
+export type SanityGlobalPage = z.infer<
+  ReturnType<typeof sanityGlobalPageSchema>
+>;
 
 export async function fetchGlobalPage({
   config,
@@ -47,7 +58,7 @@ export async function fetchGlobalPage({
 }) {
   return fetchSanityData({
     query: globalPageQuery({ lang, pageType }),
-    schema: sanityGlobalPageSchema,
+    schema: sanityGlobalPageSchema({ pageType }),
     config,
   });
 }

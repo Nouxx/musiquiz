@@ -1,6 +1,8 @@
 import { defineField, defineType } from "sanity";
 import { DocumentIcon } from "@sanity/icons/Document";
 
+import { isLegalPage } from "./globalPage";
+
 export const pageTypes = [
   { value: "home", title: "Home page" },
   { value: "gift", title: "Gift page" },
@@ -20,9 +22,10 @@ export function hasWidget(pageType: unknown) {
 /**
  * The booking and gifting covers take their buttons from the build: the url is
  * the anchor of the widget those pages render, which only `apps/web` knows.
+ * The legal covers have no button at all.
  */
 export function hasAuthorableCta(pageType: unknown) {
-  return !hasWidget(pageType);
+  return !hasWidget(pageType) && !isLegalPage(pageType);
 }
 
 export const venuePageType = defineType({

@@ -5,6 +5,7 @@ import CardsScroller from "@repo/ui/CardsScroller";
 import DetailTabs from "@repo/ui/DetailTabs";
 import TextSlideshow from "@repo/ui/TextSlideshow";
 import TextStrip from "@repo/ui/TextStrip";
+import TextBody from "@repo/ui/TextBody";
 import TextCards from "@repo/ui/TextCards";
 import TextCardsGrid from "@repo/ui/TextCardsGrid";
 import VideoEmbed from "@repo/ui/VideoEmbed";
@@ -299,6 +300,9 @@ const t = getT(lang);
             images={component.images}
           />
         );
+      }
+      case "textBody": {
+        return <TextBody body={component.body} />;
       }
       case "textCards": {
         return (

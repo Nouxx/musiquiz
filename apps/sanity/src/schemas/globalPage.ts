@@ -10,7 +10,13 @@ export const globalPageTypes = [
   { value: "joinTheNetwork", title: "Join the network page" },
   { value: "contact", title: "Contact page" },
   { value: "whereToFindUs", title: "Where to find us page" },
+  { value: "legalNotice", title: "Legal notice page" },
+  { value: "termsAndConditions", title: "Terms and conditions page" },
 ] as const;
+
+export function isLegalPage(pageType: unknown) {
+  return pageType === "legalNotice" || pageType === "termsAndConditions";
+}
 
 function isContactPage(document: SanityDocument | undefined) {
   return document?.pageType === "contact";

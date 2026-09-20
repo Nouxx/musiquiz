@@ -13,9 +13,9 @@ const frenchRoutes = {
   press: "presse",
   joinTheNetwork: "/rejoindre-le-reseau",
   whereToFindUs: "/ou-nous-trouver",
-  termsAndConditions: "cgv",
+  termsAndConditions: "/cgv",
   gdpr: "rgpd",
-  legalsNotice: "mentions-legales",
+  legalNotice: "/mentions-legales",
 };
 
 const englishRoutes: typeof frenchRoutes = {
@@ -31,9 +31,9 @@ const englishRoutes: typeof frenchRoutes = {
   press: "press",
   joinTheNetwork: "/en/join-the-network",
   whereToFindUs: "/en/where-to-find-us",
-  termsAndConditions: "terms",
+  termsAndConditions: "/en/terms",
   gdpr: "gdpr",
-  legalsNotice: "legals-notice",
+  legalNotice: "/en/legal-notice",
 };
 
 export function getRoutesForLang(lang: Lang) {

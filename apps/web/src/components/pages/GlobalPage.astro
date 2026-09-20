@@ -27,6 +27,8 @@ const pageData = await getGlobalPageData({
   config: getSanityConfigFromEnvironment(),
 });
 
+const coverHeight = pageType === "joinTheNetwork" ? "full" : "m";
+
 const pageCoverData: PageCoverData =
   pageType === "joinTheNetwork" && pageData.pageCover.cta
     ? {
@@ -36,7 +38,11 @@ const pageCoverData: PageCoverData =
     : pageData.pageCover;
 ---
 
-<VenuePageCover data={pageCoverData} ctaIcon="arrow-down" />
+<VenuePageCover
+  data={pageCoverData}
+  height={coverHeight}
+  ctaIcon="arrow-down"
+/>
 
 <PageComponents components={pageData.components} />
 

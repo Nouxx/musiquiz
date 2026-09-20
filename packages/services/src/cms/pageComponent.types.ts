@@ -208,6 +208,11 @@ type TextStrip = {
   images: CmsImage[];
 };
 
+type TextBody = {
+  type: "textBody";
+  body: RichText;
+};
+
 export type ContentIcon =
   | "calendar"
   | "camera"
@@ -321,6 +326,7 @@ export type PageComponent =
   | DetailTabs
   | TextSlideshow
   | TextStrip
+  | TextBody
   | TextCards
   | TextCardsGrid
   | Offers

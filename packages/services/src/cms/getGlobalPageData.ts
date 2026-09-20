@@ -17,7 +17,9 @@ function adaptGlobalPage({
   pageType: GlobalPageType;
 }): GlobalPage {
   switch (pageType) {
-    case "joinTheNetwork": {
+    case "joinTheNetwork":
+    case "legalNotice":
+    case "termsAndConditions": {
       return {
         pageCover: toPageCover({ data: data.globalPage.pageCover }),
         components:

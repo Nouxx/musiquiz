@@ -177,6 +177,13 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
       };
     }
 
+    case "textBody": {
+      return {
+        type: "textBody",
+        body: toRichText(data.body),
+      };
+    }
+
     case "textCards": {
       return {
         type: "textCards",

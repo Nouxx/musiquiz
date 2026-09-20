@@ -11,6 +11,8 @@ import { ConfettiIcon } from "@sanity/icons/Confetti";
 import { EnvelopeIcon } from "@sanity/icons/Envelope";
 import { RocketIcon } from "@sanity/icons/Rocket";
 import { PinIcon } from "@sanity/icons/Pin";
+import { DocumentTextIcon } from "@sanity/icons/DocumentText";
+import { BookIcon } from "@sanity/icons/Book";
 import type { ComponentType } from "react";
 import {
   globalPageTemplateId,
@@ -172,6 +174,20 @@ export const myStructure: StructureResolver = (S: StructureBuilder) =>
         pageType: "whereToFindUs",
         title: "Where to find us page",
         icon: PinIcon,
+      }),
+
+      globalPageItem({
+        S,
+        pageType: "legalNotice",
+        title: "Legal notice page",
+        icon: DocumentTextIcon,
+      }),
+
+      globalPageItem({
+        S,
+        pageType: "termsAndConditions",
+        title: "Terms and conditions page",
+        icon: BookIcon,
       }),
 
       S.listItem()

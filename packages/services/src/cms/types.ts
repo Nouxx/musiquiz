@@ -77,7 +77,10 @@ export type PageCover = {
 
 export type VenuePageType = "home" | "gift" | "book";
 
-export type GlobalPageType = "joinTheNetwork";
+export type GlobalPageType =
+  | "joinTheNetwork"
+  | "legalNotice"
+  | "termsAndConditions";
 
 export type GlobalPage = {
   pageCover: PageCover;

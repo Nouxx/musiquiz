@@ -56,7 +56,7 @@ export const en: typeof fr = {
     joinTheNetwork: "Open your Musi'quiz franchise",
     termsAndConditions: "T&C",
     gdpr: "GDPR",
-    legalsNotice: "Legal Notices",
+    legalNotice: "Legal notice",
     chooseVenue: "Choose a venue",
     changeVenue: "Switch venue",
     ourVenues: "Our venues",

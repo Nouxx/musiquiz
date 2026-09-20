@@ -54,7 +54,7 @@ export const fr = {
     joinTheNetwork: "Ouvrez votre salle Musi'quiz",
     termsAndConditions: "CGV",
     gdpr: "RGPD",
-    legalsNotice: "Mentions légales",
+    legalNotice: "Mentions légales",
     chooseVenue: "Choisir un centre",
     changeVenue: "Changez de ville",
     ourVenues: "Nos centres",
