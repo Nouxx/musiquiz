@@ -13,7 +13,7 @@ import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
 
 function whereToFindUsPageQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
-    "page": *[_type == "globalPage" && pageType == "whereToFindUs"][0]{
+    "page": *[_type == "whereToFindUsPage"][0]{
       pageCover ${pageCoverProjection({ lang })},
       "componentsBeforeMap": ${pageComponentsProjection({ field: "componentsBeforeMap", lang })},
       "venuesCta": ${optionalCtaProjection({ field: "venuesCta", lang })},

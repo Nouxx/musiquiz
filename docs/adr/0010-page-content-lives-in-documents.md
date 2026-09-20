@@ -18,6 +18,8 @@ The three Venue Pages get **deterministic ids** — `venuePage-${venueId}-${page
 
 ## Alternative: a generic `page` document with a `pageType` covering all five routes
 
+> Applied by [ADR 0012](./0012-one-document-type-per-global-page.md): the `globalPage` document type was this alternative under another name, one `pageType` over five pages that share only a cover. It is now one document type per page.
+
 One document type for every page, with `venue`, `pageType`, and conditionally-required `game` and `event` references. Rejected for the reason given above — the discriminator is shape-bearing across all five, so `game` is required-if-type-is-game, which is a rule the schema states in a validation callback, the Studio states in a `hidden` callback, and Zod cannot state at all without a discriminated union per query.
 
 ## Alternative: keep offerings nested and widen the modal

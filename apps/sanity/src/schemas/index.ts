@@ -7,7 +7,11 @@ import { pageCoverType } from "./shared/pageCover";
 import { pricesFootnoteType } from "./shared/pricesFootnote";
 import { eventFormatType } from "./eventFormat";
 import { gameFormatType } from "./gameFormat";
-import { globalPageType } from "./globalPage";
+import { joinTheNetworkPageType } from "./joinTheNetworkPage";
+import { contactPageType } from "./contactPage";
+import { whereToFindUsPageType } from "./whereToFindUsPage";
+import { legalNoticePageType } from "./legalNoticePage";
+import { termsAndConditionsPageType } from "./termsAndConditionsPage";
 import { homepageType } from "./homepage";
 import { siteSettingsType, teamMemberType } from "./siteSettings";
 import { quotationServiceType, venueType } from "./venue";
@@ -52,7 +56,11 @@ import { textBlockType } from "./shared/textBlock";
 
 export const schemaTypes = [
   homepageType,
-  globalPageType,
+  joinTheNetworkPageType,
+  contactPageType,
+  whereToFindUsPageType,
+  legalNoticePageType,
+  termsAndConditionsPageType,
   venueType,
   quotationServiceType,
   venuePageType,

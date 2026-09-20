@@ -1,0 +1,19 @@
+# One document type per Global Page
+
+The site has five pages that belong to no Venue: join the network, contact, where to find us, legal notice, terms and conditions. They were one document type, `globalPage`, with a `pageType` enum, one document per value. That was the `venuePage` trick from [ADR 0010](./0010-page-content-lives-in-documents.md) applied to a family it does not fit.
+
+ADR 0010's test is whether the discriminator is **shape-bearing**. For `globalPage` it was, on every value. The contact page carries four strings of its own and no Page Component array; the where-to-find-us page carries two arrays bracketing a map and a call to action between them; the legal pages have a Page Cover with no call to action; the join page has all of the cover and one array. Nothing was shared beyond the cover. What the enum bought was nine `hidden` and `custom` callbacks reading `document.pageType`, a `readOnly` field filled by an initial value template the Studio structure had to pass, a preview that looked the title up in a table, an import chain from the shared Page Cover object through `venuePage.ts` into `globalPage.ts`, and a `switch` in the service layer with three identical cases. That is the indirection ADR 0010 rejected in its own "generic `page` document" alternative, rebuilt one level down.
+
+So each page is its own document type — `joinTheNetworkPage`, `contactPage`, `whereToFindUsPage`, `legalNoticePage`, `termsAndConditionsPage` — and a **singleton** like `homepage` and `siteSettings`: document id equal to the type name, listed in `singletonIds`, no template, no create-new entry, one fixed item in the Studio structure. Every field is unconditional. The only callback left is the Page Cover's call-to-action gate, which now reads `_type` for the legal pages and `pageType` for the Venue Pages that render a Widget, in one function beside the field it gates.
+
+## Alternative: keep the enum, split only the shapes that differ
+
+A `legalPage` type holding legal notice and T&C under a `pageType`, since those two are byte-for-byte the same shape. That is exactly the case ADR 0010 allows, and it was still rejected: two files with one field each cost nothing, and the enum costs a `hidden`-free but still readOnly-and-templated discriminator for a family of two. The rule this ADR sets is simpler to hold than the exception.
+
+## Consequences
+
+- **The Page Cover object reads `_type`.** The shared object cannot be parameterised per use, so its call-to-action gate must look at the document. `hasAuthorableCta(document)` in `shared/pageCover.ts` is the single place that knows which documents have no authorable button.
+- **`packages/api` gets one Query Module per page**: `joinTheNetworkPage.ts`, `legalNoticePage.ts`, alongside the `contactPage.ts` and `whereToFindUsPage.ts` that already existed. `globalPage.ts` and its `pageType` parameter are gone; so are `getGlobalPageData` and `GlobalPage.astro`, replaced by one service and one Page per type. ADR 0009's test holds: each module has a contract of its own, because the covers differ on `hasCta`.
+- **Four documents were copied, not re-entered**: the published `globalPage-*` documents became `<type>` documents with the same fields minus `pageType`, verified by read-back, and the old ones deleted. A stale draft of the legal notice, differing only by empty field stubs, was dropped.
+- **`termsAndConditionsPage` exists in the schema and the structure before it has a route.** Its API module, service and Page arrive with the T&C task. The per-venue terms that task also calls for are a different document, under a Venue, and not this one.
+- **`venuePage` is the open item.** [ADR 0011](./0011-widget-pages-bracket-their-widget.md) made its `pageType` shape-bearing too. By this ADR's rule it should split into a home page and a widget page; that is a separate change with its own record.

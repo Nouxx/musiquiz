@@ -1,6 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
-import { hasAuthorableCta } from "../venuePage";
+import { hasWidget } from "../venuePage";
 
 type PageCoverParent = {
   background?: string;
@@ -8,15 +8,23 @@ type PageCoverParent = {
 };
 
 type PageCoverDocument = {
+  _type?: string;
   pageType?: string;
 };
 
-function documentOf(document: unknown) {
-  return document as PageCoverDocument | undefined;
-}
-
 function parentOf(parent: unknown) {
   return parent as PageCoverParent | undefined;
+}
+
+function hasAuthorableCta(document: unknown) {
+  const { _type, pageType } = (document as PageCoverDocument | undefined) ?? {};
+
+  if (_type === "legalNoticePage" || _type === "termsAndConditionsPage") {
+    return false;
+  }
+
+  // The booking and gifting covers take their buttons from the build: the url is the anchor of the widget those pages render
+  return !hasWidget(pageType);
 }
 
 export const pageCoverType = defineType({
@@ -120,13 +128,10 @@ export const pageCoverType = defineType({
       title: "Call to action",
       description: "The button under the text.",
       type: "cta",
-      hidden: ({ document }) =>
-        !hasAuthorableCta(documentOf(document)?.pageType),
+      hidden: ({ document }) => !hasAuthorableCta(document),
       validation: (rule) =>
         rule.custom((value, context) =>
-          hasAuthorableCta(documentOf(context.document)?.pageType) && !value
-            ? "Required"
-            : true,
+          hasAuthorableCta(context.document) && !value ? "Required" : true,
         ),
     }),
     defineField({
@@ -134,8 +139,7 @@ export const pageCoverType = defineType({
       title: "Second call to action",
       description: "The light button beside the first one.",
       type: "cta",
-      hidden: ({ document }) =>
-        !hasAuthorableCta(documentOf(document)?.pageType),
+      hidden: ({ document }) => !hasAuthorableCta(document),
     }),
   ],
 });

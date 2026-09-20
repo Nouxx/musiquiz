@@ -9,7 +9,7 @@ import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
 
 function contactPageQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
-    "page": *[_type == "globalPage" && pageType == "contact"][0]{
+    "page": *[_type == "contactPage"][0]{
       pageCover ${pageCoverProjection({ lang })},
       "teamTitle": teamTitle[language == "${lang}"][0].value,
       "teamIntro": teamIntro[language == "${lang}"][0].value,

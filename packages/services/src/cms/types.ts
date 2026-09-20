@@ -77,12 +77,12 @@ export type PageCover = {
 
 export type VenuePageType = "home" | "gift" | "book";
 
-export type GlobalPageType =
-  | "joinTheNetwork"
-  | "legalNotice"
-  | "termsAndConditions";
+export type JoinTheNetworkPage = {
+  pageCover: PageCover;
+  components: PageComponent[];
+};
 
-export type GlobalPage = {
+export type LegalNoticePage = {
   pageCover: PageCover;
   components: PageComponent[];
 };

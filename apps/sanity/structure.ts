@@ -3,7 +3,6 @@ import {
   type StructureResolver,
 } from "sanity/structure";
 import { ControlsIcon } from "@sanity/icons/Controls";
-import { DocumentIcon } from "@sanity/icons/Document";
 import { HomeIcon } from "@sanity/icons/Home";
 import { InfoOutlineIcon } from "@sanity/icons/InfoOutline";
 import { JoystickIcon } from "@sanity/icons/Joystick";
@@ -15,7 +14,6 @@ import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { BookIcon } from "@sanity/icons/Book";
 import type { ComponentType } from "react";
 import {
-  globalPageTemplateId,
   singletonIds,
   venueEventTemplateId,
   venueGameTemplateId,
@@ -23,14 +21,7 @@ import {
 } from "./sanity.config";
 
 // venuePage, venueGame and venueEvent belong to a venue, only reachable from there
-// globalPage has one document per page type, listed by name
-const nestedTypeIds = [
-  "venue",
-  "venuePage",
-  "venueGame",
-  "venueEvent",
-  "globalPage",
-];
+const nestedTypeIds = ["venue", "venuePage", "venueGame", "venueEvent"];
 
 function venuePageId({
   venueId,
@@ -72,28 +63,22 @@ function venuePageItem({
     );
 }
 
-function globalPageItem({
+function singletonItem({
   S,
-  pageType,
+  type,
   title,
-  icon = DocumentIcon,
+  icon,
 }: {
   S: StructureBuilder;
-  pageType: string;
+  type: string;
   title: string;
-  icon?: ComponentType;
+  icon: ComponentType;
 }) {
   return S.listItem()
     .title(title)
-    .id(`globalPage-${pageType}`)
+    .id(type)
     .icon(icon)
-    .child(
-      S.document()
-        .schemaType("globalPage")
-        .documentId(`globalPage-${pageType}`)
-        .title(title)
-        .initialValueTemplate(globalPageTemplateId, { pageType }),
-    );
+    .child(S.document().schemaType(type).documentId(type).title(title));
 }
 
 function venueChild({ S, venueId }: { S: StructureBuilder; venueId: string }) {
@@ -155,37 +140,37 @@ export const myStructure: StructureResolver = (S: StructureBuilder) =>
         .id("homepage")
         .child(S.document().schemaType("homepage").documentId("homepage")),
 
-      globalPageItem({
+      singletonItem({
         S,
-        pageType: "joinTheNetwork",
+        type: "joinTheNetworkPage",
         title: "Join the network page",
         icon: RocketIcon,
       }),
 
-      globalPageItem({
+      singletonItem({
         S,
-        pageType: "contact",
+        type: "contactPage",
         title: "Contact page",
         icon: EnvelopeIcon,
       }),
 
-      globalPageItem({
+      singletonItem({
         S,
-        pageType: "whereToFindUs",
+        type: "whereToFindUsPage",
         title: "Where to find us page",
         icon: PinIcon,
       }),
 
-      globalPageItem({
+      singletonItem({
         S,
-        pageType: "legalNotice",
+        type: "legalNoticePage",
         title: "Legal notice page",
         icon: DocumentTextIcon,
       }),
 
-      globalPageItem({
+      singletonItem({
         S,
-        pageType: "termsAndConditions",
+        type: "termsAndConditionsPage",
         title: "Terms and conditions page",
         icon: BookIcon,
       }),

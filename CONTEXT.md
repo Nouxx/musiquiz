@@ -61,6 +61,10 @@ _Avoid_: offering, event page
 The document holding one of a Venue's three fixed screens — its home page, its gift page, its booking page — distinguished by a `pageType`. One document type for all three: the home page carries a single Page Component array, the gift and booking pages carry two that bracket their Widget, and nothing else differs. It is content, and the component that renders it is a Page. [ADR 0011](./docs/adr/0011-widget-pages-bracket-their-widget.md).
 _Avoid_: page, page document, venue content, screen
 
+**Global Page**:
+A page no Venue owns — join the network, contact, where to find us, legal notice, terms and conditions. The phrase names the family, not a type: each is its own document type and its own singleton document, and nothing but the Page Cover is shared between them. [ADR 0012](./docs/adr/0012-one-document-type-per-global-page.md).
+_Avoid_: globalPage, generic page, static page, site page
+
 ## Page Content
 
 Every page of the site is a document, and every one of those documents has exactly these two things and differs only in what else it carries.

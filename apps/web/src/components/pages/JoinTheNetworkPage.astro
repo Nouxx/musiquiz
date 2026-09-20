@@ -1,0 +1,34 @@
+---
+import { getJoinTheNetworkPageData } from "@repo/services/cms/getJoinTheNetworkPageData";
+import type { PageCover as PageCoverData } from "@repo/services/cms/types";
+import { venueOpeningFormId } from "@repo/services/contactForm/venueOpening";
+
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import Footer from "../features/Footer.astro";
+import PageComponents from "../features/PageComponents.astro";
+import VenueOpeningForm from "../features/VenueOpeningForm.astro";
+import VenuePageCover from "../features/VenuePageCover.astro";
+
+const lang = getLang(Astro);
+
+const pageData = await getJoinTheNetworkPageData({
+  lang,
+  config: getSanityConfigFromEnvironment(),
+});
+
+const pageCoverData: PageCoverData = pageData.pageCover.cta
+  ? {
+      ...pageData.pageCover,
+      cta: { ...pageData.pageCover.cta, url: `#${venueOpeningFormId}` },
+    }
+  : pageData.pageCover;
+---
+
+<VenuePageCover data={pageCoverData} height="full" ctaIcon="arrow-down" />
+
+<PageComponents components={pageData.components} />
+
+<VenueOpeningForm />
+
+<Footer />

@@ -1,8 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { DocumentIcon } from "@sanity/icons/Document";
 
-import { isLegalPage } from "./globalPage";
-
 export const pageTypes = [
   { value: "home", title: "Home page" },
   { value: "gift", title: "Gift page" },
@@ -10,22 +8,10 @@ export const pageTypes = [
 ] as const;
 
 /**
- * The gifting and booking pages render a Widget the build owns, and bracket it
- * with two component arrays instead of the single one every other page has.
- * Mirrored by the split between `venuePage.ts` and `venueWidgetPage.ts` in
- * `packages/api`. See `docs/adr/0011-widget-pages-bracket-their-widget.md`.
+ * The gifting and booking pages have a widget, owned by the build
  */
 export function hasWidget(pageType: unknown) {
   return pageType === "gift" || pageType === "book";
-}
-
-/**
- * The booking and gifting covers take their buttons from the build: the url is
- * the anchor of the widget those pages render, which only `apps/web` knows.
- * The legal covers have no button at all.
- */
-export function hasAuthorableCta(pageType: unknown) {
-  return !hasWidget(pageType) && !isLegalPage(pageType);
 }
 
 export const venuePageType = defineType({
