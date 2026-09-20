@@ -69,7 +69,7 @@ export const en: typeof fr = {
     directions: "Directions",
     openDirections: "Open directions",
     ourGames: "Our games",
-    ourVenueGames: "Our game in this venue",
+    ourVenueGames: "Our games in this venue",
     generalInformation: "General information",
     socials: "Follow us",
     subscribe: "Subscribe to our newsletter",
@@ -79,8 +79,15 @@ export const en: typeof fr = {
     newsletterConsent: "I agree to receive information from Musi'Quiz",
   },
   contactPage: {
+    ctaLabel: "Our contact details",
     writeTo: "Send an email",
     venueName: "Musi'Quiz {{city}}",
+  },
+  whereToFindUsPage: {
+    ctaLabel: "See our venues",
+  },
+  joinTheNetworkPage: {
+    ctaLabel: "Request our brochure",
   },
   findUs: {
     address: "Address",

@@ -20,15 +20,13 @@ const { pageCover, team, venues } = await getContactPageData({
 
 const venuesContactAnchor = "venues-contact";
 
-const pageCoverData: PageCoverData = pageCover.cta
-  ? {
-      ...pageCover,
-      cta: { ...pageCover.cta, url: `#${venuesContactAnchor}` },
-    }
-  : pageCover;
+const pageCoverDataWithCta: PageCoverData = {
+  ...pageCover,
+  cta: { label: t("contactPage.ctaLabel"), url: `#${venuesContactAnchor}` },
+};
 ---
 
-<VenuePageCover data={pageCoverData} height="m" ctaIcon="arrow-down" />
+<VenuePageCover data={pageCoverDataWithCta} height="m" ctaIcon="arrow-down" />
 
 <TeamMembers
   title={team.title}

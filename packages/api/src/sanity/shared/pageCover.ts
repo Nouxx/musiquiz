@@ -36,12 +36,6 @@ const basePageCoverSchema = z.strictObject({
   secondaryCta: sanityCtaSchema.nullable(),
 });
 
-/**
- * `hasCta` is false for the covers whose buttons the build generates — see
- * `hasAuthorableCta` in `venuePage.ts`. Everywhere else the cta is projected
- * through `optionalCtaProjection` but required here, so a cover whose cta is
- * half-filled fails the fetch rather than drawing a dead button.
- */
 export function sanityPageCoverSchema({ hasCta }: { hasCta: boolean }) {
   return hasCta
     ? basePageCoverSchema.extend({ cta: sanityCtaSchema })

@@ -30,7 +30,7 @@ function whereToFindUsPageQuery({ lang }: { lang: Lang }) {
 
 const sanityWhereToFindUsPageSchema = z.strictObject({
   page: z.strictObject({
-    pageCover: sanityPageCoverSchema({ hasCta: true }),
+    pageCover: sanityPageCoverSchema({ hasCta: false }),
     componentsBeforeMap: z.array(sanityPageComponentSchema).nullable(),
     venuesCta: sanityCtaSchema.nullable(),
     componentsAfterMap: z.array(sanityPageComponentSchema).nullable(),

@@ -5,7 +5,7 @@ import Button from "./primitives/Button.astro";
 import Flex from "./primitives/Flex.astro";
 import Grid from "./primitives/Grid.astro";
 import Text from "./primitives/Text.astro";
-import type { CtaLink, VenuePin } from "./types";
+import { venuesMapAnchorId, type CtaLink, type VenuePin } from "./types";
 import { venuesMap } from "./lib/maps";
 
 interface Props {
@@ -27,7 +27,7 @@ const pairingCss = venues
   .join("\n");
 ---
 
-<Section surface="vivid" id="venues">
+<Section surface="vivid" id={venuesMapAnchorId}>
   <Flex direction="column" gap="8">
     <div class="venues" {id}>
       <Flex direction="column" gap="10" class="list">

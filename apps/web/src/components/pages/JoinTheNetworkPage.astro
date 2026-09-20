@@ -9,20 +9,23 @@ import Footer from "../features/Footer.astro";
 import PageComponents from "../features/PageComponents.astro";
 import VenueOpeningForm from "../features/VenueOpeningForm.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
+import { getT } from "../../libs/i18n";
 
 const lang = getLang(Astro);
+const t = getT(lang);
 
 const pageData = await getJoinTheNetworkPageData({
   lang,
   config: getSanityConfigFromEnvironment(),
 });
 
-const pageCoverData: PageCoverData = pageData.pageCover.cta
-  ? {
-      ...pageData.pageCover,
-      cta: { ...pageData.pageCover.cta, url: `#${venueOpeningFormId}` },
-    }
-  : pageData.pageCover;
+const pageCoverData: PageCoverData = {
+  ...pageData.pageCover,
+  cta: {
+    label: t("joinTheNetworkPage.ctaLabel"),
+    url: `#${venueOpeningFormId}`,
+  },
+};
 ---
 
 <VenuePageCover data={pageCoverData} height="full" ctaIcon="arrow-down" />

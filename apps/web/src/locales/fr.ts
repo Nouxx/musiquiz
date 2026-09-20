@@ -77,8 +77,15 @@ export const fr = {
     newsletterConsent: "J'accepte de recevoir les informations de Musi'Quiz",
   },
   contactPage: {
+    ctaLabel: "Nos coordonnées",
     writeTo: "Écrire un mail",
     venueName: "Musi'Quiz {{city}}",
+  },
+  whereToFindUsPage: {
+    ctaLabel: "Voir nos centres",
+  },
+  joinTheNetworkPage: {
+    ctaLabel: "Demander notre plaquette",
   },
   findUs: {
     address: "Adresse",

@@ -8,24 +8,24 @@ import Footer from "../features/Footer.astro";
 import PageComponents from "../features/PageComponents.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
 import VenuesList from "../features/VenuesList.astro";
+import { getT } from "../../libs/i18n";
+import { venuesMapAnchorId } from "@repo/ui/types";
 
 const lang = getLang(Astro);
+const t = getT(lang);
 
 const pageData = await getWhereToFindUsPageData({
   lang,
   config: getSanityConfigFromEnvironment(),
 });
 
-// the button scrolls to the map, whose anchor VenuesMap owns
-const pageCoverData: PageCoverData = pageData.pageCover.cta
-  ? {
-      ...pageData.pageCover,
-      cta: { ...pageData.pageCover.cta, url: "#venues" },
-    }
-  : pageData.pageCover;
+const pageCoverDataWithCta: PageCoverData = {
+  ...pageData.pageCover,
+  cta: { label: t("whereToFindUsPage.ctaLabel"), url: `#${venuesMapAnchorId}` },
+};
 ---
 
-<VenuePageCover data={pageCoverData} ctaIcon="arrow-down" />
+<VenuePageCover data={pageCoverDataWithCta} ctaIcon="arrow-down" />
 
 <PageComponents components={pageData.componentsBeforeMap} />
 

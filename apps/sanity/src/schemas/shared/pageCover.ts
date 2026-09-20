@@ -16,10 +16,17 @@ function parentOf(parent: unknown) {
   return parent as PageCoverParent | undefined;
 }
 
+// todo: maybe think about moving this logic to the call site?
 function hasAuthorableCta(document: unknown) {
   const { _type, pageType } = (document as PageCoverDocument | undefined) ?? {};
 
-  if (_type === "legalNoticePage" || _type === "termsAndConditionsPage") {
+  if (
+    _type === "legalNoticePage" ||
+    _type === "termsAndConditionsPage" ||
+    _type === "whereToFindUsPage" ||
+    _type === "joinTheNetworkPage" ||
+    _type === "contactPage"
+  ) {
     return false;
   }
 

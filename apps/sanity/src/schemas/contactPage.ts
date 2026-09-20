@@ -7,8 +7,6 @@ export const contactPageType = defineType({
   type: "document",
   icon: EnvelopeIcon,
   fields: [
-    // todo: the contact page CTA url should be authorable, the page has no pageComponents
-    // so the first CTA should be a section anchor
     defineField({
       name: "pageCover",
       title: "Page Cover",

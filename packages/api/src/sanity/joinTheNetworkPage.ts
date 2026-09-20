@@ -21,7 +21,7 @@ function joinTheNetworkPageQuery({ lang }: { lang: Lang }) {
 
 const sanityJoinTheNetworkPageSchema = z.strictObject({
   page: z.strictObject({
-    pageCover: sanityPageCoverSchema({ hasCta: true }),
+    pageCover: sanityPageCoverSchema({ hasCta: false }),
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
   }),
 });
