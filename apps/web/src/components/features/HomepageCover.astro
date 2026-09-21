@@ -7,6 +7,7 @@ import Text from "@repo/ui/primitives/Text";
 import type { CmsImage } from "@repo/services/cms/types";
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
+import { venuesMapAnchorId } from "@repo/ui/types";
 
 interface Props {
   logo: CmsImage;
@@ -27,7 +28,7 @@ const t = getT(getLang(Astro));
   <Badge slot="badge">{badgeLabel}</Badge>
   <Text slot="heading" as="h1" variant="title-h1">{heading}</Text>
 
-  <Button slot="actions" as="a" href="#venues" icon="arrow-down">
+  <Button slot="actions" as="a" href=`#${venuesMapAnchorId}`` icon="arrow-down">
     {t("cover.chooseVenue")}
   </Button>
 </PageCover>
