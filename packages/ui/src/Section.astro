@@ -42,6 +42,11 @@ const {
     overflow-x: clip;
   }
 
+  /* the header is `position: fixed`; an anchor jump would land the target underneath it */
+  .section[id] {
+    scroll-margin-block-start: var(--space-20);
+  }
+
   .width-wide {
     padding-inline: var(--space-gutter-wide);
   }

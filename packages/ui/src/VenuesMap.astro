@@ -91,13 +91,6 @@ const pairingCss = venues
 <style is:inline set:html={pairingCss}></style>
 
 <style>
-  /* the header is `position: fixed`, so an anchor jump would otherwise land the
-     heading underneath it. `:global` because the id is on the element Section
-     renders, which never carries this component's scope marker */
-  :global(#venues) {
-    scroll-margin-block-start: var(--space-20);
-  }
-
   .venues {
     display: grid;
     gap: var(--space-20);
