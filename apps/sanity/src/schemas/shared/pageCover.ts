@@ -92,6 +92,12 @@ export const pageCoverType = defineType({
         "The game's own mark, shown beside the text. Not the venue logo, which the header already carries.",
       type: "imageWithAlt",
       hidden: ({ parent }) => parentOf(parent)?.aside !== "logo",
+      validation: (rule) =>
+        rule.custom((value, context) =>
+          parentOf(context.parent)?.aside === "logo" && !value
+            ? "Required for a logo aside"
+            : true,
+        ),
     }),
     defineField({
       name: "images",
