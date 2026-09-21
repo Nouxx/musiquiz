@@ -14,7 +14,7 @@ interface Props {
   ctaIcon?: "arrow-down" | "arrow-left";
 }
 
-const { data, height = "full", ctaIcon } = Astro.props;
+const { data, height = "full", ctaIcon = "arrow-right" } = Astro.props;
 
 const { background, aside, badge, heading, subHeading, cta, secondaryCta } =
   data;
