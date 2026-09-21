@@ -89,6 +89,13 @@ export const en: typeof fr = {
   joinTheNetworkPage: {
     ctaLabel: "Request our brochure",
   },
+  venueBookingPage: {
+    ctaLabel: "Choose my activity",
+    secondaryCtaLabel: "Prices",
+  },
+  venueGiftingPage: {
+    ctaLabel: "Choose my activity",
+  },
   termsAndConditionsPage: {
     indexLabel: "The terms and conditions depend on the venue you book at",
     venueTitle: "Terms and Conditions Musi'Quiz {{venue}}",

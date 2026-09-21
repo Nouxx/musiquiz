@@ -1,6 +1,7 @@
 ---
 import { getLang } from "../../libs/getLang";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getT } from "../../libs/i18n";
 import VenueFooter from "../features/VenueFooter.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
 import PageComponents from "../features/PageComponents.astro";
@@ -16,6 +17,7 @@ interface Props {
 const { venueSlug } = Astro.props;
 
 const lang = getLang(Astro);
+const t = getT(lang);
 
 const pageData = await getVenueWidgetPageData({
   lang,
@@ -27,11 +29,11 @@ const pageData = await getVenueWidgetPageData({
 const pageCoverData: PageCoverData = {
   ...pageData.pageCover,
   cta: {
-    label: "Choisir mon activité",
+    label: t("venueBookingPage.ctaLabel"),
     url: `#${bookingAnchor}`,
   },
   secondaryCta: {
-    label: "Tarifs",
+    label: t("venueBookingPage.secondaryCtaLabel"),
     url: "#prices",
   },
 };

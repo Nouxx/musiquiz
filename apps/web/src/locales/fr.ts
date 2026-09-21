@@ -87,6 +87,13 @@ export const fr = {
   joinTheNetworkPage: {
     ctaLabel: "Demander notre plaquette",
   },
+  venueBookingPage: {
+    ctaLabel: "Choisir mon activité",
+    secondaryCtaLabel: "Tarifs",
+  },
+  venueGiftingPage: {
+    ctaLabel: "Choisir mon activité",
+  },
   termsAndConditionsPage: {
     indexLabel:
       "Les conditions générales de vente s'appliquent selon le centre où vous réservez",
