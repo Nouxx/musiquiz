@@ -8,6 +8,7 @@ import type { StringRule } from "sanity";
 import { frenchValue, type LocalizedEntry } from "./shared/frenchValue";
 import TagIcon from "@sanity/icons/Tag";
 import { HomeIcon } from "@sanity/icons/Home";
+import { BookIcon } from "@sanity/icons/Book";
 
 // todo: i18n, "Fermé" is french
 function openingTimeValidation(rule: StringRule) {
@@ -35,6 +36,7 @@ export const venueType = defineType({
     { name: "location", title: "Location", icon: PinIcon },
     { name: "openHours", title: "Open Hours", icon: ClockIcon },
     { name: "quotation", title: "Quotation", icon: TagIcon },
+    { name: "legal", title: "Legal", icon: BookIcon },
   ],
   fields: [
     defineField({
@@ -217,7 +219,46 @@ export const venueType = defineType({
       group: "location",
       validation: (rule) => rule.required(),
     }),
+    defineField({
+      name: "terms",
+      title: "Terms and conditions",
+      description:
+        'The articles of this venue\'s terms, shown on the Terms and conditions page. Numbered in order, so write the title without "Article N".',
+      type: "array",
+      of: [defineArrayMember({ type: "termsArticle" })],
+      group: "legal",
+      validation: (rule) => rule.required().min(1),
+    }),
   ],
+});
+
+export const termsArticleType = defineType({
+  name: "termsArticle",
+  title: "Article",
+  type: "object",
+  fields: [
+    defineField({
+      name: "title",
+      title: "Title",
+      description: 'Example: "Objet", "Prix des services"',
+      type: "internationalizedArrayString",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "body",
+      title: "Body",
+      description:
+        "Paragraphs, bold and links, nothing else. An empty line between two paragraphs is drawn as a real gap, so break the copy up rather than writing one block.",
+      type: "internationalizedArrayRichText",
+      validation: (rule) => rule.required(),
+    }),
+  ],
+  preview: {
+    select: { title: "title" },
+    prepare({ title }: { title?: LocalizedEntry[] }) {
+      return { title: frenchValue(title) ?? "Article" };
+    },
+  },
 });
 
 export const quotationServiceType = defineType({

@@ -14,10 +14,10 @@ export const termsAndConditionsPageType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "body",
-      title: "Body",
+      name: "intro",
+      title: "Intro",
       description:
-        "Paragraphs, bold and links, nothing else — no title, no button. An empty line between two paragraphs is drawn as a real gap, so break the copy up rather than writing one block.",
+        "Shown between the list of venues and the first venue's terms: what a visitor should do when their venue is not listed. Paragraphs, bold and links, nothing else.",
       type: "internationalizedArrayRichText",
       validation: (rule) => rule.required(),
     }),

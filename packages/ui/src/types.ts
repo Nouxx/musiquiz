@@ -176,6 +176,20 @@ export type OfferGroup = {
   cards: OfferCard[];
 };
 
+export type TermsArticle = {
+  /** display-ready, numbering included. @example "Article 1 · Objet" */
+  title: string;
+  body: RichTextNode[];
+};
+
+export type VenueTerms = {
+  /** the in-page anchor; the venue slug */
+  id: string;
+  /** @example "Conditions Générales de Vente (CGV) Musi'Quiz Lille" */
+  title: string;
+  articles: TermsArticle[];
+};
+
 export type VenuePin = {
   /** pairs the list link with its dot; the venue slug */
   id: string;

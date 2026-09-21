@@ -87,6 +87,24 @@ export type LegalNoticePage = {
   body: RichText;
 };
 
+export type TermsArticle = {
+  /** @example "Objet", "Prix des services" — numbered by position, not authored */
+  title: string;
+  body: RichText;
+};
+
+export type VenueTerms = {
+  slug: string;
+  title: string;
+  articles: TermsArticle[];
+};
+
+export type TermsAndConditionsPage = {
+  pageCover: PageCover;
+  intro: RichText;
+  venues: VenueTerms[];
+};
+
 export type WhereToFindUsPage = {
   pageCover: PageCover;
   componentsBeforeMap: PageComponent[];

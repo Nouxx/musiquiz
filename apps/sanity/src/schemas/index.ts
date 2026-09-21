@@ -14,7 +14,7 @@ import { legalNoticePageType } from "./legalNoticePage";
 import { termsAndConditionsPageType } from "./termsAndConditionsPage";
 import { homepageType } from "./homepage";
 import { siteSettingsType, teamMemberType } from "./siteSettings";
-import { quotationServiceType, venueType } from "./venue";
+import { quotationServiceType, termsArticleType, venueType } from "./venue";
 import { priceType, venueGameType } from "./venueGame";
 import { venueEventType } from "./venueEvent";
 import { venuePageType } from "./venuePage";
@@ -63,6 +63,7 @@ export const schemaTypes = [
   termsAndConditionsPageType,
   venueType,
   quotationServiceType,
+  termsArticleType,
   venuePageType,
   venueGameType,
   venueEventType,

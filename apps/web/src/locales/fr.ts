@@ -87,6 +87,12 @@ export const fr = {
   joinTheNetworkPage: {
     ctaLabel: "Demander notre plaquette",
   },
+  termsAndConditionsPage: {
+    indexLabel:
+      "Les conditions générales de vente s'appliquent selon le centre où vous réservez",
+    venueTitle: "Conditions Générales de Vente (CGV) Musi'Quiz {{venue}}",
+    articleTitle: "Article {{number}} · {{title}}",
+  },
   findUs: {
     address: "Adresse",
     openingHours: "Horaires",
