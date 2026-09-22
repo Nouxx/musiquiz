@@ -1,3 +1,14 @@
 {
-  "extends": ["../../tsconfig.json", "astro/tsconfigs/strict"]
+  "extends": ["../../tsconfig.json", "astro/tsconfigs/strict"],
+  "compilerOptions": {
+    // mirrors @repo/ui exports: the Astro language server keeps the
+    // node_modules path for .astro imports
+    // Cmd + Click is opening the copy under node_modules if not for these paths
+    "paths": {
+      "@repo/ui/types": ["../../packages/ui/src/types.ts"],
+      "@repo/ui/lib/*": ["../../packages/ui/src/lib/*.ts"],
+      "@repo/ui/styles/*": ["../../packages/ui/src/styles/*"],
+      "@repo/ui/*": ["../../packages/ui/src/*.astro"]
+    }
+  }
 }
