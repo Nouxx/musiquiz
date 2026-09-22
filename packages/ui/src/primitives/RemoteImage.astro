@@ -129,6 +129,12 @@ const srcSetWidths =
 }
 
 <style>
+  /* a `<source>` is not display:none in Chrome, so it becomes a grid or flex
+     item wherever a caller makes the `<picture>` a container */
+  picture > :global(source) {
+    display: none;
+  }
+
   .header-logo {
     width: 140px;
     height: auto;
