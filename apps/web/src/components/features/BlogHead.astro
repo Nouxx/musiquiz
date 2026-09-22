@@ -1,0 +1,17 @@
+---
+import { blogPageLinks } from "../../libs/blogPagination";
+
+export interface Props {
+  articleCount: number;
+  page: number;
+}
+
+const { articleCount, page } = Astro.props;
+
+const pages = blogPageLinks(articleCount);
+const previous = pages[page - 2]?.url;
+const next = pages[page]?.url;
+---
+
+{previous && <link rel="prev" href={previous} />}
+{next && <link rel="next" href={next} />}

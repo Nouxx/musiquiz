@@ -84,6 +84,15 @@ export const fr = {
   whereToFindUsPage: {
     ctaLabel: "Voir nos centres",
   },
+  blogPage: {
+    badge: "Blog",
+    readArticle: "Lire l’article",
+    pagination: "Pagination",
+    previousPage: "Page précédente",
+    nextPage: "Page suivante",
+    page: "Page {{page}}",
+    pageTitle: "{{title}} – page {{page}}",
+  },
   joinTheNetworkPage: {
     ctaLabel: "Demander notre plaquette",
   },

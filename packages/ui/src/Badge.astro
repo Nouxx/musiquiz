@@ -7,7 +7,7 @@ interface Props {
   // the sheet's Couleur axis: `dark` is the translucent pill that sits on
   // media, `light` the opaque one for plain surfaces
   color?: "dark" | "light";
-  border?: "brand" | "blue" | "red";
+  border?: "brand" | "blue" | "red" | "muted";
   size?: "large" | "small";
   tilt?: boolean;
   icon?: IconName;
@@ -74,6 +74,11 @@ const {
 
   .border-red {
     --badge-border: var(--color-border-brand-red);
+  }
+
+  /* the ring is painted as an image, so a flat colour has to be a gradient */
+  .border-muted {
+    --badge-border: linear-gradient(var(--color-border), var(--color-border));
   }
 
   .tilt {

@@ -1,0 +1,153 @@
+---
+import Icon from "./primitives/Icon.astro";
+import Text from "./primitives/Text.astro";
+import type { PaginationLink } from "./types";
+
+export interface Props {
+  current: number;
+  pages: PaginationLink[];
+  label: string;
+  previousLabel: string;
+  nextLabel: string;
+}
+
+// a function-typed prop (a `pageLabel(page)` callback) silently drops Astro's
+// Props inference, the way an `as` prop does; hence labels ride on the links
+const { current, pages, label, previousLabel, nextLabel } = Astro.props;
+
+const total = pages.length;
+
+/* the design's `1 2 3 4 … 25`: six slots, the ends always present */
+function visiblePages() {
+  if (total <= 6) return pages.map((link) => link.page);
+  if (current <= 3) return [1, 2, 3, 4, "…", total];
+  if (current >= total - 2)
+    return [1, "…", total - 3, total - 2, total - 1, total];
+  return [1, "…", current - 1, current, current + 1, total];
+}
+
+function linkOf(page: number) {
+  return pages[page - 1];
+}
+
+const previous = current > 1 ? linkOf(current - 1)?.url : undefined;
+const next = current < total ? linkOf(current + 1)?.url : undefined;
+---
+
+<nav class="pagination" aria-label={label}>
+  {
+    previous ? (
+      <a class="arrow" href={previous} aria-label={previousLabel}>
+        <Icon name="angle-left" size="m" />
+      </a>
+    ) : (
+      <span class="arrow" aria-disabled="true">
+        <Icon name="angle-left" size="m" />
+      </span>
+    )
+  }
+
+  <ol class="pages">
+    {
+      visiblePages().map((page) =>
+        typeof page === "number" ? (
+          <li>
+            <a
+              class:list={["page", { current: page === current }]}
+              href={linkOf(page)?.url}
+              aria-label={linkOf(page)?.label}
+              aria-current={page === current ? "page" : undefined}
+            >
+              <Text variant="title-base">{page}</Text>
+            </a>
+          </li>
+        ) : (
+          <li>
+            <span class="page" aria-hidden="true">
+              <Text variant="title-base">{page}</Text>
+            </span>
+          </li>
+        ),
+      )
+    }
+  </ol>
+
+  {
+    next ? (
+      <a class="arrow" href={next} aria-label={nextLabel}>
+        <Icon name="angle-right" size="m" />
+      </a>
+    ) : (
+      <span class="arrow" aria-disabled="true">
+        <Icon name="angle-right" size="m" />
+      </span>
+    )
+  }
+</nav>
+
+<style>
+  .pagination {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text);
+  }
+
+  .arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 30px;
+    block-size: 30px;
+    color: inherit;
+    background-color: var(--color-fill-muted);
+    border-radius: var(--radius-pill);
+    box-shadow:
+      0 0 0 1px var(--color-border-light),
+      0 2px 0 1px var(--color-border-light);
+  }
+
+  .arrow[aria-disabled] {
+    opacity: 0.4;
+  }
+
+  .pages {
+    display: flex;
+    gap: var(--space-1);
+    padding: var(--space-1);
+    margin: 0;
+    list-style: none;
+    background-color: var(--color-surface-muted);
+    border-radius: var(--radius-pill);
+    box-shadow:
+      0 0 0 1px var(--color-border-light),
+      0 2px 0 1px var(--color-border-light);
+  }
+
+  .page {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 30px;
+    block-size: 30px;
+    padding-inline: var(--space-2);
+    color: inherit;
+    text-decoration: none;
+    border-radius: var(--radius-s);
+  }
+
+  a.page:hover {
+    background-color: var(--color-fill-muted);
+  }
+
+  .current {
+    color: var(--color-text-on-blue);
+    background-image: var(--color-fill-blue);
+    border-radius: var(--radius-pill);
+  }
+
+  a.current:hover {
+    background-color: transparent;
+  }
+</style>

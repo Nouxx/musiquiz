@@ -65,9 +65,17 @@ _Avoid_: page, page document, venue content, screen
 A page no Venue owns — join the network, contact, where to find us, legal notice, terms and conditions. The phrase names the family, not a type: each is its own document type and its own singleton document, and nothing but the Page Cover is shared between them. [ADR 0012](./docs/adr/0012-one-document-type-per-global-page.md).
 _Avoid_: globalPage, generic page, static page, site page
 
+**Blog Article**:
+One post of the blog, written in French only, dated, and pinned to the Venue it is about. Nothing on it is translated and no `en` route serves it; the blog exists for search engines and the business writes it in one language. [ADR 0013](./docs/adr/0013-blog-is-french-only-and-static.md).
+_Avoid_: post, news, article (alone), blog entry
+
+**Blog Page**:
+The singleton holding the listing's title and intro, and nothing else. The listing itself is derived: every Blog Article newest first, cut into pages of twelve that are each a route, with the two newest drawn above the grid on the first page. It has no Page Cover and no Page Components — the one page outside that shape.
+_Avoid_: blog, blog archive, blog listing (that is the UI Component), news page
+
 ## Page Content
 
-Every page of the site is a document, and every one of those documents has exactly these two things and differs only in what else it carries.
+Every page of the site but the Blog Page is a document with exactly these two things, differing only in what else it carries.
 
 **Page Cover**:
 The block at the top of every page — media, badge, heading, sub-heading, and a call-to-action label. The call to action's **label** is content; its **destination is not**. Where the button goes is decided in code from the page's kind, so `getRoutesForLang` stays the only source of routing truth and an editor cannot author a URL that skips the locale prefix or 404s. Authored as one object type reused across every content document, rendered by the `PageCover` UI Component.
@@ -134,6 +142,10 @@ _Avoid_: tab, panel, section
 **Detail Card**:
 The card inside a Detail Group — a Mark over a title, an optional lead-in sentence and a required closing one. The closing sentence is drawn heavier on every card, so the weight is a rhythm of the design and never emphasis against its neighbours. It carries no media, no badge and no call to action, which is what separates it from a Card and from a Deck Card.
 _Avoid_: feature card, tile, item
+
+**Article Card**:
+The UI Component drawing one Blog Article in the listing — cover, Venue badge, title, excerpt, a read button and the date on one row. `stacked` in the grid, `wide` for the newest article with the cover beside the copy. Not a Card: a Card pins its call to action alone to the bottom edge, an Article Card pins a button and a date together.
+_Avoid_: blog card, post card, card
 
 **Site Chrome**:
 The one kind of Feature Component that fetches its own data instead of receiving it from a Page — `Header`, `Footer`. Its content is site-wide settings, so it belongs to no single page and threading it through every Page would be noise. Any other Feature Component takes its data as props.

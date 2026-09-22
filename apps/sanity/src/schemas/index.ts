@@ -13,6 +13,8 @@ import { whereToFindUsPageType } from "./whereToFindUsPage";
 import { legalNoticePageType } from "./legalNoticePage";
 import { termsAndConditionsPageType } from "./termsAndConditionsPage";
 import { homepageType } from "./homepage";
+import { blogPageType } from "./blogPage";
+import { blogArticleType } from "./blogArticle";
 import { siteSettingsType, teamMemberType } from "./siteSettings";
 import { quotationServiceType, termsArticleType, venueType } from "./venue";
 import { priceType, venueGameType } from "./venueGame";
@@ -61,6 +63,8 @@ export const schemaTypes = [
   whereToFindUsPageType,
   legalNoticePageType,
   termsAndConditionsPageType,
+  blogPageType,
+  blogArticleType,
   venueType,
   quotationServiceType,
   termsArticleType,

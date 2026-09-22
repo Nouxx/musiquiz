@@ -86,6 +86,15 @@ export const en: typeof fr = {
   whereToFindUsPage: {
     ctaLabel: "See our venues",
   },
+  blogPage: {
+    badge: "Blog",
+    readArticle: "Read the article",
+    pagination: "Pagination",
+    previousPage: "Previous page",
+    nextPage: "Next page",
+    page: "Page {{page}}",
+    pageTitle: "{{title}} – page {{page}}",
+  },
   joinTheNetworkPage: {
     ctaLabel: "Request our brochure",
   },

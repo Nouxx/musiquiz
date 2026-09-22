@@ -7,6 +7,13 @@ import "@repo/ui/styles/reset.css";
 import "@repo/ui/styles/tokens.css";
 import "@repo/ui/styles/base.css";
 
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = "Musi'Quiz", description } = Astro.props;
+
 const lang = getLang(Astro);
 ---
 
@@ -20,7 +27,9 @@ const lang = getLang(Astro);
     <meta name="generator" content={Astro.generator} />
     <Font cssVariable="--font-momo-trust-display" preload />
     <Font cssVariable="--font-funnel-display" preload />
-    <title>Astro Basics</title>
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <slot name="head" />
   </head>
   <body>
     <slot />

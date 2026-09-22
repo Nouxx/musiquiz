@@ -1,0 +1,17 @@
+---
+import { getBlogPageData } from "@repo/services/cms/getBlogPageData";
+
+import BlogHead from "../../components/features/BlogHead.astro";
+import BlogPage from "../../components/pages/BlogPage.astro";
+import Layout from "../../layouts/Layout.astro";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+
+const data = await getBlogPageData({
+  config: getSanityConfigFromEnvironment(),
+});
+---
+
+<Layout title={data.title} description={data.intro}>
+  <BlogHead slot="head" articleCount={data.articles.length} page={1} />
+  <BlogPage {data} page={1} />
+</Layout>

@@ -1,0 +1,24 @@
+---
+import type { BlogPage as BlogPageData } from "@repo/services/cms/types";
+
+import BlogListing from "../features/BlogListing.astro";
+import Footer from "../features/Footer.astro";
+
+// the route fetches, unlike every other Page: `<title>` and `rel=prev/next`
+// belong to the Layout, which only the route can feed. docs/adr/0013
+export interface Props {
+  data: BlogPageData;
+  page: number;
+}
+
+const { data, page } = Astro.props;
+---
+
+<BlogListing
+  title={data.title}
+  intro={data.intro}
+  articles={data.articles}
+  {page}
+/>
+
+<Footer />

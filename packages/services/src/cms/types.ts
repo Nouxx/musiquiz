@@ -134,6 +134,24 @@ export type VenueContact = {
   phoneHref: string;
 };
 
+export type BlogArticleSummary = {
+  title: string;
+  url: string;
+  /** ISO date, `YYYY-MM-DD` */
+  publishedAt: string;
+  /** the venue title, drawn as the badge */
+  venue: string;
+  cover: CmsImage;
+  excerpt: string;
+};
+
+export type BlogPage = {
+  title: string;
+  intro: string;
+  /** every article, newest first; the web app pages them */
+  articles: BlogArticleSummary[];
+};
+
 export type ContactPage = {
   pageCover: PageCover;
   team: {

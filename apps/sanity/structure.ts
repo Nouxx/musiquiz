@@ -12,6 +12,7 @@ import { RocketIcon } from "@sanity/icons/Rocket";
 import { PinIcon } from "@sanity/icons/Pin";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { BookIcon } from "@sanity/icons/Book";
+import { BlockContentIcon } from "@sanity/icons/BlockContent";
 import type { ComponentType } from "react";
 import {
   singletonIds,
@@ -20,8 +21,15 @@ import {
   venuePageTemplateId,
 } from "./sanity.config";
 
-// venuePage, venueGame and venueEvent belong to a venue, only reachable from there
-const nestedTypeIds = ["venue", "venuePage", "venueGame", "venueEvent"];
+// venuePage, venueGame and venueEvent belong to a venue, only reachable from
+// there; blogArticle sits under the Blog item
+const nestedTypeIds = [
+  "venue",
+  "venuePage",
+  "venueGame",
+  "venueEvent",
+  "blogArticle",
+];
 
 function venuePageId({
   venueId,
@@ -174,6 +182,34 @@ export const myStructure: StructureResolver = (S: StructureBuilder) =>
         title: "Terms and conditions page",
         icon: BookIcon,
       }),
+
+      S.listItem()
+        .title("Blog")
+        .id("blog")
+        .icon(BlockContentIcon)
+        .child(
+          S.list()
+            .title("Blog")
+            .items([
+              singletonItem({
+                S,
+                type: "blogPage",
+                title: "Blog page",
+                icon: BlockContentIcon,
+              }),
+              S.listItem()
+                .title("Articles")
+                .id("articles")
+                .icon(DocumentTextIcon)
+                .child(
+                  S.documentTypeList("blogArticle")
+                    .title("Articles")
+                    .defaultOrdering([
+                      { field: "publishedAt", direction: "desc" },
+                    ]),
+                ),
+            ]),
+        ),
 
       S.listItem()
         .title("Venues")

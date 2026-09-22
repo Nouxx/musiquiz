@@ -1,0 +1,123 @@
+---
+import Badge from "./Badge.astro";
+import Button from "./primitives/Button.astro";
+import Card from "./primitives/Card.astro";
+import RemoteImage from "./primitives/RemoteImage.astro";
+import Text from "./primitives/Text.astro";
+import type { ArticleCardItem } from "./types";
+
+export type Props = ArticleCardItem & {
+  /** `wide` puts the media aside the copy, for the featured article */
+  layout?: "stacked" | "wide";
+};
+
+const {
+  layout = "stacked",
+  media,
+  badge,
+  title,
+  body,
+  cta,
+  date,
+} = Astro.props;
+
+const wide = layout === "wide";
+---
+
+<Card as="article" border="soft" class:list={["card", layout]}>
+  <div class="media">
+    <RemoteImage
+      image={media}
+      variant={wide ? "article-media-wide" : "article-media"}
+    />
+  </div>
+
+  <div class="content">
+    <div class="stack">
+      <Badge color="light" border="muted" icon="pin">{badge}</Badge>
+
+      <Text as="h3" variant={wide ? "title-h4" : "title-h5"}>{title}</Text>
+
+      <div class="body">
+        <Text as="p" variant="paragraph-base">{body}</Text>
+      </div>
+    </div>
+
+    <div class="footer">
+      <Button as="a" href={cta.url} tone="blue" size="s">{cta.label}</Button>
+
+      <time datetime={date.iso}>
+        <Text variant="paragraph-xs">{date.label}</Text>
+      </time>
+    </div>
+  </div>
+</Card>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    block-size: 100%;
+    color: var(--color-text);
+    background-color: var(--color-surface);
+  }
+
+  /* a `<picture>` is inline, so it shrink-to-fits unless it is a stretched
+     grid item — the image's own `100%` then has a full-width box to resolve against */
+  .media {
+    display: grid;
+  }
+
+  .media > :global(picture) {
+    display: grid;
+    min-inline-size: 0;
+  }
+
+  .content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-10);
+    justify-content: space-between;
+    padding: var(--space-6);
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+
+  .body {
+    color: var(--color-text-muted);
+  }
+
+  .footer {
+    display: flex;
+    gap: var(--space-10);
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  /* 60rem — TwoBlocks split (styles/breakpoints.css) */
+  @media (width >= 60rem) {
+    .wide {
+      flex-direction: row-reverse;
+    }
+
+    .wide .media,
+    .wide .content {
+      flex: 1 1 50%;
+      min-inline-size: 0;
+    }
+
+    .wide .content {
+      padding: var(--space-10);
+    }
+
+    .wide .stack {
+      gap: var(--space-4);
+    }
+  }
+</style>

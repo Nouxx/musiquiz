@@ -1,0 +1,66 @@
+---
+import type { BlogArticleSummary } from "@repo/services/cms/types";
+import BlogListingUi from "@repo/ui/BlogListing";
+import type { ArticleCardItem } from "@repo/ui/types";
+
+import { blogPageLinks, BLOG_PAGE_SIZE } from "../../libs/blogPagination";
+import { getT } from "../../libs/i18n";
+
+export interface Props {
+  title: string;
+  intro: string;
+  articles: BlogArticleSummary[];
+  page: number;
+}
+
+const { title, intro, articles, page } = Astro.props;
+
+const t = getT("fr");
+
+const dateFormat = new Intl.DateTimeFormat("fr-FR", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+});
+
+function toArticleCard(article: BlogArticleSummary): ArticleCardItem {
+  return {
+    media: article.cover,
+    badge: article.venue,
+    title: article.title,
+    body: article.excerpt,
+    cta: { label: t("blogPage.readArticle"), url: article.url },
+    date: {
+      label: dateFormat.format(new Date(article.publishedAt)),
+      iso: article.publishedAt,
+    },
+  };
+}
+
+const featured = page === 1 ? articles.slice(0, 2).map(toArticleCard) : [];
+
+const start = (page - 1) * BLOG_PAGE_SIZE;
+const pageArticles = articles
+  .slice(start, start + BLOG_PAGE_SIZE)
+  .map(toArticleCard);
+
+const pagination = {
+  current: page,
+  pages: blogPageLinks(articles.length).map((link) => ({
+    ...link,
+    label: t("blogPage.page", { page: link.page }),
+  })),
+  label: t("blogPage.pagination"),
+  previousLabel: t("blogPage.previousPage"),
+  nextLabel: t("blogPage.nextPage"),
+};
+---
+
+<BlogListingUi
+  badge={t("blogPage.badge")}
+  {title}
+  {intro}
+  {featured}
+  articles={pageArticles}
+  {pagination}
+/>

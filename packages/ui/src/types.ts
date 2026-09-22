@@ -78,6 +78,28 @@ export type CardItem = {
   cta?: CtaLink;
 };
 
+export type ArticleCardItem = {
+  media: ImageSource;
+  /** the venue title */
+  badge: string;
+  title: string;
+  body: string;
+  cta: CtaLink;
+  date: {
+    /** @example "14 juil. 2026" */
+    label: string;
+    /** ISO date, `YYYY-MM-DD` */
+    iso: string;
+  };
+};
+
+export type PaginationLink = {
+  page: number;
+  url: string;
+  /** the accessible name @example "Page 3" */
+  label: string;
+};
+
 export type TextCard = {
   icon: IconName;
   body: string;

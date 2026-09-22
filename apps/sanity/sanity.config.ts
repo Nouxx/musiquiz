@@ -16,6 +16,7 @@ export const singletonIds = [
   "whereToFindUsPage",
   "legalNoticePage",
   "termsAndConditionsPage",
+  "blogPage",
   "siteSettings",
 ];
 
