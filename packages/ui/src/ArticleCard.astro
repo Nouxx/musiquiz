@@ -65,7 +65,11 @@ const wide = layout === "wide";
   /* a `<picture>` is inline, so it shrink-to-fits unless it is a stretched
      grid item — the image's own `100%` then has a full-width box to resolve against */
   .media {
+    --media-radius: calc(var(--radius-l) - 1px);
+
     display: grid;
+    /* on the card's own curve, the image bleeds through the ring's anti-aliased edge */
+    clip-path: inset(1px 1px 0 round var(--media-radius) var(--media-radius) 0 0);
   }
 
   .media > :global(picture) {
@@ -110,6 +114,10 @@ const wide = layout === "wide";
     .wide .content {
       flex: 1 1 50%;
       min-inline-size: 0;
+    }
+
+    .wide .media {
+      clip-path: inset(1px 1px 1px 0 round 0 var(--media-radius) var(--media-radius) 0);
     }
 
     .wide .content {
