@@ -69,7 +69,9 @@ const wide = layout === "wide";
 
     display: grid;
     /* on the card's own curve, the image bleeds through the ring's anti-aliased edge */
-    clip-path: inset(1px 1px 0 round var(--media-radius) var(--media-radius) 0 0);
+    clip-path: inset(
+      1px 1px 0 round var(--media-radius) var(--media-radius) 0 0
+    );
   }
 
   .media > :global(picture) {
@@ -117,7 +119,9 @@ const wide = layout === "wide";
     }
 
     .wide .media {
-      clip-path: inset(1px 1px 1px 0 round 0 var(--media-radius) var(--media-radius) 0);
+      clip-path: inset(
+        1px 1px 1px 0 round 0 var(--media-radius) var(--media-radius) 0
+      );
     }
 
     .wide .content {
