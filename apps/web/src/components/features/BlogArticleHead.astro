@@ -74,8 +74,4 @@ const structuredData = JSON.stringify([
 ]).replaceAll("<", "\\u003c"); // escape "<" so a value containing </script> can't terminate this block
 ---
 
-<script
-  is:inline
-  type="application/ld+json"
-  set:html={structuredData}
-/>
+<script is:inline type="application/ld+json" set:html={structuredData} />
