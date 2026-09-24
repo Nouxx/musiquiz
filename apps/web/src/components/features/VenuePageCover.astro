@@ -2,30 +2,63 @@
 import Badge from "@repo/ui/Badge";
 import PageCover from "@repo/ui/PageCover";
 import Button from "@repo/ui/primitives/Button";
+import DriftingColumns from "@repo/ui/primitives/DriftingColumns";
 import RemoteImage from "@repo/ui/primitives/RemoteImage";
 import Text from "@repo/ui/primitives/Text";
 import type { PageCover as PageCoverData } from "@repo/services/cms/types";
+import type { ComponentProps } from "astro/types";
 
 interface Props {
   data: PageCoverData;
   height?: "full" | "m";
+  ctaIcon?: "arrow-down" | "arrow-left";
 }
 
-const { data, height = "full" } = Astro.props;
-const { media, logo, badge, heading, subHeading, cta } = data;
+const { data, height = "full", ctaIcon = "arrow-right" } = Astro.props;
+
+const { background, aside, badge, heading, subHeading, cta, secondaryCta } =
+  data;
+
+// a gradient has no photo to fill a tall screen with, so it is sized by its content
+const coverProps: ComponentProps<typeof PageCover> =
+  background.kind === "image"
+    ? { align: "left", height }
+    : {
+        align: "left",
+        height: "l",
+        background: "gradient",
+        surface: background.kind,
+      };
+
+// todo: rename this component to PageCover (not only tied to venue now)
 ---
 
-<PageCover align="left" {height}>
-  <RemoteImage slot="media" image={media} variant="cover" loading="eager" />
+<PageCover {...coverProps}>
+  {
+    background.kind === "image" && (
+      <RemoteImage
+        slot="media"
+        image={background.media}
+        variant="cover"
+        loading="eager"
+      />
+    )
+  }
 
   {
-    logo && (
+    aside.kind === "logo" && (
       <RemoteImage
         slot="logo"
-        image={logo}
+        image={aside.logo}
         variant="cover-logo-side"
         loading="eager"
       />
+    )
+  }
+
+  {
+    aside.kind === "columns" && (
+      <DriftingColumns slot="columns" images={aside.images} from="80rem" />
     )
   }
 
@@ -41,7 +74,21 @@ const { media, logo, badge, heading, subHeading, cta } = data;
     )
   }
 
-  <Button slot="actions" as="a" href={cta.url} icon={cta.icon}>
-    {cta.label}
-  </Button>
+  {
+    (cta || secondaryCta) && (
+      <Fragment slot="actions">
+        {cta && (
+          <Button as="a" href={cta.url} icon={ctaIcon}>
+            {cta.label}
+          </Button>
+        )}
+
+        {secondaryCta && (
+          <Button as="a" href={secondaryCta.url} tone="light">
+            {secondaryCta.label}
+          </Button>
+        )}
+      </Fragment>
+    )
+  }
 </PageCover>

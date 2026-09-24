@@ -2,6 +2,7 @@
 type Props = {
   align?: "center" | "left";
   height?: "full" | "l" | "m";
+  width?: "content" | "article";
 } & (
   | { background?: "image" }
   | { background: "gradient"; surface: "brand" | "vivid" }
@@ -11,6 +12,7 @@ const props = Astro.props;
 
 const align = props.align ?? "center";
 const height = props.height ?? "full";
+const width = props.width ?? "content";
 const isGradient = props.background === "gradient";
 
 async function slotHtml(name: string) {
@@ -21,7 +23,8 @@ async function slotHtml(name: string) {
   return (await Astro.slots.render(name)).trim();
 }
 
-const logo = await slotHtml("logo");
+const columns = await slotHtml("columns");
+const logo = columns ? "" : await slotHtml("logo");
 const subheading = await slotHtml("subheading");
 const actions = await slotHtml("actions");
 
@@ -36,14 +39,20 @@ const style = {
 ---
 
 <section
-  class:list={["page-cover", align, height === "full" ? "full" : "sized"]}
+  class:list={[
+    "page-cover",
+    align,
+    height === "full" ? "full" : "sized",
+    width,
+    columns && "has-columns",
+  ]}
   style={style}
 >
   <div class:list={["media", isGradient && "gradient"]}>
     {!isGradient && <slot name="media" />}
   </div>
 
-  <div class:list={["frame", logo && "with-logo"]}>
+  <div class:list={["frame", logo && "with-logo", columns && "with-columns"]}>
     <div class="stack">
       <slot name="badge" />
       <slot name="heading" />
@@ -53,6 +62,7 @@ const style = {
     </div>
 
     {logo && <div class="logo" set:html={logo} />}
+    {columns && <div class="columns" set:html={columns} />}
   </div>
 </section>
 
@@ -60,18 +70,20 @@ const style = {
   .page-cover {
     position: relative;
     display: grid;
-    place-items: center;
+    padding-block: var(--cover-pad-block);
     padding-inline: var(--space-6);
+    place-items: center;
     overflow: hidden;
   }
 
   .full {
+    --cover-pad-block: var(--space-10);
+
     min-block-size: 100svh;
-    padding-block: var(--space-10);
   }
 
   .sized {
-    padding-block: var(--cover-spacing);
+    --cover-pad-block: var(--cover-spacing);
   }
 
   /* three layers, top to bottom: the scrim (`::after`), the photo (the media
@@ -116,13 +128,16 @@ const style = {
     flex-direction: column;
     align-items: center;
 
-    /* the cover frame's content width, 1036px */
-    max-inline-size: 64.75rem;
+    max-inline-size: var(--size-article);
   }
 
   .left .frame {
     inline-size: 100%;
     max-inline-size: var(--size-content);
+  }
+
+  .left.article .frame {
+    max-inline-size: var(--size-article);
   }
 
   .left .with-logo {
@@ -144,6 +159,25 @@ const style = {
     min-inline-size: min(12.5rem, 100%);
   }
 
+  .left .with-columns {
+    display: flex;
+    gap: var(--space-24);
+    align-items: center;
+  }
+
+  .left .with-columns .stack {
+    flex: 1 1 auto;
+  }
+
+  /* the strip is drawn against the section's height, not the text's */
+  .has-columns .frame {
+    align-self: stretch;
+  }
+
+  .columns {
+    display: none;
+  }
+
   .stack {
     display: flex;
     flex-direction: column;
@@ -161,12 +195,19 @@ const style = {
     text-align: left;
   }
 
+  .left.article .stack {
+    max-inline-size: none;
+  }
+
   .subheading {
     margin-block-start: calc(var(--space-4) - var(--space-2));
     color: var(--color-text-on-media-muted);
   }
 
   .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
     margin-block-start: var(--space-10);
   }
 
@@ -177,6 +218,22 @@ const style = {
     z-index: 2;
     display: flex;
     justify-content: center;
+  }
+
+  /* 80rem — drifting strip shown. see styles/breakpoints.css */
+  @media (width >= 80rem) {
+    .columns {
+      --drift-bleed: var(--cover-pad-block);
+
+      /* a grid child stretches, which is how the strip picks the frame's height up */
+      display: grid;
+      flex: 0 0 544px;
+      align-self: stretch;
+    }
+
+    .has-columns {
+      min-block-size: 47.375rem;
+    }
   }
 
   @media (height <= 40rem) {

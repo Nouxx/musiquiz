@@ -1,0 +1,38 @@
+---
+import { getTermsAndConditionsPageData } from "@repo/services/cms/getTermsAndConditionsPageData";
+import VenueTerms from "@repo/ui/VenueTerms";
+
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getT } from "../../libs/i18n";
+import Footer from "../features/Footer.astro";
+import VenuePageCover from "../features/VenuePageCover.astro";
+
+const lang = getLang(Astro);
+const t = getT(lang);
+
+const { pageCover, intro, venues } = await getTermsAndConditionsPageData({
+  lang,
+  config: getSanityConfigFromEnvironment(),
+});
+---
+
+<VenuePageCover data={pageCover} height="m" />
+
+<VenueTerms
+  indexLabel={t("termsAndConditionsPage.indexLabel")}
+  {intro}
+  venues={venues.map((venue) => ({
+    id: venue.slug,
+    title: t("termsAndConditionsPage.venueTitle", { venue: venue.title }),
+    articles: venue.articles.map((article, index) => ({
+      title: t("termsAndConditionsPage.articleTitle", {
+        number: index + 1,
+        title: article.title,
+      }),
+      body: article.body,
+    })),
+  }))}
+/>
+
+<Footer />

@@ -1,4 +1,6 @@
 ---
+import { isExternalUrl } from "@repo/utils/isExternalUrl";
+
 import Badge from "./Badge.astro";
 import ContactRow from "./contact/ContactRow.astro";
 import Button from "./primitives/Button.astro";
@@ -20,6 +22,9 @@ interface Props {
 }
 
 const { media, badge, title, facts, cta, map } = Astro.props;
+
+// todo: this helper should be owned by the services and return a object like {url, external} kinda of things
+const external = isExternalUrl(cta.url);
 ---
 
 <Section surface="media" width="content">
@@ -50,8 +55,8 @@ const { media, badge, title, facts, cta, map } = Astro.props;
         as="a"
         href={cta.url}
         tone="blue"
-        target="_blank"
-        rel="noopener"
+        target={external ? "_blank" : undefined}
+        rel={external ? "noopener" : undefined}
         icon="arrow-right"
         iconPosition="trailing"
       >

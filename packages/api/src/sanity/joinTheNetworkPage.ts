@@ -10,44 +10,36 @@ import {
 } from "./shared/pageComponents";
 import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
 
-export type GlobalPageType = "joinTheNetwork";
-
-function globalPageQuery({
-  lang,
-  pageType,
-}: {
-  lang: Lang;
-  pageType: GlobalPageType;
-}) {
+function joinTheNetworkPageQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
-    "globalPage": *[_type == "globalPage" && pageType == "${pageType}"][0]{
+    "page": *[_type == "joinTheNetworkPage"][0]{
       pageCover ${pageCoverProjection({ lang })},
-      "pageComponents": ${pageComponentsProjection({ lang })},
+      "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
     }
   }`);
 }
 
-const sanityGlobalPageSchema = z.strictObject({
-  globalPage: z.strictObject({
-    pageCover: sanityPageCoverSchema,
+const sanityJoinTheNetworkPageSchema = z.strictObject({
+  page: z.strictObject({
+    pageCover: sanityPageCoverSchema({ hasCta: false }),
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
   }),
 });
 
-export type SanityGlobalPage = z.infer<typeof sanityGlobalPageSchema>;
+export type SanityJoinTheNetworkPage = z.infer<
+  typeof sanityJoinTheNetworkPageSchema
+>;
 
-export async function fetchGlobalPage({
+export async function fetchJoinTheNetworkPage({
   config,
   lang,
-  pageType,
 }: {
   config: SanityConfig;
   lang: Lang;
-  pageType: GlobalPageType;
 }) {
   return fetchSanityData({
-    query: globalPageQuery({ lang, pageType }),
-    schema: sanityGlobalPageSchema,
+    query: joinTheNetworkPageQuery({ lang }),
+    schema: sanityJoinTheNetworkPageSchema,
     config,
   });
 }

@@ -47,14 +47,14 @@ export const fr = {
     closeLabel: "Fermer",
   },
   footer: {
-    faq: "FAQ",
+    whereToFindUs: "Où nous trouver",
     contact: "Contact",
     blog: "Blog",
     press: "Presse",
     joinTheNetwork: "Ouvrez votre salle Musi'quiz",
     termsAndConditions: "CGV",
     gdpr: "RGPD",
-    legalsNotice: "Mentions légales",
+    legalNotice: "Mentions légales",
     chooseVenue: "Choisir un centre",
     changeVenue: "Changez de ville",
     ourVenues: "Nos centres",
@@ -77,8 +77,51 @@ export const fr = {
     newsletterConsent: "J'accepte de recevoir les informations de Musi'Quiz",
   },
   contactPage: {
+    ctaLabel: "Nos coordonnées",
     writeTo: "Écrire un mail",
     venueName: "Musi'Quiz {{city}}",
+  },
+  whereToFindUsPage: {
+    ctaLabel: "Voir nos centres",
+  },
+  blogPage: {
+    badge: "Blog",
+    readArticle: "Lire l’article",
+    pagination: "Pagination",
+    previousPage: "Page précédente",
+    nextPage: "Page suivante",
+    page: "Page {{page}}",
+    pageTitle: "{{title}} – page {{page}}",
+  },
+  blogArticlePage: {
+    breadcrumbs: "Fil d’Ariane",
+    published: "Publié le {{date}}",
+    updated: "Mis à jour le {{date}}",
+    readingTime_one: "{{count}} minute",
+    readingTime_other: "{{count}} minutes",
+    summary: "Le résumé en 30 secondes",
+    rating: "5/5 sur {{count}} avis",
+    ratingStars: "Noté 5 sur 5",
+    book: "Réserver à {{venue}}",
+    findUsCta: "Réservez votre activité à {{venue}}",
+    author: "L’auteur de cet article",
+    readMore: "À lire aussi à {{venue}}",
+  },
+  joinTheNetworkPage: {
+    ctaLabel: "Demander notre plaquette",
+  },
+  venueBookingPage: {
+    ctaLabel: "Choisir mon activité",
+    secondaryCtaLabel: "Tarifs",
+  },
+  venueGiftingPage: {
+    ctaLabel: "Choisir mon activité",
+  },
+  termsAndConditionsPage: {
+    indexLabel:
+      "Les conditions générales de vente s'appliquent selon le centre où vous réservez",
+    venueTitle: "Conditions Générales de Vente (CGV) Musi'Quiz {{venue}}",
+    articleTitle: "Article {{number}} · {{title}}",
   },
   findUs: {
     address: "Adresse",

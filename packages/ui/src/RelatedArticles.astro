@@ -1,0 +1,66 @@
+---
+import ArticleCard from "./ArticleCard.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { ArticleCardItem } from "./types";
+
+interface Props {
+  title: string;
+  articles: ArticleCardItem[];
+}
+
+const { title, articles } = Astro.props;
+---
+
+<Section spacing="m">
+  <div class="related">
+    <Text as="h2" variant="title-h2">{title}</Text>
+
+    <ul class="grid">
+      {
+        articles.map((article) => (
+          <li>
+            <ArticleCard {...article} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Section>
+
+<style>
+  .related {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    padding: 0;
+    list-style: none;
+  }
+
+  .grid li {
+    display: flex;
+  }
+
+  .grid li > :global(*) {
+    inline-size: 100%;
+  }
+
+  /* the article grid's column steps, same as BlogListing.astro */
+  @media (width >= 40rem) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (width >= 64rem) {
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

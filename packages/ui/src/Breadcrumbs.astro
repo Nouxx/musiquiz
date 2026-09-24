@@ -1,0 +1,48 @@
+---
+import Link from "./primitives/Link.astro";
+import Text from "./primitives/Text.astro";
+import type { BreadcrumbItem } from "./types";
+
+interface Props {
+  items: BreadcrumbItem[];
+  label: string;
+}
+
+const { items, label } = Astro.props;
+---
+
+<nav aria-label={label}>
+  <ol class="trail">
+    {
+      items.map((item) => (
+        <li>
+          <Text variant="paragraph-base">
+            {item.url ? (
+              <Link url={item.url} underline={false}>
+                {item.label}
+              </Link>
+            ) : (
+              <span aria-current="page">{item.label}</span>
+            )}
+          </Text>
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .trail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    padding: 0;
+    color: var(--color-text-on-media-muted);
+    list-style: none;
+  }
+
+  li + li::before {
+    margin-inline-end: var(--space-1);
+    content: "/";
+  }
+</style>

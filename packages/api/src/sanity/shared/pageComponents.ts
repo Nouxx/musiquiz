@@ -242,6 +242,23 @@ function textSlideshowProjection({ lang }: { lang: Lang }) {
   `;
 }
 
+function textStripProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "textStrip" => {
+      "textBlock": ${textBlockProjection({ field: "textBlock", lang })},
+      "images": images[] ${imageProjection({ lang })}
+    }
+  `;
+}
+
+function textBodyProjection({ lang }: { lang: Lang }) {
+  return `
+    _type == "textBody" => {
+      "body": ${richTextProjection({ field: "body", lang })}
+    }
+  `;
+}
+
 function textCardsProjection({ lang }: { lang: Lang }) {
   return `
     _type == "textCards" => {
@@ -334,9 +351,15 @@ function videoEmbedProjection({ lang }: { lang: Lang }) {
   `;
 }
 
-export function pageComponentsProjection({ lang }: { lang: Lang }) {
+export function pageComponentsProjection({
+  field,
+  lang,
+}: {
+  field: string;
+  lang: Lang;
+}) {
   return `
-    pageComponents[]{
+    ${field}[]{
       _type,
       ${rollingBannerProjection({ lang })},
       ${cardsGridProjection({ lang })},
@@ -353,6 +376,8 @@ export function pageComponentsProjection({ lang }: { lang: Lang }) {
       ${cardsScrollerProjection({ lang })},
       ${detailTabsProjection({ lang })},
       ${textSlideshowProjection({ lang })},
+      ${textStripProjection({ lang })},
+      ${textBodyProjection({ lang })},
       ${textCardsProjection({ lang })},
       ${textCardsGridProjection({ lang })},
       ${offersProjection({ lang })},
@@ -559,7 +584,18 @@ const sanityTextSlideshowSchema = z.strictObject({
   images: z.array(sanityImageSchema).min(1).max(8),
 });
 
-const sanityContentIconSchema = z.enum([
+const sanityTextStripSchema = z.strictObject({
+  _type: z.literal("textStrip"),
+  textBlock: sanityTextBlockSchema,
+  images: z.array(sanityImageSchema).min(6).max(12),
+});
+
+const sanityTextBodySchema = z.strictObject({
+  _type: z.literal("textBody"),
+  body: sanityRichTextSchema,
+});
+
+export const sanityContentIconSchema = z.enum([
   "calendar",
   "camera",
   "check-circle",
@@ -696,6 +732,8 @@ export const sanityPageComponentSchema = z.discriminatedUnion("_type", [
   sanityCardsScrollerSchema,
   sanityDetailTabsSchema,
   sanityTextSlideshowSchema,
+  sanityTextStripSchema,
+  sanityTextBodySchema,
   sanityTextCardsSchema,
   sanityTextCardsGridSchema,
   sanityOffersSchema,

@@ -9,15 +9,21 @@ const frenchRoutes = {
   venueGifting: (venue: string) => `/${venue}/offrir`,
   faq: "faq",
   contact: "/contact",
-  blog: "blog",
+  blog: "/blog/",
+  blogPage: (page: number) => (page === 1 ? "/blog/" : `/blog/page/${page}`),
+  blogArticle: (slug: string) => `/blog/${slug}`,
   press: "presse",
   joinTheNetwork: "/rejoindre-le-reseau",
-  termsAndConditions: "cgv",
+  whereToFindUs: "/ou-nous-trouver",
+  termsAndConditions: "/cgv",
   gdpr: "rgpd",
-  legalsNotice: "mentions-legales",
+  legalNotice: "/mentions-legales",
 };
 
-const englishRoutes: typeof frenchRoutes = {
+// the blog is French only, see docs/adr/0013
+type BlogRoutes = "blog" | "blogPage" | "blogArticle";
+
+const englishRoutes: Omit<typeof frenchRoutes, BlogRoutes> = {
   home: "/en/",
   venueHome: (venue: string) => `/en/${venue}/`,
   venueBook: (venue: string) => `/en/${venue}/book`,
@@ -26,14 +32,19 @@ const englishRoutes: typeof frenchRoutes = {
   venueGifting: (venue: string) => `/en/${venue}/gift`,
   faq: "faq",
   contact: "/en/contact",
-  blog: "blog",
   press: "press",
   joinTheNetwork: "/en/join-the-network",
-  termsAndConditions: "terms",
+  whereToFindUs: "/en/where-to-find-us",
+  termsAndConditions: "/en/terms",
   gdpr: "gdpr",
-  legalsNotice: "legals-notice",
+  legalNotice: "/en/legal-notice",
 };
 
+export function getRoutesForLang(lang: "fr"): typeof frenchRoutes;
+export function getRoutesForLang(lang: "en"): typeof englishRoutes;
+export function getRoutesForLang(
+  lang: Lang,
+): typeof frenchRoutes | typeof englishRoutes;
 export function getRoutesForLang(lang: Lang) {
   return lang === "fr" ? frenchRoutes : englishRoutes;
 }

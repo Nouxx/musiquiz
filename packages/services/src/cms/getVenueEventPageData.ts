@@ -5,26 +5,18 @@ import {
 import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
-import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { VenueEventPage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
 import { toPageCover } from "./utils/toPageCover";
 
 function adaptVenueEventPage({
   data,
-  lang,
-  venueSlug,
 }: {
   data: SanityVenueEventPage;
-  lang: Lang;
-  venueSlug: string;
 }): VenueEventPage {
   return {
     eventName: data.venueEvent.eventName,
-    pageCover: toPageCover({
-      data: data.venueEvent.pageCover,
-      ctaUrl: getRoutesForLang(lang).venueBook(venueSlug),
-    }),
+    pageCover: toPageCover({ data: data.venueEvent.pageCover }),
     components:
       data.venueEvent.pageComponents?.map((component) =>
         adaptPageComponent(component),
@@ -50,5 +42,5 @@ export async function getVenueEventPageData({
     eventSlug,
   });
 
-  return adaptVenueEventPage({ data, lang, venueSlug });
+  return adaptVenueEventPage({ data });
 }

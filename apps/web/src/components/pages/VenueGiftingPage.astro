@@ -1,0 +1,46 @@
+---
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getT } from "../../libs/i18n";
+import VenueFooter from "../features/VenueFooter.astro";
+import VenuePageCover from "../features/VenuePageCover.astro";
+import PageComponents from "../features/PageComponents.astro";
+import { getVenueWidgetPageData } from "@repo/services/cms/getVenueWidgetPageData";
+import type { PageCover as PageCoverData } from "@repo/services/cms/types";
+import GiftingWidget from "../features/4espace/GiftingWidget.astro";
+import { giftingAnchor } from "../features/4espace/config";
+
+interface Props {
+  venueSlug: string;
+}
+
+const { venueSlug } = Astro.props;
+
+const lang = getLang(Astro);
+const t = getT(lang);
+
+const pageData = await getVenueWidgetPageData({
+  lang,
+  venueSlug,
+  pageType: "gift",
+  config: getSanityConfigFromEnvironment(),
+});
+
+const pageCoverData: PageCoverData = {
+  ...pageData.pageCover,
+  cta: {
+    label: t("venueGiftingPage.ctaLabel"),
+    url: `#${giftingAnchor}`,
+  },
+};
+---
+
+<VenuePageCover data={pageCoverData} />
+
+<PageComponents components={pageData.componentsBeforeWidget} />
+
+<GiftingWidget />
+
+<PageComponents components={pageData.componentsAfterWidget} />
+
+<VenueFooter {venueSlug} />

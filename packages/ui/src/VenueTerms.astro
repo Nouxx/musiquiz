@@ -1,0 +1,107 @@
+---
+import Accordion from "./primitives/Accordion.astro";
+import AccordionItem from "./primitives/AccordionItem.astro";
+import Link from "./primitives/Link.astro";
+import RichText from "./primitives/RichText.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { RichTextNode, VenueTerms } from "./types";
+
+interface Props {
+  indexLabel: string;
+  intro: RichTextNode[];
+  venues: VenueTerms[];
+}
+
+const { indexLabel, intro, venues } = Astro.props;
+---
+
+<Section spacing="m">
+  <div class="venue-terms">
+    <Accordion>
+      <AccordionItem name="venue-terms-index" question={indexLabel} open>
+        <ul class="index">
+          {
+            venues.map((venue) => (
+              <li>
+                <Link url={`#${venue.id}`} underline={false}>
+                  <Text variant="title-base">{venue.title}</Text>
+                </Link>
+              </li>
+            ))
+          }
+        </ul>
+      </AccordionItem>
+    </Accordion>
+
+    <div class="intro">
+      <RichText value={intro} gap="4" />
+    </div>
+
+    {
+      venues.map((venue) => (
+        <section class="venue" id={venue.id}>
+          <Text as="h2" variant="title-h3">
+            {venue.title}
+          </Text>
+
+          {venue.articles.map((article) => (
+            <article class="article">
+              <Text as="h3" variant="title-h5">
+                {article.title}
+              </Text>
+
+              <div class="body">
+                <RichText value={article.body} gap="4" />
+              </div>
+            </article>
+          ))}
+        </section>
+      ))
+    }
+  </div>
+</Section>
+
+<style>
+  /* narrower than the content width: long-form copy at 1248px is unreadable */
+  .venue-terms {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    max-inline-size: var(--size-article);
+    margin-inline: auto;
+  }
+
+  .index {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    color: var(--color-text);
+  }
+
+  .intro {
+    color: var(--color-text-muted);
+  }
+
+  .venue {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding-block-start: var(--space-10);
+    margin-block-start: var(--space-4);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .article {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .body {
+    color: var(--color-text-muted);
+  }
+</style>

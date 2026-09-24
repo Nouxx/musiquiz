@@ -1,0 +1,36 @@
+---
+import { getWhereToFindUsPageData } from "@repo/services/cms/getWhereToFindUsPageData";
+import type { PageCover as PageCoverData } from "@repo/services/cms/types";
+
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import Footer from "../features/Footer.astro";
+import PageComponents from "../features/PageComponents.astro";
+import VenuePageCover from "../features/VenuePageCover.astro";
+import VenuesList from "../features/VenuesList.astro";
+import { getT } from "../../libs/i18n";
+import { venuesMapAnchorId } from "@repo/ui/types";
+
+const lang = getLang(Astro);
+const t = getT(lang);
+
+const pageData = await getWhereToFindUsPageData({
+  lang,
+  config: getSanityConfigFromEnvironment(),
+});
+
+const pageCoverDataWithCta: PageCoverData = {
+  ...pageData.pageCover,
+  cta: { label: t("whereToFindUsPage.ctaLabel"), url: `#${venuesMapAnchorId}` },
+};
+---
+
+<VenuePageCover data={pageCoverDataWithCta} ctaIcon="arrow-down" />
+
+<PageComponents components={pageData.componentsBeforeMap} />
+
+<VenuesList venues={pageData.venues} cta={pageData.venuesCta} />
+
+<PageComponents components={pageData.componentsAfterMap} />
+
+<Footer />

@@ -1,0 +1,50 @@
+---
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getT } from "../../libs/i18n";
+import VenueFooter from "../features/VenueFooter.astro";
+import VenuePageCover from "../features/VenuePageCover.astro";
+import PageComponents from "../features/PageComponents.astro";
+import { getVenueWidgetPageData } from "@repo/services/cms/getVenueWidgetPageData";
+import type { PageCover as PageCoverData } from "@repo/services/cms/types";
+import BookingWidget from "../features/4espace/BookingWidget.astro";
+import { bookingAnchor } from "../features/4espace/config";
+
+interface Props {
+  venueSlug: string;
+}
+
+const { venueSlug } = Astro.props;
+
+const lang = getLang(Astro);
+const t = getT(lang);
+
+const pageData = await getVenueWidgetPageData({
+  lang,
+  venueSlug,
+  pageType: "book",
+  config: getSanityConfigFromEnvironment(),
+});
+
+const pageCoverData: PageCoverData = {
+  ...pageData.pageCover,
+  cta: {
+    label: t("venueBookingPage.ctaLabel"),
+    url: `#${bookingAnchor}`,
+  },
+  secondaryCta: {
+    label: t("venueBookingPage.secondaryCtaLabel"),
+    url: "#prices",
+  },
+};
+---
+
+<VenuePageCover data={pageCoverData} />
+
+<PageComponents components={pageData.componentsBeforeWidget} />
+
+<BookingWidget />
+
+<PageComponents components={pageData.componentsAfterWidget} />
+
+<VenueFooter {venueSlug} />

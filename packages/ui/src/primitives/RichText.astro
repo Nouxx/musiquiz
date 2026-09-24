@@ -1,5 +1,5 @@
 ---
-import Link from "./Link.astro";
+import RichTextSpans from "./RichTextSpans.astro";
 import type { TextVariant } from "./Text.astro";
 import Text from "./Text.astro";
 import type { RichTextNode, SpaceScale } from "../types";
@@ -24,11 +24,7 @@ const { value, variant = "paragraph-base", gap = "2" } = Astro.props;
   {
     value.map((node) => (
       <Text as="p" variant={variant}>
-        {node.spans.map((span) => {
-          const content = span.bold ? <strong>{span.text}</strong> : span.text;
-
-          return span.href ? <Link url={span.href}>{content}</Link> : content;
-        })}
+        <RichTextSpans spans={node.spans} />
       </Text>
     ))
   }
@@ -39,10 +35,5 @@ const { value, variant = "paragraph-base", gap = "2" } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: var(--rich-text-gap);
-  }
-
-  /* the body face ships 400 and 600 only (apps/web/astro.config.mjs), so the default `bold` would be synthesized */
-  .rich-text strong {
-    font-weight: 600;
   }
 </style>

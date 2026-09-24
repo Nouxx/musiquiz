@@ -1,0 +1,25 @@
+---
+import Link from "./Link.astro";
+import type { RichTextSpan } from "../types";
+
+interface Props {
+  spans: RichTextSpan[];
+}
+
+const { spans } = Astro.props;
+---
+
+{
+  spans.map((span) => {
+    const content = span.bold ? <strong>{span.text}</strong> : span.text;
+
+    return span.href ? <Link url={span.href}>{content}</Link> : content;
+  })
+}
+
+<style>
+  /* the body face ships 400 and 600 only (apps/web/astro.config.mjs), so the default `bold` would be synthesized */
+  strong {
+    font-weight: 600;
+  }
+</style>

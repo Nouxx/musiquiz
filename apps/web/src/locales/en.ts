@@ -1,6 +1,11 @@
 import type { fr } from "./fr";
 
-export const en: typeof fr = {
+/**
+ * blog is french only, no need keys for it
+ */
+type EnglishKeys = Omit<typeof fr, "blogArticlePage" | "blogPage">;
+
+export const en: EnglishKeys = {
   cover: {
     chooseVenue: "Choose your Musi'Quiz venue",
   },
@@ -49,14 +54,14 @@ export const en: typeof fr = {
     closeLabel: "Close",
   },
   footer: {
-    faq: "FAQ",
+    whereToFindUs: "Where to find us",
     contact: "Contact",
     blog: "Blog",
     press: "Press",
     joinTheNetwork: "Open your Musi'quiz franchise",
     termsAndConditions: "T&C",
     gdpr: "GDPR",
-    legalsNotice: "Legal Notices",
+    legalNotice: "Legal notice",
     chooseVenue: "Choose a venue",
     changeVenue: "Switch venue",
     ourVenues: "Our venues",
@@ -69,7 +74,7 @@ export const en: typeof fr = {
     directions: "Directions",
     openDirections: "Open directions",
     ourGames: "Our games",
-    ourVenueGames: "Our game in this venue",
+    ourVenueGames: "Our games in this venue",
     generalInformation: "General information",
     socials: "Follow us",
     subscribe: "Subscribe to our newsletter",
@@ -79,8 +84,27 @@ export const en: typeof fr = {
     newsletterConsent: "I agree to receive information from Musi'Quiz",
   },
   contactPage: {
+    ctaLabel: "Our contact details",
     writeTo: "Send an email",
     venueName: "Musi'Quiz {{city}}",
+  },
+  whereToFindUsPage: {
+    ctaLabel: "See our venues",
+  },
+  joinTheNetworkPage: {
+    ctaLabel: "Request our brochure",
+  },
+  venueBookingPage: {
+    ctaLabel: "Choose my activity",
+    secondaryCtaLabel: "Prices",
+  },
+  venueGiftingPage: {
+    ctaLabel: "Choose my activity",
+  },
+  termsAndConditionsPage: {
+    indexLabel: "The terms and conditions depend on the venue you book at",
+    venueTitle: "Terms and Conditions Musi'Quiz {{venue}}",
+    articleTitle: "Article {{number}} · {{title}}",
   },
   findUs: {
     address: "Address",

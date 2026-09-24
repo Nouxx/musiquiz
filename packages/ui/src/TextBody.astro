@@ -1,0 +1,26 @@
+---
+import RichText from "./primitives/RichText.astro";
+import Section from "./Section.astro";
+import type { RichTextNode } from "./types";
+
+interface Props {
+  body: RichTextNode[];
+}
+
+const { body } = Astro.props;
+---
+
+<Section spacing="m">
+  <div class="text-body">
+    <RichText value={body} gap="6" />
+  </div>
+</Section>
+
+<style>
+  /* narrower than the content width: long-form copy at 1248px is unreadable */
+  .text-body {
+    max-inline-size: var(--size-article);
+    margin-inline: auto;
+    color: var(--color-text-muted);
+  }
+</style>

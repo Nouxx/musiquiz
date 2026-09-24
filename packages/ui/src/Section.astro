@@ -17,7 +17,10 @@ const {
 
 <section
   class:list={["section", surface, `width-${width}`]}
-  style={{ "--section-spacing": `var(--space-section-${spacing})` }}
+  style={{
+    "--section-spacing": `var(--space-section-${spacing})`,
+    "--drift-bleed": "var(--section-spacing)",
+  }}
   {id}
 >
   {
@@ -37,6 +40,11 @@ const {
     padding-inline: var(--space-6);
 
     overflow-x: clip;
+  }
+
+  /* the header is `position: fixed`; an anchor jump would land the target underneath it */
+  .section[id] {
+    scroll-margin-block-start: var(--space-20);
   }
 
   .width-wide {

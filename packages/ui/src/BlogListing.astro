@@ -1,0 +1,134 @@
+---
+import ArticleCard from "./ArticleCard.astro";
+import Badge from "./Badge.astro";
+import Pagination from "./Pagination.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { ArticleCardItem, PaginationLink } from "./types";
+
+export interface Props {
+  badge: string;
+  title: string;
+  intro: string;
+  /** the newest two, drawn above the grid; the first one wide */
+  featured: ArticleCardItem[];
+  articles: ArticleCardItem[];
+  pagination: {
+    current: number;
+    pages: PaginationLink[];
+    label: string;
+    previousLabel: string;
+    nextLabel: string;
+  };
+}
+
+const { badge, title, intro, featured, articles, pagination } = Astro.props;
+---
+
+<Section spacing="l">
+  <div class="listing">
+    <header class="heading">
+      <Badge color="light">{badge}</Badge>
+
+      <Text as="h1" variant="title-h2">{title}</Text>
+
+      <div class="intro">
+        <Text as="p" variant="paragraph-base">{intro}</Text>
+      </div>
+    </header>
+
+    {
+      featured.length > 0 && (
+        <ul class="featured">
+          {featured.map((article, index) => (
+            <li class:list={[{ wide: index === 0 }]}>
+              <ArticleCard
+                {...article}
+                layout={index === 0 ? "wide" : "stacked"}
+              />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    <hr class="divider" />
+
+    <ul class="grid">
+      {
+        articles.map((article) => (
+          <li>
+            <ArticleCard {...article} />
+          </li>
+        ))
+      }
+    </ul>
+
+    {pagination.pages.length > 1 && <Pagination {...pagination} />}
+  </div>
+</Section>
+
+<style>
+  .listing {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    align-items: flex-start;
+    max-inline-size: 44.875rem;
+  }
+
+  .intro {
+    color: var(--color-text-muted);
+  }
+
+  .featured,
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    padding: 0;
+    list-style: none;
+  }
+
+  .featured li,
+  .grid li {
+    display: flex;
+  }
+
+  .featured li > :global(*),
+  .grid li > :global(*) {
+    inline-size: 100%;
+  }
+
+  .divider {
+    border: 0;
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  /* explicit column counts, like CardsGrid: 3 -> 2 -> 1 without an orphan step */
+  @media (width >= 40rem) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (width >= 64rem) {
+    .featured {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .featured .wide {
+      grid-column: span 2;
+    }
+
+    .grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

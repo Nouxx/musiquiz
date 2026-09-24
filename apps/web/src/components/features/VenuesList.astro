@@ -1,12 +1,13 @@
 ---
-import type { Homepage } from "@repo/services/cms/types";
+import type { CtaLink } from "@repo/ui/types";
+import type { VenuePin } from "@repo/services/cms/types";
 import VenuesMap from "@repo/ui/VenuesMap";
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 
 export interface Props {
-  venues: Homepage["venues"];
-  cta: Homepage["venuesCta"];
+  venues: VenuePin[];
+  cta: CtaLink | undefined;
 }
 
 const { venues, cta } = Astro.props;

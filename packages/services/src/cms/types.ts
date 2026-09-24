@@ -1,4 +1,9 @@
-import type { PageComponent } from "./pageComponent.types";
+import type {
+  ContentIcon,
+  FaqQuestion,
+  FindUsContent,
+  PageComponent,
+} from "./pageComponent.types";
 
 export type CmsImage = {
   url: string;
@@ -24,45 +29,99 @@ export type RichTextNode = {
 
 export type RichText = RichTextNode[];
 
+export type ArticleNode =
+  | RichTextNode
+  | { type: "heading"; level: 2 | 3; spans: RichTextSpan[] }
+  | { type: "list"; items: RichTextSpan[][] }
+  | { type: "image"; image: CmsImage };
+
+export type VenuePin = {
+  /** the slug, pairs a list link with its dot on the map */
+  id: string;
+  title: string;
+  url: string;
+  detail: string;
+  /** percent of the map frame */
+  position: { x: number; y: number };
+};
+
 export type Homepage = {
   logo: CmsImage;
   cover: CmsImage;
   badgeLabel: string;
   heading: string;
-  venues: {
-    /** the slug, pairs a list link with its dot on the map */
-    id: string;
-    title: string;
-    url: string;
-    detail: string;
-    /** percent of the map frame */
-    position: { x: number; y: number };
-  }[];
+  venues: VenuePin[];
   venuesCta: { label: string; url: string } | undefined;
   components: PageComponent[];
 };
 
-export type PageCover = {
-  media: CmsImage;
+export type CoverBackground =
+  | { kind: "image"; media: CmsImage }
+  | { kind: "brand" }
+  | { kind: "vivid" };
+
+export type CoverAside =
+  | { kind: "none" }
   // the game's own mark, not the venue logo the header carries
-  logo: CmsImage | undefined;
+  | { kind: "logo"; logo: CmsImage }
+  | { kind: "columns"; images: CmsImage[] };
+
+export type PageCover = {
+  background: CoverBackground;
+  aside: CoverAside;
   badge: string | undefined;
   heading: string;
   subHeading: string | undefined;
-  cta: {
-    label: string;
-    url: string;
-    icon: "arrow-right" | "arrow-down";
-  };
+  cta:
+    | {
+        label: string;
+        url: string;
+      }
+    | undefined;
+  secondaryCta:
+    | {
+        label: string;
+        url: string;
+      }
+    | undefined;
 };
 
 export type VenuePageType = "home" | "gift" | "book";
 
-export type GlobalPageType = "joinTheNetwork";
-
-export type GlobalPage = {
+export type JoinTheNetworkPage = {
   pageCover: PageCover;
   components: PageComponent[];
+};
+
+export type LegalNoticePage = {
+  pageCover: PageCover;
+  body: RichText;
+};
+
+export type TermsArticle = {
+  /** @example "Objet", "Prix des services" — numbered by position, not authored */
+  title: string;
+  body: RichText;
+};
+
+export type VenueTerms = {
+  slug: string;
+  title: string;
+  articles: TermsArticle[];
+};
+
+export type TermsAndConditionsPage = {
+  pageCover: PageCover;
+  intro: RichText;
+  venues: VenueTerms[];
+};
+
+export type WhereToFindUsPage = {
+  pageCover: PageCover;
+  componentsBeforeMap: PageComponent[];
+  venues: VenuePin[];
+  venuesCta: { label: string; url: string } | undefined;
+  componentsAfterMap: PageComponent[];
 };
 
 export type TeamMember = {
@@ -86,6 +145,51 @@ export type VenueContact = {
   phoneHref: string;
 };
 
+export type BlogArticleSummary = {
+  title: string;
+  url: string;
+  /** ISO date, `YYYY-MM-DD` */
+  publishedAt: string;
+  /** the venue title, drawn as the badge */
+  venue: string;
+  cover: CmsImage;
+  excerpt: string;
+};
+
+export type BlogPage = {
+  title: string;
+  intro: string;
+  /** every article, newest first; the web app pages them */
+  articles: BlogArticleSummary[];
+};
+
+export type BlogArticlePage = {
+  title: string;
+  excerpt: string;
+  /** ISO date, `YYYY-MM-DD` */
+  publishedAt: string;
+  /** ISO date, `YYYY-MM-DD` */
+  updatedAt: string | undefined;
+  cover: CmsImage;
+  summary: RichText;
+  chips: { icon: ContentIcon; label: string }[];
+  reviewCount: number | undefined;
+  body: ArticleNode[];
+  readingMinutes: number;
+  venue: { title: string; slug: string };
+  author: {
+    name: string;
+    jobTitle: string;
+    bio: string;
+    tone: "blue" | "red";
+    photo: CmsImage;
+  };
+  findUs: FindUsContent;
+  faq: { title: string; questions: FaqQuestion[] };
+  /** same venue, newest first, at most three */
+  readMore: BlogArticleSummary[];
+};
+
 export type ContactPage = {
   pageCover: PageCover;
   team: {
@@ -103,6 +207,14 @@ export type ContactPage = {
 export type VenuePage = {
   pageCover: PageCover;
   components: PageComponent[];
+};
+
+export type VenueWidgetPageType = "gift" | "book";
+
+export type VenueWidgetPage = {
+  pageCover: PageCover;
+  componentsBeforeWidget: PageComponent[];
+  componentsAfterWidget: PageComponent[];
 };
 
 export type VenueGamePage = {

@@ -7,6 +7,13 @@ export const pageTypes = [
   { value: "book", title: "Booking page" },
 ] as const;
 
+/**
+ * The gifting and booking pages have a widget, owned by the build
+ */
+export function hasWidget(pageType: unknown) {
+  return pageType === "gift" || pageType === "book";
+}
+
 export const venuePageType = defineType({
   name: "venuePage",
   title: "Venue Page",
@@ -41,6 +48,19 @@ export const venuePageType = defineType({
     defineField({
       name: "pageComponents",
       type: "pageComponents",
+      hidden: ({ document }) => hasWidget(document?.pageType),
+    }),
+    defineField({
+      name: "componentsBeforeWidget",
+      title: "Before the widget",
+      type: "pageComponents",
+      hidden: ({ document }) => !hasWidget(document?.pageType),
+    }),
+    defineField({
+      name: "componentsAfterWidget",
+      title: "After the widget",
+      type: "pageComponents",
+      hidden: ({ document }) => !hasWidget(document?.pageType),
     }),
   ],
   preview: {

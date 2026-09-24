@@ -6,8 +6,8 @@ import Text from "./primitives/Text.astro";
 interface Props {
   // the sheet's Couleur axis: `dark` is the translucent pill that sits on
   // media, `light` the opaque one for plain surfaces
-  color?: "dark" | "light";
-  border?: "brand" | "blue" | "red";
+  color?: "dark" | "light" | "red";
+  border?: "brand" | "blue" | "red" | "red-dark" | "muted";
   size?: "large" | "small";
   tilt?: boolean;
   icon?: IconName;
@@ -64,6 +64,11 @@ const {
     background-color: var(--color-surface);
   }
 
+  .red {
+    color: var(--color-text-on-red);
+    background-image: var(--color-fill-red);
+  }
+
   .border-brand {
     --badge-border: var(--color-border-brand);
   }
@@ -74,6 +79,18 @@ const {
 
   .border-red {
     --badge-border: var(--color-border-brand-red);
+  }
+
+  /* the ring is painted as an image, so a flat colour has to be a gradient */
+  .border-muted {
+    --badge-border: linear-gradient(var(--color-border), var(--color-border));
+  }
+
+  .border-red-dark {
+    --badge-border: linear-gradient(
+      var(--color-border-red),
+      var(--color-border-red)
+    );
   }
 
   .tilt {

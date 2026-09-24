@@ -3,30 +3,34 @@ import {
   type StructureResolver,
 } from "sanity/structure";
 import { ControlsIcon } from "@sanity/icons/Controls";
-import { DocumentIcon } from "@sanity/icons/Document";
 import { HomeIcon } from "@sanity/icons/Home";
 import { InfoOutlineIcon } from "@sanity/icons/InfoOutline";
 import { JoystickIcon } from "@sanity/icons/Joystick";
 import { ConfettiIcon } from "@sanity/icons/Confetti";
 import { EnvelopeIcon } from "@sanity/icons/Envelope";
 import { RocketIcon } from "@sanity/icons/Rocket";
+import { PinIcon } from "@sanity/icons/Pin";
+import { DocumentTextIcon } from "@sanity/icons/DocumentText";
+import { BookIcon } from "@sanity/icons/Book";
+import { BlockContentIcon } from "@sanity/icons/BlockContent";
+import { UsersIcon } from "@sanity/icons/Users";
 import type { ComponentType } from "react";
 import {
-  globalPageTemplateId,
   singletonIds,
+  venueBlogTemplateId,
   venueEventTemplateId,
   venueGameTemplateId,
   venuePageTemplateId,
 } from "./sanity.config";
 
-// venuePage, venueGame and venueEvent belong to a venue, only reachable from there
-// globalPage has one document per page type, listed by name
 const nestedTypeIds = [
   "venue",
   "venuePage",
   "venueGame",
   "venueEvent",
-  "globalPage",
+  "blogArticle",
+  "venueBlog",
+  "teamMember",
 ];
 
 function venuePageId({
@@ -69,28 +73,38 @@ function venuePageItem({
     );
 }
 
-function globalPageItem({
+function venueBlogItem({
   S,
-  pageType,
-  title,
-  icon = DocumentIcon,
+  venueId,
 }: {
   S: StructureBuilder;
-  pageType: string;
+  venueId: string;
+}) {
+  const publishedVenueId = venueId.replace(/^drafts\./, "");
+
+  // a hyphen, never a dot: see venuePageId
+  return S.document()
+    .schemaType("venueBlog")
+    .documentId(`venueBlog-${publishedVenueId}`)
+    .initialValueTemplate(venueBlogTemplateId, { venueId: publishedVenueId });
+}
+
+function singletonItem({
+  S,
+  type,
+  title,
+  icon,
+}: {
+  S: StructureBuilder;
+  type: string;
   title: string;
-  icon?: ComponentType;
+  icon: ComponentType;
 }) {
   return S.listItem()
     .title(title)
-    .id(`globalPage-${pageType}`)
+    .id(type)
     .icon(icon)
-    .child(
-      S.document()
-        .schemaType("globalPage")
-        .documentId(`globalPage-${pageType}`)
-        .title(title)
-        .initialValueTemplate(globalPageTemplateId, { pageType }),
-    );
+    .child(S.document().schemaType(type).documentId(type).title(title));
 }
 
 function venueChild({ S, venueId }: { S: StructureBuilder; venueId: string }) {
@@ -152,19 +166,77 @@ export const myStructure: StructureResolver = (S: StructureBuilder) =>
         .id("homepage")
         .child(S.document().schemaType("homepage").documentId("homepage")),
 
-      globalPageItem({
+      singletonItem({
         S,
-        pageType: "joinTheNetwork",
+        type: "joinTheNetworkPage",
         title: "Join the network page",
         icon: RocketIcon,
       }),
 
-      globalPageItem({
+      singletonItem({
         S,
-        pageType: "contact",
+        type: "contactPage",
         title: "Contact page",
         icon: EnvelopeIcon,
       }),
+
+      singletonItem({
+        S,
+        type: "whereToFindUsPage",
+        title: "Where to find us page",
+        icon: PinIcon,
+      }),
+
+      singletonItem({
+        S,
+        type: "legalNoticePage",
+        title: "Legal notice page",
+        icon: DocumentTextIcon,
+      }),
+
+      singletonItem({
+        S,
+        type: "termsAndConditionsPage",
+        title: "Terms and conditions page",
+        icon: BookIcon,
+      }),
+
+      S.listItem()
+        .title("Blog")
+        .id("blog")
+        .icon(BlockContentIcon)
+        .child(
+          S.list()
+            .title("Blog")
+            .items([
+              singletonItem({
+                S,
+                type: "blogPage",
+                title: "Blog page",
+                icon: BlockContentIcon,
+              }),
+              S.listItem()
+                .title("Articles")
+                .id("articles")
+                .icon(DocumentTextIcon)
+                .child(
+                  S.documentTypeList("blogArticle")
+                    .title("Articles")
+                    .defaultOrdering([
+                      { field: "publishedAt", direction: "desc" },
+                    ]),
+                ),
+              S.listItem()
+                .title("Venues")
+                .id("venues")
+                .icon(HomeIcon)
+                .child(
+                  S.documentTypeList("venue")
+                    .title("Venues")
+                    .child((venueId) => venueBlogItem({ S, venueId })),
+                ),
+            ]),
+        ),
 
       S.listItem()
         .title("Venues")
@@ -186,6 +258,23 @@ export const myStructure: StructureResolver = (S: StructureBuilder) =>
         .id("siteSettings")
         .icon(ControlsIcon)
         .child(
-          S.document().schemaType("siteSettings").documentId("siteSettings"),
+          S.list()
+            .title("Site Settings")
+            .items([
+              S.listItem()
+                .title("Settings")
+                .id("settings")
+                .icon(ControlsIcon)
+                .child(
+                  S.document()
+                    .schemaType("siteSettings")
+                    .documentId("siteSettings"),
+                ),
+              S.listItem()
+                .title("Team members")
+                .id("teamMembers")
+                .icon(UsersIcon)
+                .child(S.documentTypeList("teamMember").title("Team members")),
+            ]),
         ),
     ]);

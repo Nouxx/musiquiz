@@ -21,7 +21,7 @@
     "lint": "eslint . && pnpm lint:css",
     "lint:css": "stylelint \"./src/**/*.{css,astro}\"",
     "tsc": "pnpm generate-types && astro check",
-    "generate-types": "wrangler types"
+    "generate-types": "wrangler types --include-runtime=false"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.1.4",

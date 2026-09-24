@@ -82,8 +82,7 @@ type GamePrices = {
   game: PricesGame;
 };
 
-type FindUs = {
-  type: "findUs";
+export type FindUsContent = {
   badge: string;
   title: string;
   media: CmsImage;
@@ -97,6 +96,8 @@ type FindUs = {
   contactTitle: string;
   contactNote: string;
 };
+
+type FindUs = { type: "findUs" } & FindUsContent;
 
 type ContactPanelRow = {
   label: string;
@@ -200,6 +201,17 @@ type TextSlideshow = {
   surface: "default" | "muted";
   slideshowPosition: "left" | "right";
   images: CmsImage[];
+};
+
+type TextStrip = {
+  type: "textStrip";
+  textBlock: TextBlock;
+  images: CmsImage[];
+};
+
+type TextBody = {
+  type: "textBody";
+  body: RichText;
 };
 
 export type ContentIcon =
@@ -314,6 +326,8 @@ export type PageComponent =
   | CardsScroller
   | DetailTabs
   | TextSlideshow
+  | TextStrip
+  | TextBody
   | TextCards
   | TextCardsGrid
   | Offers

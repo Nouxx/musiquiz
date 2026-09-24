@@ -7,10 +7,19 @@ import { pageCoverType } from "./shared/pageCover";
 import { pricesFootnoteType } from "./shared/pricesFootnote";
 import { eventFormatType } from "./eventFormat";
 import { gameFormatType } from "./gameFormat";
-import { globalPageType } from "./globalPage";
+import { joinTheNetworkPageType } from "./joinTheNetworkPage";
+import { contactPageType } from "./contactPage";
+import { whereToFindUsPageType } from "./whereToFindUsPage";
+import { legalNoticePageType } from "./legalNoticePage";
+import { termsAndConditionsPageType } from "./termsAndConditionsPage";
 import { homepageType } from "./homepage";
-import { siteSettingsType, teamMemberType } from "./siteSettings";
-import { quotationServiceType, venueType } from "./venue";
+import { blogPageType } from "./blogPage";
+import { blogArticleType } from "./blogArticle";
+import { siteSettingsType } from "./siteSettings";
+import { teamMemberType } from "./teamMember";
+import { blogFaqType, blogFindUsType, venueBlogType } from "./venueBlog";
+import { articleBodyType } from "./shared/articleBody";
+import { quotationServiceType, termsArticleType, venueType } from "./venue";
 import { priceType, venueGameType } from "./venueGame";
 import { venueEventType } from "./venueEvent";
 import { venuePageType } from "./venuePage";
@@ -45,14 +54,27 @@ import {
   offersType,
 } from "./shared/pageComponents/offers";
 import { textSlideshowType } from "./shared/pageComponents/textSlideshow";
+import { textStripType } from "./shared/pageComponents/textStrip";
+import { textBodyType } from "./shared/pageComponents/textBody";
 import { videoEmbedType } from "./shared/pageComponents/videoEmbed";
 import { textBlockType } from "./shared/textBlock";
 
 export const schemaTypes = [
   homepageType,
-  globalPageType,
+  joinTheNetworkPageType,
+  contactPageType,
+  whereToFindUsPageType,
+  legalNoticePageType,
+  termsAndConditionsPageType,
+  blogPageType,
+  blogArticleType,
+  articleBodyType,
+  venueBlogType,
+  blogFaqType,
+  blogFindUsType,
   venueType,
   quotationServiceType,
+  termsArticleType,
   venuePageType,
   venueGameType,
   venueEventType,
@@ -90,6 +112,8 @@ export const schemaTypes = [
   textCardsGridType,
   keywordCardType,
   textSlideshowType,
+  textStripType,
+  textBodyType,
   offersType,
   offerGroupType,
   offerCardType,

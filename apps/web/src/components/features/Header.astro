@@ -6,7 +6,7 @@ import { getT } from "../../libs/i18n";
 import { getLang } from "../../libs/getLang";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import { isCurrentUrl } from "@repo/services/routing/isCurrentUrl";
-import type { NavLink, NavMenu } from "@repo/ui/types";
+import { venuesMapAnchorId, type NavLink, type NavMenu } from "@repo/ui/types";
 import { getOtherLang } from "../../libs/getOtherLang";
 import HeaderSocials from "./header/HeaderSocials.astro";
 
@@ -80,7 +80,7 @@ const linksTree = mainLinks.map(withCurrent);
 
 const venueSwitcherLink = {
   label: t("header.changeVenue"),
-  url: routes.home + "#venues",
+  url: routes.home + `#${venuesMapAnchorId}`,
 };
 
 const cta = {

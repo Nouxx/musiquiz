@@ -1,0 +1,103 @@
+---
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+import type { BlogArticlePage as BlogArticlePageData } from "@repo/services/cms/types";
+import ArticleAuthor from "@repo/ui/ArticleAuthor";
+import ArticleBody from "@repo/ui/ArticleBody";
+import ArticleIntro from "@repo/ui/ArticleIntro";
+import Faq from "@repo/ui/Faq";
+import FindUs from "@repo/ui/FindUs";
+import RelatedArticles from "@repo/ui/RelatedArticles";
+import type { BreadcrumbItem } from "@repo/ui/types";
+
+import { getT } from "../../libs/i18n";
+import { formatBlogDate, toArticleCard } from "../../libs/toArticleCard";
+import { toContactFacts } from "../../libs/toContactFacts";
+import ArticleCover from "../features/ArticleCover.astro";
+import Footer from "../features/Footer.astro";
+
+// the route fetches, like the listing: docs/adr/0013
+export interface Props {
+  data: BlogArticlePageData;
+  breadcrumbs: BreadcrumbItem[];
+}
+
+const { data, breadcrumbs } = Astro.props;
+
+const t = getT("fr");
+const routes = getRoutesForLang("fr");
+
+const articleAnchor = "article";
+const bookUrl = routes.venueBook(data.venue.slug);
+const venue = data.venue.title;
+
+const date = data.updatedAt
+  ? { key: "blogArticlePage.updated" as const, iso: data.updatedAt }
+  : { key: "blogArticlePage.published" as const, iso: data.publishedAt };
+---
+
+<ArticleCover
+  items={breadcrumbs}
+  breadcrumbsLabel={t("blogArticlePage.breadcrumbs")}
+  media={data.cover}
+  title={data.title}
+  cta={{ label: t("blogPage.readArticle"), url: `#${articleAnchor}` }}
+  photo={data.author.photo}
+  name={data.author.name}
+  date={{
+    label: t(date.key, { date: formatBlogDate(date.iso) }),
+    iso: date.iso,
+  }}
+  readingTime={t("blogArticlePage.readingTime", { count: data.readingMinutes })}
+/>
+
+<ArticleIntro
+  summaryBadge={t("blogArticlePage.summary")}
+  summary={data.summary}
+  chips={data.chips}
+  rating={data.reviewCount === undefined
+    ? undefined
+    : {
+        label: t("blogArticlePage.rating", { count: data.reviewCount }),
+        starsLabel: t("blogArticlePage.ratingStars"),
+      }}
+  cta={{ label: t("blogArticlePage.book", { venue }), url: bookUrl }}
+/>
+
+<ArticleBody id={articleAnchor} nodes={data.body} />
+
+<FindUs
+  media={data.findUs.media}
+  badge={data.findUs.badge}
+  title={data.findUs.title}
+  facts={toContactFacts({ component: data.findUs, t })}
+  cta={{ label: t("blogArticlePage.findUsCta", { venue }), url: bookUrl }}
+  map={{
+    ...data.findUs.location,
+    title: t("findUs.mapTitle", { venue }),
+  }}
+/>
+
+<Faq
+  badge={t("faq.badge")}
+  title={data.faq.title}
+  questions={data.faq.questions}
+/>
+
+<ArticleAuthor
+  badge={t("blogArticlePage.author")}
+  name={data.author.name}
+  jobTitle={data.author.jobTitle}
+  bio={data.author.bio}
+  photo={data.author.photo}
+/>
+
+{
+  data.readMore.length > 0 && (
+    <RelatedArticles
+      title={t("blogArticlePage.readMore", { venue })}
+      articles={data.readMore.map(toArticleCard)}
+    />
+  )
+}
+
+<Footer />

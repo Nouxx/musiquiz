@@ -5,7 +5,7 @@ import Button from "./primitives/Button.astro";
 import Flex from "./primitives/Flex.astro";
 import Grid from "./primitives/Grid.astro";
 import Text from "./primitives/Text.astro";
-import type { CtaLink, VenuePin } from "./types";
+import { venuesMapAnchorId, type CtaLink, type VenuePin } from "./types";
 import { venuesMap } from "./lib/maps";
 
 interface Props {
@@ -27,7 +27,7 @@ const pairingCss = venues
   .join("\n");
 ---
 
-<Section surface="vivid" id="venues">
+<Section surface="vivid" id={venuesMapAnchorId}>
   <Flex direction="column" gap="8">
     <div class="venues" {id}>
       <Flex direction="column" gap="10" class="list">
@@ -91,13 +91,6 @@ const pairingCss = venues
 <style is:inline set:html={pairingCss}></style>
 
 <style>
-  /* the header is `position: fixed`, so an anchor jump would otherwise land the
-     heading underneath it. `:global` because the id is on the element Section
-     renders, which never carries this component's scope marker */
-  :global(#venues) {
-    scroll-margin-block-start: var(--space-20);
-  }
-
   .venues {
     display: grid;
     gap: var(--space-20);

@@ -1,0 +1,39 @@
+---
+import { getBlogArticlePageData } from "@repo/services/cms/getBlogArticlePageData";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+import type { BreadcrumbItem } from "@repo/ui/types";
+
+import BlogArticleHead from "../../components/features/BlogArticleHead.astro";
+import BlogArticlePage from "../../components/pages/BlogArticlePage.astro";
+import Layout from "../../layouts/Layout.astro";
+import { getBlogArticleParameters } from "../../libs/getBlogArticleParameters";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getT } from "../../libs/i18n";
+
+export async function getStaticPaths() {
+  return getBlogArticleParameters();
+}
+
+const { slug } = Astro.params;
+
+// we could have made a <BlogArticlePage> component handle the fetch
+// but since there is no `/en`, it's not a big deal.
+const data = await getBlogArticlePageData({
+  config: getSanityConfigFromEnvironment(),
+  slug,
+});
+
+const routes = getRoutesForLang("fr");
+
+const breadcrumbs: BreadcrumbItem[] = [
+  { label: getT("fr")("footer.blog"), url: routes.blog },
+  // linking to the venue home strengthen this link SEO wise, allegedly.
+  { label: data.venue.title, url: routes.venueHome(data.venue.slug) },
+  { label: data.title },
+];
+---
+
+<Layout title={data.title} description={data.excerpt}>
+  <BlogArticleHead slot="head" {data} {breadcrumbs} />
+  <BlogArticlePage {data} {breadcrumbs} />
+</Layout>

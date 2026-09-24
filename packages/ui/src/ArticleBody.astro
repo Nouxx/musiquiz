@@ -1,0 +1,108 @@
+---
+import RemoteImage from "./primitives/RemoteImage.astro";
+import RichTextSpans from "./primitives/RichTextSpans.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { ArticleNode } from "./types";
+
+interface Props {
+  id: string;
+  nodes: ArticleNode[];
+}
+
+const { id, nodes } = Astro.props;
+---
+
+<Section spacing="m" {id}>
+  <div class="body">
+    {
+      nodes.map((node) => {
+        switch (node.type) {
+          case "paragraph": {
+            return (
+              <Text as="p" variant="paragraph-base">
+                <RichTextSpans spans={node.spans} />
+              </Text>
+            );
+          }
+          case "heading": {
+            return node.level === 2 ? (
+              <Text as="h2" variant="title-h4">
+                <RichTextSpans spans={node.spans} />
+              </Text>
+            ) : (
+              <Text as="h3" variant="title-xl">
+                <RichTextSpans spans={node.spans} />
+              </Text>
+            );
+          }
+          case "list": {
+            return (
+              <ul class="list">
+                {node.items.map((spans) => (
+                  <li>
+                    <Text variant="paragraph-base">
+                      <RichTextSpans {spans} />
+                    </Text>
+                  </li>
+                ))}
+              </ul>
+            );
+          }
+          case "image": {
+            return (
+              <div class="media">
+                <RemoteImage image={node.image} variant="article-body-media" />
+              </div>
+            );
+          }
+        }
+      })
+    }
+  </div>
+</Section>
+
+<style>
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-inline-size: var(--size-article);
+    margin-inline: auto;
+    color: var(--grey-800);
+  }
+
+  .body > :global(h2),
+  .body > :global(h3) {
+    color: var(--color-text);
+  }
+
+  .body > :global(h2) {
+    margin-block-start: var(--space-10);
+  }
+
+  .body > :global(h3) {
+    margin-block-start: var(--space-4);
+  }
+
+  .body > :global(:first-child) {
+    margin-block-start: 0;
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding-inline-start: var(--space-6);
+  }
+
+  .media {
+    margin-block: var(--space-6);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+  }
+
+  .media :global(picture) {
+    display: block;
+  }
+</style>

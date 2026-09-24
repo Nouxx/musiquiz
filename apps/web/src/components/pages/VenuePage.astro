@@ -5,21 +5,18 @@ import VenueFooter from "../features/VenueFooter.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
 import PageComponents from "../features/PageComponents.astro";
 import { getVenuePageData } from "@repo/services/cms/getVenuePageData";
-import type { VenuePageType } from "@repo/services/cms/types";
 
 interface Props {
   venueSlug: string;
-  pageType: VenuePageType;
 }
 
-const { venueSlug, pageType } = Astro.props;
+const { venueSlug } = Astro.props;
 
 const lang = getLang(Astro);
 
 const pageData = await getVenuePageData({
   lang,
   venueSlug,
-  pageType,
   config: getSanityConfigFromEnvironment(),
 });
 ---

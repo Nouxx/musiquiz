@@ -12,17 +12,19 @@ interface Props {
   badge: string;
   title: string;
   questions: FaqQuestion[];
-  images: ImageSource[];
+  images?: ImageSource[];
 }
 
-const { badge, title, questions, images } = Astro.props;
+const { badge, title, questions, images = [] } = Astro.props;
+
+const hasImages = images.length > 0;
 
 // two FAQs on a page must not close each other's questions
 const groupName = `faq-${crypto.randomUUID().slice(0, 8)}`;
 ---
 
 <Section spacing="m">
-  <div class="faq">
+  <div class:list={["faq", { solo: !hasImages }]}>
     <div class="panel">
       <div class="heading">
         <Badge color="light">{badge}</Badge>
@@ -45,7 +47,7 @@ const groupName = `faq-${crypto.randomUUID().slice(0, 8)}`;
       </Accordion>
     </div>
 
-    <DriftingColumns {images} />
+    {hasImages && <DriftingColumns {images} />}
   </div>
 </Section>
 
@@ -68,9 +70,20 @@ const groupName = `faq-${crypto.randomUUID().slice(0, 8)}`;
     align-items: flex-start;
   }
 
+  /* the article column of the blog, 824px */
+  .solo {
+    max-inline-size: 51.5rem;
+    margin-inline: auto;
+  }
+
+  .solo .heading {
+    align-items: center;
+    text-align: center;
+  }
+
   /* 72rem — FAQ image strip shown. see styles/breakpoints.css */
   @media (width >= 72rem) {
-    .faq {
+    .faq:not(.solo) {
       grid-template-columns: minmax(0, 1fr) calc(260px * 2 + var(--space-6));
       gap: 120px;
       align-items: center;

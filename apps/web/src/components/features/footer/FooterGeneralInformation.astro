@@ -21,11 +21,10 @@ const t = getT(lang);
 const routes = getRoutesForLang(lang);
 
 const links = [
-  { label: t("footer.faq"), url: routes.faq },
+  { label: t("footer.whereToFindUs"), url: routes.whereToFindUs },
   { label: t("footer.contact"), url: routes.contact },
   { label: t("footer.joinTheNetwork"), url: routes.joinTheNetwork },
-  // blog is not translated and only exists for FR
-  ...(routes.blog ? [{ label: t("footer.blog"), url: routes.blog }] : []),
+  ...("blog" in routes ? [{ label: t("footer.blog"), url: routes.blog }] : []),
   { label: t("footer.press"), url: routes.press },
 ];
 ---

@@ -78,6 +78,28 @@ export type CardItem = {
   cta?: CtaLink;
 };
 
+export type ArticleCardItem = {
+  media: ImageSource;
+  /** the venue title */
+  badge: string;
+  title: string;
+  body: string;
+  cta: CtaLink;
+  date: {
+    /** @example "14 juil. 2026" */
+    label: string;
+    /** ISO date, `YYYY-MM-DD` */
+    iso: string;
+  };
+};
+
+export type PaginationLink = {
+  page: number;
+  url: string;
+  /** the accessible name @example "Page 3" */
+  label: string;
+};
+
 export type TextCard = {
   icon: IconName;
   body: string;
@@ -131,6 +153,23 @@ export type RichTextNode = {
   spans: RichTextSpan[];
 };
 
+export type ArticleNode =
+  | RichTextNode
+  | { type: "heading"; level: 2 | 3; spans: RichTextSpan[] }
+  | { type: "list"; items: RichTextSpan[][] }
+  | { type: "image"; image: ImageSource };
+
+export type BreadcrumbItem = {
+  label: string;
+  /** the current page has none */
+  url?: string;
+};
+
+export type ArticleChip = {
+  icon: IconName;
+  label: string;
+};
+
 export type DetailCard = {
   mark?: MarkName;
   title: string;
@@ -174,6 +213,20 @@ export type OfferGroup = {
   body: RichTextNode[];
   tone?: Tone;
   cards: OfferCard[];
+};
+
+export type TermsArticle = {
+  /** display-ready, numbering included. @example "Article 1 · Objet" */
+  title: string;
+  body: RichTextNode[];
+};
+
+export type VenueTerms = {
+  /** the in-page anchor; the venue slug */
+  id: string;
+  /** @example "Conditions Générales de Vente (CGV) Musi'Quiz Lille" */
+  title: string;
+  articles: TermsArticle[];
 };
 
 export type VenuePin = {
@@ -255,3 +308,6 @@ export type VenueOpeningLimits = {
   phone: number;
   message: number;
 };
+
+// todo: move this to a better place
+export const venuesMapAnchorId = "venuesMap";

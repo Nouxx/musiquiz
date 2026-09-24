@@ -92,13 +92,16 @@ const rightColumnDelaySeconds =
     gap: var(--space-6);
   }
 
+  /* `--drift-bleed` is the host's block padding, set by the host and cancelled
+     here so the strip runs to the top and bottom edges of its section */
+
   /* 72rem and 80rem — drifting strip shown. see styles/breakpoints.css */
   @media (width >= 72rem) {
     .from-72 {
       position: relative;
       display: block;
       align-self: stretch;
-      margin-block: calc(-1 * var(--section-spacing));
+      margin-block: calc(-1 * var(--drift-bleed));
       overflow: hidden;
     }
   }
@@ -108,7 +111,7 @@ const rightColumnDelaySeconds =
       position: relative;
       display: block;
       align-self: stretch;
-      margin-block: calc(-1 * var(--section-spacing));
+      margin-block: calc(-1 * var(--drift-bleed));
       overflow: hidden;
     }
   }

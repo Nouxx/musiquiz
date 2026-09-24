@@ -58,20 +58,48 @@ A Venue Game for Event Formats, serving `/[venue]/evenements/[event]`. It carrie
 _Avoid_: offering, event page
 
 **Venue Page**:
-The document holding one of a Venue's three fixed screens — its home page, its gift page, its booking page — distinguished by a `pageType`. All three have identical shape, so they are one document type; the enum names a route, never a field that only some of them have. It is content, and the component that renders it is a Page.
+The document holding one of a Venue's three fixed screens — its home page, its gift page, its booking page — distinguished by a `pageType`. One document type for all three: the home page carries a single Page Component array, the gift and booking pages carry two that bracket their Widget, and nothing else differs. It is content, and the component that renders it is a Page. [ADR 0011](./docs/adr/0011-widget-pages-bracket-their-widget.md).
 _Avoid_: page, page document, venue content, screen
+
+**Global Page**:
+A page no Venue owns — join the network, contact, where to find us, legal notice, terms and conditions. The phrase names the family, not a type: each is its own document type and its own singleton document, and nothing but the Page Cover is shared between them. [ADR 0012](./docs/adr/0012-one-document-type-per-global-page.md).
+_Avoid_: globalPage, generic page, static page, site page
+
+**Blog Article**:
+One post of the blog, written in French only, dated, signed by a Team Member and pinned to the Venue it is about. Nothing on it is translated and no `en` route serves it; the blog exists for search engines and the business writes it in one language. Its page is fixed: cover, summary, Article Body, then the Venue Blog and the author, with no Page Components. [ADR 0013](./docs/adr/0013-blog-is-french-only-and-static.md), [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md).
+_Avoid_: post, news, article (alone), blog entry
+
+**Article Body**:
+The rich text a Blog Article is written in — paragraphs, two heading levels, bullet lists, bold, links and images. Richer than the site's Rich Text, which stays paragraphs only, and allowed relative links because the blog has no language prefix to skip.
+_Avoid_: content, post body, rich text (that is the paragraph-only one)
+
+**Venue Blog**:
+One document per Venue closing every Blog Article about it: a Find Us block and an FAQ, both French only. The Venue supplies the address, the map and the booking link; the Venue Blog supplies the words around them. An article whose Venue has none fails the build. [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md).
+_Avoid_: blog settings, venue FAQ, blog footer
+
+**Team Member**:
+A person of the company, a document of its own. The contact page lists them in the order Site Settings references them; a Blog Article references one as its author, whose French bio is then required. [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md).
+_Avoid_: author, staff, employee
+
+**Blog Page**:
+The singleton holding the listing's title and intro, and nothing else. The listing itself is derived: every Blog Article newest first, cut into pages of twelve that are each a route, with the two newest drawn above the grid on the first page. It has no Page Cover and no Page Components — the one page outside that shape.
+_Avoid_: blog, blog archive, blog listing (that is the UI Component), news page
 
 ## Page Content
 
-Every page of the site is a document, and every one of those documents has exactly these two things and differs only in what else it carries.
+Every page of the site but the blog's is a document with exactly these two things, differing only in what else it carries.
 
 **Page Cover**:
 The block at the top of every page — media, badge, heading, sub-heading, and a call-to-action label. The call to action's **label** is content; its **destination is not**. Where the button goes is decided in code from the page's kind, so `getRoutesForLang` stays the only source of routing truth and an editor cannot author a URL that skips the locale prefix or 404s. Authored as one object type reused across every content document, rendered by the `PageCover` UI Component.
 _Avoid_: hero, banner, header, masthead
 
 **Page Component**:
-One entry in the ordered array an editor composes a page body from — a Rolling Banner or a Cards Grid today, more later. The array is the same shared dictionary on every content document, so a component written for one page works on all of them.
+One entry in the ordered array an editor composes a page body from — a Rolling Banner or a Cards Grid today, more later. The array is the same shared dictionary on every content document, so a component written for one page works on all of them. Never a Widget: that word names the thing below, which no editor composes.
 _Avoid_: block, section, module, widget
+
+**Widget**:
+The booking or gifting interface 4escape hosts, mounted at runtime into a container `apps/web` renders and themes. It is not content and not a Page Component — an editor cannot add one, remove one, or move one, and each of the two pages that has one has exactly one. The **Booking Widget** sells sessions and anchors at `#booking`; the **Gifting Widget** sells vouchers and anchors at `#gifting`. Editors write around it, in the Page Component arrays named for the sides of it. [ADR 0011](./docs/adr/0011-widget-pages-bracket-their-widget.md).
+_Avoid_: embed, iframe, booking form, 4escape (the vendor, not the thing)
 
 ## Components
 
@@ -107,6 +135,14 @@ _Avoid_: carousel (a different Page Component), slider, cards row
 A Page Component pairing a set of questions with a strip of photos. Only one answer is open at a time, which is the `name` attribute on `<details>` doing it and not a script — so the whole section works with JavaScript off. The photo strip is decoration: it is two columns drifting past each other, it never decides how tall the section is, and it is not rendered at all below the width where it fits. Questions are authored on the page that shows them, so a venue's answers can name its city; there is no shared question set.
 _Avoid_: accordion (that is the UI Component inside it), questions block, help section
 
+**Text Strip**:
+A Page Component pairing a Text Block with the FAQ's drifting photo strip. The strip is the same decoration under the same rule — it never decides the section height and is not rendered below the width where it fits — so below that width the section is the Text Block alone. Nothing else: no surface, no side option, because no design has asked for one.
+_Avoid_: text columns, text photos, photo strip (that is the decoration, not the component)
+
+**Text Body**:
+A Page Component holding one Rich Text body and nothing else — no badge, no title, no button. It is a Text Block with the chrome stripped, for the pages whose heading is the Page Cover and whose content is copy alone: the legal pages. Drawn narrower than the content width and in the muted text colour, because long-form copy at full width is unreadable.
+_Avoid_: rich text (that is the field type inside it), text block, prose, legal text
+
 **Detail Tabs**:
 A Page Component that explains a thing one facet at a time — a title, several named sets of cards with one set shown at a time, and the FAQ's drifting photo strip beside them. Everything it shows is authored on the page that shows it; it references no Venue and no Game Format, which is why it is not called Game Details even though a game's mechanics are what it was drawn for. The picker is radio inputs, so switching sets needs no JavaScript, and with a single set there is nothing to pick between and no picker exists.
 _Avoid_: tabs, accordion, game details, features section
@@ -118,6 +154,10 @@ _Avoid_: tab, panel, section
 **Detail Card**:
 The card inside a Detail Group — a Mark over a title, an optional lead-in sentence and a required closing one. The closing sentence is drawn heavier on every card, so the weight is a rhythm of the design and never emphasis against its neighbours. It carries no media, no badge and no call to action, which is what separates it from a Card and from a Deck Card.
 _Avoid_: feature card, tile, item
+
+**Article Card**:
+The UI Component drawing one Blog Article in the listing — cover, Venue badge, title, excerpt, a read button and the date on one row. `stacked` in the grid, `wide` for the newest article with the cover beside the copy. Not a Card: a Card pins its call to action alone to the bottom edge, an Article Card pins a button and a date together.
+_Avoid_: blog card, post card, card
 
 **Site Chrome**:
 The one kind of Feature Component that fetches its own data instead of receiving it from a Page — `Header`, `Footer`. Its content is site-wide settings, so it belongs to no single page and threading it through every Page would be noise. Any other Feature Component takes its data as props.
