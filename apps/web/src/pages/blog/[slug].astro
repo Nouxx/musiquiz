@@ -23,10 +23,12 @@ const data = await getBlogArticlePageData({
   slug,
 });
 
-// todo: the venue will link to its own listing once /blog/[venue] exists: docs/temp/blogVenuePage.md
+const routes = getRoutesForLang("fr");
+
 const breadcrumbs: BreadcrumbItem[] = [
-  { label: getT("fr")("footer.blog"), url: getRoutesForLang("fr").blog },
-  { label: data.venue.title },
+  { label: getT("fr")("footer.blog"), url: routes.blog },
+  // linking to the venue home strengthen this link SEO wise, allegedly.
+  { label: data.venue.title, url: routes.venueHome(data.venue.slug) },
   { label: data.title },
 ];
 ---
