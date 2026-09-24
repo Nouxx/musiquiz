@@ -7,6 +7,7 @@ const dateFormat = new Intl.DateTimeFormat("fr-FR", {
   day: "numeric",
   month: "short",
   year: "numeric",
+  timeZone: "UTC",
 });
 
 export function formatBlogDate(iso: string) {
