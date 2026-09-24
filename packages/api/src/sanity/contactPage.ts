@@ -16,7 +16,7 @@ function contactPageQuery({ lang }: { lang: Lang }) {
       "venuesTitle": venuesTitle[language == "${lang}"][0].value,
       "venuesIntro": venuesIntro[language == "${lang}"][0].value,
     },
-    "teamMembers": *[_type == "siteSettings"][0].teamMembers[]{
+    "teamMembers": *[_type == "siteSettings"][0].teamMembers[]->{
       photo ${imageProjection({ lang })},
       name,
       "role": role[language == "${lang}"][0].value,

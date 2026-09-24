@@ -1,14 +1,8 @@
 import type { Lang } from "@repo/utils/lang";
 import { z } from "zod";
 
-export function richTextProjection({
-  field,
-  lang,
-}: {
-  field: string;
-  lang: Lang;
-}) {
-  return `${field}[language == "${lang}"][0].value[]{
+function blocksProjection(path: string) {
+  return `${path}[]{
     _type,
     style,
     children[]{ _type, text, "marks": coalesce(marks, []) },
@@ -16,13 +10,27 @@ export function richTextProjection({
   }`;
 }
 
-const sanityRichTextSpanSchema = z.strictObject({
+export function richTextProjection({
+  field,
+  lang,
+}: {
+  field: string;
+  lang: Lang;
+}) {
+  return blocksProjection(`${field}[language == "${lang}"][0].value`);
+}
+
+export function unlocalizedRichTextProjection({ field }: { field: string }) {
+  return blocksProjection(field);
+}
+
+export const sanityRichTextSpanSchema = z.strictObject({
   _type: z.literal("span"),
   text: z.string(),
   marks: z.array(z.string()),
 });
 
-const sanityRichTextLinkSchema = z.strictObject({
+export const sanityRichTextLinkSchema = z.strictObject({
   _key: z.string().min(1),
   href: z.string().min(1),
 });

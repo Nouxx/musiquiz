@@ -15,7 +15,10 @@ import { termsAndConditionsPageType } from "./termsAndConditionsPage";
 import { homepageType } from "./homepage";
 import { blogPageType } from "./blogPage";
 import { blogArticleType } from "./blogArticle";
-import { siteSettingsType, teamMemberType } from "./siteSettings";
+import { siteSettingsType } from "./siteSettings";
+import { teamMemberType } from "./teamMember";
+import { blogFaqType, blogFindUsType, venueBlogType } from "./venueBlog";
+import { articleBodyType } from "./shared/articleBody";
 import { quotationServiceType, termsArticleType, venueType } from "./venue";
 import { priceType, venueGameType } from "./venueGame";
 import { venueEventType } from "./venueEvent";
@@ -65,6 +68,10 @@ export const schemaTypes = [
   termsAndConditionsPageType,
   blogPageType,
   blogArticleType,
+  articleBodyType,
+  venueBlogType,
+  blogFaqType,
+  blogFindUsType,
   venueType,
   quotationServiceType,
   termsArticleType,

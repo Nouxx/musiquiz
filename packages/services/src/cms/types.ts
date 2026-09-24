@@ -1,4 +1,9 @@
-import type { PageComponent } from "./pageComponent.types";
+import type {
+  ContentIcon,
+  FaqQuestion,
+  FindUsContent,
+  PageComponent,
+} from "./pageComponent.types";
 
 export type CmsImage = {
   url: string;
@@ -23,6 +28,12 @@ export type RichTextNode = {
 };
 
 export type RichText = RichTextNode[];
+
+export type ArticleNode =
+  | RichTextNode
+  | { type: "heading"; level: 2 | 3; spans: RichTextSpan[] }
+  | { type: "list"; items: RichTextSpan[][] }
+  | { type: "image"; image: CmsImage };
 
 export type VenuePin = {
   /** the slug, pairs a list link with its dot on the map */
@@ -150,6 +161,33 @@ export type BlogPage = {
   intro: string;
   /** every article, newest first; the web app pages them */
   articles: BlogArticleSummary[];
+};
+
+export type BlogArticlePage = {
+  title: string;
+  excerpt: string;
+  /** ISO date, `YYYY-MM-DD` */
+  publishedAt: string;
+  /** ISO date, `YYYY-MM-DD` */
+  updatedAt: string | undefined;
+  cover: CmsImage;
+  summary: RichText;
+  chips: { icon: ContentIcon; label: string }[];
+  reviewCount: number | undefined;
+  body: ArticleNode[];
+  readingMinutes: number;
+  venue: { title: string; slug: string };
+  author: {
+    name: string;
+    jobTitle: string;
+    bio: string;
+    tone: "blue" | "red";
+    photo: CmsImage;
+  };
+  findUs: FindUsContent;
+  faq: { title: string; questions: FaqQuestion[] };
+  /** same venue, newest first, at most three */
+  readMore: BlogArticleSummary[];
 };
 
 export type ContactPage = {

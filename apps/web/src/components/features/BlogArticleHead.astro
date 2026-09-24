@@ -1,0 +1,75 @@
+---
+import { getImage } from "astro:assets";
+import type { BlogArticlePage } from "@repo/services/cms/types";
+import type { BreadcrumbItem } from "@repo/ui/types";
+
+interface Props {
+  data: BlogArticlePage;
+  breadcrumbs: BreadcrumbItem[];
+}
+
+const { data, breadcrumbs } = Astro.props;
+
+// when this was written, there were no `site` in astro.config and schema.org needs absolute urls
+function absolute(path: string) {
+  return Astro.site ? new URL(path, Astro.site).href : path;
+}
+
+function plainText(spans: { text: string }[]) {
+  return spans.map((span) => span.text).join("");
+}
+
+// served from the build like every other image, never from the Sanity CDN
+const cover = await getImage({
+  src: data.cover.url,
+  width: Math.min(data.cover.width, 1200),
+  height: Math.round(
+    (Math.min(data.cover.width, 1200) * data.cover.height) / data.cover.width,
+  ),
+  format: "jpeg",
+});
+
+const blogPosting = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: data.title,
+  description: data.excerpt,
+  image: absolute(cover.src),
+  datePublished: data.publishedAt,
+  dateModified: data.updatedAt ?? data.publishedAt,
+  inLanguage: "fr",
+  mainEntityOfPage: absolute(Astro.url.pathname),
+  author: { "@type": "Person", name: data.author.name },
+  publisher: { "@type": "Organization", name: "Musi'Quiz" },
+};
+
+const breadcrumbList = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: breadcrumbs.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.label,
+    ...(item.url ? { item: absolute(item.url) } : {}),
+  })),
+};
+
+const faqPage = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: data.faq.questions.map((entry) => ({
+    "@type": "Question",
+    name: entry.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: entry.answer.map((node) => plainText(node.spans)).join("\n"),
+    },
+  })),
+};
+---
+
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify([blogPosting, breadcrumbList, faqPage])}
+/>

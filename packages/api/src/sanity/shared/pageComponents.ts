@@ -595,7 +595,7 @@ const sanityTextBodySchema = z.strictObject({
   body: sanityRichTextSchema,
 });
 
-const sanityContentIconSchema = z.enum([
+export const sanityContentIconSchema = z.enum([
   "calendar",
   "camera",
   "check-circle",

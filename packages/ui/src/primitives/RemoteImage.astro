@@ -73,6 +73,13 @@ const variants = {
   },
   "review-avatar": { widths: [40, 80, 120], sizes: "40px" },
   "team-photo": { widths: [200, 400, 600], sizes: "200px" },
+  "byline-photo": { widths: [48, 96, 144], sizes: "48px" },
+  "author-photo": { widths: [80, 160, 240], sizes: "80px" },
+  // the article column is 1036px wide at most (ArticleBody.astro)
+  "article-body-media": {
+    widths: [400, 800, 1036, 1600, 2072],
+    sizes: "min(100vw, 1036px)",
+  },
   // hidden below 72rem (see styles/breakpoints.css)
   "drifting-media": {
     widths: [260, 520, 780],
@@ -182,6 +189,20 @@ const srcSetWidths =
   .team-photo {
     width: 100%;
     height: 100%;
+    object-fit: cover;
+  }
+
+  .byline-photo,
+  .author-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .article-body-media {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1036 / 400;
     object-fit: cover;
   }
 

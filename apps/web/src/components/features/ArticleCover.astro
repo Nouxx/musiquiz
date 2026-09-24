@@ -1,0 +1,68 @@
+---
+import ArticleByline from "@repo/ui/ArticleByline";
+import Breadcrumbs from "@repo/ui/Breadcrumbs";
+import PageCover from "@repo/ui/PageCover";
+import Button from "@repo/ui/primitives/Button";
+import RemoteImage from "@repo/ui/primitives/RemoteImage";
+import Text from "@repo/ui/primitives/Text";
+import type { ComponentProps } from "astro/types";
+
+type Props = Pick<ComponentProps<typeof Breadcrumbs>, "items"> &
+  ComponentProps<typeof ArticleByline> & {
+    media: ComponentProps<typeof RemoteImage>["image"];
+    title: string;
+    breadcrumbsLabel: string;
+    cta: { label: string; url: string };
+  };
+
+const {
+  items,
+  breadcrumbsLabel,
+  media,
+  title,
+  cta,
+  photo,
+  name,
+  date,
+  readingTime,
+} = Astro.props;
+---
+
+<PageCover align="left" height="m" width="article">
+  <RemoteImage slot="media" image={media} variant="cover" loading="eager" />
+
+  <div slot="badge" class="meta">
+    <Breadcrumbs {items} label={breadcrumbsLabel} />
+    <ArticleByline {photo} {name} {date} {readingTime} />
+  </div>
+
+  <div slot="heading" class="heading">
+    <Text as="h1" variant="title-h3">{title}</Text>
+
+    <Button as="a" href={cta.url} tone="blue" icon="arrow-down">
+      {cta.label}
+    </Button>
+  </div>
+</PageCover>
+
+<style>
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-block-end: var(--space-8);
+  }
+
+  .heading {
+    display: flex;
+    inline-size: 100%;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .heading > :global(h1) {
+    flex: 0 1 46rem;
+  }
+</style>

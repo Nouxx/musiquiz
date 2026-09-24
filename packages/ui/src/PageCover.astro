@@ -2,6 +2,7 @@
 type Props = {
   align?: "center" | "left";
   height?: "full" | "l" | "m";
+  width?: "content" | "article";
 } & (
   | { background?: "image" }
   | { background: "gradient"; surface: "brand" | "vivid" }
@@ -11,6 +12,7 @@ const props = Astro.props;
 
 const align = props.align ?? "center";
 const height = props.height ?? "full";
+const width = props.width ?? "content";
 const isGradient = props.background === "gradient";
 
 async function slotHtml(name: string) {
@@ -41,6 +43,7 @@ const style = {
     "page-cover",
     align,
     height === "full" ? "full" : "sized",
+    width,
     columns && "has-columns",
   ]}
   style={style}
@@ -125,13 +128,16 @@ const style = {
     flex-direction: column;
     align-items: center;
 
-    /* the cover frame's content width, 1036px */
-    max-inline-size: 64.75rem;
+    max-inline-size: var(--size-article);
   }
 
   .left .frame {
     inline-size: 100%;
     max-inline-size: var(--size-content);
+  }
+
+  .left.article .frame {
+    max-inline-size: var(--size-article);
   }
 
   .left .with-logo {
@@ -187,6 +193,10 @@ const style = {
     align-items: flex-start;
     max-inline-size: min(100%, max(74.5%, 36.5rem));
     text-align: left;
+  }
+
+  .left.article .stack {
+    max-inline-size: none;
   }
 
   .subheading {

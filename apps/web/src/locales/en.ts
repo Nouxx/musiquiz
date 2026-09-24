@@ -1,6 +1,11 @@
 import type { fr } from "./fr";
 
-export const en: typeof fr = {
+/**
+ * blog is french only, no need keys for it
+ */
+type EnglishKeys = Omit<typeof fr, "blogArticlePage" | "blogPage">;
+
+export const en: EnglishKeys = {
   cover: {
     chooseVenue: "Choose your Musi'Quiz venue",
   },
@@ -85,15 +90,6 @@ export const en: typeof fr = {
   },
   whereToFindUsPage: {
     ctaLabel: "See our venues",
-  },
-  blogPage: {
-    badge: "Blog",
-    readArticle: "Read the article",
-    pagination: "Pagination",
-    previousPage: "Previous page",
-    nextPage: "Next page",
-    page: "Page {{page}}",
-    pageTitle: "{{title}} – page {{page}}",
   },
   joinTheNetworkPage: {
     ctaLabel: "Request our brochure",

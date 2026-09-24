@@ -1,17 +1,15 @@
-import type { PageComponent } from "@repo/services/cms/pageComponent.types";
+import type { FindUsContent } from "@repo/services/cms/pageComponent.types";
 import type { ContactFact } from "@repo/ui/types";
 
 import type { getT } from "./i18n";
 
 type Translate = ReturnType<typeof getT>;
 
-type FindUs = Extract<PageComponent, { type: "findUs" }>;
-
 export function toContactFacts({
   component,
   t,
 }: {
-  component: FindUs;
+  component: FindUsContent;
   t: Translate;
 }): ContactFact[] {
   return [

@@ -66,8 +66,20 @@ A page no Venue owns — join the network, contact, where to find us, legal noti
 _Avoid_: globalPage, generic page, static page, site page
 
 **Blog Article**:
-One post of the blog, written in French only, dated, and pinned to the Venue it is about. Nothing on it is translated and no `en` route serves it; the blog exists for search engines and the business writes it in one language. [ADR 0013](./docs/adr/0013-blog-is-french-only-and-static.md).
+One post of the blog, written in French only, dated, signed by a Team Member and pinned to the Venue it is about. Nothing on it is translated and no `en` route serves it; the blog exists for search engines and the business writes it in one language. Its page is fixed: cover, summary, Article Body, then the Venue Blog and the author, with no Page Components. [ADR 0013](./docs/adr/0013-blog-is-french-only-and-static.md), [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md).
 _Avoid_: post, news, article (alone), blog entry
+
+**Article Body**:
+The rich text a Blog Article is written in — paragraphs, two heading levels, bullet lists, bold, links and images. Richer than the site's Rich Text, which stays paragraphs only, and allowed relative links because the blog has no language prefix to skip.
+_Avoid_: content, post body, rich text (that is the paragraph-only one)
+
+**Venue Blog**:
+One document per Venue closing every Blog Article about it: a Find Us block and an FAQ, both French only. The Venue supplies the address, the map and the booking link; the Venue Blog supplies the words around them. An article whose Venue has none fails the build. [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md).
+_Avoid_: blog settings, venue FAQ, blog footer
+
+**Team Member**:
+A person of the company, a document of its own. The contact page lists them in the order Site Settings references them; a Blog Article references one as its author, whose French bio is then required. [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md).
+_Avoid_: author, staff, employee
 
 **Blog Page**:
 The singleton holding the listing's title and intro, and nothing else. The listing itself is derived: every Blog Article newest first, cut into pages of twelve that are each a route, with the two newest drawn above the grid on the first page. It has no Page Cover and no Page Components — the one page outside that shape.
@@ -75,7 +87,7 @@ _Avoid_: blog, blog archive, blog listing (that is the UI Component), news page
 
 ## Page Content
 
-Every page of the site but the Blog Page is a document with exactly these two things, differing only in what else it carries.
+Every page of the site but the blog's is a document with exactly these two things, differing only in what else it carries.
 
 **Page Cover**:
 The block at the top of every page — media, badge, heading, sub-heading, and a call-to-action label. The call to action's **label** is content; its **destination is not**. Where the button goes is decided in code from the page's kind, so `getRoutesForLang` stays the only source of routing truth and an editor cannot author a URL that skips the locale prefix or 404s. Authored as one object type reused across every content document, rendered by the `PageCover` UI Component.

@@ -1,0 +1,85 @@
+---
+import Icon from "./primitives/Icon.astro";
+import RemoteImage from "./primitives/RemoteImage.astro";
+import Text from "./primitives/Text.astro";
+import type { ImageSource } from "./types";
+
+interface Props {
+  photo: ImageSource;
+  name: string;
+  date: {
+    /** @example "Mis à jour le 14 juil. 2026" */
+    label: string;
+    /** ISO date, `YYYY-MM-DD` */
+    iso: string;
+  };
+  /** @example "8 minutes" */
+  readingTime: string;
+}
+
+const { photo, name, date, readingTime } = Astro.props;
+---
+
+<div class="byline">
+  <div class="photo">
+    <RemoteImage image={photo} variant="byline-photo" loading="eager" />
+  </div>
+
+  <div class="lines">
+    <Text variant="title-xl">{name}</Text>
+
+    <div class="meta">
+      <time datetime={date.iso}>
+        <Text variant="paragraph-xs">{date.label}</Text>
+      </time>
+
+      <span class="reading">
+        <Icon name="hourglass" size="s" />
+        <Text variant="paragraph-xs">{readingTime}</Text>
+      </span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .byline {
+    display: flex;
+    gap: var(--space-6);
+    align-items: center;
+  }
+
+  .photo {
+    flex: none;
+    inline-size: 48px;
+    block-size: 48px;
+    background-color: var(--color-border);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+
+  .photo :global(picture) {
+    display: block;
+    block-size: 100%;
+  }
+
+  .lines {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+    color: var(--color-text-on-media-muted);
+  }
+
+  .reading {
+    display: inline-flex;
+    gap: var(--space-1);
+    align-items: center;
+    padding-inline-start: var(--space-2);
+    border-inline-start: 1px solid var(--color-border-translucent-strong);
+  }
+</style>

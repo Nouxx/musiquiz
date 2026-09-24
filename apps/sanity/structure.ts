@@ -13,22 +13,24 @@ import { PinIcon } from "@sanity/icons/Pin";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { BookIcon } from "@sanity/icons/Book";
 import { BlockContentIcon } from "@sanity/icons/BlockContent";
+import { UsersIcon } from "@sanity/icons/Users";
 import type { ComponentType } from "react";
 import {
   singletonIds,
+  venueBlogTemplateId,
   venueEventTemplateId,
   venueGameTemplateId,
   venuePageTemplateId,
 } from "./sanity.config";
 
-// venuePage, venueGame and venueEvent belong to a venue, only reachable from
-// there; blogArticle sits under the Blog item
 const nestedTypeIds = [
   "venue",
   "venuePage",
   "venueGame",
   "venueEvent",
   "blogArticle",
+  "venueBlog",
+  "teamMember",
 ];
 
 function venuePageId({
@@ -69,6 +71,22 @@ function venuePageItem({
           pageType,
         }),
     );
+}
+
+function venueBlogItem({
+  S,
+  venueId,
+}: {
+  S: StructureBuilder;
+  venueId: string;
+}) {
+  const publishedVenueId = venueId.replace(/^drafts\./, "");
+
+  // a hyphen, never a dot: see venuePageId
+  return S.document()
+    .schemaType("venueBlog")
+    .documentId(`venueBlog-${publishedVenueId}`)
+    .initialValueTemplate(venueBlogTemplateId, { venueId: publishedVenueId });
 }
 
 function singletonItem({
@@ -208,6 +226,15 @@ export const myStructure: StructureResolver = (S: StructureBuilder) =>
                       { field: "publishedAt", direction: "desc" },
                     ]),
                 ),
+              S.listItem()
+                .title("Venues")
+                .id("venues")
+                .icon(HomeIcon)
+                .child(
+                  S.documentTypeList("venue")
+                    .title("Venues")
+                    .child((venueId) => venueBlogItem({ S, venueId })),
+                ),
             ]),
         ),
 
@@ -231,6 +258,23 @@ export const myStructure: StructureResolver = (S: StructureBuilder) =>
         .id("siteSettings")
         .icon(ControlsIcon)
         .child(
-          S.document().schemaType("siteSettings").documentId("siteSettings"),
+          S.list()
+            .title("Site Settings")
+            .items([
+              S.listItem()
+                .title("Settings")
+                .id("settings")
+                .icon(ControlsIcon)
+                .child(
+                  S.document()
+                    .schemaType("siteSettings")
+                    .documentId("siteSettings"),
+                ),
+              S.listItem()
+                .title("Team members")
+                .id("teamMembers")
+                .icon(UsersIcon)
+                .child(S.documentTypeList("teamMember").title("Team members")),
+            ]),
         ),
     ]);

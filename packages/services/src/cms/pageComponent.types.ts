@@ -82,8 +82,7 @@ type GamePrices = {
   game: PricesGame;
 };
 
-type FindUs = {
-  type: "findUs";
+export type FindUsContent = {
   badge: string;
   title: string;
   media: CmsImage;
@@ -97,6 +96,8 @@ type FindUs = {
   contactTitle: string;
   contactNote: string;
 };
+
+type FindUs = { type: "findUs" } & FindUsContent;
 
 type ContactPanelRow = {
   label: string;

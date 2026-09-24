@@ -1,0 +1,83 @@
+---
+import Badge from "./Badge.astro";
+import Card from "./primitives/Card.astro";
+import RemoteImage from "./primitives/RemoteImage.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { ImageSource } from "./types";
+
+interface Props {
+  badge: string;
+  name: string;
+  jobTitle: string;
+  bio: string;
+  photo: ImageSource;
+}
+
+const { badge, name, jobTitle, bio, photo } = Astro.props;
+---
+
+<Section spacing="m">
+  <Card border="soft" class="author">
+    <div class="top">
+      <Badge color="light">{badge}</Badge>
+
+      <div class="photo">
+        <RemoteImage image={photo} variant="author-photo" />
+      </div>
+    </div>
+
+    <div class="lines">
+      <div>
+        <Text as="p" variant="title-xl">{name}</Text>
+        <Text as="p" variant="paragraph-base">{jobTitle}</Text>
+      </div>
+
+      <Text as="p" variant="paragraph-base">{bio}</Text>
+    </div>
+  </Card>
+</Section>
+
+<style>
+  .author {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-inline-size: 51.5rem;
+    margin-inline: auto;
+    padding: var(--space-6);
+    background-color: var(--color-surface-muted);
+  }
+
+  .top {
+    display: flex;
+    gap: var(--space-6);
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .photo {
+    flex: none;
+    inline-size: 80px;
+    block-size: 80px;
+    background-color: var(--color-border);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+
+  .photo :global(picture) {
+    display: block;
+    block-size: 100%;
+  }
+
+  .lines {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    color: var(--grey-800);
+  }
+
+  .lines :global(.title-xl) {
+    color: var(--color-text);
+  }
+</style>

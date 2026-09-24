@@ -153,6 +153,23 @@ export type RichTextNode = {
   spans: RichTextSpan[];
 };
 
+export type ArticleNode =
+  | RichTextNode
+  | { type: "heading"; level: 2 | 3; spans: RichTextSpan[] }
+  | { type: "list"; items: RichTextSpan[][] }
+  | { type: "image"; image: ImageSource };
+
+export type BreadcrumbItem = {
+  label: string;
+  /** the current page has none */
+  url?: string;
+};
+
+export type ArticleChip = {
+  icon: IconName;
+  label: string;
+};
+
 export type DetailCard = {
   mark?: MarkName;
   title: string;
