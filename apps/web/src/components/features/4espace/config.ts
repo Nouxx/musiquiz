@@ -4,6 +4,7 @@
 export const forEscapeSetting =
   "b64.eyJkb21haW4iOiJtdXNpcXVpei40ZXNjYXBlLmlvIn0=";
 
+// todo: widget ids are per venue, it needs to be read from the CMS
 export const bookingWidgetId = "fa25b722-264c-4644-b65e-5e8aeb60f7b3";
 export const bookingAnchor = "booking";
 
@@ -19,7 +20,7 @@ export const giftingAnchor = "gifting";
 
 // OPEN QUESTIONS
 // - plugged to main, isn't is too risky?
-
+//
 // CSP allowlist, read off the widget bundle. Adyen only appears as the SDK
 // stylesheet URL; its runtime hosts are inferred, confirm on a real payment.
 //
