@@ -5,7 +5,6 @@
 # this file defines extra rules specific to Prettier
 pnpm-lock.yaml
 **/.claude
-**/.vscode
 
 # generated cloudflare typing file
 apps/worker/worker-configuration.d.ts

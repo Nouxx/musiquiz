@@ -18,7 +18,13 @@
     "**/.astro",
     "**/.git"
   ],
-  "cSpell.words": [
-    "zeptomail"
-  ]
+  // VSCode does not consider ignored files when searching in a folder
+  // so we need to manually exclude these paths
+  "search.exclude": {
+    "**/dist": true,
+    "**/.astro": true,
+    "**/.sanity": true,
+    "**/.wrangler": true
+  },
+  "cSpell.words": ["zeptomail"]
 }
