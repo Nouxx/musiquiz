@@ -10,8 +10,8 @@ import {
 import { imageProjection, sanityImageSchema } from "./shared/image";
 import { sanityContentIconSchema } from "./shared/pageComponents";
 import {
-  unlocalizedRichTextProjection,
   sanityRichTextSchema,
+  unlocalizedRichTextProjection,
 } from "./shared/richText";
 
 const lang = "fr";

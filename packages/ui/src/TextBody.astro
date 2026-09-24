@@ -19,7 +19,7 @@ const { body } = Astro.props;
 <style>
   /* narrower than the content width: long-form copy at 1248px is unreadable */
   .text-body {
-    max-inline-size: 64.75rem;
+    max-inline-size: var(--size-article);
     margin-inline: auto;
     color: var(--color-text-muted);
   }
