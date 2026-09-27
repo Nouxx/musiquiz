@@ -1,0 +1,261 @@
+# SEO audit — apps/web
+
+Date: 2026-09-24. Branch: `feat/booking-system`. Evidence comes from the source and from a fresh `dist/static` build (61 HTML pages), scanned with a script.
+
+## 1. What matters for this site
+
+Musi'Quiz is a **multi-venue local business** (Paris, Lille, more to come), **bilingual** (fr default, `/en/`), with a **French-only blog** built to rank (ADR 0013). It ships as a static Astro site on Cloudflare Workers, plus an SSR preview worker. The SEO levers that apply, in order of weight:
+
+| Lever | What Google expects (Search Central, 2026) | Why it matters here |
+|---|---|---|
+| **Local pack** | Google Business Profile per venue, consistent NAP (name, address, phone) between GBP, site and directories, `LocalBusiness` structured data, a landing page per venue. | Most bookings start with "blind test Paris", "quiz musical Lille", "EVG Lille". The map pack sits above organic results. |
+| **Indexability** | Absolute `site`, `sitemap.xml`, `robots.txt`, self-referencing canonical, one URL per page (consistent trailing slash), a real 404 status. | None of it exists yet. |
+| **Internationalization** | `hreflang` on every page, reciprocal, absolute, with `x-default`; each language links to its *equivalent*, not to its home. | fr and en pages are unlinked mirrors today. Google may treat them as unrelated or pick the wrong one. |
+| **Titles and snippets** | Unique `<title>` and `<meta name="description">` per page. Title ~50–60 chars, description ~140–160. Google rewrites weak ones. | 44 of 61 pages share the title "Musi'Quiz" and have no description. |
+| **Structured data** | JSON-LD. Eligible here: `Organization`, `LocalBusiness` (subtype `EntertainmentBusiness`), `BreadcrumbList`, `BlogPosting`, `WebSite`. | **Not eligible any more:** `FAQPage` rich results (restricted to government and health sites since Aug 2023), `HowTo` (removed), self-served review stars on `LocalBusiness`/`Organization` (self-serving reviews are ignored). Keep FAQ markup only if it is free. |
+| **Duplicate content** | Near-identical pages compete with each other; Google picks one and drops the rest. | Venue × game and venue × event pages are one template × N cities. They need city-specific copy to rank per city. |
+| **Core Web Vitals** | LCP < 2.5 s, INP < 200 ms, CLS < 0.1, measured on real users (CrUX). | Mostly in good shape (static, AVIF/WebP, sized images, self-hosted fonts). Small LCP wins left. |
+| **Social previews** | Open Graph + Twitter card tags. Not a ranking signal, but shared links on WhatsApp, Instagram and LinkedIn are a booking channel for EVG/EVJF and team building. | None. |
+| **Measurement** | Search Console (domain property), Bing Webmaster Tools, sitemap submitted, a cookieless analytics tool. | Nothing wired. |
+
+Signals that no longer matter and can be ignored: `rel=prev/next` (Google ignores it since 2019; Bing still reads it, harmless), `meta keywords`, `meta generator`.
+
+## 2. Audit
+
+Severity: **P0** blocks indexing or ranking; **P1** real loss; **P2** polish.
+
+### 2.1 Crawl and index foundations
+
+| # | Finding | Evidence | Sev |
+|---|---|---|---|
+| A1 | No `site` in `astro.config.mjs`. Nothing can produce an absolute URL: canonical, hreflang, sitemap, OG, JSON-LD. `BlogArticleHead` already falls back to relative URLs, which schema.org rejects. | `apps/web/astro.config.mjs`, `BlogArticleHead.astro:13` | P0 |
+| A2 | No `sitemap.xml`. | `public/` holds only favicons | P0 |
+| A3 | No `robots.txt`. | same | P0 |
+| A4 | No canonical tag on any page. | 0 / 61 | P0 |
+| A5 | No 404 page. The static worker has no `not_found_handling`, so a missing URL returns a bare 404 with no navigation. | no `src/pages/404.astro`; `wrangler.jsonc` | P1 |
+| A6 | Trailing slash is inconsistent. Routes emit `/paris/` and `/blog/` with a slash but `/paris/reserver`, `/contact`, `/blog/<slug>` without. The build writes `…/index.html` for all of them, so Cloudflare's default `auto-trailing-slash` answers every slash-less link with a redirect. Every internal link to those pages costs a hop and splits signals. *To confirm on the deployed worker with `curl -I`.* | `packages/services/src/routing/getRoutesForLang.ts`; 5–18 slash-less internal links per page | P1 |
+| A7 | The SSR preview worker (`musiquiz-ssr`) serves drafts and has no `noindex`. If a crawler finds it, it indexes a duplicate site with unpublished content. `docs/temp/todo.md` item 1 (Cloudflare Access) covers it; an `X-Robots-Tag: noindex` header is the belt to go with those braces. | `wrangler.jsonc` env `ssr` | P0 before any public preview URL |
+| A8 | Broken links: `presse`, `rgpd`, `press`, `gdpr` (and `faq`) are relative paths with no leading slash and no page behind them. They resolve against the current URL, so `/paris/jeux/musi-quiz` links to `/paris/jeux/presse`. | 22–39 pages each; `getRoutesForLang.ts` | P1 |
+| A9 | Publishing in Sanity does not rebuild the static site. Content fixes (titles, descriptions, blog posts) wait for a code deploy. | `README.md:92` | P1 |
+
+### 2.2 Head: titles, descriptions, social
+
+| # | Finding | Evidence | Sev |
+|---|---|---|---|
+| B1 | 44 / 61 pages have the title `Musi'Quiz`. Only blog pages pass a title. | `Layout.astro` default prop | P0 |
+| B2 | 44 / 61 pages have no meta description. | same | P0 |
+| B3 | No title template. Blog titles lack the brand, and nothing says which city. | — | P1 |
+| B4 | No SEO fields in any Sanity schema: no meta title, meta description, OG image or noindex switch an editor can set. | `apps/sanity/src/schemas/*` | P1 |
+| B5 | No Open Graph or Twitter tags on any page. | 0 / 61 | P1 |
+| B6 | `/blog/page/2` repeats page 1's description. | audit script | P2 |
+| B7 | `<meta name="generator">` exposes the Astro version. No SEO effect, minor fingerprinting. | `Layout.astro:27` | P2 |
+
+### 2.3 Internationalization
+
+| # | Finding | Evidence | Sev |
+|---|---|---|---|
+| C1 | No `hreflang` anywhere. fr and en mirrors are not declared as alternates. | 0 / 61 | P0 |
+| C2 | The language switch always goes to the other language's home (or venue home), not to the equivalent page. Same root cause as C1: there is no "this page in the other language" function. | `FooterChangeLang.astro:19` todo | P1 |
+| C3 | The blog is fr only (ADR 0013). Blog pages must carry no `en` alternate, and the fr↔en mapping must skip them. | — | note |
+| C4 | `html lang` is correct on every page. | 61 / 61 | ✓ |
+
+### 2.4 Structured data
+
+| # | Finding | Evidence | Sev |
+|---|---|---|---|
+| D1 | No `Organization` / `WebSite` on the homepage (name, logo, `sameAs` social links — all already in `siteSettings`). | — | P1 |
+| D2 | No `LocalBusiness` on venue pages, though `venue` already holds address, geo, phone, email, opening hours per day, Google Maps link. The biggest free local-SEO win. | `apps/sanity/src/schemas/venue.ts` | P0 |
+| D3 | `BreadcrumbList` only on blog articles. Venue sub-pages have an obvious hierarchy (Home › Paris › Jeux › Pixel Games). | — | P2 |
+| D4 | Blog `BlogPosting` uses relative URLs (A1), its `publisher` has no `logo`, `author` has no `url`. | `BlogArticleHead.astro` | P1 |
+| D5 | Blog `FAQPage` is valid but earns no rich result for this site (see §1). Keep it, it costs nothing; do not add more. | — | note |
+
+### 2.5 Content
+
+| # | Finding | Evidence | Sev |
+|---|---|---|---|
+| E1 | Paris event pages carry Lille copy: H1 "EVG / EVJF à Lille" and "…enfants et ados à Lille" on `/paris/evenements/*`, same in `/en/paris/events/*`. Wrong city on the one page that should rank for "EVG Paris". | `dist/static/paris/evenements/*` | P0 (content) |
+| E2 | `/en/paris/` and `/en/lille/` have the H1 "Lorem ipsum". | `dist/static/en/*/index.html` | P0 (content) |
+| E3 | Venue × game and venue × event pages are near-duplicates across cities. To rank locally each needs city-specific material: address, access, neighbourhood, local reviews, local photos, local FAQ. | page diff Paris vs Lille | P1 |
+| E4 | Most content photos have an empty `alt` (23–33 per venue/game/event page). The schema makes `alt` optional; editors left it blank. Image search and accessibility both lose. | `imageWithAltType.ts`; audit script | P1 |
+| E5 | Booking and gift pages are thin (~170 words on Paris) because the 4espace widget renders client-side. Fine as conversion pages; they should not be the page that ranks for "réserver blind test Paris" — the venue home should. | — | P2 |
+| E6 | Planned but missing pages that are search targets: FAQ, press, "ouvrez votre salle" (exists as `rejoindre-le-reseau`), per-venue CGV. | `docs/temp/todo.md` | P2 |
+| E7 | Exactly one H1 per page. | 61 / 61 | ✓ |
+
+### 2.6 Performance (Core Web Vitals)
+
+| # | Finding | Evidence | Sev |
+|---|---|---|---|
+| F1 | Images: AVIF + WebP `<picture>`, `srcset`/`sizes`, explicit `width`/`height`, lazy below the fold, built from the static pipeline. | `RemoteImage.astro` | ✓ |
+| F2 | Fonts self-hosted through `astro:assets` fonts, preloaded. | `Layout.astro` | ✓ |
+| F3 | The LCP image (home cover, venue covers) is `loading="eager"` but has no `fetchpriority="high"`. | 0 occurrences | P2 |
+| F4 | Little JS (9 bundles total). Leaflet map and 4espace widget are the heavy parts; confirm they load only where used and not before LCP. | `_astro/` | P2 |
+| F5 | No field data yet. Measure after launch in Search Console's CWV report and PageSpeed Insights. | — | note |
+
+### 2.7 Off-site and measurement
+
+| # | Finding | Sev |
+|---|---|---|
+| G1 | Search Console, Bing Webmaster Tools: not set up. | P0 at launch |
+| G2 | Google Business Profile per venue: website link must point to the venue page (`/paris/`), not the homepage (Q3). | P0 |
+| G3 | `musiquizlejeu.fr` ranks today (§5). Every URL needs a 301 or a 410, or the rankings reset. | P0 |
+| G4 | No analytics. | P1 |
+
+## 3. Plan
+
+Each phase is shippable alone; decision numbers refer to §4. Code lives where the repo already puts it: URL logic in `@repo/services/routing`, head rendering in `apps/web/src/layouts` + `components/features/*Head.astro`, editable fields in Sanity.
+
+### Phase 0 — Content fixes (Sanity only)
+
+1. Fix E1: Paris event pages copy.
+2. Fix E2: English venue home H1.
+3. Fill `alt` on content photos (E4), fr and en.
+
+### Phase 1 — Foundations (code)
+
+1. **`site`** in `astro.config.mjs` from a public env var, so preview and production differ. Production: `https://musiquiz.co` (Q14, Q19).
+2. **Trailing slash always** (Q6): `trailingSlash: "always"`, every route in `getRoutesForLang` ends in `/`, a test guards it.
+3. **Footer links** (Q8, Q10, Q18): drop `gdpr`/`rgpd`; `faq` and `press` become absolute.
+4. **Alternates map** in `@repo/services/routing`: route key + params → `{ fr, en? }` absolute URLs. Feeds canonical, hreflang and the language switch (fixes C2). Blog keys return fr only.
+5. **`<SeoHead>` in `Layout`**: `title`, `description`, `canonical`, `alternates`, `ogImage`, `noindex`. Emits title (template `{page} · Musi'Quiz {city}`), description, canonical, hreflang (+ `x-default` → fr), OG, Twitter card.
+6. **`@astrojs/sitemap`** with its `i18n` option; excludes `noindex` pages (booking, gift — Q5).
+7. **`robots.txt`** from an endpoint, pointing at the sitemap under `site`.
+8. **404 page** + `"not_found_handling": "404-page"` in the static env of `wrangler.jsonc`.
+9. **SSR worker**: `X-Robots-Tag: noindex, nofollow` on every response, on top of Cloudflare Access.
+
+### Phase 2 — Titles, descriptions, social
+
+1. A localized `seo` object in Sanity (`title`, `description`, `ogImage`, `noindex`) on every page document, `venue`, `venueGame`, `venueEvent`, `eventFormat`. Character-count hints in the Studio.
+2. Fallback (Q4): empty field → page cover heading / intro, same language.
+3. Default OG image per venue and one global, 1200×630, through `getImage`.
+4. Sanity publish → Cloudflare deploy hook (A9), so edits go live without a code push.
+
+### Phase 3 — Structured data
+
+1. `Organization` + `WebSite` on the homepage from `siteSettings` (logo, `sameAs`).
+2. Venue address split (Q13): `streetAddress`, `postalCode`, `addressLocality` in Sanity.
+3. `EntertainmentBusiness` on each venue home: name, `PostalAddress`, `geo`, `telephone`, `email`, `openingHoursSpecification` (parsed from `HH:mm - HH:mm`), `url`, `sameAs`, `priceRange`, `parentOrganization`.
+4. `BreadcrumbList` on every venue sub-page and national activity page.
+5. Fix `BlogPosting` (absolute URLs, publisher logo, author url).
+6. One JSON-LD module with the `<` escaping `BlogArticleHead` already does; validate in the Rich Results Test.
+
+### Phase 4 — Site structure to absorb the legacy site
+
+1. **All open cities in Sanity** (Q20, Q27), with their games and events.
+2. **Other products as `gameFormat`s** (Q28): karaoke, NeoXperiences, Duo, Meet & Quiz, enabled per venue.
+3. **National activity pages** at the root (Q24, Q30): `/evg-evjf/`, `/team-building/`, teens, gift voucher, and their `/en/` twins. Hung off `eventFormat`; each lists the venues offering it. Sanity validation: no venue slug equals an activity slug. ADR to write.
+4. **Blog closing link** (Q29): `venue` optional, `activity` added; closes on venue → activity page → `/ou-nous-trouver/`. Amend ADR 0014.
+5. **Legacy blog** (Q22, Q31): 73 posts entered by the client, same slugs, original `publishedAt`.
+6. **English content** (Q32): machine-translate every missing `en` field by script, then human review. ADR 0003 stays strict.
+
+### Phase 5 — Local content
+
+1. Keyword map and one writing brief per page, produced in `docs/temp` (Q11): one target query per page, no two pages on the same query.
+2. City-specific copy on every venue × game/event page (E3), written by the client from the briefs (Q7).
+3. Blog internal linking: each article links to the page that owns its query, descriptive anchor.
+4. ⚠️ FAQ and press pages built, or their links removed (Q18).
+
+### Phase 6 — Site move to `musiquiz.co`
+
+**Launch blockers** (all must hold on switch day):
+
+- ⚠️ FAQ and press pages exist, or their links are removed (Q18).
+- Phases 0–4 shipped.
+- `redirects.csv` reviewed: every legacy URL (fr, `/en/`, `/nl/`) mapped to a 301 target or a 410; tested by script.
+- Both domains verified in Search Console.
+- SSR preview worker behind Cloudflare Access and `noindex`.
+
+Before:
+
+1. Search Console domain properties for `musiquiz.co` and `musiquizlejeu.fr`; Bing Webmaster imported from GSC.
+2. Baseline: export the legacy site's top queries and pages over 16 months.
+3. `docs/temp/redirects.csv` built from §5 with these rules:
+   - fr page → new fr equivalent;
+   - `/en/<fr-slug>/` → new `/en/` equivalent (Q21);
+   - `/nl/<fr-slug>/` → new **fr** equivalent (Q21);
+   - `…/reservations/` → `/<city>/reserver/` (Q25);
+   - national activity pages → new national pages (Q24); `/concept/` → home;
+   - closed cities → 410 (Q20);
+   - emoji blog slugs: both raw and percent-encoded forms (Q22).
+4. Apply through Plan A or Plan B (Q15).
+5. `musiquiz.ca` France pages: 301 to `musiquiz.co` equivalents (Q23).
+
+Switch day:
+
+6. New site live, 301s and 410s on, Change of Address filed in GSC.
+7. Submit the new sitemap; keep the old one submitted on the old property a few weeks so Google recrawls the 301s.
+8. Update every GBP website link (→ venue page, Q3), social bios, directory listings.
+
+After:
+
+9. Cloudflare Web Analytics (Q12).
+10. Weekly for two months: GSC coverage (404s, redirect errors) and queries per venue page against the baseline. A few weeks' dip is normal on a domain move; a lasting one means a missing redirect.
+11. Monthly afterwards: coverage, CWV, queries.
+12. Keep the legacy domain and its redirects indefinitely (Q16).
+
+### Phase 7 — Guard rails
+
+1. A build-time check (like `scripts/assertBundledImages.js`) over `dist/static`: unique title, description, canonical, reciprocal hreflang, no relative or slash-less internal links, allowlist for FAQ/press until they exist. Runs in CI.
+2. A script that replays `redirects.csv` against the live legacy domain: each row → 301 → 200 (or 410).
+3. Lighthouse CI on a few templates, SEO and performance budgets.
+
+## 4. Decisions
+
+| # | Question | Decision |
+|---|---|---|
+| Q1 | Domain structure | One domain, fr at the root, `/en/`. Belgium and Canada become venues, not domains. `x-default` → fr. |
+| Q2 | Legacy site | `https://musiquizlejeu.fr` ranks today. Its URLs are inventoried in §5 and all get a 301. |
+| Q3 | Google Business Profile | One profile per venue, owned by Musi'Quiz, website link → the venue page. NAP identical to the `venue` document. |
+| Q4 | SEO fields fallback | Optional `seo` fields; empty → derived from the page cover heading/intro (already localized, so no cross-language fallback; ADR 0003 holds). |
+| Q5 | Booking / gift pages | `noindex, follow`, out of the sitemap, unless §5 shows a legacy booking page ranking. |
+| Q6 | Trailing slash | Always. `trailingSlash: "always"`, every route in `getRoutesForLang` ends in `/`, a test guards it. |
+| Q7 | City-specific copy | Written by the client, from briefs produced here (Q11). |
+| Q8 / Q10 / Q18 | Unbuilt pages | `gdpr`/`rgpd` link removed. FAQ and press links kept, made absolute (`/faq/`, `/presse/`, `/en/faq/`, `/en/press/`). **Launch blocker: both pages exist or both links are removed before the switch.** The CI check (Phase 6) allowlists them explicitly until then. |
+| Q9 | New domain | The new site moves to a new domain. Site move: 301 per URL + Search Console Change of Address. |
+| Q11 | Keyword map and briefs | Produced here, in `docs/temp`: one target query per page, plus a writing brief per page. |
+| Q12 | Analytics | Cloudflare Web Analytics (cookieless, no consent banner) + Search Console + Bing Webmaster. |
+| Q13 | Venue address | New Sanity fields `streetAddress`, `postalCode`, `addressLocality`; `addressLine` derived. |
+| Q14 | New domain name | `musiquiz.co`. `.co` is treated as generic by Google (no country targeting). Buy `musiquiz.com` / `musiquiz.fr` if free and 301 them: users type `.com` by reflex. |
+| Q19 | Host | Apex: `https://musiquiz.co/`. `www` → 301 → apex. |
+| Q20 | Legacy cities | Every open city is created in Sanity before launch. Closed cities answer **410**. |
+| Q27 | Open cities | To be confirmed by the client. Crawl found: Lille, Villeneuve-d'Ascq, Cergy, Bruxelles, Sénart, Rennes, Orléans, Dijon, Avignon, Grenoble (closed?), Strasbourg (closed?), Saint-Priest, Paris, Lyon, Rouen, Metz, Toulon, La Réunion, Niort, Meaux, Lausanne. |
+| Q28 | Other products | Karaoke (Avignon), NeoXperiences (Niort), Duo and Meet & Quiz (Lille) become `gameFormat`s enabled at their venue only: `/<city>/jeux/<game>/`. |
+| Q21 | Legacy `/nl/*` | 301 → French equivalent. Legacy `/en/<fr-slug>/` → new `/en/` equivalent. |
+| Q22 / Q31 | Legacy blog (73 posts) | All migrated into Sanity by the client, by hand. Same slug under `/blog/`, except emoji slugs (new clean slug + 301). Keep the original publication date in `publishedAt`. |
+| Q23 | `musiquiz.ca` | Same company. Its France pages 301 to `musiquiz.co`; it keeps Canada only. The new site links out to it, no cross-domain hreflang. |
+| Q24 / Q30 | National activity pages | At the root: `/evg-evjf/`, `/team-building/`… (English under `/en/`). A Sanity validation forbids a venue slug equal to an activity slug. Built: EVG/EVJF, team building, teens, gift voucher. Each lists the venues offering it and links to the city pages. `/concept/` → home. |
+| Q25 | Booking pages | Confirmed `noindex`. Legacy `…/reservations/` → 301 → `/<city>/reserver/`. |
+| Q29 | Blog article closing link | `venue` becomes optional, new optional `activity` field. Closes on the venue if set, else the national activity page, else `/ou-nous-trouver/`. Amend ADR 0014. |
+| Q32 | English for new cities | Missing `en` fields machine-translated by script, then reviewed. ADR 0003 stays strict. |
+| Q16 | Legacy domain lifetime | Kept and redirecting indefinitely (Google's floor is one year; backlinks and bookmarks outlive it). |
+| Q17 | Switch | Same day: new site live, 301s on, Change of Address filed, GBP links updated. Both domains verified in Search Console beforehand; the 301 table tested by script (each old URL → 301 → 200 on the new domain). |
+
+### Q15 — Redirect hosting, two plans
+
+**Plan A: `musiquizlejeu.fr` DNS moves to Cloudflare.**
+
+1. Add the zone to the Cloudflare account, copy every existing record (MX and TXT first: email must survive), switch nameservers at the registrar.
+2. Proxied `A`/`AAAA` placeholder records (e.g. `192.0.2.1`) for the apex and `www`, so traffic reaches Cloudflare.
+3. A Bulk Redirect List: one row per legacy URL → new URL, 301, "preserve query string" on, "subpath matching" off.
+4. One catch-all Redirect Rule, evaluated after the list, for unmapped paths → the closest section (city page, blog index), never a blanket redirect to the homepage — Google reads that as a soft 404.
+5. No server to keep alive; the list lives in the repo as a CSV and is applied through the API or Terraform.
+
+**Plan B: DNS stays with the current host.**
+
+1. The old host serves the 301s: `.htaccess` (Apache), `nginx` rules, or the platform's redirect manager (WordPress plugin, Wix/Squarespace URL redirect panel), fed from the same CSV.
+2. If the host only redirects whole domains (some site builders), per-URL 301s need a server we control. Cloudflare Workers cannot serve a domain whose DNS lives elsewhere, so the fallback is a small redirect host that allows rewrite rules, and only the apex and `www` `A`/`CNAME` records change at the current DNS provider.
+3. The host's plan must be kept paid for as long as the redirects live (Q16). That is the ongoing cost Plan A avoids.
+4. HTTPS must stay valid on the old domain in both plans, or browsers stop before they see the 301.
+
+Either way the source of truth is `docs/temp/redirects.csv` (old URL, new URL), generated from §5 and reviewed before launch.
+
+## 5. Legacy site (`musiquizlejeu.fr`)
+
+Full inventory: [`seo-legacy-inventory.md`](./seo-legacy-inventory.md) (203 URLs, crawled 2026-09-24).
+
+- WordPress + Yoast. 196 sitemap URLs (73 blog posts, 121 pages), 7 more off-sitemap. Trailing slash everywhere.
+- Weglot machine-translates every page to `/en/<fr-slug>/` and `/nl/<fr-slug>/`. Not in the sitemap, but indexed, and they rank for branded queries. **The 301 table must cover `/en/*` and `/nl/*`, not only French URLs** — roughly 3× the French count.
+- ~21 cities across two URL schemes (`/nos-centres-<city>/…` and `/<city>/…`), each with `concept/`, `kids/`, `team-building/`, EVG/EVJF (inconsistent slugs), `bon-cadeau/`, `reservations/`.
+- National pages: `/concept/`, `/team-building/`, `/jeux-evg-jeux-evjf/`, `/jeunesse/`, `/bons-cadeaux/`, `/reserver/`, `/foire-aux-questions/`, `/presse/`, `/licence-franchises/`, `/plan-du-site/`…
+- Own venues book through 4escape; partner venues book off-site (Koezio, Qweekle, own sites).
+- `musiquiz.ca/france/paris/` also ranks for Paris.
+- Two blog slugs contain emoji: the redirect table must match both the raw and percent-encoded forms.
