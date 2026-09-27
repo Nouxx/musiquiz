@@ -53,7 +53,6 @@ export const fr = {
     press: "Presse",
     joinTheNetwork: "Ouvrez votre salle Musi'quiz",
     termsAndConditions: "CGV",
-    gdpr: "RGPD",
     legalNotice: "Mentions légales",
     chooseVenue: "Choisir un centre",
     changeVenue: "Changez de ville",

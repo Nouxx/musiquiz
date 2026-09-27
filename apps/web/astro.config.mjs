@@ -8,6 +8,12 @@ const isSsrBuild = process.env.SSR_BUILD === "true";
 
 export default defineConfig({
   site: "https://musiquiz.co",
+
+  // help enforcing the always trailing slashes policy on URLs
+  // because the previous site already has this URL pattern (simplify migration)
+  // https://developers.cloudflare.com/workers/static-assets/routing/advanced/html-handling/
+  trailingSlash: "always",
+
   output: isSsrBuild ? "server" : "static",
   // output directory differs to prevent a build erasing the other
   outDir: isSsrBuild ? "./dist/ssr" : "./dist/static",

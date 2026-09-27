@@ -60,7 +60,6 @@ export const en: EnglishKeys = {
     press: "Press",
     joinTheNetwork: "Open your Musi'quiz franchise",
     termsAndConditions: "T&C",
-    gdpr: "GDPR",
     legalNotice: "Legal notice",
     chooseVenue: "Choose a venue",
     changeVenue: "Switch venue",
