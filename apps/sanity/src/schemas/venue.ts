@@ -137,7 +137,8 @@ export const venueType = defineType({
     defineField({
       name: "ownerMails",
       title: "Owner emails",
-      description: "List of emails to send quotation form to.",
+      description:
+        "List of emails that will receive the internal form responses.",
       type: "array",
       of: [defineArrayMember({ type: "email" })],
       group: "contact",
