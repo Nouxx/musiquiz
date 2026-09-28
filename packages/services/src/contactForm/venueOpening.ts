@@ -8,6 +8,8 @@ import { scoreVenueOpeningLead } from "./scoreVenueOpeningLead";
 // anchor the page cover CTA scrolls to
 export const venueOpeningFormId = "venue-opening-form";
 
+export const noReplyMail = "noreply@musiquiz.co";
+
 export const venueOpeningFormLimits = {
   city: 120,
   firstName: 80,
@@ -163,7 +165,7 @@ export async function processVenueOpeningForm({
       templateKey: internalMailTemplateKey,
       mergeInfo,
       token: zeptomailToken,
-      senderAddress: venueOpeningEmail,
+      senderAddress: noReplyMail,
       senderName: venueOpeningName,
       destinationAddress: venueOpeningEmail,
       destinationName: venueOpeningName,
@@ -172,7 +174,7 @@ export async function processVenueOpeningForm({
       templateKey: clientTemplateKey,
       mergeInfo,
       token: zeptomailToken,
-      senderAddress: venueOpeningEmail,
+      senderAddress: noReplyMail,
       senderName: venueOpeningName,
       destinationAddress: applicantMail,
       destinationName: firstName,
