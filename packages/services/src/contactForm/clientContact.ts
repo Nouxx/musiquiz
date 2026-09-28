@@ -4,6 +4,7 @@ import z from "zod";
 
 import { buildVenueEmail } from "./buildVenueEmail";
 import { buildVenueName } from "./buildVenueName";
+import { noReplyMail } from "./noReplyMail";
 import { venueSlugSchema } from "./venueSlugSchema";
 
 export const clientContactFormLimits = {
@@ -65,7 +66,7 @@ export async function processClientContactForm({
       templateKey: clientTemplateKey,
       mergeInfo,
       token: zeptomailToken,
-      senderAddress: venueEmail,
+      senderAddress: noReplyMail,
       senderName: venueName,
       destinationAddress: clientMail,
       destinationName: firstName,

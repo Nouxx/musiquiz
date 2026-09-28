@@ -3,12 +3,11 @@ import { sendEmailWithTemplate } from "@repo/api/zeptomail/sendEmailWithTemplate
 import { venueOpeningMergeLabels } from "@repo/api/zeptomail/venueOpeningMergeLabels";
 import z from "zod";
 
+import { noReplyMail } from "./noReplyMail";
 import { scoreVenueOpeningLead } from "./scoreVenueOpeningLead";
 
 // anchor the page cover CTA scrolls to
 export const venueOpeningFormId = "venue-opening-form";
-
-export const noReplyMail = "noreply@musiquiz.co";
 
 export const venueOpeningFormLimits = {
   city: 120,
