@@ -98,8 +98,7 @@ export async function processQuotationForm({
       token: zeptomailToken,
       senderAddress: venueEmail,
       senderName: venueName,
-      destinationAddress: venueEmail,
-      destinationName: venueName,
+      destinations: [{ address: venueEmail, name: venueName }],
     }),
     sendEmailWithTemplate({
       templateKey: clientTemplateKey,
@@ -107,8 +106,7 @@ export async function processQuotationForm({
       token: zeptomailToken,
       senderAddress: venueEmail,
       senderName: venueName,
-      destinationAddress: clientMail,
-      destinationName: firstName,
+      destinations: [{ address: clientMail, name: firstName }],
     }),
   ]);
 

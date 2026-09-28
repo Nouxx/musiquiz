@@ -1,5 +1,7 @@
+import { fetchVenueOwnerMails } from "@repo/api/sanity/venueOwnerMails";
 import { emailTemplateKeys } from "@repo/api/zeptomail/emailTemplateKeys";
 import { sendEmailWithTemplate } from "@repo/api/zeptomail/sendEmailWithTemplate";
+import type { SanityConfig } from "@repo/utils/sanityConfig";
 import z from "zod";
 
 import { buildVenueEmail } from "./buildVenueEmail";
@@ -40,14 +42,23 @@ export function adaptClientContactFormMergeInfo(body: ClientContactFormBody) {
 export async function processClientContactForm({
   body,
   zeptomailToken,
+  sanityConfig,
 }: {
   body: ClientContactFormBody;
   zeptomailToken: string;
+  sanityConfig: SanityConfig;
 }) {
   const { venueSlug, venueTitle, firstName, mail: clientMail } = body;
 
   const venueEmail = buildVenueEmail(venueSlug);
   const venueName = buildVenueName(venueTitle);
+
+  // looked up server side instead of passed through the form body
+  // because a recipient list from the request would let anyone mail anyone from the venue domain
+  const { venue } = await fetchVenueOwnerMails({
+    config: sanityConfig,
+    venueSlug,
+  });
 
   const mergeInfo = adaptClientContactFormMergeInfo(body);
 
@@ -61,8 +72,10 @@ export async function processClientContactForm({
       token: zeptomailToken,
       senderAddress: venueEmail,
       senderName: venueName,
-      destinationAddress: venueEmail,
-      destinationName: venueName,
+      destinations: venue.ownerMails.map((ownerMail) => ({
+        address: ownerMail,
+        name: venueName,
+      })),
     }),
     sendEmailWithTemplate({
       templateKey: clientTemplateKey,
@@ -70,8 +83,7 @@ export async function processClientContactForm({
       token: zeptomailToken,
       senderAddress: noReplyMail,
       senderName: venueName,
-      destinationAddress: clientMail,
-      destinationName: firstName,
+      destinations: [{ address: clientMail, name: firstName }],
     }),
   ]);
 

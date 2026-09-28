@@ -166,8 +166,7 @@ export async function processVenueOpeningForm({
       token: zeptomailToken,
       senderAddress: noReplyMail,
       senderName: venueOpeningName,
-      destinationAddress: venueOpeningEmail,
-      destinationName: venueOpeningName,
+      destinations: [{ address: venueOpeningEmail, name: venueOpeningName }],
     }),
     sendEmailWithTemplate({
       templateKey: clientTemplateKey,
@@ -175,8 +174,7 @@ export async function processVenueOpeningForm({
       token: zeptomailToken,
       senderAddress: noReplyMail,
       senderName: venueOpeningName,
-      destinationAddress: applicantMail,
-      destinationName: firstName,
+      destinations: [{ address: applicantMail, name: firstName }],
     }),
   ]);
 

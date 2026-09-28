@@ -109,7 +109,7 @@ it("sends the lead to the network address and a copy to the applicant", async ()
   expect(
     sent.mock.calls.map(([call]) => [
       call.templateKey,
-      call.destinationAddress,
+      call.destinations[0]?.address,
     ]),
   ).toEqual([
     [

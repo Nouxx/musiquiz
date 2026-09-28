@@ -7,5 +7,10 @@
 	"observability": {
 		"enabled": true
 	},
-	"upload_source_maps": true
+	"upload_source_maps": true,
+	// mirrors SANITY_STUDIO_* in the root .env; wrangler does not read it
+	"vars": {
+		"SANITY_PROJECT_ID": "loisi7q0",
+		"SANITY_DATASET": "production"
+	}
 }
