@@ -14,6 +14,8 @@ import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { BookIcon } from "@sanity/icons/Book";
 import { BlockContentIcon } from "@sanity/icons/BlockContent";
 import { UsersIcon } from "@sanity/icons/Users";
+import { HeartIcon } from "@sanity/icons/Heart";
+import { CalendarIcon } from "@sanity/icons/Calendar";
 import type { ComponentType } from "react";
 import {
   singletonIds,
@@ -50,17 +52,20 @@ function venuePageItem({
   venueId,
   pageType,
   title,
+  icon,
 }: {
   S: StructureBuilder;
   venueId: string;
   pageType: string;
   title: string;
+  icon: ComponentType;
 }) {
   const publishedVenueId = venueId.replace(/^drafts\./, "");
 
   return S.listItem()
     .title(title)
     .id(pageType)
+    .icon(icon)
     .child(
       S.document()
         .schemaType("venuePage")
@@ -111,9 +116,19 @@ function venueChild({ S, venueId }: { S: StructureBuilder; venueId: string }) {
   return S.list()
     .title("Venue")
     .items([
-      venuePageItem({ S, venueId, pageType: "home", title: "Home page" }),
-      venuePageItem({ S, venueId, pageType: "gift", title: "Gift page" }),
-      venuePageItem({ S, venueId, pageType: "book", title: "Booking page" }),
+      S.listItem()
+        .title("Venue details")
+        .id("details")
+        .icon(InfoOutlineIcon)
+        .child(S.document().schemaType("venue").documentId(venueId)),
+
+      venuePageItem({
+        S,
+        venueId,
+        pageType: "home",
+        title: "Home page",
+        icon: HomeIcon,
+      }),
 
       S.listItem()
         .title("Games")
@@ -149,11 +164,20 @@ function venueChild({ S, venueId }: { S: StructureBuilder; venueId: string }) {
             ]),
         ),
 
-      S.listItem()
-        .title("Venue details")
-        .id("details")
-        .icon(InfoOutlineIcon)
-        .child(S.document().schemaType("venue").documentId(venueId)),
+      venuePageItem({
+        S,
+        venueId,
+        pageType: "gift",
+        title: "Gift page",
+        icon: HeartIcon,
+      }),
+      venuePageItem({
+        S,
+        venueId,
+        pageType: "book",
+        title: "Booking page",
+        icon: CalendarIcon,
+      }),
     ]);
 }
 

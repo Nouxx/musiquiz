@@ -3,15 +3,13 @@
 1. apps/web/tsconfig.json includes ./worker-configuration.d.ts, which doesn't exist — run pnpm --filter web generate-types, or drop the include.
 1. Validate [venue] before it reaches GROQ, on preview only. Preview builds with output: "server", so getStaticPaths is skipped and Astro.params.venue is a raw URL segment interpolated into slug.current == "...". A segment with a quote in it becomes GROQ, and the preview client reads drafts with a token. Reject unknown slugs (404) at the route or in @repo/services. Blocks the same first deploy as item 1. See ADR 0009.
 
-
 ## Improvements: enter animation for cards
 
-Homepage > 
+Homepage >
 
 ## Concept (TDB)
 
-If one eventFormat, "Nos expériences" becomes "Concept" 
-
+If one eventFormat, "Nos expériences" becomes "Concept"
 
 - CGV per center
 - All socials per center, fallback to global
@@ -32,7 +30,7 @@ Strongest liquid glass effect
 
 ### Global footer
 
-- Nos jeux: only show signature 
+- Nos jeux: only show signature
 
 ### Page de résa global
 
