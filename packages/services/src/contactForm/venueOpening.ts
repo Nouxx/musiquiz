@@ -3,6 +3,7 @@ import { sendEmailWithTemplate } from "@repo/api/zeptomail/sendEmailWithTemplate
 import { venueOpeningMergeLabels } from "@repo/api/zeptomail/venueOpeningMergeLabels";
 import z from "zod";
 
+import { noReplyMail } from "./noReplyMail";
 import { scoreVenueOpeningLead } from "./scoreVenueOpeningLead";
 
 // anchor the page cover CTA scrolls to
@@ -106,15 +107,14 @@ export const venueOpeningFormBodySchema = z.strictObject({
 
 export type VenueOpeningFormBody = z.infer<typeof venueOpeningFormBodySchema>;
 
-// the page belongs to no venue, so the lead goes to the network address
-// todo: check with Lionel
-const venueOpeningEmail = "contact@musiquiz.co";
+// todo: update to Lionel, Val and the sales
+// todo: move this to the CMS, site settings eventually
+const venueOpeningEmail = "lionel@musiquiz.co";
 const venueOpeningName = "Musi'Quiz";
 
-// keys are the client's merge tags
 export function adaptVenueOpeningMergeInfo(body: VenueOpeningFormBody) {
   const labels = venueOpeningMergeLabels;
-  const { score, qualification } = scoreVenueOpeningLead(body);
+  const { score, qualification, families } = scoreVenueOpeningLead(body);
 
   return {
     profil: labels.profile[body.profile],
@@ -135,6 +135,11 @@ export function adaptVenueOpeningMergeInfo(body: VenueOpeningFormBody) {
     rgpd: "Oui",
     lead_score: String(score),
     lead_qualification: labels.qualification[qualification],
+    score_finance: String(families.finance),
+    score_maturite: String(families.maturity),
+    score_adequation: String(families.fit),
+    score_timing: String(families.timing),
+    score_entrepreneur: String(families.entrepreneurship),
   };
 }
 
@@ -157,19 +162,17 @@ export async function processVenueOpeningForm({
       templateKey: internalMailTemplateKey,
       mergeInfo,
       token: zeptomailToken,
-      senderAddress: venueOpeningEmail,
+      senderAddress: noReplyMail,
       senderName: venueOpeningName,
-      destinationAddress: venueOpeningEmail,
-      destinationName: venueOpeningName,
+      destinations: [{ address: venueOpeningEmail, name: venueOpeningName }],
     }),
     sendEmailWithTemplate({
       templateKey: clientTemplateKey,
       mergeInfo,
       token: zeptomailToken,
-      senderAddress: venueOpeningEmail,
+      senderAddress: noReplyMail,
       senderName: venueOpeningName,
-      destinationAddress: applicantMail,
-      destinationName: firstName,
+      destinations: [{ address: applicantMail, name: firstName }],
     }),
   ]);
 

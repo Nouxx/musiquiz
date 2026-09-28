@@ -12,6 +12,17 @@ vi.mock("@repo/api/zeptomail/sendEmailWithTemplate", () => ({
   sendEmailWithTemplate: vi.fn(),
 }));
 
+vi.mock("@repo/api/sanity/venueMailing", () => ({
+  fetchVenueMailing: vi.fn(async () => ({
+    venue: {
+      title: "Paris",
+      ownerMails: ["owner@example.com", "partner@example.com"],
+    },
+  })),
+}));
+
+const sanityConfig = { projectId: "project", dataset: "test", draft: false };
+
 function buildBody(overrides: Record<string, unknown> = {}) {
   return {
     venueSlug: "paris",
@@ -101,8 +112,9 @@ it("caps the ticked services, by count and by length", () => {
   expect(accepts({ services: ["a".repeat(201)] })).toBe(false);
 });
 
-it("requires a message and caps it", () => {
-  expect(accepts({ message: "" })).toBe(false);
+it("takes an optional message and caps it", () => {
+  expect(accepts({ message: undefined })).toBe(true);
+  expect(accepts({ message: "" })).toBe(true);
   expect(accepts({ message: "a".repeat(2000) })).toBe(true);
   expect(accepts({ message: "a".repeat(2001) })).toBe(false);
 });
@@ -112,7 +124,9 @@ it("joins the ticked services into one merge field", () => {
     buildBody({ services: ["Blind test", "Karaoké"] }),
   );
 
-  expect(adaptQuotationMergeInfo(body).prestations).toBe("Blind test, Karaoké");
+  expect(
+    adaptQuotationMergeInfo({ body, venueTitle: "Paris" }).prestations,
+  ).toBe("Blind test, Karaoké");
 });
 
 it("sends with the template pair of the audience", async () => {
@@ -123,10 +137,52 @@ it("sends with the template pair of the audience", async () => {
   await processQuotationForm({
     body: quotationFormBodySchema.parse(buildBody({ audience: "musiTeens" })),
     zeptomailToken: "token",
+    sanityConfig,
   });
 
   expect(sent.mock.calls.map(([call]) => call.templateKey)).toEqual([
     emailTemplateKeys.musiTeens.internalMailTemplateKey,
     emailTemplateKeys.musiTeens.clientTemplateKey,
   ]);
+});
+
+it("sends the internal mail to the venue owners and the copy to the client", async () => {
+  const sent = vi.mocked(sendEmailWithTemplate);
+  sent.mockClear();
+  sent.mockResolvedValue(undefined as never);
+
+  await processQuotationForm({
+    body: quotationFormBodySchema.parse(buildBody()),
+    zeptomailToken: "token",
+    sanityConfig,
+  });
+
+  expect(
+    sent.mock.calls.map(([call]) =>
+      call.destinations.map((destination) => destination.address),
+    ),
+  ).toEqual([
+    ["owner@example.com", "partner@example.com"],
+    ["camille@example.com"],
+  ]);
+});
+
+it("takes the sender name from the venue, never from the request", async () => {
+  expect(accepts({ venueTitle: "Lyon" })).toBe(false);
+
+  const sent = vi.mocked(sendEmailWithTemplate);
+  sent.mockClear();
+  sent.mockResolvedValue(undefined as never);
+
+  await processQuotationForm({
+    body: quotationFormBodySchema.parse(buildBody()),
+    zeptomailToken: "token",
+    sanityConfig,
+  });
+
+  expect(sent.mock.calls.map(([call]) => call.senderName)).toEqual([
+    "Musi'Quiz Paris",
+    "Musi'Quiz Paris",
+  ]);
+  expect(sent.mock.calls[0]?.[0].mergeInfo).toMatchObject({ ville: "Paris" });
 });

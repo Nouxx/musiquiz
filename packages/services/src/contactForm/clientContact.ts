@@ -1,9 +1,11 @@
 import { emailTemplateKeys } from "@repo/api/zeptomail/emailTemplateKeys";
 import { sendEmailWithTemplate } from "@repo/api/zeptomail/sendEmailWithTemplate";
+import type { SanityConfig } from "@repo/utils/sanityConfig";
 import z from "zod";
 
-import { buildVenueEmail } from "./buildVenueEmail";
 import { buildVenueName } from "./buildVenueName";
+import { getVenueMailing } from "./getVenueMailing";
+import { noReplyMail } from "./noReplyMail";
 import { venueSlugSchema } from "./venueSlugSchema";
 
 export const clientContactFormLimits = {
@@ -37,14 +39,20 @@ export function adaptClientContactFormMergeInfo(body: ClientContactFormBody) {
 export async function processClientContactForm({
   body,
   zeptomailToken,
+  sanityConfig,
 }: {
   body: ClientContactFormBody;
   zeptomailToken: string;
+  sanityConfig: SanityConfig;
 }) {
   const { venueSlug, firstName, mail: clientMail } = body;
 
-  const venueEmail = buildVenueEmail(venueSlug);
-  const venueName = buildVenueName(venueSlug);
+  const { title, ownerMails } = await getVenueMailing({
+    sanityConfig,
+    venueSlug,
+  });
+
+  const venueName = buildVenueName(title);
 
   const mergeInfo = adaptClientContactFormMergeInfo(body);
 
@@ -56,19 +64,20 @@ export async function processClientContactForm({
       templateKey: internalMailTemplateKey,
       mergeInfo,
       token: zeptomailToken,
-      senderAddress: venueEmail,
+      senderAddress: noReplyMail,
       senderName: venueName,
-      destinationAddress: venueEmail,
-      destinationName: venueName,
+      destinations: ownerMails.map((ownerMail) => ({
+        address: ownerMail,
+        name: venueName,
+      })),
     }),
     sendEmailWithTemplate({
       templateKey: clientTemplateKey,
       mergeInfo,
       token: zeptomailToken,
-      senderAddress: venueEmail,
+      senderAddress: noReplyMail,
       senderName: venueName,
-      destinationAddress: clientMail,
-      destinationName: firstName,
+      destinations: [{ address: clientMail, name: firstName }],
     }),
   ]);
 

@@ -33,14 +33,14 @@ function score(overrides: Partial<VenueOpeningLeadAnswers> = {}) {
 }
 
 it("tops out at 100", () => {
-  expect(scoreVenueOpeningLead(strongest)).toEqual({
+  expect(scoreVenueOpeningLead(strongest)).toMatchObject({
     score: 100,
     qualification: "hot",
   });
 });
 
 it("scores the baseline as warm", () => {
-  expect(score()).toEqual({ score: 58, qualification: "warm" });
+  expect(score()).toMatchObject({ score: 58, qualification: "warm" });
 });
 
 describe("weights", () => {
@@ -130,11 +130,46 @@ it("counts the existing centre once for a manager who needs no premises", () => 
   ).toBe(65);
 });
 
+describe("families", () => {
+  it("fills every family at full marks", () => {
+    expect(scoreVenueOpeningLead(strongest).families).toEqual({
+      finance: 25,
+      maturity: 25,
+      fit: 20,
+      timing: 15,
+      entrepreneurship: 15,
+    });
+  });
+
+  it("applies the manager anti-cumul inside maturity", () => {
+    expect(
+      scoreVenueOpeningLead({ ...strongest, premises: "notNeeded" }).families
+        .maturity,
+    ).toBe(18);
+  });
+
+  it("keeps the uncapped families when a knockout caps the score", () => {
+    const { score, families } = scoreVenueOpeningLead({
+      ...strongest,
+      contribution: "under5k",
+    });
+
+    expect(score).toBe(34);
+    expect(families).toEqual({
+      finance: 0,
+      maturity: 25,
+      fit: 20,
+      timing: 15,
+      entrepreneurship: 15,
+    });
+  });
+});
+
 describe("knockouts", () => {
   it("caps a contribution under 5k at low priority", () => {
     expect(
       scoreVenueOpeningLead({ ...strongest, contribution: "under5k" }),
-    ).toEqual({ score: 34, qualification: "low" });
+    ).toMatchObject({ score: 34, qualification: "low" });
   });
 
   it("caps a small contribution with no horizon and no track record", () => {
@@ -145,7 +180,7 @@ describe("knockouts", () => {
       experience: "firstVenture",
     };
 
-    expect(scoreVenueOpeningLead(answers)).toEqual({
+    expect(scoreVenueOpeningLead(answers)).toMatchObject({
       score: 34,
       qualification: "low",
     });
@@ -162,7 +197,7 @@ describe("knockouts", () => {
       horizon: "undecided",
     };
 
-    expect(scoreVenueOpeningLead(answers)).toEqual({
+    expect(scoreVenueOpeningLead(answers)).toMatchObject({
       score: 74,
       qualification: "warm",
     });
@@ -214,6 +249,6 @@ describe("qualification thresholds", () => {
       },
     ],
   ] as const)("%i → %s", (expected, qualification, overrides) => {
-    expect(score(overrides)).toEqual({ score: expected, qualification });
+    expect(score(overrides)).toMatchObject({ score: expected, qualification });
   });
 });

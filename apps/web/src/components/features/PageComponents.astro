@@ -212,7 +212,8 @@ const t = getT(lang);
         );
       }
       case "quotationForm": {
-        const copy = `quotationForm.${component.audience}` as const;
+        const audience = component.audience;
+        const copy = `quotationForm.${audience}` as const;
 
         return (
           <QuotationForm
@@ -226,12 +227,14 @@ const t = getT(lang);
             phonePlaceholder={t(`${copy}.phonePlaceholder`)}
             mailLabel={t(`${copy}.mail`)}
             mailPlaceholder={t(`${copy}.mailPlaceholder`)}
+            displayCompany={audience === "teamBuilding"}
             companyLabel={t(`${copy}.company`)}
             companyPlaceholder={t(`${copy}.companyPlaceholder`)}
             dateLabel={t(`${copy}.date`)}
             timeLabel={t(`${copy}.time`)}
             participantsLabel={t(`${copy}.participants`)}
             participantsPlaceholder={t(`${copy}.participantsPlaceholder`)}
+            displayBudget={audience === "teamBuilding"}
             budgetLabel={t(`${copy}.budget`)}
             budgetPlaceholder={t(`${copy}.budgetPlaceholder`)}
             servicesLabel={t(`${copy}.services`)}

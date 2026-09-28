@@ -20,6 +20,11 @@ export async function clientContactRoute(request: Request, env: Env) {
 	const { confirmationError } = await processClientContactForm({
 		body: parsedBody.data,
 		zeptomailToken: env.ZOHO_API_KEY,
+		sanityConfig: {
+			projectId: env.SANITY_PROJECT_ID,
+			dataset: env.SANITY_DATASET,
+			draft: false,
+		},
 	});
 
 	if (confirmationError) {

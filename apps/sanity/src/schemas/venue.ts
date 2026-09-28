@@ -135,6 +135,16 @@ export const venueType = defineType({
       group: "contact",
     }),
     defineField({
+      name: "ownerMails",
+      title: "Owner emails",
+      description:
+        "List of emails that will receive the internal form responses.",
+      type: "array",
+      of: [defineArrayMember({ type: "email" })],
+      group: "contact",
+      validation: (rule) => rule.required().min(1).unique(),
+    }),
+    defineField({
       name: "googleMapsLink",
       title: "Google Maps Link",
       type: "string",

@@ -15,29 +15,25 @@ function buildBody({
   mergeInfo,
   senderAddress,
   senderName,
-  destinationAddress,
-  destinationName,
+  destinations,
 }: {
   templateKey: string;
   mergeInfo: unknown;
   senderAddress: string;
   senderName: string;
-  destinationAddress: string;
-  destinationName: string;
+  destinations: { address: string; name: string }[];
 }) {
   return JSON.stringify({
     template_key: templateKey,
     merge_info: mergeInfo,
     // ZeptoMail only accepts from.address on a verified domain
     from: { address: senderAddress, name: senderName },
-    to: [
-      {
-        email_address: {
-          address: destinationAddress,
-          name: destinationName,
-        },
+    to: destinations.map((destination) => ({
+      email_address: {
+        address: destination.address,
+        name: destination.name,
       },
-    ],
+    })),
   });
 }
 
@@ -50,16 +46,14 @@ export async function sendEmailWithTemplate({
   token,
   senderAddress,
   senderName,
-  destinationAddress,
-  destinationName,
+  destinations,
 }: {
   templateKey: string;
   mergeInfo: unknown;
   token: string;
   senderAddress: string;
   senderName: string;
-  destinationAddress: string;
-  destinationName: string;
+  destinations: { address: string; name: string }[];
 }) {
   const response = await fetch(buildUrl(), {
     method: "POST",
@@ -69,8 +63,7 @@ export async function sendEmailWithTemplate({
       mergeInfo,
       senderAddress,
       senderName,
-      destinationAddress,
-      destinationName,
+      destinations,
     }),
   });
 
