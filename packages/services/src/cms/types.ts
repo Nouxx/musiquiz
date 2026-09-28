@@ -185,7 +185,7 @@ export type BlogArticlePage = {
     photo: CmsImage;
   };
   findUs: FindUsContent;
-  faq: { title: string; questions: FaqQuestion[] };
+  faq: { title: string; questions: FaqQuestion[] } | undefined;
   /** same venue, newest first, at most three */
   readMore: BlogArticleSummary[];
 };

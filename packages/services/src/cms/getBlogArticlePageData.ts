@@ -49,13 +49,15 @@ function adaptBlogArticlePage({
       address: venue.addressLine,
       mapsUrl: venue.googleMapsLink,
     },
-    faq: {
-      title: venueBlog.faq.title,
-      questions: venueBlog.faq.questions.map((question) => ({
-        question: question.question,
-        answer: toRichText(question.answer),
-      })),
-    },
+    faq: article.faq
+      ? {
+          title: article.faq.title,
+          questions: article.faq.questions.map((question) => ({
+            question: question.question,
+            answer: toRichText(question.answer),
+          })),
+        }
+      : undefined,
     readMore: article.readMore.map((item) => toBlogArticleSummary(item)),
   };
 }

@@ -77,11 +77,15 @@ const date = data.updatedAt
   }}
 />
 
-<Faq
-  badge={t("faq.badge")}
-  title={data.faq.title}
-  questions={data.faq.questions}
-/>
+{
+  data.faq && (
+    <Faq
+      badge={t("faq.badge")}
+      title={data.faq.title}
+      questions={data.faq.questions}
+    />
+  )
+}
 
 <ArticleAuthor
   badge={t("blogArticlePage.author")}

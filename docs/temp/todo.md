@@ -47,7 +47,6 @@ Strongest liquid glass effect
 - Ajouter header
 - Pas de page cover
 - Génération automatique des pills et seulement avis et c'est la moyenne
-- FAQ par article
 - Add code block (youtube, instagram...)
 
 ## Logo strip
