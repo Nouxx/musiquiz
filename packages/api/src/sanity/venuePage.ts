@@ -46,6 +46,7 @@ export async function fetchVenuePage({
   venueSlug: string;
 }) {
   return fetchSanityData({
+    queryName: "venuePage",
     query: venuePageQuery({ lang, venueSlug }),
     schema: sanityVenuePageSchema,
     config,

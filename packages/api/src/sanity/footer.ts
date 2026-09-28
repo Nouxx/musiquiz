@@ -56,6 +56,7 @@ export async function fetchFooter({
   lang: Lang;
 }) {
   return fetchSanityData({
+    queryName: "footer",
     query: footerQuery({ lang }),
     schema: sanityFooterSchema,
     config,

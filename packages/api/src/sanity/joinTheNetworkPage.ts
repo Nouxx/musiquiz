@@ -38,6 +38,7 @@ export async function fetchJoinTheNetworkPage({
   lang: Lang;
 }) {
   return fetchSanityData({
+    queryName: "joinTheNetworkPage",
     query: joinTheNetworkPageQuery({ lang }),
     schema: sanityJoinTheNetworkPageSchema,
     config,

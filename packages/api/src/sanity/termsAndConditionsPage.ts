@@ -59,6 +59,7 @@ export async function fetchTermsAndConditionsPage({
   lang: Lang;
 }) {
   return fetchSanityData({
+    queryName: "termsAndConditionsPage",
     query: termsAndConditionsPageQuery({ lang }),
     schema: sanityTermsAndConditionsPageSchema,
     config,

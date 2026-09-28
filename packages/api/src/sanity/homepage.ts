@@ -59,6 +59,7 @@ export async function fetchHomepage({
   lang: Lang;
 }) {
   return fetchSanityData({
+    queryName: "homepage",
     query: homepageQuery({ lang }),
     schema: sanityHomepageSchema,
     config,

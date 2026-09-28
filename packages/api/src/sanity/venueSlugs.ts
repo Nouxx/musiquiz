@@ -16,6 +16,7 @@ export type SanityVenueSlugs = z.infer<typeof sanityVenueSlugsSchema>;
 
 export async function fetchVenueSlugs({ config }: { config: SanityConfig }) {
   return fetchSanityData({
+    queryName: "venueSlugs",
     query: venueSlugsQuery(),
     schema: sanityVenueSlugsSchema,
     config,

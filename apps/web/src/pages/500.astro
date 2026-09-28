@@ -1,0 +1,95 @@
+---
+import { SanityQueryError } from "@repo/utils/sanityQueryError";
+
+import Layout from "../layouts/Layout.astro";
+
+// this page is only useful on the SSR build
+// it tells editors what their draft is missing
+
+interface Props {
+  error: unknown;
+}
+
+const { error } = Astro.props;
+
+const queryError = error instanceof SanityQueryError ? error : undefined;
+
+if (queryError?.kind === "empty") Astro.response.status = 404;
+---
+
+<Layout title="Erreur d'aperçu">
+  <main>
+    {
+      queryError?.kind === "empty" && (
+        <>
+          <h1>Page introuvable</h1>
+          <p>
+            Le contenu demandé par <code>{queryError.queryName}</code> n'existe
+            pas. Le document n'est peut-être pas encore créé, ou l'adresse
+            contient un slug inconnu.
+          </p>
+        </>
+      )
+    }
+    {
+      queryError?.kind === "parse" && (
+        <>
+          <h1>Contenu incomplet</h1>
+          <p>
+            Certains champs du brouillon ne correspondent pas à ce dont la page
+            a besoin pour être affichée.
+          </p>
+          <h2>Détails</h2>
+          <p>
+            Requête : <code>{queryError.queryName}</code>.
+          </p>
+          <ul>
+            {queryError.issues.map((issue) => (
+              <li>
+                <code>{issue.path}</code> : {issue.message}
+              </li>
+            ))}
+          </ul>
+        </>
+      )
+    }
+    {
+      !queryError && (
+        <>
+          <h1>Erreur</h1>
+          <p>La page n'a pas pu être affichée.</p>
+          {error instanceof Error && (
+            <p>
+              <code>{error.message}</code>
+            </p>
+          )}
+        </>
+      )
+    }
+  </main>
+</Layout>
+
+<style>
+  main {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 60rem;
+    padding: var(--space-10) var(--space-4);
+    margin-inline: auto;
+    font-family: var(--font-body);
+  }
+
+  h1,
+  h2 {
+    font-family: var(--font-title);
+  }
+
+  ul {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  code {
+    overflow-wrap: anywhere;
+  }
+</style>

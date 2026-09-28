@@ -16,7 +16,7 @@ Rationale for every rule below: [ADR 0009](../../docs/adr/0009-sanity-query-modu
 - Interpolate values into the query text. A query is a `function` of the values it needs, and so is a shared projection. No GROQ params — see the ADR.
 - Interpolate only closed unions and slugs. Anything free-form needs validating at the service boundary first.
 - Wrap query text in `defineQuery` from `groq`, once.
-- Write the fetch function by hand: an `async function` taking `{ config, … }` that returns `fetchSanityData({ query, schema, config })`.
+- Write the fetch function by hand: an `async function` taking `{ config, … }` that returns `fetchSanityData({ queryName, query, schema, config })`. `queryName` is the module's file name; the SSR error page shows it.
 - Use `z.strictObject`.
 
 ## shared/

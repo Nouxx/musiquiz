@@ -154,6 +154,7 @@ export async function fetchBlogArticlePage({
   slug: string;
 }) {
   return fetchSanityData({
+    queryName: "blogArticlePage",
     query: blogArticlePageQuery({ slug }),
     schema: sanityBlogArticlePageSchema,
     config,

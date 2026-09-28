@@ -20,6 +20,7 @@ export async function fetchBlogArticleSlugs({
   config: SanityConfig;
 }) {
   return fetchSanityData({
+    queryName: "blogArticleSlugs",
     query: blogArticleSlugsQuery(),
     schema: sanityBlogArticleSlugsSchema,
     config,

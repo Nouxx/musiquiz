@@ -77,6 +77,7 @@ export async function fetchContactPage({
   lang: Lang;
 }) {
   return fetchSanityData({
+    queryName: "contactPage",
     query: contactPageQuery({ lang }),
     schema: sanityContactPageSchema,
     config,
