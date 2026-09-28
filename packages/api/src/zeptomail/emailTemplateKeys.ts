@@ -14,7 +14,7 @@ export const emailTemplateKeys: Record<string, EmailTemplateKey> = {
     clientTemplateKey:
       "13ef.34e5f5b7aef4f343.k1.58ef8070-a6d2-11f1-a4b9-dad70ff08860.1a0624f99f7",
     internalMailTemplateKey:
-      "13ef.34e5f5b7aef4f343.k1.155fb4a0-a6d3-11f1-a4b9-dad70ff08860.1a062546cea",
+      "13ef.34e5f5b7aef4f343.k1.92c45020-8bfa-11f1-9615-dad70ff08860.19fb264be22",
   },
   musiTeens: {
     clientTemplateKey:
