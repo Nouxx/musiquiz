@@ -88,6 +88,11 @@ it("merges the client's tags with the French wording", () => {
     rgpd: "Oui",
     lead_score: "60",
     lead_qualification: "🟡 LEAD TIÈDE",
+    score_finance: "14",
+    score_maturite: "13",
+    score_adequation: "14",
+    score_timing: "12",
+    score_entrepreneur: "7",
   });
 });
 
@@ -109,7 +114,7 @@ it("sends the lead to the network address and a copy to the applicant", async ()
   ).toEqual([
     [
       emailTemplateKeys.venueOpening.internalMailTemplateKey,
-      "contact@musiquiz.co",
+      "lionel@musiquiz.co",
     ],
     [emailTemplateKeys.venueOpening.clientTemplateKey, "camille@example.com"],
   ]);

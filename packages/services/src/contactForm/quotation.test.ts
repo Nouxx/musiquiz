@@ -101,8 +101,9 @@ it("caps the ticked services, by count and by length", () => {
   expect(accepts({ services: ["a".repeat(201)] })).toBe(false);
 });
 
-it("requires a message and caps it", () => {
-  expect(accepts({ message: "" })).toBe(false);
+it("takes an optional message and caps it", () => {
+  expect(accepts({ message: undefined })).toBe(true);
+  expect(accepts({ message: "" })).toBe(true);
   expect(accepts({ message: "a".repeat(2000) })).toBe(true);
   expect(accepts({ message: "a".repeat(2001) })).toBe(false);
 });

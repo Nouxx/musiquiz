@@ -111,10 +111,9 @@ export type VenueOpeningFormBody = z.infer<typeof venueOpeningFormBodySchema>;
 const venueOpeningEmail = "lionel@musiquiz.co";
 const venueOpeningName = "Musi'Quiz";
 
-// keys are the client's merge tags
 export function adaptVenueOpeningMergeInfo(body: VenueOpeningFormBody) {
   const labels = venueOpeningMergeLabels;
-  const { score, qualification } = scoreVenueOpeningLead(body);
+  const { score, qualification, families } = scoreVenueOpeningLead(body);
 
   return {
     profil: labels.profile[body.profile],
@@ -135,6 +134,11 @@ export function adaptVenueOpeningMergeInfo(body: VenueOpeningFormBody) {
     rgpd: "Oui",
     lead_score: String(score),
     lead_qualification: labels.qualification[qualification],
+    score_finance: String(families.finance),
+    score_maturite: String(families.maturity),
+    score_adequation: String(families.fit),
+    score_timing: String(families.timing),
+    score_entrepreneur: String(families.entrepreneurship),
   };
 }
 
@@ -148,6 +152,8 @@ export async function processVenueOpeningForm({
   const { firstName, mail: applicantMail } = body;
 
   const mergeInfo = adaptVenueOpeningMergeInfo(body);
+
+  console.log("XDEBUG mergeInfo", JSON.stringify(mergeInfo));
 
   const { internalMailTemplateKey, clientTemplateKey } =
     emailTemplateKeys.venueOpening;

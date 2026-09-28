@@ -115,17 +115,25 @@ function qualify(score: number): VenueOpeningQualification {
 }
 
 export function scoreVenueOpeningLead(answers: VenueOpeningLeadAnswers) {
+  const families = {
+    finance: contributionWeights[answers.contribution],
+    maturity: profileWeights[answers.profile] + premisesScore(answers),
+    fit:
+      intentWeights[answers.intent] + populationWeights[answers.population],
+    timing: horizonWeights[answers.horizon],
+    entrepreneurship:
+      experienceWeights[answers.experience] +
+      partnersWeights[answers.partners],
+  };
+
   const raw =
-    contributionWeights[answers.contribution] +
-    profileWeights[answers.profile] +
-    premisesScore(answers) +
-    intentWeights[answers.intent] +
-    populationWeights[answers.population] +
-    horizonWeights[answers.horizon] +
-    experienceWeights[answers.experience] +
-    partnersWeights[answers.partners];
+    families.finance +
+    families.maturity +
+    families.fit +
+    families.timing +
+    families.entrepreneurship;
 
   const score = Math.min(raw, scoreCap(answers));
 
-  return { score, qualification: qualify(score) };
+  return { score, qualification: qualify(score), families };
 }
