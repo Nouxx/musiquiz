@@ -85,8 +85,7 @@ export async function processQuotationForm({
   zeptomailToken: string;
   sanityConfig: SanityConfig;
 }) {
-  const { venueSlug, venueTitle, audience, firstName, mail: clientMail } =
-    body;
+  const { venueSlug, venueTitle, audience, firstName, mail: clientMail } = body;
 
   const venueName = buildVenueName(venueTitle);
 

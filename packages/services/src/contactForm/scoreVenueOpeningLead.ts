@@ -118,12 +118,10 @@ export function scoreVenueOpeningLead(answers: VenueOpeningLeadAnswers) {
   const families = {
     finance: contributionWeights[answers.contribution],
     maturity: profileWeights[answers.profile] + premisesScore(answers),
-    fit:
-      intentWeights[answers.intent] + populationWeights[answers.population],
+    fit: intentWeights[answers.intent] + populationWeights[answers.population],
     timing: horizonWeights[answers.horizon],
     entrepreneurship:
-      experienceWeights[answers.experience] +
-      partnersWeights[answers.partners],
+      experienceWeights[answers.experience] + partnersWeights[answers.partners],
   };
 
   const raw =
