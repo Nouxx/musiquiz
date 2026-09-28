@@ -1,6 +1,4 @@
-function capitalizeFirstLetter(input: string) {
-  return input.charAt(0).toUpperCase() + input.slice(1);
-}
+import { capitalizeFirstLetter } from "@repo/utils/capitalizeFirstLetter";
 
 export function buildVenueName(venueSlug: string) {
   return `Musi'Quiz ${capitalizeFirstLetter(venueSlug)}`;

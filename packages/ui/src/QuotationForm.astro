@@ -18,12 +18,14 @@ interface Props {
   phonePlaceholder: string;
   mailLabel: string;
   mailPlaceholder: string;
+  displayCompany: boolean;
   companyLabel: string;
   companyPlaceholder: string;
   dateLabel: string;
   timeLabel: string;
   participantsLabel: string;
   participantsPlaceholder: string;
+  displayBudget: boolean;
   budgetLabel: string;
   budgetPlaceholder: string;
   servicesLabel: string;
@@ -55,12 +57,14 @@ const {
   phonePlaceholder,
   mailLabel,
   mailPlaceholder,
+  displayCompany,
   companyLabel,
   companyPlaceholder,
   dateLabel,
   timeLabel,
   participantsLabel,
   participantsPlaceholder,
+  displayBudget,
   budgetLabel,
   budgetPlaceholder,
   servicesLabel,
@@ -148,16 +152,21 @@ const uid = crypto.randomUUID().slice(0, 8);
             />
           </div>
 
-          <TextField
-            id={`quotation-${uid}-company`}
-            name="company"
-            type="text"
-            autocomplete="organization"
-            tone="plain"
-            label={companyLabel}
-            placeholder={companyPlaceholder}
-            maxlength={companyMaxLength}
-          />
+          {
+            displayCompany && (
+              <TextField
+                id={`quotation-${uid}-company`}
+                name="company"
+                type="text"
+                autocomplete="organization"
+                tone="plain"
+                label={companyLabel}
+                placeholder={companyPlaceholder}
+                maxlength={companyMaxLength}
+                required
+              />
+            )
+          }
 
           <div class="row">
             <TextField
@@ -188,17 +197,22 @@ const uid = crypto.randomUUID().slice(0, 8);
               label={participantsLabel}
               placeholder={participantsPlaceholder}
               maxlength={participantsMaxLength}
+              required
             />
 
-            <TextField
-              id={`quotation-${uid}-budget`}
-              name="budget"
-              type="text"
-              tone="plain"
-              label={budgetLabel}
-              placeholder={budgetPlaceholder}
-              maxlength={budgetMaxLength}
-            />
+            {
+              displayBudget && (
+                <TextField
+                  id={`quotation-${uid}-budget`}
+                  name="budget"
+                  type="text"
+                  tone="plain"
+                  label={budgetLabel}
+                  placeholder={budgetPlaceholder}
+                  maxlength={budgetMaxLength}
+                />
+              )
+            }
           </div>
 
           {
@@ -233,7 +247,6 @@ const uid = crypto.randomUUID().slice(0, 8);
               label={messageLabel}
               placeholder={messagePlaceholder}
               maxlength={messageMaxLength}
-              required
             />
 
             <p class="counter" data-counter aria-hidden="true"></p>

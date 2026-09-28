@@ -1,5 +1,6 @@
 import { emailTemplateKeys } from "@repo/api/zeptomail/emailTemplateKeys";
 import { sendEmailWithTemplate } from "@repo/api/zeptomail/sendEmailWithTemplate";
+import { capitalizeFirstLetter } from "@repo/utils/capitalizeFirstLetter";
 import z from "zod";
 
 import { buildVenueEmail } from "./buildVenueEmail";
@@ -27,7 +28,7 @@ export const quotationFormBodySchema = z.strictObject({
   firstName: z.string().min(1).max(quotationFormLimits.firstName),
   mail: z.email().max(quotationFormLimits.mail),
   phone: z.string().max(quotationFormLimits.phone),
-  company: z.string().max(quotationFormLimits.company),
+  company: z.string().max(quotationFormLimits.company).optional(),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   time: z.string().regex(/^\d{2}:\d{2}$/),
   participants: z.string().max(quotationFormLimits.participants),
@@ -35,12 +36,11 @@ export const quotationFormBodySchema = z.strictObject({
   services: z
     .array(z.string().min(1).max(quotationFormLimits.service))
     .max(quotationFormLimits.services),
-  message: z.string().min(1).max(quotationFormLimits.message),
+  message: z.string().max(quotationFormLimits.message).optional(),
 });
 
 type QuotationFormBody = z.infer<typeof quotationFormBodySchema>;
 
-// todo: check with Lionel
 export function adaptQuotationMergeInfo(body: QuotationFormBody) {
   const {
     lastName,
@@ -54,9 +54,11 @@ export function adaptQuotationMergeInfo(body: QuotationFormBody) {
     budget,
     services,
     message,
+    venueSlug,
   } = body;
 
   return {
+    ville: capitalizeFirstLetter(venueSlug),
     prenom: firstName,
     nom: lastName,
     email: mail,
