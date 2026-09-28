@@ -1,10 +1,9 @@
-/**
- * basee64 encoded value for `{"domain":"musiquiz.4escape.io"}`
- */
+// todo: per venue as well
 export const forEscapeSetting =
   "b64.eyJkb21haW4iOiJtdXNpcXVpei40ZXNjYXBlLmlvIn0=";
 
 // todo: widget ids are per venue, it needs to be read from the CMS
+// confirmed
 export const bookingWidgetId = "fa25b722-264c-4644-b65e-5e8aeb60f7b3";
 export const bookingAnchor = "booking";
 

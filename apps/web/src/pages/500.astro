@@ -15,9 +15,12 @@ const { error } = Astro.props;
 const queryError = error instanceof SanityQueryError ? error : undefined;
 
 if (queryError?.kind === "empty") Astro.response.status = 404;
+
+// rendered under whichever URL failed, in either language
+const alternates = { fr: Astro.url.href, en: Astro.url.href };
 ---
 
-<Layout title="Erreur d'aperçu">
+<Layout title="Erreur d'aperçu" alternates={alternates} noindex>
   <main>
     {
       queryError?.kind === "empty" && (

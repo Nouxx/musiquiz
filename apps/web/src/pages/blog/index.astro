@@ -1,17 +1,23 @@
 ---
 import { getBlogPageData } from "@repo/services/cms/getBlogPageData";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 
 import BlogHead from "../../components/features/BlogHead.astro";
 import BlogPage from "../../components/pages/BlogPage.astro";
 import Layout from "../../layouts/Layout.astro";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getSite } from "../../libs/getSite";
 
 const data = await getBlogPageData({
   config: getSanityConfigFromEnvironment(),
 });
+
+const alternates = {
+  fr: new URL(getRoutesForLang("fr").blog, getSite(Astro)).href,
+};
 ---
 
-<Layout title={data.title} description={data.intro}>
+<Layout title={data.title} description={data.intro} {alternates}>
   <BlogHead slot="head" articleCount={data.articles.length} page={1} />
   <BlogPage {data} page={1} />
 </Layout>

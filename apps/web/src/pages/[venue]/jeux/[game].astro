@@ -1,7 +1,10 @@
 ---
+import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
+
 import VenueGamePage from "../../../components/pages/VenueGamePage.astro";
 import VenueLayout from "../../../layouts/VenueLayout.astro";
 import { getVenueGamesSlugParameters } from "../../../libs/getVenueGamesSlugParameters";
+import { getSite } from "../../../libs/getSite";
 
 export async function getStaticPaths() {
   const params = await getVenueGamesSlugParameters();
@@ -9,8 +12,12 @@ export async function getStaticPaths() {
 }
 
 const { venue, game } = Astro.params;
+
+const alternates = getAlternatesUrl(getSite(Astro), (routes) =>
+  routes.venueGame(venue, game),
+);
 ---
 
-<VenueLayout venueSlug={venue}>
+<VenueLayout venueSlug={venue} {alternates}>
   <VenueGamePage venueSlug={venue} gameSlug={game} />
 </VenueLayout>

@@ -1,8 +1,16 @@
 ---
+import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
+
 import WhereToFindUsPage from "../../components/pages/WhereToFindUsPage.astro";
 import Layout from "../../layouts/Layout.astro";
+import { getSite } from "../../libs/getSite";
+
+const alternates = getAlternatesUrl(
+  getSite(Astro),
+  (routes) => routes.whereToFindUs,
+);
 ---
 
-<Layout>
+<Layout {alternates}>
   <WhereToFindUsPage />
 </Layout>

@@ -1,11 +1,13 @@
 ---
 import { getBlogPageData } from "@repo/services/cms/getBlogPageData";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 
 import BlogHead from "../../../components/features/BlogHead.astro";
 import BlogPage from "../../../components/pages/BlogPage.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { getBlogPageParameters } from "../../../libs/getBlogPageParameters";
 import { getSanityConfigFromEnvironment } from "../../../libs/getSanityConfigFromEnvironment";
+import { getSite } from "../../../libs/getSite";
 import { getT } from "../../../libs/i18n";
 
 export async function getStaticPaths() {
@@ -19,9 +21,13 @@ const data = await getBlogPageData({
 });
 
 const title = getT("fr")("blogPage.pageTitle", { title: data.title, page });
+
+const alternates = {
+  fr: new URL(getRoutesForLang("fr").blogPage(page), getSite(Astro)).href,
+};
 ---
 
-<Layout {title} description={data.intro}>
+<Layout {title} description={data.intro} {alternates}>
   <BlogHead slot="head" articleCount={data.articles.length} {page} />
   <BlogPage {data} {page} />
 </Layout>

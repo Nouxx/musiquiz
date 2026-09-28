@@ -8,6 +8,7 @@ import BlogArticlePage from "../../components/pages/BlogArticlePage.astro";
 import Layout from "../../layouts/Layout.astro";
 import { getBlogArticleParameters } from "../../libs/getBlogArticleParameters";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getSite } from "../../libs/getSite";
 import { getT } from "../../libs/i18n";
 
 export async function getStaticPaths() {
@@ -25,6 +26,10 @@ const data = await getBlogArticlePageData({
 
 const routes = getRoutesForLang("fr");
 
+const alternates = {
+  fr: new URL(routes.blogArticle(slug), getSite(Astro)).href,
+};
+
 const breadcrumbs: BreadcrumbItem[] = [
   { label: getT("fr")("footer.blog"), url: routes.blog },
   // linking to the venue home strengthen this link SEO wise, allegedly.
@@ -33,7 +38,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 ---
 
-<Layout title={data.title} description={data.excerpt}>
+<Layout title={data.title} description={data.excerpt} {alternates}>
   <BlogArticleHead slot="head" {data} {breadcrumbs} />
   <BlogArticlePage {data} {breadcrumbs} />
 </Layout>

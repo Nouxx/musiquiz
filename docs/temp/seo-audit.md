@@ -1,7 +1,5 @@
 # SEO audit — apps/web
 
-Date: 2026-09-24. Branch: `feat/booking-system`. Evidence comes from the source and from a fresh `dist/static` build (61 HTML pages), scanned with a script.
-
 ## 1. What matters for this site
 
 Musi'Quiz is a **multi-venue local business** (Paris, Lille, more to come), **bilingual** (fr default, `/en/`), with a **French-only blog** built to rank (ADR 0013). It ships as a static Astro site on Cloudflare Workers, plus an SSR preview worker. The SEO levers that apply, in order of weight:

@@ -1,0 +1,69 @@
+---
+import { getLang } from "../../libs/getLang";
+import { getSite } from "../../libs/getSite";
+
+export interface Props {
+  /** @example "Blind test", rendered "Blind test · Musi'Quiz" */
+  title?: string;
+  description?: string;
+  alternates: { fr: string; en?: string };
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  alternates,
+  ogImage,
+  noindex = false,
+} = Astro.props;
+
+const lang = getLang(Astro);
+
+const canonical = alternates[lang];
+
+if (!canonical) {
+  throw new Error(`${Astro.url.pathname} has no ${lang} alternate`);
+}
+
+const brand = "Musi'Quiz";
+const fullTitle = title ? `${title} · ${brand}` : brand;
+
+const ogLocales = { fr: "fr_FR", en: "en_GB" } as const;
+const otherLang = lang === "fr" ? "en" : "fr";
+const ogImageUrl = ogImage && new URL(ogImage, getSite(Astro)).href;
+---
+
+<title>{fullTitle}</title>
+{description && <meta name="description" content={description} />}
+{noindex && <meta name="robots" content="noindex, follow" />}
+
+<link rel="canonical" href={canonical} />
+{
+  alternates.en && (
+    <>
+      <link rel="alternate" hreflang="fr" href={alternates.fr} />
+      <link rel="alternate" hreflang="en" href={alternates.en} />
+      <link rel="alternate" hreflang="x-default" href={alternates.fr} />
+    </>
+  )
+}
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={brand} />
+<meta property="og:title" content={fullTitle} />
+{description && <meta property="og:description" content={description} />}
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={ogLocales[lang]} />
+{
+  alternates[otherLang] && (
+    <meta property="og:locale:alternate" content={ogLocales[otherLang]} />
+  )
+}
+{ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+{/* X reads title, description and image from the og: tags */}
+<meta
+  name="twitter:card"
+  content={ogImageUrl ? "summary_large_image" : "summary"}
+/>
