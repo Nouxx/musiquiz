@@ -1,6 +1,47 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { contentIcons } from "./shared/pageComponents/contentIcons";
+import { richTextFieldType } from "./shared/richText";
+
+// french only, plain strings on purpose: docs/adr/0013
+export const blogFaqType = defineType({
+  name: "blogFaq",
+  title: "FAQ",
+  type: "object",
+  fields: [
+    defineField({
+      name: "title",
+      type: "string",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "questions",
+      type: "array",
+      of: [
+        defineArrayMember({
+          name: "blogFaqQuestion",
+          type: "object",
+          fields: [
+            defineField({
+              name: "question",
+              type: "string",
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: "answer",
+              type: "array",
+              of: richTextFieldType.of,
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: { select: { title: "question" } },
+        }),
+      ],
+      description: "Between 3 and 8.",
+      validation: (rule) => rule.required().min(3).max(8),
+    }),
+  ],
+});
 
 // french only, plain strings on purpose: docs/adr/0013
 export const blogArticleType = defineType({
@@ -122,6 +163,13 @@ export const blogArticleType = defineType({
       title: "Article",
       type: "articleBody",
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "faq",
+      title: "FAQ",
+      description:
+        "Optional. The questions this article answers, also sent to search engines as FAQ data. Leave empty when the article raises none.",
+      type: "blogFaq",
     }),
   ],
   orderings: [

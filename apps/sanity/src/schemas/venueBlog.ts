@@ -1,46 +1,7 @@
-import { defineArrayMember, defineField, defineType } from "sanity";
+import { defineField, defineType } from "sanity";
 import { BlockContentIcon } from "@sanity/icons/BlockContent";
-import { richTextFieldType } from "./shared/richText";
 
 // french only, plain strings on purpose: docs/adr/0013
-export const blogFaqType = defineType({
-  name: "blogFaq",
-  title: "FAQ",
-  type: "object",
-  fields: [
-    defineField({
-      name: "title",
-      type: "string",
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "questions",
-      type: "array",
-      of: [
-        defineArrayMember({
-          name: "blogFaqQuestion",
-          type: "object",
-          fields: [
-            defineField({
-              name: "question",
-              type: "string",
-              validation: (rule) => rule.required(),
-            }),
-            defineField({
-              name: "answer",
-              type: "array",
-              of: richTextFieldType.of,
-              validation: (rule) => rule.required(),
-            }),
-          ],
-          preview: { select: { title: "question" } },
-        }),
-      ],
-      validation: (rule) => rule.required().min(1),
-    }),
-  ],
-});
-
 export const blogFindUsType = defineType({
   name: "blogFindUs",
   title: "Find Us",
@@ -130,12 +91,6 @@ export const venueBlogType = defineType({
       name: "findUs",
       title: "Find Us",
       type: "blogFindUs",
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "faq",
-      title: "FAQ",
-      type: "blogFaq",
       validation: (rule) => rule.required(),
     }),
   ],

@@ -28,6 +28,13 @@ function blogArticlePageQuery({ slug }: { slug: string }) {
       chips[]{ icon, label },
       reviewCount,
       "body": ${articleBodyProjection({ field: "body" })},
+      faq{
+        title,
+        questions[]{
+          question,
+          "answer": ${unlocalizedRichTextProjection({ field: "answer" })},
+        },
+      },
       "venue": venue->{
         title,
         "slug": slug.current,
@@ -52,13 +59,6 @@ function blogArticlePageQuery({ slug }: { slug: string }) {
           openingNote,
           contactTitle,
           contactNote,
-        },
-        faq{
-          title,
-          questions[]{
-            question,
-            "answer": ${unlocalizedRichTextProjection({ field: "answer" })},
-          },
         },
       },
       "readMore": *[_type == "blogArticle"
@@ -94,6 +94,20 @@ const sanityBlogArticlePageSchema = z.strictObject({
       .nullable(),
     reviewCount: z.number().int().positive().nullable(),
     body: sanityArticleBodySchema,
+    faq: z
+      .strictObject({
+        title: z.string().min(1),
+        questions: z
+          .array(
+            z.strictObject({
+              question: z.string().min(1),
+              answer: sanityRichTextSchema,
+            }),
+          )
+          .min(3)
+          .max(8),
+      })
+      .nullable(),
     venue: z.strictObject({
       title: z.string().min(1),
       slug: z.string().min(1),
@@ -118,17 +132,6 @@ const sanityBlogArticlePageSchema = z.strictObject({
         openingNote: z.string().min(1),
         contactTitle: z.string().min(1),
         contactNote: z.string().min(1),
-      }),
-      faq: z.strictObject({
-        title: z.string().min(1),
-        questions: z
-          .array(
-            z.strictObject({
-              question: z.string().min(1),
-              answer: sanityRichTextSchema,
-            }),
-          )
-          .min(1),
       }),
     }),
     readMore: z.array(

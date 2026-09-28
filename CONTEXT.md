@@ -66,7 +66,7 @@ A page no Venue owns — join the network, contact, where to find us, legal noti
 _Avoid_: globalPage, generic page, static page, site page
 
 **Blog Article**:
-One post of the blog, written in French only, dated, signed by a Team Member and pinned to the Venue it is about. Nothing on it is translated and no `en` route serves it; the blog exists for search engines and the business writes it in one language. Its page is fixed: cover, summary, Article Body, then the Venue Blog and the author, with no Page Components. [ADR 0013](./docs/adr/0013-blog-is-french-only-and-static.md), [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md).
+One post of the blog, written in French only, dated, signed by a Team Member and pinned to the Venue it is about. Nothing on it is translated and no `en` route serves it; the blog exists for search engines and the business writes it in one language. Its page is fixed: cover, summary, Article Body, then the Venue Blog, its own optional FAQ and the author, with no Page Components. [ADR 0013](./docs/adr/0013-blog-is-french-only-and-static.md), [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md), [ADR 0016](./docs/adr/0016-blog-faq-belongs-to-the-article.md).
 _Avoid_: post, news, article (alone), blog entry
 
 **Article Body**:
@@ -74,7 +74,7 @@ The rich text a Blog Article is written in — paragraphs, two heading levels, b
 _Avoid_: content, post body, rich text (that is the paragraph-only one)
 
 **Venue Blog**:
-One document per Venue closing every Blog Article about it: a Find Us block and an FAQ, both French only. The Venue supplies the address, the map and the booking link; the Venue Blog supplies the words around them. An article whose Venue has none fails the build. [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md).
+One document per Venue closing every Blog Article about it with a Find Us block, French only. The Venue supplies the address, the map and the booking link; the Venue Blog supplies the words around them. The FAQ is not here: each article writes its own. An article whose Venue has none fails the build. [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md), [ADR 0016](./docs/adr/0016-blog-faq-belongs-to-the-article.md).
 _Avoid_: blog settings, venue FAQ, blog footer
 
 **Team Member**:

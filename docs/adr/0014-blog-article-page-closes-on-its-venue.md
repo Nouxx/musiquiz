@@ -1,5 +1,7 @@
 # The Blog Article page closes on its Venue
 
+> The FAQ part is superseded by [ADR 0016](./0016-blog-faq-belongs-to-the-article.md).
+
 The article page ends the same way on every article: a Find Us block, an FAQ, the author, and up to three more articles about the same Venue. None of it is composed per article. Three things had to be decided to get there.
 
 **The tail is fixed, not a Page Component array.** An editor writing an article chooses nothing below the body. A `pageComponents[]` on `blogArticle` would offer choices the design does not have, and would repeat the same Find Us and FAQ on every article of a Venue.
