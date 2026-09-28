@@ -5,6 +5,7 @@ import { clientContactFormBodySchema } from "./clientContact";
 function buildBody(overrides: Record<string, unknown> = {}) {
   return {
     venueSlug: "paris",
+    venueTitle: "Paris",
     firstName: "Camille",
     mail: "camille@example.com",
     phone: "0612345678",
@@ -49,6 +50,13 @@ it("rejects a venue slug that is not a bare slug", () => {
   expect(accepts({ venueSlug: "-paris" })).toBe(false);
   expect(accepts({ venueSlug: "2paris" })).toBe(false);
   expect(accepts({ venueSlug: "a".repeat(41) })).toBe(false);
+});
+
+it("rejects a venue title that breaks the sender name", () => {
+  expect(accepts({ venueTitle: "Paris Bastille" })).toBe(true);
+  expect(accepts({ venueTitle: "" })).toBe(false);
+  expect(accepts({ venueTitle: "Paris\nBcc: someone" })).toBe(false);
+  expect(accepts({ venueTitle: "a".repeat(31) })).toBe(false);
 });
 
 it("requires a first name and caps it", () => {

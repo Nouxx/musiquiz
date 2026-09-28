@@ -123,6 +123,7 @@ type ClientContactForm = {
   type: "clientContactForm";
   images: CmsImage[];
   venueSlug: string;
+  venueTitle: string;
 };
 
 type QuotationForm = {

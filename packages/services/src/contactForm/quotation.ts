@@ -83,7 +83,8 @@ export async function processQuotationForm({
   const { venueSlug, audience, firstName, mail: clientMail } = body;
 
   const venueEmail = buildVenueEmail(venueSlug);
-  const venueName = buildVenueName(venueSlug);
+  // todo: pass the venue title instead
+  const venueName = buildVenueName(capitalizeFirstLetter(venueSlug));
 
   const mergeInfo = adaptQuotationMergeInfo(body);
 

@@ -18,9 +18,10 @@ type Props = Omit<
 > & {
   workerUrl: string;
   venueSlug: string;
+  venueTitle: string;
 };
 
-const { workerUrl, venueSlug, ...rest } = Astro.props;
+const { workerUrl, venueSlug, venueTitle, ...rest } = Astro.props;
 
 const t = getT(getLang(Astro));
 
@@ -39,6 +40,7 @@ const serializedMessages = JSON.stringify(messages).replaceAll("<", "\\u003c");
 <musiquiz-contact-form
   data-worker-url={`${workerUrl}/form/client-contact`}
   data-venue-slug={venueSlug}
+  data-venue-title={venueTitle}
 >
   <ClientContactForm
     {...rest}

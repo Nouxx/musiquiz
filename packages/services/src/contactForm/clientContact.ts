@@ -6,6 +6,7 @@ import { buildVenueEmail } from "./buildVenueEmail";
 import { buildVenueName } from "./buildVenueName";
 import { noReplyMail } from "./noReplyMail";
 import { venueSlugSchema } from "./venueSlugSchema";
+import { venueTitleSchema } from "./venueTitleSchema";
 
 export const clientContactFormLimits = {
   firstName: 80,
@@ -16,6 +17,7 @@ export const clientContactFormLimits = {
 
 export const clientContactFormBodySchema = z.strictObject({
   venueSlug: venueSlugSchema,
+  venueTitle: venueTitleSchema,
   firstName: z.string().min(1).max(clientContactFormLimits.firstName),
   mail: z.email().max(clientContactFormLimits.mail),
   phone: z.string().max(clientContactFormLimits.phone),
@@ -42,10 +44,10 @@ export async function processClientContactForm({
   body: ClientContactFormBody;
   zeptomailToken: string;
 }) {
-  const { venueSlug, firstName, mail: clientMail } = body;
+  const { venueSlug, venueTitle, firstName, mail: clientMail } = body;
 
   const venueEmail = buildVenueEmail(venueSlug);
-  const venueName = buildVenueName(venueSlug);
+  const venueName = buildVenueName(venueTitle);
 
   const mergeInfo = adaptClientContactFormMergeInfo(body);
 

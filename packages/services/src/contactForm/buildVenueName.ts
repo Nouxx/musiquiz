@@ -1,5 +1,3 @@
-import { capitalizeFirstLetter } from "@repo/utils/capitalizeFirstLetter";
-
-export function buildVenueName(venueSlug: string) {
-  return `Musi'Quiz ${capitalizeFirstLetter(venueSlug)}`;
+export function buildVenueName(venueTitle: string) {
+  return `Musi'Quiz ${venueTitle}`;
 }

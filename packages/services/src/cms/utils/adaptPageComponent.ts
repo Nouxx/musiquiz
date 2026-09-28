@@ -116,6 +116,7 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         type: "clientContactForm",
         images: data.images.map((image) => toCmsImage(image)),
         venueSlug: data.venueSlug,
+        venueTitle: data.venueTitle,
       };
     }
 
