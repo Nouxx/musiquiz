@@ -131,6 +131,7 @@ type QuotationForm = {
   audience: "teamBuilding" | "musiTeens";
   services: string[];
   venueSlug: string;
+  venueTitle: string;
 };
 
 type Logos = {

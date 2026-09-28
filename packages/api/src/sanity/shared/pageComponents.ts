@@ -171,7 +171,8 @@ function quotationFormProjection({ lang }: { lang: Lang }) {
       "services": venue->quotationServices[^.audience in audiences]{
         "label": label[language == "${lang}"][0].value
       },
-      "venueSlug": venue->slug.current
+      "venueSlug": venue->slug.current,
+      "venueTitle": venue->title
     }
   `;
 }
@@ -518,6 +519,7 @@ const sanityQuotationFormSchema = z.strictObject({
   // a venue offering nothing for this audience still takes enquiries
   services: z.array(z.strictObject({ label: z.string().min(1) })),
   venueSlug: z.string().min(1),
+  venueTitle: z.string().min(1),
 });
 
 const sanityLogosSchema = z.strictObject({

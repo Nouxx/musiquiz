@@ -22,10 +22,11 @@ type Props = Omit<
 > & {
   workerUrl: string;
   venueSlug: string;
+  venueTitle: string;
   audience: "teamBuilding" | "musiTeens";
 };
 
-const { workerUrl, venueSlug, audience, ...rest } = Astro.props;
+const { workerUrl, venueSlug, venueTitle, audience, ...rest } = Astro.props;
 
 const t = getT(getLang(Astro));
 
@@ -46,6 +47,7 @@ const serializedMessages = JSON.stringify(messages).replaceAll("<", "\\u003c");
 <musiquiz-quotation-form
   data-worker-url={`${workerUrl}/form/quotation`}
   data-venue-slug={venueSlug}
+  data-venue-title={venueTitle}
   data-audience={audience}
 >
   <QuotationForm

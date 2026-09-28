@@ -126,6 +126,7 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         audience: data.audience,
         services: data.services.map((service) => service.label),
         venueSlug: data.venueSlug,
+        venueTitle: data.venueTitle,
       };
     }
 

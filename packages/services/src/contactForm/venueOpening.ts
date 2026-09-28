@@ -107,8 +107,8 @@ export const venueOpeningFormBodySchema = z.strictObject({
 
 export type VenueOpeningFormBody = z.infer<typeof venueOpeningFormBodySchema>;
 
-// the page belongs to no venue, so the lead goes to the network address
-// todo: check with Lionel
+// todo: update to Lionel, Val and the sales
+// todo: move this to the CMS, site settings eventually
 const venueOpeningEmail = "lionel@musiquiz.co";
 const venueOpeningName = "Musi'Quiz";
 
@@ -153,8 +153,6 @@ export async function processVenueOpeningForm({
   const { firstName, mail: applicantMail } = body;
 
   const mergeInfo = adaptVenueOpeningMergeInfo(body);
-
-  console.log("XDEBUG mergeInfo", JSON.stringify(mergeInfo));
 
   const { internalMailTemplateKey, clientTemplateKey } =
     emailTemplateKeys.venueOpening;

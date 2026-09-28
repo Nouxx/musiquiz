@@ -18,6 +18,11 @@ export async function quotationRoute(request: Request, env: Env) {
 	const { confirmationError } = await processQuotationForm({
 		body: parsedBody.data,
 		zeptomailToken: env.ZOHO_API_KEY,
+		sanityConfig: {
+			projectId: env.SANITY_PROJECT_ID,
+			dataset: env.SANITY_DATASET,
+			draft: false,
+		},
 	});
 
 	if (confirmationError) {

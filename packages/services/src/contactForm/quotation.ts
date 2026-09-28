@@ -1,11 +1,13 @@
 import { emailTemplateKeys } from "@repo/api/zeptomail/emailTemplateKeys";
 import { sendEmailWithTemplate } from "@repo/api/zeptomail/sendEmailWithTemplate";
-import { capitalizeFirstLetter } from "@repo/utils/capitalizeFirstLetter";
+import type { SanityConfig } from "@repo/utils/sanityConfig";
 import z from "zod";
 
-import { buildVenueEmail } from "./buildVenueEmail";
 import { buildVenueName } from "./buildVenueName";
+import { getVenueOwnerMails } from "./getVenueOwnerMails";
+import { noReplyMail } from "./noReplyMail";
 import { venueSlugSchema } from "./venueSlugSchema";
+import { venueTitleSchema } from "./venueTitleSchema";
 
 export const quotationFormLimits = {
   lastName: 80,
@@ -22,6 +24,7 @@ export const quotationFormLimits = {
 
 export const quotationFormBodySchema = z.strictObject({
   venueSlug: venueSlugSchema,
+  venueTitle: venueTitleSchema,
   // picks the mail template only; the recipient comes from the venue slug
   audience: z.enum(["teamBuilding", "musiTeens"]),
   lastName: z.string().min(1).max(quotationFormLimits.lastName),
@@ -54,11 +57,11 @@ export function adaptQuotationMergeInfo(body: QuotationFormBody) {
     budget,
     services,
     message,
-    venueSlug,
+    venueTitle,
   } = body;
 
   return {
-    ville: capitalizeFirstLetter(venueSlug),
+    ville: venueTitle,
     prenom: firstName,
     nom: lastName,
     email: mail,
@@ -76,15 +79,18 @@ export function adaptQuotationMergeInfo(body: QuotationFormBody) {
 export async function processQuotationForm({
   body,
   zeptomailToken,
+  sanityConfig,
 }: {
   body: QuotationFormBody;
   zeptomailToken: string;
+  sanityConfig: SanityConfig;
 }) {
-  const { venueSlug, audience, firstName, mail: clientMail } = body;
+  const { venueSlug, venueTitle, audience, firstName, mail: clientMail } =
+    body;
 
-  const venueEmail = buildVenueEmail(venueSlug);
-  // todo: pass the venue title instead
-  const venueName = buildVenueName(capitalizeFirstLetter(venueSlug));
+  const venueName = buildVenueName(venueTitle);
+
+  const ownerMails = await getVenueOwnerMails({ sanityConfig, venueSlug });
 
   const mergeInfo = adaptQuotationMergeInfo(body);
 
@@ -96,15 +102,18 @@ export async function processQuotationForm({
       templateKey: internalMailTemplateKey,
       mergeInfo,
       token: zeptomailToken,
-      senderAddress: venueEmail,
+      senderAddress: noReplyMail,
       senderName: venueName,
-      destinations: [{ address: venueEmail, name: venueName }],
+      destinations: ownerMails.map((ownerMail) => ({
+        address: ownerMail,
+        name: venueName,
+      })),
     }),
     sendEmailWithTemplate({
       templateKey: clientTemplateKey,
       mergeInfo,
       token: zeptomailToken,
-      senderAddress: venueEmail,
+      senderAddress: noReplyMail,
       senderName: venueName,
       destinations: [{ address: clientMail, name: firstName }],
     }),

@@ -12,9 +12,18 @@ vi.mock("@repo/api/zeptomail/sendEmailWithTemplate", () => ({
   sendEmailWithTemplate: vi.fn(),
 }));
 
+vi.mock("@repo/api/sanity/venueOwnerMails", () => ({
+  fetchVenueOwnerMails: vi.fn(async () => ({
+    venue: { ownerMails: ["owner@example.com", "partner@example.com"] },
+  })),
+}));
+
+const sanityConfig = { projectId: "project", dataset: "test", draft: false };
+
 function buildBody(overrides: Record<string, unknown> = {}) {
   return {
     venueSlug: "paris",
+    venueTitle: "Paris",
     audience: "teamBuilding",
     lastName: "Durand",
     firstName: "Camille",
@@ -68,6 +77,13 @@ it("rejects a venue slug that steers the recipient", () => {
   expect(accepts({ venueSlug: "someone@example.com" })).toBe(false);
   expect(accepts({ venueSlug: "paris, someone" })).toBe(false);
   expect(accepts({ venueSlug: "paris\nbcc" })).toBe(false);
+});
+
+it("rejects a venue title that breaks the sender name", () => {
+  expect(accepts({ venueTitle: "Paris Bastille" })).toBe(true);
+  expect(accepts({ venueTitle: "" })).toBe(false);
+  expect(accepts({ venueTitle: "Paris\nBcc: someone" })).toBe(false);
+  expect(accepts({ venueTitle: "a".repeat(31) })).toBe(false);
 });
 
 it("requires both names and caps them", () => {
@@ -124,10 +140,32 @@ it("sends with the template pair of the audience", async () => {
   await processQuotationForm({
     body: quotationFormBodySchema.parse(buildBody({ audience: "musiTeens" })),
     zeptomailToken: "token",
+    sanityConfig,
   });
 
   expect(sent.mock.calls.map(([call]) => call.templateKey)).toEqual([
     emailTemplateKeys.musiTeens.internalMailTemplateKey,
     emailTemplateKeys.musiTeens.clientTemplateKey,
+  ]);
+});
+
+it("sends the internal mail to the venue owners and the copy to the client", async () => {
+  const sent = vi.mocked(sendEmailWithTemplate);
+  sent.mockClear();
+  sent.mockResolvedValue(undefined as never);
+
+  await processQuotationForm({
+    body: quotationFormBodySchema.parse(buildBody()),
+    zeptomailToken: "token",
+    sanityConfig,
+  });
+
+  expect(
+    sent.mock.calls.map(([call]) =>
+      call.destinations.map((destination) => destination.address),
+    ),
+  ).toEqual([
+    ["owner@example.com", "partner@example.com"],
+    ["camille@example.com"],
   ]);
 });
