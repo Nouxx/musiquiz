@@ -12,9 +12,12 @@ vi.mock("@repo/api/zeptomail/sendEmailWithTemplate", () => ({
   sendEmailWithTemplate: vi.fn(),
 }));
 
-vi.mock("@repo/api/sanity/venueOwnerMails", () => ({
-  fetchVenueOwnerMails: vi.fn(async () => ({
-    venue: { ownerMails: ["owner@example.com", "partner@example.com"] },
+vi.mock("@repo/api/sanity/venueMailing", () => ({
+  fetchVenueMailing: vi.fn(async () => ({
+    venue: {
+      title: "Paris",
+      ownerMails: ["owner@example.com", "partner@example.com"],
+    },
   })),
 }));
 
@@ -23,7 +26,6 @@ const sanityConfig = { projectId: "project", dataset: "test", draft: false };
 function buildBody(overrides: Record<string, unknown> = {}) {
   return {
     venueSlug: "paris",
-    venueTitle: "Paris",
     audience: "teamBuilding",
     lastName: "Durand",
     firstName: "Camille",
@@ -79,13 +81,6 @@ it("rejects a venue slug that steers the recipient", () => {
   expect(accepts({ venueSlug: "paris\nbcc" })).toBe(false);
 });
 
-it("rejects a venue title that breaks the sender name", () => {
-  expect(accepts({ venueTitle: "Paris Bastille" })).toBe(true);
-  expect(accepts({ venueTitle: "" })).toBe(false);
-  expect(accepts({ venueTitle: "Paris\nBcc: someone" })).toBe(false);
-  expect(accepts({ venueTitle: "a".repeat(31) })).toBe(false);
-});
-
 it("requires both names and caps them", () => {
   expect(accepts({ lastName: "" })).toBe(false);
   expect(accepts({ firstName: "" })).toBe(false);
@@ -129,7 +124,9 @@ it("joins the ticked services into one merge field", () => {
     buildBody({ services: ["Blind test", "Karaoké"] }),
   );
 
-  expect(adaptQuotationMergeInfo(body).prestations).toBe("Blind test, Karaoké");
+  expect(
+    adaptQuotationMergeInfo({ body, venueTitle: "Paris" }).prestations,
+  ).toBe("Blind test, Karaoké");
 });
 
 it("sends with the template pair of the audience", async () => {
@@ -168,4 +165,24 @@ it("sends the internal mail to the venue owners and the copy to the client", asy
     ["owner@example.com", "partner@example.com"],
     ["camille@example.com"],
   ]);
+});
+
+it("takes the sender name from the venue, never from the request", async () => {
+  expect(accepts({ venueTitle: "Lyon" })).toBe(false);
+
+  const sent = vi.mocked(sendEmailWithTemplate);
+  sent.mockClear();
+  sent.mockResolvedValue(undefined as never);
+
+  await processQuotationForm({
+    body: quotationFormBodySchema.parse(buildBody()),
+    zeptomailToken: "token",
+    sanityConfig,
+  });
+
+  expect(sent.mock.calls.map(([call]) => call.senderName)).toEqual([
+    "Musi'Quiz Paris",
+    "Musi'Quiz Paris",
+  ]);
+  expect(sent.mock.calls[0]?.[0].mergeInfo).toMatchObject({ ville: "Paris" });
 });

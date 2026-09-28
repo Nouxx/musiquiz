@@ -4,10 +4,9 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 import z from "zod";
 
 import { buildVenueName } from "./buildVenueName";
-import { getVenueOwnerMails } from "./getVenueOwnerMails";
+import { getVenueMailing } from "./getVenueMailing";
 import { noReplyMail } from "./noReplyMail";
 import { venueSlugSchema } from "./venueSlugSchema";
-import { venueTitleSchema } from "./venueTitleSchema";
 
 export const clientContactFormLimits = {
   firstName: 80,
@@ -18,7 +17,6 @@ export const clientContactFormLimits = {
 
 export const clientContactFormBodySchema = z.strictObject({
   venueSlug: venueSlugSchema,
-  venueTitle: venueTitleSchema,
   firstName: z.string().min(1).max(clientContactFormLimits.firstName),
   mail: z.email().max(clientContactFormLimits.mail),
   phone: z.string().max(clientContactFormLimits.phone),
@@ -47,11 +45,14 @@ export async function processClientContactForm({
   zeptomailToken: string;
   sanityConfig: SanityConfig;
 }) {
-  const { venueSlug, venueTitle, firstName, mail: clientMail } = body;
+  const { venueSlug, firstName, mail: clientMail } = body;
 
-  const venueName = buildVenueName(venueTitle);
+  const { title, ownerMails } = await getVenueMailing({
+    sanityConfig,
+    venueSlug,
+  });
 
-  const ownerMails = await getVenueOwnerMails({ sanityConfig, venueSlug });
+  const venueName = buildVenueName(title);
 
   const mergeInfo = adaptClientContactFormMergeInfo(body);
 

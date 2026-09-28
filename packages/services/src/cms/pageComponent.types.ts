@@ -123,7 +123,6 @@ type ClientContactForm = {
   type: "clientContactForm";
   images: CmsImage[];
   venueSlug: string;
-  venueTitle: string;
 };
 
 type QuotationForm = {
@@ -131,7 +130,6 @@ type QuotationForm = {
   audience: "teamBuilding" | "musiTeens";
   services: string[];
   venueSlug: string;
-  venueTitle: string;
 };
 
 type Logos = {

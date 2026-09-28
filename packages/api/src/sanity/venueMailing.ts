@@ -4,23 +4,25 @@ import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
 
-function venueOwnerMailsQuery({ venueSlug }: { venueSlug: string }) {
+function venueMailingQuery({ venueSlug }: { venueSlug: string }) {
   return defineQuery(`{
     "venue": *[_type == "venue" && slug.current == "${venueSlug}"][0]{
+      title,
       ownerMails
     }
   }`);
 }
 
-const sanityVenueOwnerMailsSchema = z.strictObject({
+const sanityVenueMailingSchema = z.strictObject({
   venue: z.strictObject({
+    title: z.string().min(1),
     ownerMails: z.array(z.email()).min(1),
   }),
 });
 
-export type SanityVenueOwnerMails = z.infer<typeof sanityVenueOwnerMailsSchema>;
+export type SanityVenueMailing = z.infer<typeof sanityVenueMailingSchema>;
 
-export async function fetchVenueOwnerMails({
+export async function fetchVenueMailing({
   config,
   venueSlug,
 }: {
@@ -28,9 +30,9 @@ export async function fetchVenueOwnerMails({
   venueSlug: string;
 }) {
   return fetchSanityData({
-    queryName: "venueOwnerMails",
-    query: venueOwnerMailsQuery({ venueSlug }),
-    schema: sanityVenueOwnerMailsSchema,
+    queryName: "venueMailing",
+    query: venueMailingQuery({ venueSlug }),
+    schema: sanityVenueMailingSchema,
     config,
   });
 }

@@ -158,8 +158,7 @@ function clientContactFormProjection({ lang }: { lang: Lang }) {
   return `
     _type == "clientContactForm" => {
       "images": images[] ${imageProjection({ lang })},
-      "venueSlug": venue->slug.current,
-      "venueTitle": venue->title
+      "venueSlug": venue->slug.current
     }
   `;
 }
@@ -171,8 +170,7 @@ function quotationFormProjection({ lang }: { lang: Lang }) {
       "services": venue->quotationServices[^.audience in audiences]{
         "label": label[language == "${lang}"][0].value
       },
-      "venueSlug": venue->slug.current,
-      "venueTitle": venue->title
+      "venueSlug": venue->slug.current
     }
   `;
 }
@@ -510,7 +508,6 @@ const sanityClientContactFormSchema = z.strictObject({
   _type: z.literal("clientContactForm"),
   images: z.array(sanityImageSchema).min(1).max(8),
   venueSlug: z.string().min(1),
-  venueTitle: z.string().min(1),
 });
 
 const sanityQuotationFormSchema = z.strictObject({
@@ -519,7 +516,6 @@ const sanityQuotationFormSchema = z.strictObject({
   // a venue offering nothing for this audience still takes enquiries
   services: z.array(z.strictObject({ label: z.string().min(1) })),
   venueSlug: z.string().min(1),
-  venueTitle: z.string().min(1),
 });
 
 const sanityLogosSchema = z.strictObject({

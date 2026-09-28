@@ -4,10 +4,9 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 import z from "zod";
 
 import { buildVenueName } from "./buildVenueName";
-import { getVenueOwnerMails } from "./getVenueOwnerMails";
+import { getVenueMailing } from "./getVenueMailing";
 import { noReplyMail } from "./noReplyMail";
 import { venueSlugSchema } from "./venueSlugSchema";
-import { venueTitleSchema } from "./venueTitleSchema";
 
 export const quotationFormLimits = {
   lastName: 80,
@@ -24,7 +23,6 @@ export const quotationFormLimits = {
 
 export const quotationFormBodySchema = z.strictObject({
   venueSlug: venueSlugSchema,
-  venueTitle: venueTitleSchema,
   // picks the mail template only; the recipient comes from the venue slug
   audience: z.enum(["teamBuilding", "musiTeens"]),
   lastName: z.string().min(1).max(quotationFormLimits.lastName),
@@ -44,7 +42,13 @@ export const quotationFormBodySchema = z.strictObject({
 
 type QuotationFormBody = z.infer<typeof quotationFormBodySchema>;
 
-export function adaptQuotationMergeInfo(body: QuotationFormBody) {
+export function adaptQuotationMergeInfo({
+  body,
+  venueTitle,
+}: {
+  body: QuotationFormBody;
+  venueTitle: string;
+}) {
   const {
     lastName,
     firstName,
@@ -57,7 +61,6 @@ export function adaptQuotationMergeInfo(body: QuotationFormBody) {
     budget,
     services,
     message,
-    venueTitle,
   } = body;
 
   return {
@@ -85,13 +88,16 @@ export async function processQuotationForm({
   zeptomailToken: string;
   sanityConfig: SanityConfig;
 }) {
-  const { venueSlug, venueTitle, audience, firstName, mail: clientMail } = body;
+  const { venueSlug, audience, firstName, mail: clientMail } = body;
 
-  const venueName = buildVenueName(venueTitle);
+  const { title, ownerMails } = await getVenueMailing({
+    sanityConfig,
+    venueSlug,
+  });
 
-  const ownerMails = await getVenueOwnerMails({ sanityConfig, venueSlug });
+  const venueName = buildVenueName(title);
 
-  const mergeInfo = adaptQuotationMergeInfo(body);
+  const mergeInfo = adaptQuotationMergeInfo({ body, venueTitle: title });
 
   const { internalMailTemplateKey, clientTemplateKey } =
     emailTemplateKeys[audience];
