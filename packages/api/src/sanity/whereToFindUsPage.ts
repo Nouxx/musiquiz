@@ -57,6 +57,7 @@ export async function fetchWhereToFindUsPage({
   lang: Lang;
 }) {
   return fetchSanityData({
+    queryName: "whereToFindUsPage",
     query: whereToFindUsPageQuery({ lang }),
     schema: sanityWhereToFindUsPageSchema,
     config,

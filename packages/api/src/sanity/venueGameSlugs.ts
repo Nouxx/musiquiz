@@ -28,6 +28,7 @@ export async function fetchVenueGameSlugs({
   config: SanityConfig;
 }) {
   return fetchSanityData({
+    queryName: "venueGameSlugs",
     query: venueGameSlugsQuery(),
     schema: sanityVenueGameSlugsSchema,
     config,

@@ -45,6 +45,7 @@ export type SanityBlogPage = z.infer<typeof sanityBlogPageSchema>;
 
 export async function fetchBlogPage({ config }: { config: SanityConfig }) {
   return fetchSanityData({
+    queryName: "blogPage",
     query: blogPageQuery(),
     schema: sanityBlogPageSchema,
     config,

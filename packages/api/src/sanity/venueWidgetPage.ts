@@ -55,6 +55,7 @@ export async function fetchVenueWidgetPage({
   pageType: VenueWidgetPageType;
 }) {
   return fetchSanityData({
+    queryName: "venueWidgetPage",
     query: venueWidgetPageQuery({ lang, venueSlug, pageType }),
     schema: sanityVenueWidgetPageSchema,
     config,

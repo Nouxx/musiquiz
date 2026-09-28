@@ -33,6 +33,7 @@ export async function fetchLegalNoticePage({
   lang: Lang;
 }) {
   return fetchSanityData({
+    queryName: "legalNoticePage",
     query: legalNoticePageQuery({ lang }),
     schema: sanityLegalNoticePageSchema,
     config,

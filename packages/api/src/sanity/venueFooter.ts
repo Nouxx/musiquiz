@@ -89,6 +89,7 @@ export async function fetchVenueFooter({
   venueSlug: string;
 }) {
   return fetchSanityData({
+    queryName: "venueFooter",
     query: venueFooterQuery({ lang, venueSlug }),
     schema: sanityVenueFooterSchema,
     config,

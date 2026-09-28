@@ -35,6 +35,18 @@ export const venueGameTemplateId = "venueGame-by-venue";
 export const venueEventTemplateId = "venueEvent-by-venue";
 export const venueBlogTemplateId = "venueBlog-by-venue";
 
+// when a doc is draft, others document that relies on it can have issues
+// because they expect it to be published
+// this fixes it
+function venueReference(venueId: string) {
+  return {
+    _type: "reference",
+    _ref: venueId,
+    _weak: true,
+    _strengthenOnPublish: { type: "venue" },
+  };
+}
+
 export default defineConfig({
   name: "default",
   title: "MusiQuiz",
@@ -78,7 +90,7 @@ export default defineConfig({
           pageType: string;
         }) => ({
           pageType,
-          venue: { _type: "reference", _ref: venueId },
+          venue: venueReference(venueId),
         }),
       },
       {
@@ -87,7 +99,7 @@ export default defineConfig({
         schemaType: "venueGame",
         parameters: [{ name: "venueId", type: "string" }],
         value: ({ venueId }: { venueId: string }) => ({
-          venue: { _type: "reference", _ref: venueId },
+          venue: venueReference(venueId),
         }),
       },
       {
@@ -96,7 +108,7 @@ export default defineConfig({
         schemaType: "venueBlog",
         parameters: [{ name: "venueId", type: "string" }],
         value: ({ venueId }: { venueId: string }) => ({
-          venue: { _type: "reference", _ref: venueId },
+          venue: venueReference(venueId),
         }),
       },
       {
@@ -105,7 +117,7 @@ export default defineConfig({
         schemaType: "venueEvent",
         parameters: [{ name: "venueId", type: "string" }],
         value: ({ venueId }: { venueId: string }) => ({
-          venue: { _type: "reference", _ref: venueId },
+          venue: venueReference(venueId),
         }),
       },
     ],

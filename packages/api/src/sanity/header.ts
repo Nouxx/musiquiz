@@ -82,6 +82,7 @@ export async function fetchHeader({
   venueSlug: string;
 }) {
   return fetchSanityData({
+    queryName: "header",
     query: headerQuery({ lang, venueSlug }),
     schema: sanityHeaderSchema,
     config,
