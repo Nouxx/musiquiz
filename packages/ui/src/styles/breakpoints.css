@@ -19,7 +19,7 @@
    plus the header's own `--space-6` gutter on each side = 81rem. Under it
    the logo + nav + CTA row stops fitting, so:
      - Header.astro          the nav moves into the burger sheet
-     - RemoteImage.astro     `header-logo` drops 200px → 140px, in the
+     - RemoteImage.astro     `header-logo` drops 155px → 140px, in the
                              stylesheet AND in the `sizes` attribute string,
                              which is TS and must be edited in step
 

@@ -71,14 +71,8 @@ A blog article in draft is breaking the schema in SSR
 
 ## T&C optional
 
-## Quotation form destination from the CMS
-
-Venue > Contact > new field, quotation email(s).
+not all venues have t&c because not all operated by MQ.
 
 ## Translate UI to FR
 
 https://www.sanity.io/docs/studio/localizing-studio-ui
-
-## New page on draft mode
-
-- new page in draft mode (ex: new game) cant be previewed, need to also enable the error in preview mode

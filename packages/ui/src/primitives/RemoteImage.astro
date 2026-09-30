@@ -20,9 +20,9 @@ interface Props {
 
 const variants = {
   "header-logo": {
-    widths: [140, 200, 280, 400, 600],
-    // 80rem = "header collapsed"
-    sizes: "(width < 80rem) 140px, 200px",
+    widths: [140, 155, 280, 310, 465],
+    // 80rem = "header collapsed"; 155px = the desktop 38px height at 260x64
+    sizes: "(width < 80rem) 140px, 155px",
   },
   "menu-logo": { widths: [144, 288, 432], sizes: "144px" },
   "footer-logo": {
@@ -149,8 +149,10 @@ const srcSetWidths =
 
   /* 80rem = "header collapsed" */
   @media (width >= 80rem) {
+    /* the height of a size "m" Button, so the logo never makes the header taller */
     .header-logo {
-      width: 200px;
+      width: auto;
+      height: calc(2 * var(--space-2) + 1rem * 1.375);
     }
   }
 
