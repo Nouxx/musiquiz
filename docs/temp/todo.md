@@ -7,16 +7,9 @@
 
 Homepage >
 
-## Concept (TDB)
+### Reviews widget
 
-- CGV per center
-- All socials per center, fallback to global
-- one page for joining the network: "ouvrez votre salle"
-- One link to Canada, Brussels in
 - Reviews widget: fetch from Google, by center, from 4 to 5 stars, with word analysis (ex: EVJF)
-- cards grid: in 2 + 1 layout, center the last track
-- hotspots for the map: draggable by the user
-- center star.svg
 
 ### Custom venue page
 
@@ -39,6 +32,8 @@ Strongest liquid glass effect
 - Accueil: global
 - Nos expériences: signature only
 - Pareil pour occasions (sans le signature)
+- pas de "offrir une partie"
+- Booking CTA goes to a new page: Reserver
 
 ### Blog
 
