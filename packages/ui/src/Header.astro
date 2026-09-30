@@ -57,7 +57,9 @@ const hasSocials = Astro.slots.has("socials");
 
 <header class="header">
   <div class="row">
-    <RemoteImage image={logo} variant="header-logo" loading="eager" />
+    <div class="logo">
+      <RemoteImage image={logo} variant="header-logo" loading="eager" />
+    </div>
 
     <div class="bar">
       <nav class="nav">
@@ -165,6 +167,9 @@ const hasSocials = Astro.slots.has("socials");
 
 <style>
   .header {
+    /* thickness of the gradient edge below the pill */
+    --bar-edge: 3px;
+
     position: fixed;
     inset-block-start: 0;
     inset-inline: 0;
@@ -174,9 +179,6 @@ const hasSocials = Astro.slots.has("socials");
   }
 
   .row {
-    /* thickness of the gradient edge below the bar */
-    --bar-edge: 3px;
-
     position: relative;
     display: flex;
     justify-content: space-between;
@@ -189,7 +191,15 @@ const hasSocials = Astro.slots.has("socials");
     border-radius: var(--radius-pill);
   }
 
-  .row::before {
+  .logo {
+    position: relative;
+    display: flex;
+    border-radius: var(--radius-pill);
+  }
+
+  /* one pill drawn twice: the whole row on desktop, the logo alone when collapsed */
+  .row::before,
+  .logo::before {
     position: absolute;
     inset: 0;
     z-index: -1;
@@ -199,7 +209,8 @@ const hasSocials = Astro.slots.has("socials");
     content: "";
   }
 
-  .row::after {
+  .row::after,
+  .logo::after {
     position: absolute;
     inset: 0 0 calc(-1 * var(--bar-edge)) 0;
 
@@ -262,6 +273,14 @@ const hasSocials = Astro.slots.has("socials");
   }
 
   /* 80rem = "header collapsed" */
+  @media (width >= 80rem) {
+    .logo::before,
+    .logo::after {
+      content: none;
+    }
+  }
+
+  /* 80rem = "header collapsed" */
   @media (width < 80rem) {
     .nav {
       display: none;
@@ -277,6 +296,11 @@ const hasSocials = Astro.slots.has("socials");
       content: none;
     }
 
+    .logo {
+      padding-block: var(--space-2);
+      padding-inline: var(--space-4);
+    }
+
     .bar {
       gap: var(--space-3);
     }
@@ -286,8 +310,8 @@ const hasSocials = Astro.slots.has("socials");
     }
   }
 
-  /* 24rem = "header CTA dropped" */
-  @media (width < 24rem) {
+  /* 27rem = "header CTA dropped" */
+  @media (width < 27rem) {
     /* the sheet behind the burger carries the same CTA, so nothing is lost */
     .cta {
       display: none;

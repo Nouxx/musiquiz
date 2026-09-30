@@ -156,25 +156,16 @@
    stylesheet and in its `sizes` string. Figma step, no derivation recorded.
 
    ------------------------------------------------------------
-   24rem — header CTA dropped
+   27rem — header CTA dropped
    ------------------------------------------------------------
    Used by Header.astro. Below it the collapsed header row stops fitting and
    the row overflows the viewport, which shows as a band of page background
-   past the right edge on a 320px phone.
+   past the right edge on a phone.
 
-   Derived from the collapsed row's fixed parts: `--space-6` gutter on each
-   side (3rem) + the 38px-tall logo, ~154px wide (9.65rem) + the row's
-   `--space-3` gap (0.75rem) + the bar's `--space-3` gap (0.75rem) + the
-   burger chip (2.25rem) = 16.4rem, leaving 7.6rem for the CTA pill. The pill measures `--space-6` of padding
-   on each side (3rem) plus its label, and the label is the static i18n string
-   `header.book` — "Réserver" in the worst case, roughly 4rem at `title-base`.
-   Rounded up half a rem because that label width is estimated, not measured:
-   a longer translation moves this number, unlike the Sanity-driven nav labels
-   above.
-
-   Effect: 320, 360 and 375px viewports drop the CTA and keep only logo +
-   burger; 390px and up keep it. Booking stays reachable below 24rem through
-   the CTA that `MobileMenu` renders inside the burger sheet.
+   Effect: every common phone width (320 to 414px) drops the CTA and keeps
+   only the logo pill + burger; 432px and up keep it. Booking stays reachable
+   below 27rem through the CTA that `MobileMenu` renders inside the burger
+   sheet.
 
    ------------------------------------------------------------
    280px — Logos heading column ceiling
