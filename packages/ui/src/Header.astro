@@ -229,7 +229,7 @@ const hasSocials = Astro.slots.has("socials");
   .bar {
     display: flex;
     flex: 1;
-    gap: var(--space-8);
+    gap: var(--space-4);
     align-items: center;
     justify-content: flex-end;
   }
@@ -272,16 +272,16 @@ const hasSocials = Astro.slots.has("socials");
     display: none;
   }
 
-  /* 80rem = "header collapsed" */
-  @media (width >= 80rem) {
+  /* 68rem = "header collapsed" */
+  @media (width >= 68rem) {
     .logo::before,
     .logo::after {
       content: none;
     }
   }
 
-  /* 80rem = "header collapsed" */
-  @media (width < 80rem) {
+  /* 68rem = "header collapsed" */
+  @media (width < 68rem) {
     .nav {
       display: none;
     }

@@ -45,14 +45,15 @@ const mainLinks: (NavLink | NavMenu)[] = [
     label: t("header.home"),
     url: routes.venueHome(venueSlug),
   },
-  {
-    label: t("header.concept"),
-    url: "#todo",
-  },
-  {
-    label: t("header.experiences"),
-    links: data.experiences,
-  },
+  data.experiences.length === 1
+    ? {
+        label: t("header.concept"),
+        url: data.experiences[0].url,
+      }
+    : {
+        label: t("header.experiences"),
+        links: data.experiences,
+      },
   {
     label: t("header.events"),
     links: data.events,

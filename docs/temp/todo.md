@@ -9,8 +9,6 @@ Homepage >
 
 ## Concept (TDB)
 
-If one eventFormat, "Nos expériences" becomes "Concept"
-
 - CGV per center
 - All socials per center, fallback to global
 - one page for joining the network: "ouvrez votre salle"

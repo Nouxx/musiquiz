@@ -13,18 +13,21 @@
    siblings that must change with it.
 
    ------------------------------------------------------------
-   80rem — header collapsed
+   68rem — header collapsed
    ------------------------------------------------------------
-   Derived, not picked: the nav bar is drawn at `--size-content` (78rem)
-   plus the header's own `--space-6` gutter on each side = 81rem. Under it
-   the logo + nav + CTA row stops fitting, so Header.astro moves the nav
-   into the burger sheet.
+   Measured, not picked: the widest row is the French one (4 links, the
+   longest being "Offrir une partie" and the "Nos expériences" menu), and
+   logo + nav + CTA + the row's padding and gaps + the `--space-6` gutters
+   stop fitting below 1059px. 68rem (1088px) adds ~30px on top, enough for
+   a classic scrollbar, which media queries count as viewport width.
 
-   Note it is a worst-case number, tied to the widest the bar can be drawn,
-   not to what a given venue's links actually measure. Nav labels come from
-   Sanity, so a venue with few short labels collapses earlier than it needs
-   to. Making the flip content-driven needs JS (measure the row, compare
-   against available width) — deliberately not done.
+   The top-level labels are the locale strings in apps/web, not Sanity
+   content; the menus' entries sit in the dropdown and take no row width.
+   The menu buttons' inline padding is fluid (it grows as the viewport
+   narrows), so re-measure at the candidate width, not at a wide one.
+   Adding a link or lengthening a label moves this number. Making the flip
+   content-driven needs JS (measure the row, compare against available
+   width) — deliberately not done.
 
    ------------------------------------------------------------
    60rem — footer columns stacked / cover columns stacked
