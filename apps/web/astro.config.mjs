@@ -1,5 +1,6 @@
 // @ts-check
 import cloudflare from "@astrojs/cloudflare";
+import sitemap from "@astrojs/sitemap";
 import { defineConfig, envField, fontProviders } from "astro/config";
 
 // WARNING: process.env reads variables set by the CLI
@@ -19,6 +20,8 @@ export default defineConfig({
   // output directory differs to prevent a build erasing the other
   outDir: isSsrBuild ? "./dist/ssr" : "./dist/static",
   adapter: isSsrBuild ? cloudflare({ imageService: "passthrough" }) : undefined,
+  // no i18n option for sitemap: it pairs pages by identical path, and localized slugs (reserver/book) break that.
+  integrations: isSsrBuild ? [] : [sitemap()],
   image: {
     // domains allow list for image optimization
     // only the static build needs it, the ssr build passthrough image service

@@ -7,6 +7,8 @@
     "dev:stop": "pnpm --recursive --parallel dev:stop",
     "clean": "pnpm --recursive --parallel clean",
     "build": "pnpm --recursive --parallel build",
+    "preview": "pnpm --filter web preview:static",
+    "seo:audit": "pnpm --filter web seo:audit",
     "build:web:static": "pnpm --filter web build:static",
     "build:web:ssr": "pnpm --filter web build:ssr",
     "build:worker": "pnpm --filter worker build",

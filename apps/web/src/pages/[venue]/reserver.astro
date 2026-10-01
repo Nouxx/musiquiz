@@ -36,7 +36,6 @@ const alternates = getAlternatesUrl(getSite(Astro), (routes) =>
   title={getT(lang)("header.book")}
   city={data.venueTitle}
   description={data.pageCover.subHeading}
-  noindex
   {alternates}
 >
   <VenueBookingPage venueSlug={venue} {data} {alternates} />

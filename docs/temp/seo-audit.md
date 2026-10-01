@@ -75,7 +75,7 @@ Severity: **P0** blocks indexing or ranking; **P1** real loss; **P2** polish.
 | E2 | `/en/paris/` and `/en/lille/` have the H1 "Lorem ipsum". | `dist/static/en/*/index.html` | P0 (content) |
 | E3 | Venue × game and venue × event pages are near-duplicates across cities. To rank locally each needs city-specific material: address, access, neighbourhood, local reviews, local photos, local FAQ. | page diff Paris vs Lille | P1 |
 | E4 | Most content photos have an empty `alt` (23–33 per venue/game/event page). The schema makes `alt` optional; editors left it blank. Image search and accessibility both lose. | `imageWithAltType.ts`; audit script | P1 |
-| E5 | Booking and gift pages are thin (~170 words on Paris) because the 4espace widget renders client-side. Fine as conversion pages; they should not be the page that ranks for "réserver blind test Paris" — the venue home should. | — | P2 |
+| E5 | Booking and gift pages are thin (~170 words on Paris) because the 4espace widget renders client-side. They stay indexed (Q5): booking earns a brand sitelink, gift targets its own queries ("bon cadeau blind test Paris") and needs static copy around the widget. | — | P2 |
 | E6 | Planned but missing pages that are search targets: FAQ, press, "ouvrez votre salle" (exists as `rejoindre-le-reseau`), per-venue CGV. | `docs/temp/todo.md` | P2 |
 | E7 | Exactly one H1 per page. | 61 / 61 | ✓ |
 
@@ -115,7 +115,7 @@ Each phase is shippable alone; decision numbers refer to §4. Code lives where t
 3. **Footer links** (Q8, Q10, Q18): drop `gdpr`/`rgpd`; `faq` and `press` become absolute.
 4. **Alternates map** in `@repo/services/routing`: route key + params → `{ fr, en? }` absolute URLs. Feeds canonical, hreflang and the language switch (fixes C2). Blog keys return fr only.
 5. **`<SeoHead>` in `Layout`**: `title`, `description`, `canonical`, `alternates`, `ogImage`, `noindex`. Emits title (template `{page} · Musi'Quiz {city}`), description, canonical, hreflang (+ `x-default` → fr), OG, Twitter card.
-6. **`@astrojs/sitemap`** with its `i18n` option; excludes `noindex` pages (booking, gift — Q5).
+6. **`@astrojs/sitemap`**, static build only, no filter (every page is indexable, Q5). No `i18n` option: it pairs pages by identical path, which localized slugs break; hreflang lives in the HTML head.
 7. **`robots.txt`** from an endpoint, pointing at the sitemap under `site`.
 8. **404 page** + `"not_found_handling": "404-page"` in the static env of `wrangler.jsonc`.
 9. **SSR worker**: `X-Robots-Tag: noindex, nofollow` on every response, on top of Cloudflare Access.
@@ -204,7 +204,7 @@ After:
 | Q2 | Legacy site | `https://musiquizlejeu.fr` ranks today. Its URLs are inventoried in §5 and all get a 301. |
 | Q3 | Google Business Profile | One profile per venue, owned by Musi'Quiz, website link → the venue page. NAP identical to the `venue` document. |
 | Q4 | SEO fields fallback | Optional `seo` fields; empty → derived from the page cover heading/intro (already localized, so no cross-language fallback; ADR 0003 holds). |
-| Q5 | Booking / gift pages | `noindex, follow`, out of the sitemap, unless §5 shows a legacy booking page ranking. |
+| Q5 | Booking / gift pages | Indexed, in the sitemap. Booking: brand sitelink ("Réserver"), keeps the value of legacy `…/reservations/` 301s. Gift: own commercial, seasonal queries; gets static copy around the widget. Revisit against the GSC baseline only if the legacy equivalents show no impressions. |
 | Q6 | Trailing slash | Always. `trailingSlash: "always"`, every route in `getRoutesForLang` ends in `/`, a test guards it. |
 | Q7 | City-specific copy | Written by the client, from briefs produced here (Q11). |
 | Q8 / Q10 / Q18 | Unbuilt pages | `gdpr`/`rgpd` link removed. FAQ and press links kept, made absolute (`/faq/`, `/presse/`, `/en/faq/`, `/en/press/`). **Launch blocker: both pages exist or both links are removed before the switch.** The CI check (Phase 6) allowlists them explicitly until then. |
@@ -221,7 +221,7 @@ After:
 | Q22 / Q31 | Legacy blog (73 posts) | All migrated into Sanity by the client, by hand. Same slug under `/blog/`, except emoji slugs (new clean slug + 301). Keep the original publication date in `publishedAt`. |
 | Q23 | `musiquiz.ca` | Same company. Its France pages 301 to `musiquiz.co`; it keeps Canada only. The new site links out to it, no cross-domain hreflang. |
 | Q24 / Q30 | National activity pages | At the root: `/evg-evjf/`, `/team-building/`… (English under `/en/`). A Sanity validation forbids a venue slug equal to an activity slug. Built: EVG/EVJF, team building, teens, gift voucher. Each lists the venues offering it and links to the city pages. `/concept/` → home. |
-| Q25 | Booking pages | Confirmed `noindex`. Legacy `…/reservations/` → 301 → `/<city>/reserver/`. |
+| Q25 | Booking pages | Indexed (Q5). Legacy `…/reservations/` → 301 → `/<city>/reserver/`. |
 | Q29 | Blog article closing link | `venue` becomes optional, new optional `activity` field. Closes on the venue if set, else the national activity page, else `/ou-nous-trouver/`. Amend ADR 0014. |
 | Q32 | English for new cities | Missing `en` fields machine-translated by script, then reviewed. ADR 0003 stays strict. |
 | Q16 | Legacy domain lifetime | Kept and redirecting indefinitely (Google's floor is one year; backlinks and bookmarks outlive it). |
