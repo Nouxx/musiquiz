@@ -7,7 +7,8 @@ import { defineConfig, envField, fontProviders } from "astro/config";
 const isSsrBuild = process.env.SSR_BUILD === "true";
 
 export default defineConfig({
-  site: "https://musiquiz.co",
+  // a build variable, so the preview build can emit its own canonical and hreflang
+  site: process.env.SITE_URL ?? "https://musiquiz.co",
 
   // help enforcing the always trailing slashes policy on URLs
   // because the previous site already has this URL pattern (simplify migration)
