@@ -1,13 +1,25 @@
 ---
+import { getContactPageData } from "@repo/services/cms/getContactPageData";
 import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
 
 import ContactPage from "../../components/pages/ContactPage.astro";
 import Layout from "../../layouts/Layout.astro";
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getSite } from "../../libs/getSite";
+
+const data = await getContactPageData({
+  lang: getLang(Astro),
+  config: getSanityConfigFromEnvironment(),
+});
 
 const alternates = getAlternatesUrl(getSite(Astro), (routes) => routes.contact);
 ---
 
-<Layout {alternates}>
-  <ContactPage />
+<Layout
+  title={data.pageCover.heading}
+  description={data.pageCover.subHeading}
+  {alternates}
+>
+  <ContactPage {data} {alternates} />
 </Layout>

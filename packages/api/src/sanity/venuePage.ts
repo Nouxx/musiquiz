@@ -21,6 +21,7 @@ function venuePageQuery({
     "venuePage": *[_type == "venuePage"
       && venue->slug.current == "${venueSlug}"
       && pageType == "home"][0]{
+      "venueTitle": venue->title,
       pageCover ${pageCoverProjection({ lang })},
       "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
     }
@@ -29,6 +30,7 @@ function venuePageQuery({
 
 const sanityVenuePageSchema = z.strictObject({
   venuePage: z.strictObject({
+    venueTitle: z.string().min(1),
     pageCover: sanityPageCoverSchema({ hasCta: true }),
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
   }),

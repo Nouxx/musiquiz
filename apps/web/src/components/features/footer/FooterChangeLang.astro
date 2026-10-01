@@ -2,6 +2,7 @@
 import Button from "@repo/ui/primitives/Button";
 
 import { getLang } from "../../../libs/getLang";
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import { getOtherLang } from "../../../libs/getOtherLang";
 
@@ -9,16 +10,17 @@ const currentLang = getLang(Astro);
 const otherLang = getOtherLang(currentLang);
 
 interface Props {
-  venueSlug?: string;
+  alternates: Alternates;
 }
 
-const { venueSlug } = Astro.props;
+const { alternates } = Astro.props;
 
-const routes = getRoutesForLang(otherLang.lang);
+const alternate = alternates[otherLang.lang];
 
-// currently the lang switch button always redirect to home
-// todo: make it redirect to the current page equivalent in /en
-const route = venueSlug ? routes.venueHome(venueSlug) : routes.home;
+// relative, or the preview worker would link to production
+const route = alternate
+  ? new URL(alternate).pathname
+  : getRoutesForLang(otherLang.lang).home;
 ---
 
 <Button

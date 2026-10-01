@@ -15,6 +15,7 @@ function adaptVenueWidgetPage({
   data: SanityVenueWidgetPage;
 }): VenueWidgetPage {
   return {
+    venueTitle: data.venuePage.venueTitle,
     pageCover: toPageCover({ data: data.venuePage.pageCover }),
     componentsBeforeWidget:
       data.venuePage.componentsBeforeWidget?.map((component) =>

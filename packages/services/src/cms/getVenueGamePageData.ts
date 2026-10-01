@@ -15,6 +15,7 @@ function adaptVenueGamePage({
   data: SanityVenueGamePage;
 }): VenueGamePage {
   return {
+    venueTitle: data.venueGame.venueTitle,
     gameName: data.venueGame.gameName,
     pageCover: toPageCover({ data: data.venueGame.pageCover }),
     components:

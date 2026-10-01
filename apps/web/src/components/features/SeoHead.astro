@@ -1,18 +1,23 @@
 ---
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
+
 import { getLang } from "../../libs/getLang";
 import { getSite } from "../../libs/getSite";
 
 export interface Props {
-  /** @example "Blind test", rendered "Blind test · Musi'Quiz" */
+  /** @example "Pixel Games", rendered "Pixel Games · Musi'Quiz Paris" */
   title?: string;
+  /** @example "Paris" */
+  city?: string;
   description?: string;
-  alternates: { fr: string; en?: string };
+  alternates: Alternates;
   ogImage?: string;
   noindex?: boolean;
 }
 
 const {
   title,
+  city,
   description,
   alternates,
   ogImage,
@@ -28,7 +33,8 @@ if (!canonical) {
 }
 
 const brand = "Musi'Quiz";
-const fullTitle = title ? `${title} · ${brand}` : brand;
+const brandWithCity = city ? `${brand} ${city}` : brand;
+const fullTitle = title ? `${title} · ${brandWithCity}` : brandWithCity;
 
 const ogLocales = { fr: "fr_FR", en: "en_GB" } as const;
 const otherLang = lang === "fr" ? "en" : "fr";

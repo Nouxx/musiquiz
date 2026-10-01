@@ -29,5 +29,5 @@ const alternates = {
 
 <Layout {title} description={data.intro} {alternates}>
   <BlogHead slot="head" articleCount={data.articles.length} {page} />
-  <BlogPage {data} {page} />
+  <BlogPage {data} {page} {alternates} />
 </Layout>

@@ -1,20 +1,23 @@
 ---
-import { getTermsAndConditionsPageData } from "@repo/services/cms/getTermsAndConditionsPageData";
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
+import type { TermsAndConditionsPage as TermsAndConditionsPageData } from "@repo/services/cms/types";
 import VenueTerms from "@repo/ui/VenueTerms";
 
 import { getLang } from "../../libs/getLang";
-import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getT } from "../../libs/i18n";
 import Footer from "../features/Footer.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
 
+interface Props {
+  data: TermsAndConditionsPageData;
+  alternates: Alternates;
+}
+
 const lang = getLang(Astro);
 const t = getT(lang);
 
-const { pageCover, intro, venues } = await getTermsAndConditionsPageData({
-  lang,
-  config: getSanityConfigFromEnvironment(),
-});
+const { data, alternates } = Astro.props;
+const { pageCover, intro, venues } = data;
 ---
 
 <VenuePageCover data={pageCover} height="m" />
@@ -35,4 +38,4 @@ const { pageCover, intro, venues } = await getTermsAndConditionsPageData({
   }))}
 />
 
-<Footer />
+<Footer {alternates} />

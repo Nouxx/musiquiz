@@ -205,6 +205,7 @@ export type ContactPage = {
 };
 
 export type VenuePage = {
+  venueTitle: string;
   pageCover: PageCover;
   components: PageComponent[];
 };
@@ -212,18 +213,21 @@ export type VenuePage = {
 export type VenueWidgetPageType = "gift" | "book";
 
 export type VenueWidgetPage = {
+  venueTitle: string;
   pageCover: PageCover;
   componentsBeforeWidget: PageComponent[];
   componentsAfterWidget: PageComponent[];
 };
 
 export type VenueGamePage = {
+  venueTitle: string;
   gameName: string;
   pageCover: PageCover;
   components: PageComponent[];
 };
 
 export type VenueEventPage = {
+  venueTitle: string;
   eventName: string;
   pageCover: PageCover;
   components: PageComponent[];

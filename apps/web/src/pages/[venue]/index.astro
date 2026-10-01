@@ -1,10 +1,13 @@
 ---
+import { getVenuePageData } from "@repo/services/cms/getVenuePageData";
 import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
 
 import VenuePage from "../../components/pages/VenuePage.astro";
 import VenueLayout from "../../layouts/VenueLayout.astro";
-import { getVenuesSlugParameters } from "../../libs/getVenuesSlugParameters";
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getSite } from "../../libs/getSite";
+import { getVenuesSlugParameters } from "../../libs/getVenuesSlugParameters";
 
 export async function getStaticPaths() {
   const params = await getVenuesSlugParameters();
@@ -13,11 +16,24 @@ export async function getStaticPaths() {
 
 const { venue } = Astro.params;
 
+const lang = getLang(Astro);
+
+const data = await getVenuePageData({
+  lang,
+  venueSlug: venue,
+  config: getSanityConfigFromEnvironment(),
+});
+
 const alternates = getAlternatesUrl(getSite(Astro), (routes) =>
   routes.venueHome(venue),
 );
 ---
 
-<VenueLayout venueSlug={venue} {alternates}>
-  <VenuePage venueSlug={venue} />
+<VenueLayout
+  venueSlug={venue}
+  city={data.venueTitle}
+  description={data.pageCover.subHeading}
+  {alternates}
+>
+  <VenuePage venueSlug={venue} {data} {alternates} />
 </VenueLayout>

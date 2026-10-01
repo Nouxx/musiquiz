@@ -1,4 +1,5 @@
 ---
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import { getVenueFooterData } from "@repo/services/cms/getVenueFooterData";
 import Footer from "@repo/ui/Footer";
 import FooterBottom from "@repo/ui/footer/FooterBottom";
@@ -21,9 +22,10 @@ const lang = getLang(Astro);
 
 interface Props {
   venueSlug: string;
+  alternates: Alternates;
 }
 
-const { venueSlug } = Astro.props;
+const { venueSlug, alternates } = Astro.props;
 
 const footerData = await getVenueFooterData({
   venueSlug,
@@ -47,7 +49,7 @@ const { logo, socials, contact, openHours, games, venueTitle, paymentMethods } =
     <FooterContact {contact} />
     <FooterVenueGames {games} />
     <FooterChangeVenue {venueTitle} />
-    <FooterGeneralInformation {venueSlug} />
+    <FooterGeneralInformation {alternates} />
   </FooterSection>
 
   <FooterBottom>

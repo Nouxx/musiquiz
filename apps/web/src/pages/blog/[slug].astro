@@ -40,5 +40,5 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 <Layout title={data.title} description={data.excerpt} {alternates}>
   <BlogArticleHead slot="head" {data} {breadcrumbs} />
-  <BlogArticlePage {data} {breadcrumbs} />
+  <BlogArticlePage {data} {breadcrumbs} {alternates} />
 </Layout>

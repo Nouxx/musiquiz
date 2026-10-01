@@ -1,22 +1,21 @@
 ---
-import { getLegalNoticePageData } from "@repo/services/cms/getLegalNoticePageData";
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
+import type { LegalNoticePage as LegalNoticePageData } from "@repo/services/cms/types";
 import TextBody from "@repo/ui/TextBody";
 
-import { getLang } from "../../libs/getLang";
-import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import Footer from "../features/Footer.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
 
-const lang = getLang(Astro);
+interface Props {
+  data: LegalNoticePageData;
+  alternates: Alternates;
+}
 
-const pageData = await getLegalNoticePageData({
-  lang,
-  config: getSanityConfigFromEnvironment(),
-});
+const { data, alternates } = Astro.props;
 ---
 
-<VenuePageCover data={pageData.pageCover} height="m" />
+<VenuePageCover data={data.pageCover} height="m" />
 
-<TextBody body={pageData.body} />
+<TextBody body={data.body} />
 
-<Footer />
+<Footer {alternates} />

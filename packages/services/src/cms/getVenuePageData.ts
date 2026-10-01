@@ -11,6 +11,7 @@ import { toPageCover } from "./utils/toPageCover";
 
 function adaptVenuePage({ data }: { data: SanityVenuePage }): VenuePage {
   return {
+    venueTitle: data.venuePage.venueTitle,
     pageCover: toPageCover({ data: data.venuePage.pageCover }),
     components:
       data.venuePage.pageComponents?.map((component) =>

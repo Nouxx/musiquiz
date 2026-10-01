@@ -1,10 +1,14 @@
 ---
+import { getVenueWidgetPageData } from "@repo/services/cms/getVenueWidgetPageData";
 import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
 
 import VenueBookingPage from "../../../components/pages/VenueBookingPage.astro";
 import VenueLayout from "../../../layouts/VenueLayout.astro";
-import { getVenuesSlugParameters } from "../../../libs/getVenuesSlugParameters";
+import { getLang } from "../../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../../libs/getSanityConfigFromEnvironment";
 import { getSite } from "../../../libs/getSite";
+import { getT } from "../../../libs/i18n";
+import { getVenuesSlugParameters } from "../../../libs/getVenuesSlugParameters";
 
 export async function getStaticPaths() {
   const params = await getVenuesSlugParameters();
@@ -13,11 +17,27 @@ export async function getStaticPaths() {
 
 const { venue } = Astro.params;
 
+const lang = getLang(Astro);
+
+const data = await getVenueWidgetPageData({
+  lang,
+  venueSlug: venue,
+  pageType: "book",
+  config: getSanityConfigFromEnvironment(),
+});
+
 const alternates = getAlternatesUrl(getSite(Astro), (routes) =>
   routes.venueBook(venue),
 );
 ---
 
-<VenueLayout venueSlug={venue} {alternates} noindex>
-  <VenueBookingPage venueSlug={venue} />
+<VenueLayout
+  venueSlug={venue}
+  title={getT(lang)("header.book")}
+  city={data.venueTitle}
+  description={data.pageCover.subHeading}
+  noindex
+  {alternates}
+>
+  <VenueBookingPage venueSlug={venue} {data} {alternates} />
 </VenueLayout>
