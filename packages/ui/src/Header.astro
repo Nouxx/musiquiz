@@ -57,7 +57,9 @@ const hasSocials = Astro.slots.has("socials");
 
 <header class="header">
   <div class="row">
-    <RemoteImage image={logo} variant="header-logo" loading="eager" />
+    <div class="logo">
+      <RemoteImage image={logo} variant="header-logo" loading="eager" />
+    </div>
 
     <div class="bar">
       <nav class="nav">
@@ -165,6 +167,9 @@ const hasSocials = Astro.slots.has("socials");
 
 <style>
   .header {
+    /* thickness of the gradient edge below the pill */
+    --bar-edge: 3px;
+
     position: fixed;
     inset-block-start: 0;
     inset-inline: 0;
@@ -174,30 +179,27 @@ const hasSocials = Astro.slots.has("socials");
   }
 
   .row {
-    display: flex;
-    gap: var(--space-10);
-    align-items: center;
-    justify-content: space-between;
-    max-inline-size: var(--size-content);
-    margin-inline: auto;
-  }
-
-  .bar {
-    /* thickness of the gradient edge below the bar */
-    --bar-edge: 3px;
-
     position: relative;
     display: flex;
-
-    gap: var(--space-8);
+    justify-content: space-between;
+    gap: var(--space-10);
     align-items: center;
-
+    max-inline-size: var(--size-content);
+    margin-inline: auto;
     padding-block: var(--space-2);
-    padding-inline: var(--space-5) var(--space-2);
+    padding-inline: var(--space-10) var(--space-2);
     border-radius: var(--radius-pill);
   }
 
-  .bar::before {
+  .logo {
+    position: relative;
+    display: flex;
+    border-radius: var(--radius-pill);
+  }
+
+  /* one pill drawn twice: the whole row on desktop, the logo alone when collapsed */
+  .row::before,
+  .logo::before {
     position: absolute;
     inset: 0;
     z-index: -1;
@@ -207,7 +209,8 @@ const hasSocials = Astro.slots.has("socials");
     content: "";
   }
 
-  .bar::after {
+  .row::after,
+  .logo::after {
     position: absolute;
     inset: 0 0 calc(-1 * var(--bar-edge)) 0;
 
@@ -221,6 +224,14 @@ const hasSocials = Astro.slots.has("socials");
       linear-gradient(#000 0 0);
     mask-composite: exclude;
     content: "";
+  }
+
+  .bar {
+    display: flex;
+    flex: 1;
+    gap: var(--space-4);
+    align-items: center;
+    justify-content: flex-end;
   }
 
   .links {
@@ -261,24 +272,37 @@ const hasSocials = Astro.slots.has("socials");
     display: none;
   }
 
-  /* 80rem = "header collapsed" */
-  @media (width < 80rem) {
+  /* 68rem = "header collapsed" */
+  @media (width >= 68rem) {
+    .logo::before,
+    .logo::after {
+      content: none;
+    }
+  }
+
+  /* 68rem = "header collapsed" */
+  @media (width < 68rem) {
     .nav {
       display: none;
     }
 
     .row {
       gap: var(--space-6);
+      padding: 0;
+    }
+
+    .row::before,
+    .row::after {
+      content: none;
+    }
+
+    .logo {
+      padding-block: var(--space-2);
+      padding-inline: var(--space-4);
     }
 
     .bar {
       gap: var(--space-3);
-      padding: 0;
-    }
-
-    .bar::before,
-    .bar::after {
-      content: none;
     }
 
     .burger {
@@ -286,8 +310,8 @@ const hasSocials = Astro.slots.has("socials");
     }
   }
 
-  /* 24rem = "header CTA dropped" */
-  @media (width < 24rem) {
+  /* 27rem = "header CTA dropped" */
+  @media (width < 27rem) {
     /* the sheet behind the burger carries the same CTA, so nothing is lost */
     .cta {
       display: none;

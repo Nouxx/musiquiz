@@ -13,21 +13,21 @@
    siblings that must change with it.
 
    ------------------------------------------------------------
-   80rem — header collapsed
+   68rem — header collapsed
    ------------------------------------------------------------
-   Derived, not picked: the nav bar is drawn at `--size-content` (78rem)
-   plus the header's own `--space-6` gutter on each side = 81rem. Under it
-   the logo + nav + CTA row stops fitting, so:
-     - Header.astro          the nav moves into the burger sheet
-     - RemoteImage.astro     `header-logo` drops 200px → 140px, in the
-                             stylesheet AND in the `sizes` attribute string,
-                             which is TS and must be edited in step
+   Measured, not picked: the widest row is the French one (4 links, the
+   longest being "Offrir une partie" and the "Nos expériences" menu), and
+   logo + nav + CTA + the row's padding and gaps + the `--space-6` gutters
+   stop fitting below 1059px. 68rem (1088px) adds ~30px on top, enough for
+   a classic scrollbar, which media queries count as viewport width.
 
-   Note it is a worst-case number, tied to the widest the bar can be drawn,
-   not to what a given venue's links actually measure. Nav labels come from
-   Sanity, so a venue with few short labels collapses earlier than it needs
-   to. Making the flip content-driven needs JS (measure the row, compare
-   against available width) — deliberately not done.
+   The top-level labels are the locale strings in apps/web, not Sanity
+   content; the menus' entries sit in the dropdown and take no row width.
+   The menu buttons' inline padding is fluid (it grows as the viewport
+   narrows), so re-measure at the candidate width, not at a wide one.
+   Adding a link or lengthening a label moves this number. Making the flip
+   content-driven needs JS (measure the row, compare against available
+   width) — deliberately not done.
 
    ------------------------------------------------------------
    60rem — footer columns stacked / cover columns stacked
@@ -159,25 +159,16 @@
    stylesheet and in its `sizes` string. Figma step, no derivation recorded.
 
    ------------------------------------------------------------
-   24rem — header CTA dropped
+   27rem — header CTA dropped
    ------------------------------------------------------------
    Used by Header.astro. Below it the collapsed header row stops fitting and
    the row overflows the viewport, which shows as a band of page background
-   past the right edge on a 320px phone.
+   past the right edge on a phone.
 
-   Derived from the collapsed row's fixed parts: `--space-6` gutter on each
-   side (3rem) + the 140px logo (8.75rem) + the row's `--space-6` gap (1.5rem)
-   + the bar's `--space-3` gap (0.75rem) + the burger chip (2.25rem) = 16.25rem,
-   leaving 7.75rem for the CTA pill. The pill measures `--space-6` of padding
-   on each side (3rem) plus its label, and the label is the static i18n string
-   `header.book` — "Réserver" in the worst case, roughly 4rem at `title-base`.
-   Rounded up half a rem because that label width is estimated, not measured:
-   a longer translation moves this number, unlike the Sanity-driven nav labels
-   above.
-
-   Effect: 320, 360 and 375px viewports drop the CTA and keep only logo +
-   burger; 390px and up keep it. Booking stays reachable below 24rem through
-   the CTA that `MobileMenu` renders inside the burger sheet.
+   Effect: every common phone width (320 to 414px) drops the CTA and keeps
+   only the logo pill + burger; 432px and up keep it. Booking stays reachable
+   below 27rem through the CTA that `MobileMenu` renders inside the burger
+   sheet.
 
    ------------------------------------------------------------
    280px — Logos heading column ceiling
