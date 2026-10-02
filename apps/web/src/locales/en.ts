@@ -377,4 +377,11 @@ export const en: EnglishKeys = {
     saturday: "Saturday",
     sunday: "Sunday",
   },
+  notFound: {
+    title: "Page not found",
+    heading: "This page does not exist",
+    body: "The link may be outdated, or the address may contain a typo.",
+    home: "Back to the homepage",
+    whereToFindUs: "Find a venue",
+  },
 };

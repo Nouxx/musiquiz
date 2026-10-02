@@ -10,7 +10,7 @@ export interface Props {
   /** @example "Paris" */
   city?: string;
   description?: string;
-  alternates: Alternates;
+  alternates: Alternates | undefined;
   ogImage?: string;
   noindex?: boolean;
 }
@@ -26,9 +26,9 @@ const {
 
 const lang = getLang(Astro);
 
-const canonical = alternates[lang];
+const canonical = alternates ? alternates[lang] : undefined;
 
-if (!canonical) {
+if (alternates && !canonical) {
   throw new Error(`${Astro.url.pathname} has no ${lang} alternate`);
 }
 
@@ -45,9 +45,9 @@ const ogImageUrl = ogImage && new URL(ogImage, getSite(Astro)).href;
 {description && <meta name="description" content={description} />}
 {noindex && <meta name="robots" content="noindex, follow" />}
 
-<link rel="canonical" href={canonical} />
+{canonical && <link rel="canonical" href={canonical} />}
 {
-  alternates.en && (
+  alternates?.en && (
     <>
       <link rel="alternate" hreflang="fr" href={alternates.fr} />
       <link rel="alternate" hreflang="en" href={alternates.en} />
@@ -60,10 +60,10 @@ const ogImageUrl = ogImage && new URL(ogImage, getSite(Astro)).href;
 <meta property="og:site_name" content={brand} />
 <meta property="og:title" content={fullTitle} />
 {description && <meta property="og:description" content={description} />}
-<meta property="og:url" content={canonical} />
+{canonical && <meta property="og:url" content={canonical} />}
 <meta property="og:locale" content={ogLocales[lang]} />
 {
-  alternates[otherLang] && (
+  alternates?.[otherLang] && (
     <meta property="og:locale:alternate" content={ogLocales[otherLang]} />
   )
 }
