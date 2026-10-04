@@ -20,15 +20,7 @@ function adaptVenueFooter({
   lang: Lang;
   venueSlug: string;
 }): VenueFooter {
-  const {
-    footerLogo,
-    facebookUrl,
-    instagramUrl,
-    linkedinUrl,
-    tiktokUrl,
-    youtubeUrl,
-    acceptedPaymentMethods,
-  } = data.siteSettings;
+  const { footerLogo, acceptedPaymentMethods } = data.siteSettings;
 
   const {
     title,
@@ -47,12 +39,13 @@ function adaptVenueFooter({
 
   return {
     logo: toCmsImage(footerLogo),
+    // a venue's own account replaces the brand's on the same network
     socials: {
-      facebookUrl,
-      instagramUrl,
-      linkedinUrl,
-      tiktokUrl,
-      youtubeUrl,
+      facebookUrl: data.venue.facebookUrl ?? data.siteSettings.facebookUrl,
+      instagramUrl: data.venue.instagramUrl ?? data.siteSettings.instagramUrl,
+      linkedinUrl: data.venue.linkedinUrl ?? data.siteSettings.linkedinUrl,
+      tiktokUrl: data.venue.tiktokUrl ?? data.siteSettings.tiktokUrl,
+      youtubeUrl: data.venue.youtubeUrl ?? data.siteSettings.youtubeUrl,
     },
     newsletter: true,
     venueTitle: title,

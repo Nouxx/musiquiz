@@ -22,6 +22,14 @@ function adaptBusiness(
     telephone: venue.phone,
     email: venue.mail,
     mapUrl: venue.googleMapsLink,
+    sameAs: [
+      venue.googleMapsLink,
+      venue.facebookUrl,
+      venue.instagramUrl,
+      venue.linkedinUrl,
+      venue.tiktokUrl,
+      venue.youtubeUrl,
+    ].filter((url) => url !== null),
     openingHours: toOpeningHours({
       Monday: venue.mondayOpeningHours,
       Tuesday: venue.tuesdayOpeningHours,

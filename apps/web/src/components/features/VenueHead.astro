@@ -35,6 +35,7 @@ const structuredData = toInlineScriptJson({
   telephone: business.telephone,
   email: business.email,
   hasMap: business.mapUrl,
+  sameAs: business.sameAs,
   openingHoursSpecification: business.openingHours.map((hours) => ({
     "@type": "OpeningHoursSpecification",
     dayOfWeek: hours.days,

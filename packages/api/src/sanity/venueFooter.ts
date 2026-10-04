@@ -35,6 +35,11 @@ function venueFooterQuery({
       mail,
       phone,
       googleMapsLink,
+      facebookUrl,
+      instagramUrl,
+      linkedinUrl,
+      tiktokUrl,
+      youtubeUrl,
       "games": *[_type == "venueGame" && venue._ref == ^._id]
         | order(coalesce(game->displayOrder, 999) asc, game->name asc){
         "name": game->name,
@@ -66,6 +71,11 @@ const sanityVenueFooterSchema = z.strictObject({
     mail: z.email(),
     phone: z.string().min(1),
     googleMapsLink: z.string().nullable(),
+    facebookUrl: z.url().nullable(),
+    instagramUrl: z.url().nullable(),
+    linkedinUrl: z.url().nullable(),
+    tiktokUrl: z.url().nullable(),
+    youtubeUrl: z.url().nullable(),
     games: z
       .array(
         z.strictObject({

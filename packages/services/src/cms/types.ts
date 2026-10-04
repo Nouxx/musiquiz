@@ -72,6 +72,8 @@ export type LocalBusiness = {
   telephone: string;
   email: string;
   mapUrl: string;
+  /** the venue's Google listing and its own accounts, never the brand's */
+  sameAs: string[];
   openingHours: OpeningHours[];
   /** across every game the venue prices, undefined when none is priced */
   priceRange: { lowest: number; highest: number } | undefined;
