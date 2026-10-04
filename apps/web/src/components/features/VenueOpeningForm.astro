@@ -15,6 +15,7 @@ import {
 import type { VenueOpeningCopy, VenueOpeningOption } from "@repo/ui/types";
 import VenueOpeningForm from "@repo/ui/VenueOpeningForm";
 import { WORKER_URL } from "astro:env/client";
+import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
 
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
@@ -223,8 +224,7 @@ const messages = {
   invalidMail: t("form.errors.mail"),
 };
 
-// a `<` inside the copy would close the script element early
-const serializedMessages = JSON.stringify(messages).replaceAll("<", "\\u003c");
+const serializedMessages = toInlineScriptJson(messages);
 ---
 
 <musiquiz-venue-opening-form

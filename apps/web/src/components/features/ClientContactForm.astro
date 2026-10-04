@@ -2,6 +2,7 @@
 import { clientContactFormLimits } from "@repo/services/contactForm/clientContact";
 import ClientContactForm from "@repo/ui/ClientContactForm";
 import type { ComponentProps } from "astro/types";
+import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
 
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
@@ -32,8 +33,7 @@ const messages = {
   counter: t("form.counter", { used: "__USED__", max: "__MAX__" }),
 };
 
-// a `<` inside the copy would close the script element early
-const serializedMessages = JSON.stringify(messages).replaceAll("<", "\\u003c");
+const serializedMessages = toInlineScriptJson(messages);
 ---
 
 <musiquiz-contact-form

@@ -2,6 +2,7 @@
 import { getImage } from "astro:assets";
 import type { BlogArticlePage } from "@repo/services/cms/types";
 import type { BreadcrumbItem } from "@repo/ui/types";
+import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
 
 interface Props {
   data: BlogArticlePage;
@@ -67,11 +68,11 @@ const faqPage = data.faq && {
   })),
 };
 
-const structuredData = JSON.stringify([
+const structuredData = toInlineScriptJson([
   blogPosting,
   breadcrumbList,
   ...(faqPage ? [faqPage] : []),
-]).replaceAll("<", "\\u003c"); // escape "<" so a value containing </script> can't terminate this block
+]);
 ---
 
 <script is:inline type="application/ld+json" set:html={structuredData} />

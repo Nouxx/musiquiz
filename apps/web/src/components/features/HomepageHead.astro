@@ -1,6 +1,7 @@
 ---
 import { getImage } from "astro:assets";
 import type { Organization } from "@repo/services/cms/types";
+import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
 
 import { getSite } from "../../libs/getSite";
 
@@ -40,10 +41,7 @@ const webSite = {
   publisher: { "@id": organizationId },
 };
 
-const structuredData = JSON.stringify([organizationData, webSite]).replaceAll(
-  "<",
-  "\\u003c",
-); // escape "<" so a value containing </script> can't terminate this block
+const structuredData = toInlineScriptJson([organizationData, webSite]);
 ---
 
 <script is:inline type="application/ld+json" set:html={structuredData} />
