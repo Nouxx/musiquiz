@@ -2,11 +2,13 @@
 import { getVenueGamePageData } from "@repo/services/cms/getVenueGamePageData";
 import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
 
+import BreadcrumbHead from "../../../../components/features/BreadcrumbHead.astro";
 import VenueGamePage from "../../../../components/pages/VenueGamePage.astro";
 import VenueLayout from "../../../../layouts/VenueLayout.astro";
 import { getLang } from "../../../../libs/getLang";
 import { getSanityConfigFromEnvironment } from "../../../../libs/getSanityConfigFromEnvironment";
 import { getSite } from "../../../../libs/getSite";
+import { getVenueBreadcrumbs } from "../../../../libs/getVenueBreadcrumbs";
 import { getVenueGamesSlugParameters } from "../../../../libs/getVenueGamesSlugParameters";
 
 export async function getStaticPaths() {
@@ -28,6 +30,12 @@ const data = await getVenueGamePageData({
 const alternates = getAlternatesUrl(getSite(Astro), (routes) =>
   routes.venueGame(venue, game),
 );
+
+const breadcrumbs = getVenueBreadcrumbs(
+  lang,
+  { slug: venue, title: data.venueTitle },
+  data.gameName,
+);
 ---
 
 <VenueLayout
@@ -36,5 +44,6 @@ const alternates = getAlternatesUrl(getSite(Astro), (routes) =>
   {...data.seo}
   {alternates}
 >
+  <BreadcrumbHead slot="head" items={breadcrumbs} />
   <VenueGamePage venueSlug={venue} {data} {alternates} />
 </VenueLayout>

@@ -1,0 +1,19 @@
+---
+import type { BreadcrumbItem } from "@repo/ui/types";
+import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
+
+import { getSite } from "../../libs/getSite";
+import { toBreadcrumbList } from "../../libs/toBreadcrumbList";
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+
+const structuredData = toInlineScriptJson(
+  toBreadcrumbList(getSite(Astro), items),
+);
+---
+
+<script is:inline type="application/ld+json" set:html={structuredData} />
