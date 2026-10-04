@@ -5,6 +5,7 @@ import {
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { BlogArticlePage } from "./types";
+import { toAddressLine } from "./utils/toAddressLine";
 import { toArticleBody } from "./utils/toArticleBody";
 import { toBlogArticleSummary } from "./utils/toBlogArticleSummary";
 import { toCmsImage } from "./utils/toCmsImage";
@@ -47,7 +48,7 @@ function adaptBlogArticlePage({
       media: toCmsImage(venueBlog.findUs.media),
       venueTitle: venue.title,
       location: venue.location,
-      address: venue.addressLine,
+      address: toAddressLine(venue.address),
       mapsUrl: venue.googleMapsLink,
     },
     faq: article.faq

@@ -4,6 +4,7 @@ import { defineQuery } from "groq";
 import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
+import { addressProjection, sanityAddressSchema } from "./shared/address";
 import { imageProjection, sanityImageSchema } from "./shared/image";
 
 function headerQuery({ lang, venueSlug }: { lang: Lang; venueSlug: string }) {
@@ -28,7 +29,7 @@ function headerQuery({ lang, venueSlug }: { lang: Lang; venueSlug: string }) {
         "slug": event->slug.current
       },
       venueLogoLight ${imageProjection({ lang })},
-      addressLine,
+      "address": ${addressProjection},
       phone,
       mail,
       googleMapsLink
@@ -63,7 +64,7 @@ const sanityHeaderSchema = z.strictObject({
       )
       .min(1),
     venueLogoLight: sanityImageSchema,
-    addressLine: z.string(),
+    address: sanityAddressSchema,
     phone: z.string().min(1),
     mail: z.email(),
     googleMapsLink: z.string(),

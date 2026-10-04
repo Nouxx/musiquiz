@@ -6,6 +6,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { Header } from "./types";
+import { toAddressLine } from "./utils/toAddressLine";
 import { toCmsImage } from "./utils/toCmsImage";
 
 function adaptHeader({
@@ -21,7 +22,7 @@ function adaptHeader({
     logo: toCmsImage(data.siteSettings.headerLogo),
     venue: {
       logo: toCmsImage(data.venue.venueLogoLight),
-      address: data.venue.addressLine,
+      address: toAddressLine(data.venue.address),
       mapsLink: data.venue.googleMapsLink,
       mailLabel: data.venue.mail,
       mailHref: getMailto(data.venue.mail),

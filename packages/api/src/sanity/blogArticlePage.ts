@@ -3,6 +3,7 @@ import { defineQuery } from "groq";
 import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
+import { addressProjection, sanityAddressSchema } from "./shared/address";
 import {
   articleBodyProjection,
   sanityArticleBodySchema,
@@ -41,7 +42,7 @@ function blogArticlePageQuery({ slug }: { slug: string }) {
         title,
         "slug": slug.current,
         "location": location{ lat, lng },
-        addressLine,
+        "address": ${addressProjection},
         googleMapsLink,
       },
       "author": author->{
@@ -115,7 +116,7 @@ const sanityBlogArticlePageSchema = z.strictObject({
       title: z.string().min(1),
       slug: z.string().min(1),
       location: z.strictObject({ lat: z.number(), lng: z.number() }),
-      addressLine: z.string().min(1),
+      address: sanityAddressSchema,
       googleMapsLink: z.string().min(1),
     }),
     author: z.strictObject({

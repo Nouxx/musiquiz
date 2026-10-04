@@ -3,6 +3,7 @@ import { getMailto } from "@repo/utils/getMailto";
 import { getTel } from "@repo/utils/getTel";
 
 import type { PageComponent } from "../pageComponent.types";
+import { toAddressLine } from "./toAddressLine";
 import { toCard } from "./toCard";
 import { toCmsImage } from "./toCmsImage";
 import { toCta } from "./toCta";
@@ -77,7 +78,7 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         media: toCmsImage(data.media),
         venueTitle: data.venueTitle,
         location: data.location,
-        address: data.address,
+        address: toAddressLine(data.address),
         mapsUrl: data.mapsUrl,
         addressNote: data.addressNote,
         openingTitle: data.openingTitle,

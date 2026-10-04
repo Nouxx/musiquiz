@@ -8,6 +8,7 @@ import type { Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { ContactPage } from "./types";
+import { toAddressLine } from "./utils/toAddressLine";
 import { toCmsImage } from "./utils/toCmsImage";
 import { toPageCover } from "./utils/toPageCover";
 import { toSeo } from "./utils/toSeo";
@@ -43,7 +44,7 @@ function adaptContactPage(data: SanityContactPage): ContactPage {
       items: venues.map((venue) => ({
         title: venue.title,
         logo: toCmsImage(venue.venueLogoDark),
-        address: venue.addressLine,
+        address: toAddressLine(venue.address),
         mailLabel: venue.mail,
         mailHref: getMailto(venue.mail),
         phoneLabel: venue.phone,

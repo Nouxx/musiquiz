@@ -4,6 +4,7 @@ import { defineQuery } from "groq";
 import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
+import { addressProjection, sanityAddressSchema } from "./shared/address";
 import { imageProjection, sanityImageSchema } from "./shared/image";
 import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
 import { sanitySeoSchema, seoProjection } from "./shared/seo";
@@ -29,7 +30,7 @@ function contactPageQuery({ lang }: { lang: Lang }) {
     "venues": *[_type == "venue"] | order(title asc){
       title,
       venueLogoDark ${imageProjection({ lang })},
-      addressLine,
+      "address": ${addressProjection},
       phone,
       mail,
     },
@@ -62,7 +63,7 @@ const sanityContactPageSchema = z.strictObject({
       z.strictObject({
         title: z.string().min(1),
         venueLogoDark: sanityImageSchema,
-        addressLine: z.string().min(1),
+        address: sanityAddressSchema,
         phone: z.string().min(1),
         mail: z.email(),
       }),

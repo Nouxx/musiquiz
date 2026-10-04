@@ -4,7 +4,7 @@ import { toInlineScriptJson } from "./toInlineScriptJson";
 
 it("escapes a closing script tag", () => {
   expect(toInlineScriptJson({ text: "</script><script>alert(1)" })).toBe(
-    '{"text":"\\u003c/script>\\u003cscript>alert(1)"}',
+    String.raw`{"text":"\u003c/script>\u003cscript>alert(1)"}`,
   );
 });
 
