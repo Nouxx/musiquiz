@@ -1,0 +1,49 @@
+---
+import type { LocalBusiness } from "@repo/services/cms/types";
+import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
+
+import { getOrganizationId } from "../../libs/getOrganizationId";
+import { getSite } from "../../libs/getSite";
+import { getVenueBusinessId } from "../../libs/getVenueBusinessId";
+
+interface Props {
+  venueSlug: string;
+  /** @example "Paris" */
+  city: string;
+  business: LocalBusiness;
+}
+
+const { venueSlug, city, business } = Astro.props;
+
+const site = getSite(Astro);
+const url = new URL(Astro.url.pathname, site).href;
+
+const priceRange =
+  business.priceRange &&
+  (business.priceRange.lowest === business.priceRange.highest
+    ? `${business.priceRange.lowest} €`
+    : `${business.priceRange.lowest}–${business.priceRange.highest} €`);
+
+const structuredData = toInlineScriptJson({
+  "@context": "https://schema.org",
+  "@type": "EntertainmentBusiness",
+  "@id": getVenueBusinessId(site, venueSlug),
+  name: `Musi'Quiz ${city}`,
+  url,
+  address: { "@type": "PostalAddress", ...business.address },
+  geo: { "@type": "GeoCoordinates", ...business.geo },
+  telephone: business.telephone,
+  email: business.email,
+  hasMap: business.mapUrl,
+  openingHoursSpecification: business.openingHours.map((hours) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: hours.days,
+    opens: hours.opens,
+    closes: hours.closes,
+  })),
+  priceRange,
+  parentOrganization: { "@id": getOrganizationId(site) },
+});
+---
+
+<script is:inline type="application/ld+json" set:html={structuredData} />

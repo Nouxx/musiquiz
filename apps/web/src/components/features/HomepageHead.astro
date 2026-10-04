@@ -3,6 +3,7 @@ import { getImage } from "astro:assets";
 import type { Organization } from "@repo/services/cms/types";
 import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
 
+import { getOrganizationId } from "../../libs/getOrganizationId";
 import { getSite } from "../../libs/getSite";
 
 interface Props {
@@ -12,7 +13,7 @@ interface Props {
 const { organization } = Astro.props;
 
 const site = getSite(Astro);
-const organizationId = new URL("#organization", site).href;
+const organizationId = getOrganizationId(site);
 
 const logo = await getImage({
   src: organization.logo.url,
