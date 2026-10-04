@@ -1,4 +1,6 @@
 ---
+import { getImage } from "astro:assets";
+import type { CmsImage } from "@repo/services/cms/types";
 import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 
 import { getLang } from "../../libs/getLang";
@@ -11,7 +13,7 @@ export interface Props {
   city?: string;
   description?: string;
   alternates: Alternates | undefined;
-  ogImage?: string;
+  ogImage?: CmsImage;
   noindex?: boolean;
 }
 
@@ -38,7 +40,21 @@ const fullTitle = title ? `${title} · ${brandWithCity}` : brandWithCity;
 
 const ogLocales = { fr: "fr_FR", en: "en_GB" } as const;
 const otherLang = lang === "fr" ? "en" : "fr";
-const ogImageUrl = ogImage && new URL(ogImage, getSite(Astro)).href;
+
+// the size Facebook, LinkedIn and WhatsApp crop to
+const OG_WIDTH = 1200;
+const OG_HEIGHT = 630;
+
+const og =
+  ogImage &&
+  (await getImage({
+    src: ogImage.url,
+    width: OG_WIDTH,
+    height: OG_HEIGHT,
+    fit: "cover",
+    format: "jpeg",
+  }));
+const ogImageUrl = og && new URL(og.src, getSite(Astro)).href;
 ---
 
 <title>{fullTitle}</title>
@@ -67,7 +83,17 @@ const ogImageUrl = ogImage && new URL(ogImage, getSite(Astro)).href;
     <meta property="og:locale:alternate" content={ogLocales[otherLang]} />
   )
 }
-{ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+{
+  ogImageUrl && (
+    <>
+      <meta property="og:image" content={ogImageUrl} />
+      <meta property="og:image:type" content="image/jpeg" />
+      <meta property="og:image:width" content={String(OG_WIDTH)} />
+      <meta property="og:image:height" content={String(OG_HEIGHT)} />
+      {ogImage.alt && <meta property="og:image:alt" content={ogImage.alt} />}
+    </>
+  )
+}
 {/* X reads title, description and image from the og: tags */}
 <meta
   name="twitter:card"

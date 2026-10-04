@@ -91,6 +91,7 @@ export type Seo = {
   /** without the brand and city the head appends */
   title: string;
   description: string | undefined;
+  ogImage: CmsImage;
   noindex: boolean;
 };
 

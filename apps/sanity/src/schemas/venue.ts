@@ -6,6 +6,7 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 import { MapPositionInput } from "../components/MapPositionInput";
 import type { StringRule } from "sanity";
 import { frenchValue, type LocalizedEntry } from "./shared/frenchValue";
+import { ogImageDescription, ogImageWarning } from "./shared/seo";
 import TagIcon from "@sanity/icons/Tag";
 import { HomeIcon } from "@sanity/icons/Home";
 import { BookIcon } from "@sanity/icons/Book";
@@ -210,6 +211,16 @@ export const venueType = defineType({
       description: "Black version, shown on plain surfaces. Prefer SVG files",
       group: "general",
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "ogImage",
+      title: "Sharing image",
+      description: ogImageDescription(
+        "Used by every page of this venue that has no sharing image of its own. Leave empty to use the one in Site Settings.",
+      ),
+      type: "image",
+      group: "general",
+      validation: (rule) => rule.custom(ogImageWarning).warning(),
     }),
     defineField({
       name: "quotationServices",

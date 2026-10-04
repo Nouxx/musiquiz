@@ -32,7 +32,9 @@ function descriptionDescription(fallback: string) {
   return `The <meta name="description"> tag, also sent as og:description. The text under the headline in search results and shared links. Say what this page offers that no other page does: Google shows an extract of the page instead when the description is generic. ${DESCRIPTION_MAX_LENGTH} characters at most. Leave empty to use ${fallback}.`;
 }
 
-const ogImageDescription = `The og:image tag: the picture shown when the page is shared on WhatsApp, Instagram or LinkedIn. Setting it also switches X (Twitter) previews to the large-image layout (twitter:card = summary_large_image). ${OG_WIDTH}×${OG_HEIGHT}. Leave empty to use the default one.`;
+export function ogImageDescription(fallback: string) {
+  return `The og:image tag: the picture shown when a page is shared on WhatsApp, Instagram or LinkedIn, and in X (Twitter) previews. ${OG_WIDTH}×${OG_HEIGHT}, or it gets cropped to it from the center. ${fallback}`;
+}
 
 const noindexDescription =
   'Adds <meta name="robots" content="noindex, follow">. Keeps this page out of search results; search engines still follow its links, and visitors can still reach it by link.';
@@ -71,7 +73,7 @@ function plain(warning: (value: string) => string | undefined) {
 }
 
 // asset ids carry the original size: image-<hash>-1200x630-jpg
-function ogImageWarning(value?: ImageValue) {
+export function ogImageWarning(value?: ImageValue) {
   const size = value?.asset?._ref.match(/-(\d+)x(\d+)-\w+$/);
 
   if (!size) return true;
@@ -111,7 +113,9 @@ export const seoType = defineType({
     defineField({
       name: "ogImage",
       title: "Sharing image",
-      description: ogImageDescription,
+      description: ogImageDescription(
+        "Leave empty to use the venue's sharing image, else the one in Site Settings.",
+      ),
       type: "image",
       validation: (rule) => rule.custom(ogImageWarning).warning(),
     }),
@@ -151,7 +155,9 @@ export const blogSeoType = defineType({
     defineField({
       name: "ogImage",
       title: "Sharing image",
-      description: ogImageDescription,
+      description: ogImageDescription(
+        "Leave empty to use the cover on an article, else the one in Site Settings.",
+      ),
       type: "image",
       validation: (rule) => rule.custom(ogImageWarning).warning(),
     }),

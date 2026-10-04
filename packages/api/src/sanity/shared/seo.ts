@@ -1,10 +1,20 @@
 import type { Lang } from "@repo/utils/lang";
 import { z } from "zod";
 
+import { imageProjection, sanityImageSchema } from "./image";
+
+const siteOgImage = `*[_type == "siteSettings"][0].ogImage`;
+
+// `venue` is undefined outside venue documents, which skips that step
 export function seoProjection({ lang }: { lang: Lang }) {
   return `{
     "title": seo.title[language == "${lang}"][0].value,
     "description": seo.description[language == "${lang}"][0].value,
+    "ogImage": select(
+      defined(seo.ogImage.asset) => seo.ogImage,
+      defined(venue->ogImage.asset) => venue->ogImage,
+      ${siteOgImage}
+    ) ${imageProjection({ lang })},
     "noindex": coalesce(seo.noindex, false),
   }`;
 }
@@ -14,6 +24,11 @@ export function blogSeoProjection() {
   return `{
     "title": seo.title,
     "description": seo.description,
+    "ogImage": select(
+      defined(seo.ogImage.asset) => seo.ogImage,
+      defined(cover.asset) => cover,
+      ${siteOgImage}
+    ) ${imageProjection({ lang: "fr" })},
     "noindex": coalesce(seo.noindex, false),
   }`;
 }
@@ -21,6 +36,7 @@ export function blogSeoProjection() {
 export const sanitySeoSchema = z.strictObject({
   title: z.string().min(1).nullable(),
   description: z.string().min(1).nullable(),
+  ogImage: sanityImageSchema,
   noindex: z.boolean(),
 });
 
