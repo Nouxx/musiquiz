@@ -1,0 +1,49 @@
+---
+import { getImage } from "astro:assets";
+import type { Organization } from "@repo/services/cms/types";
+
+import { getSite } from "../../libs/getSite";
+
+interface Props {
+  organization: Organization;
+}
+
+const { organization } = Astro.props;
+
+const site = getSite(Astro);
+const organizationId = new URL("#organization", site).href;
+
+const logo = await getImage({
+  src: organization.logo.url,
+  width: organization.logo.width,
+  height: organization.logo.height,
+  ...(organization.logo.mimeType === "image/svg+xml" && { format: "svg" }),
+});
+
+const organizationData = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": organizationId,
+  name: "Musi'Quiz",
+  url: site.href,
+  logo: new URL(logo.src, site).href,
+  sameAs: organization.sameAs,
+  telephone: organization.telephone,
+  email: organization.email,
+};
+
+const webSite = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Musi'Quiz",
+  url: site.href,
+  publisher: { "@id": organizationId },
+};
+
+const structuredData = JSON.stringify([organizationData, webSite]).replaceAll(
+  "<",
+  "\\u003c",
+); // escape "<" so a value containing </script> can't terminate this block
+---
+
+<script is:inline type="application/ld+json" set:html={structuredData} />

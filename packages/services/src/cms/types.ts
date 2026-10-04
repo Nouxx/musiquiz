@@ -54,6 +54,16 @@ export type Homepage = {
   venuesCta: { label: string; url: string } | undefined;
   components: PageComponent[];
   seo: Seo;
+  organization: Organization;
+};
+
+export type Organization = {
+  /** square, for search results */
+  logo: CmsImage;
+  /** the brand's social profiles */
+  sameAs: string[];
+  telephone: string;
+  email: string;
 };
 
 export type CoverBackground =

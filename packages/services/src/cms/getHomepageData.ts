@@ -24,6 +24,24 @@ function adaptVenue({
   };
 }
 
+function adaptOrganization(
+  data: SanityHomepage["siteSettings"],
+): Homepage["organization"] {
+  return {
+    logo: toCmsImage(data.footerLogo),
+    // we are not including the venue's socials this they are not the "brand" ones
+    sameAs: [
+      data.facebookUrl,
+      data.instagramUrl,
+      data.linkedinUrl,
+      data.tiktokUrl,
+      data.youtubeUrl,
+    ],
+    telephone: data.mainPhone,
+    email: data.mainEmail,
+  };
+}
+
 function adaptHomepage({
   data,
   lang,
@@ -45,6 +63,7 @@ function adaptHomepage({
         adaptPageComponent(component),
       ) ?? [],
     seo: toSeo({ data: seo, fallback: { title: heading } }),
+    organization: adaptOrganization(data.siteSettings),
   };
 }
 
