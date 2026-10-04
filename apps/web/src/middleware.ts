@@ -13,5 +13,10 @@ export const onRequest = defineMiddleware(async function (_context, next) {
   // catches it; losing streaming is fine on the preview build
   const body = await response.arrayBuffer();
 
-  return new Response(body, response);
+  const finalResponse = new Response(body, response);
+  
+  // robots.txt must keep allowing crawl, or crawlers never see this header
+  finalResponse.headers.set("X-Robots-Tag", "noindex, nofollow");
+
+  return finalResponse;
 });
