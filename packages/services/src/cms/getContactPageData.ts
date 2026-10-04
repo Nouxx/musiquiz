@@ -10,12 +10,20 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 import type { ContactPage } from "./types";
 import { toCmsImage } from "./utils/toCmsImage";
 import { toPageCover } from "./utils/toPageCover";
+import { toSeo } from "./utils/toSeo";
 
 function adaptContactPage(data: SanityContactPage): ContactPage {
   const { page, teamMembers, venues } = data;
 
   return {
     pageCover: toPageCover({ data: page.pageCover }),
+    seo: toSeo({
+      data: page.seo,
+      fallback: {
+        title: page.pageCover.heading,
+        description: page.pageCover.subHeading,
+      },
+    }),
     team: {
       title: page.teamTitle,
       intro: page.teamIntro ?? undefined,

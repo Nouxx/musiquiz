@@ -13,6 +13,7 @@ import {
   sanityRichTextSchema,
   unlocalizedRichTextProjection,
 } from "./shared/richText";
+import { blogSeoProjection, sanitySeoSchema } from "./shared/seo";
 
 const lang = "fr";
 
@@ -27,6 +28,7 @@ function blogArticlePageQuery({ slug }: { slug: string }) {
       "summary": ${unlocalizedRichTextProjection({ field: "summary" })},
       chips[]{ icon, label },
       reviewCount,
+      "seo": ${blogSeoProjection()},
       "body": ${articleBodyProjection({ field: "body" })},
       faq{
         title,
@@ -93,6 +95,7 @@ const sanityBlogArticlePageSchema = z.strictObject({
       )
       .nullable(),
     reviewCount: z.number().int().positive().nullable(),
+    seo: sanitySeoSchema,
     body: sanityArticleBodySchema,
     faq: z
       .strictObject({

@@ -9,11 +9,13 @@ import {
   sanityPageComponentSchema,
 } from "./shared/pageComponents";
 import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
+import { sanitySeoSchema, seoProjection } from "./shared/seo";
 
 function joinTheNetworkPageQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
     "page": *[_type == "joinTheNetworkPage"][0]{
       pageCover ${pageCoverProjection({ lang })},
+      "seo": ${seoProjection({ lang })},
       "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
     }
   }`);
@@ -22,6 +24,7 @@ function joinTheNetworkPageQuery({ lang }: { lang: Lang }) {
 const sanityJoinTheNetworkPageSchema = z.strictObject({
   page: z.strictObject({
     pageCover: sanityPageCoverSchema({ hasCta: false }),
+    seo: sanitySeoSchema,
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
   }),
 });

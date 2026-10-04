@@ -7,7 +7,6 @@ import VenueLayout from "../../layouts/VenueLayout.astro";
 import { getLang } from "../../libs/getLang";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getSite } from "../../libs/getSite";
-import { getT } from "../../libs/i18n";
 import { getVenuesSlugParameters } from "../../libs/getVenuesSlugParameters";
 
 export async function getStaticPaths() {
@@ -33,9 +32,8 @@ const alternates = getAlternatesUrl(getSite(Astro), (routes) =>
 
 <VenueLayout
   venueSlug={venue}
-  title={getT(lang)("header.book")}
   city={data.venueTitle}
-  description={data.pageCover.subHeading}
+  {...data.seo}
   {alternates}
 >
   <VenueBookingPage venueSlug={venue} {data} {alternates} />

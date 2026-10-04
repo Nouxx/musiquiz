@@ -32,7 +32,7 @@ const alternates = getAlternatesUrl(getSite(Astro), (routes) =>
 <VenueLayout
   venueSlug={venue}
   city={data.venueTitle}
-  description={data.pageCover.subHeading}
+  {...data.seo}
   {alternates}
 >
   <VenuePage venueSlug={venue} {data} {alternates} />

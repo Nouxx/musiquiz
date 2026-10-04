@@ -9,6 +9,7 @@ import {
   sanityPageComponentSchema,
 } from "./shared/pageComponents";
 import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
+import { sanitySeoSchema, seoProjection } from "./shared/seo";
 
 function venueGamePageQuery({
   lang,
@@ -26,6 +27,7 @@ function venueGamePageQuery({
       "venueTitle": venue->title,
       "gameName": game->name,
       pageCover ${pageCoverProjection({ lang })},
+      "seo": ${seoProjection({ lang })},
       "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
     }
   }`);
@@ -36,6 +38,7 @@ const sanityVenueGamePageSchema = z.strictObject({
     venueTitle: z.string().min(1),
     gameName: z.string().min(1),
     pageCover: sanityPageCoverSchema({ hasCta: true }),
+    seo: sanitySeoSchema,
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
   }),
 });

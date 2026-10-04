@@ -20,14 +20,17 @@ const data = await getBlogPageData({
   config: getSanityConfigFromEnvironment(),
 });
 
-const title = getT("fr")("blogPage.pageTitle", { title: data.title, page });
+const title = getT("fr")("blogPage.pageTitle", {
+  title: data.seo.title,
+  page,
+});
 
 const alternates = {
   fr: new URL(getRoutesForLang("fr").blogPage(page), getSite(Astro)).href,
 };
 ---
 
-<Layout {title} description={data.intro} {alternates}>
+<Layout {...data.seo} {title} {alternates}>
   <BlogHead slot="head" articleCount={data.articles.length} {page} />
   <BlogPage {data} {page} {alternates} />
 </Layout>

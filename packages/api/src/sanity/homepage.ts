@@ -10,6 +10,7 @@ import {
   pageComponentsProjection,
   sanityPageComponentSchema,
 } from "./shared/pageComponents";
+import { sanitySeoSchema, seoProjection } from "./shared/seo";
 
 function homepageQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
@@ -20,6 +21,7 @@ function homepageQuery({ lang }: { lang: Lang }) {
       cover ${imageProjection({ lang })},
       "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
       "venuesCta": ${optionalCtaProjection({ field: "venuesCta", lang })},
+      "seo": ${seoProjection({ lang })},
     },
     "venues": *[_type == "venue"] | order(title asc){
       "title": title,
@@ -38,6 +40,7 @@ const sanityHomepageSchema = z.strictObject({
     cover: sanityImageSchema,
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
     venuesCta: sanityCtaSchema.nullable(),
+    seo: sanitySeoSchema,
   }),
   venues: z.array(
     z.strictObject({

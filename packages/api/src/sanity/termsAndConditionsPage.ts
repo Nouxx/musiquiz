@@ -6,11 +6,13 @@ import { z } from "zod";
 import { fetchSanityData } from "./fetchData";
 import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
 import { richTextProjection, sanityRichTextSchema } from "./shared/richText";
+import { sanitySeoSchema, seoProjection } from "./shared/seo";
 
 function termsAndConditionsPageQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
     "page": *[_type == "termsAndConditionsPage"][0]{
       pageCover ${pageCoverProjection({ lang })},
+      "seo": ${seoProjection({ lang })},
       "intro": ${richTextProjection({ field: "intro", lang })},
     },
     "venues": *[_type == "venue"] | order(title asc){
@@ -27,6 +29,7 @@ function termsAndConditionsPageQuery({ lang }: { lang: Lang }) {
 const sanityTermsAndConditionsPageSchema = z.strictObject({
   page: z.strictObject({
     pageCover: sanityPageCoverSchema({ hasCta: false }),
+    seo: sanitySeoSchema,
     intro: sanityRichTextSchema,
   }),
   venues: z

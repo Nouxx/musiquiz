@@ -53,6 +53,7 @@ export type Homepage = {
   venues: VenuePin[];
   venuesCta: { label: string; url: string } | undefined;
   components: PageComponent[];
+  seo: Seo;
 };
 
 export type CoverBackground =
@@ -86,16 +87,25 @@ export type PageCover = {
     | undefined;
 };
 
+export type Seo = {
+  /** without the brand and city the head appends */
+  title: string;
+  description: string | undefined;
+  noindex: boolean;
+};
+
 export type VenuePageType = "home" | "gift" | "book";
 
 export type JoinTheNetworkPage = {
   pageCover: PageCover;
   components: PageComponent[];
+  seo: Seo;
 };
 
 export type LegalNoticePage = {
   pageCover: PageCover;
   body: RichText;
+  seo: Seo;
 };
 
 export type TermsArticle = {
@@ -114,6 +124,7 @@ export type TermsAndConditionsPage = {
   pageCover: PageCover;
   intro: RichText;
   venues: VenueTerms[];
+  seo: Seo;
 };
 
 export type WhereToFindUsPage = {
@@ -122,6 +133,7 @@ export type WhereToFindUsPage = {
   venues: VenuePin[];
   venuesCta: { label: string; url: string } | undefined;
   componentsAfterMap: PageComponent[];
+  seo: Seo;
 };
 
 export type TeamMember = {
@@ -161,6 +173,7 @@ export type BlogPage = {
   intro: string;
   /** every article, newest first; the web app pages them */
   articles: BlogArticleSummary[];
+  seo: Seo;
 };
 
 export type BlogArticlePage = {
@@ -188,6 +201,7 @@ export type BlogArticlePage = {
   faq: { title: string; questions: FaqQuestion[] } | undefined;
   /** same venue, newest first, at most three */
   readMore: BlogArticleSummary[];
+  seo: Seo;
 };
 
 export type ContactPage = {
@@ -202,12 +216,14 @@ export type ContactPage = {
     intro: string | undefined;
     items: VenueContact[];
   };
+  seo: Seo;
 };
 
 export type VenuePage = {
   venueTitle: string;
   pageCover: PageCover;
   components: PageComponent[];
+  seo: Seo;
 };
 
 export type VenueWidgetPageType = "gift" | "book";
@@ -217,6 +233,7 @@ export type VenueWidgetPage = {
   pageCover: PageCover;
   componentsBeforeWidget: PageComponent[];
   componentsAfterWidget: PageComponent[];
+  seo: Seo;
 };
 
 export type VenueGamePage = {
@@ -224,6 +241,7 @@ export type VenueGamePage = {
   gameName: string;
   pageCover: PageCover;
   components: PageComponent[];
+  seo: Seo;
 };
 
 export type VenueEventPage = {
@@ -231,6 +249,7 @@ export type VenueEventPage = {
   eventName: string;
   pageCover: PageCover;
   components: PageComponent[];
+  seo: Seo;
 };
 
 export type Header = {

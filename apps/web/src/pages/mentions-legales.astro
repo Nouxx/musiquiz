@@ -20,8 +20,7 @@ const alternates = getAlternatesUrl(
 ---
 
 <Layout
-  title={data.pageCover.heading}
-  description={data.pageCover.subHeading}
+  {...data.seo}
   {alternates}
 >
   <LegalNoticePage {data} {alternates} />

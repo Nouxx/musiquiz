@@ -9,6 +9,7 @@ import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { VenuePin, WhereToFindUsPage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
 import { toPageCover } from "./utils/toPageCover";
+import { toSeo } from "./utils/toSeo";
 
 function adaptVenue({
   data,
@@ -37,6 +38,13 @@ function adaptWhereToFindUsPage({
 
   return {
     pageCover: toPageCover({ data: page.pageCover }),
+    seo: toSeo({
+      data: page.seo,
+      fallback: {
+        title: page.pageCover.heading,
+        description: page.pageCover.subHeading,
+      },
+    }),
     componentsBeforeMap:
       page.componentsBeforeMap?.map((component) =>
         adaptPageComponent(component),

@@ -10,6 +10,7 @@ import { toBlogArticleSummary } from "./utils/toBlogArticleSummary";
 import { toCmsImage } from "./utils/toCmsImage";
 import { toReadingMinutes } from "./utils/toReadingMinutes";
 import { toRichText } from "./utils/toRichText";
+import { toSeo } from "./utils/toSeo";
 
 function adaptBlogArticlePage({
   data,
@@ -59,6 +60,10 @@ function adaptBlogArticlePage({
         }
       : undefined,
     readMore: article.readMore.map((item) => toBlogArticleSummary(item)),
+    seo: toSeo({
+      data: article.seo,
+      fallback: { title: article.title, description: article.excerpt },
+    }),
   };
 }
 

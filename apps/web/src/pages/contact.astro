@@ -17,8 +17,7 @@ const alternates = getAlternatesUrl(getSite(Astro), (routes) => routes.contact);
 ---
 
 <Layout
-  title={data.pageCover.heading}
-  description={data.pageCover.subHeading}
+  {...data.seo}
   {alternates}
 >
   <ContactPage {data} {alternates} />

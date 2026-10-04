@@ -17,7 +17,7 @@ const alternates = {
 };
 ---
 
-<Layout title={data.title} description={data.intro} {alternates}>
+<Layout {...data.seo} {alternates}>
   <BlogHead slot="head" articleCount={data.articles.length} page={1} />
   <BlogPage {data} page={1} {alternates} />
 </Layout>

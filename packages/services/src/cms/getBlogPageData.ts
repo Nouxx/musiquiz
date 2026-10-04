@@ -3,12 +3,17 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { BlogPage } from "./types";
 import { toBlogArticleSummary } from "./utils/toBlogArticleSummary";
+import { toSeo } from "./utils/toSeo";
 
 function adaptBlogPage({ data }: { data: SanityBlogPage }): BlogPage {
   return {
     title: data.page.title,
     intro: data.page.intro,
     articles: data.articles.map((article) => toBlogArticleSummary(article)),
+    seo: toSeo({
+      data: data.page.seo,
+      fallback: { title: data.page.title, description: data.page.intro },
+    }),
   };
 }
 

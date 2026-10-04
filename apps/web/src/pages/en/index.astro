@@ -16,6 +16,6 @@ const data = await getHomepageData({
 const alternates = getAlternatesUrl(getSite(Astro), (routes) => routes.home);
 ---
 
-<Layout {alternates}>
+<Layout {...data.seo} {alternates}>
   <Homepage {data} {alternates} />
 </Layout>
