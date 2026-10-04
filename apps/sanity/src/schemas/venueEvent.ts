@@ -1,6 +1,7 @@
 import { defineField, defineType } from "sanity";
 import { ConfettiIcon } from "@sanity/icons/Confetti";
 import { findDuplicate, takenFormatIds } from "./shared/venueFormatUniqueness";
+import { pageGroups } from "./shared/seo";
 
 export const venueEventType = defineType({
   name: "venueEvent",
@@ -27,9 +28,11 @@ export const venueEventType = defineType({
         message: `${venue} already has a page for ${event}. Open that page instead — a venue has only one page per event.`,
       };
     }),
+  groups: pageGroups,
   fields: [
     defineField({
       name: "venue",
+      group: "content",
       title: "Venue",
       type: "reference",
       to: [{ type: "venue" }],
@@ -38,6 +41,7 @@ export const venueEventType = defineType({
     }),
     defineField({
       name: "event",
+      group: "content",
       title: "Event",
       description: "Events this venue already has a page for are not listed.",
       type: "reference",
@@ -58,13 +62,20 @@ export const venueEventType = defineType({
     }),
     defineField({
       name: "pageCover",
+      group: "content",
       title: "Page Cover",
       type: "pageCover",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "pageComponents",
+      group: "content",
       type: "pageComponents",
+    }),
+    defineField({
+      name: "seo",
+      type: "seo",
+      group: "seo",
     }),
   ],
   preview: {

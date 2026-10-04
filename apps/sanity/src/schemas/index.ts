@@ -58,6 +58,7 @@ import { textStripType } from "./shared/pageComponents/textStrip";
 import { textBodyType } from "./shared/pageComponents/textBody";
 import { videoEmbedType } from "./shared/pageComponents/videoEmbed";
 import { textBlockType } from "./shared/textBlock";
+import { blogSeoType, seoType } from "./shared/seo";
 
 export const schemaTypes = [
   homepageType,
@@ -120,4 +121,6 @@ export const schemaTypes = [
   offerListItemType,
   videoEmbedType,
   textBlockType,
+  seoType,
+  blogSeoType,
 ];

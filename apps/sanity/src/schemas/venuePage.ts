@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { DocumentIcon } from "@sanity/icons/Document";
+import { pageGroups } from "./shared/seo";
 
 export const pageTypes = [
   { value: "home", title: "Home page" },
@@ -19,10 +20,12 @@ export const venuePageType = defineType({
   title: "Venue Page",
   type: "document",
   icon: DocumentIcon,
+  groups: pageGroups,
   fields: [
     // `venue` and `pageType` are derived from structure.ts
     defineField({
       name: "venue",
+      group: "content",
       title: "Venue",
       type: "reference",
       to: [{ type: "venue" }],
@@ -31,6 +34,7 @@ export const venuePageType = defineType({
     }),
     defineField({
       name: "pageType",
+      group: "content",
       title: "Page type",
       type: "string",
       readOnly: true,
@@ -41,26 +45,35 @@ export const venuePageType = defineType({
     }),
     defineField({
       name: "pageCover",
+      group: "content",
       title: "Page Cover",
       type: "pageCover",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "pageComponents",
+      group: "content",
       type: "pageComponents",
       hidden: ({ document }) => hasWidget(document?.pageType),
     }),
     defineField({
       name: "componentsBeforeWidget",
+      group: "content",
       title: "Before the widget",
       type: "pageComponents",
       hidden: ({ document }) => !hasWidget(document?.pageType),
     }),
     defineField({
       name: "componentsAfterWidget",
+      group: "content",
       title: "After the widget",
       type: "pageComponents",
       hidden: ({ document }) => !hasWidget(document?.pageType),
+    }),
+    defineField({
+      name: "seo",
+      type: "seo",
+      group: "seo",
     }),
   ],
   preview: {

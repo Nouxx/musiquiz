@@ -2,6 +2,7 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { contentIcons } from "./shared/pageComponents/contentIcons";
 import { richTextFieldType } from "./shared/richText";
+import { pageGroups } from "./shared/seo";
 
 // french only, plain strings on purpose: docs/adr/0013
 export const blogFaqType = defineType({
@@ -49,14 +50,17 @@ export const blogArticleType = defineType({
   title: "Blog article",
   type: "document",
   icon: DocumentTextIcon,
+  groups: pageGroups,
   fields: [
     defineField({
       name: "title",
+      group: "content",
       type: "string",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "slug",
+      group: "content",
       title: "URL slug",
       type: "slug",
       description:
@@ -67,12 +71,14 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "publishedAt",
+      group: "content",
       title: "Publication date",
       type: "date",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "updatedAt",
+      group: "content",
       title: "Update date",
       description:
         'Set it after a real rewrite, not a typo fix. The article then reads "Mis à jour le".',
@@ -80,6 +86,7 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "venue",
+      group: "content",
       type: "reference",
       to: [{ type: "venue" }],
       description:
@@ -88,6 +95,7 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "author",
+      group: "content",
       type: "reference",
       to: [{ type: "teamMember" }],
       description: "The team member must have a short bio.",
@@ -95,12 +103,14 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "cover",
+      group: "content",
       title: "Cover image",
       type: "imageWithAlt",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "excerpt",
+      group: "content",
       type: "text",
       rows: 3,
       description: "Shown on the article card, in the blog listing.",
@@ -108,6 +118,7 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "summary",
+      group: "content",
       title: "Summary",
       description: 'The "Le résumé en 30 secondes" box, above the article.',
       type: "array",
@@ -126,6 +137,7 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "chips",
+      group: "content",
       title: "Key facts",
       description: 'The pills under the summary. Example: "75 min de jeu".',
       type: "array",
@@ -152,6 +164,7 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "reviewCount",
+      group: "content",
       title: "Number of reviews",
       description:
         'Adds a "5/5 sur N avis" pill after the key facts. Leave empty for none.',
@@ -160,16 +173,23 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "body",
+      group: "content",
       title: "Article",
       type: "articleBody",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "faq",
+      group: "content",
       title: "FAQ",
       description:
         "Optional. The questions this article answers, also sent to search engines as FAQ data. Leave empty when the article raises none.",
       type: "blogFaq",
+    }),
+    defineField({
+      name: "seo",
+      type: "blogSeo",
+      group: "seo",
     }),
   ],
   orderings: [
