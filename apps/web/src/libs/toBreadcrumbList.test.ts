@@ -12,7 +12,6 @@ it("numbers the items from 1 and resolves their urls against the site", () => {
       { label: "Pixel Games" },
     ]),
   ).toEqual({
-    "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
       {

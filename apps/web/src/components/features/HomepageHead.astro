@@ -1,10 +1,10 @@
 ---
 import type { Organization } from "@repo/services/cms/types";
-import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
 
 import { getOrganizationId } from "../../libs/getOrganizationId";
 import { getOrganizationLogoUrl } from "../../libs/getOrganizationLogoUrl";
 import { getSite } from "../../libs/getSite";
+import JsonLd from "./JsonLd.astro";
 
 interface Props {
   organization: Organization;
@@ -16,7 +16,6 @@ const site = getSite(Astro);
 const organizationId = getOrganizationId(site);
 
 const organizationData = {
-  "@context": "https://schema.org",
   "@type": "Organization",
   "@id": organizationId,
   name: "Musi'Quiz",
@@ -28,14 +27,11 @@ const organizationData = {
 };
 
 const webSite = {
-  "@context": "https://schema.org",
   "@type": "WebSite",
   name: "Musi'Quiz",
   url: site.href,
   publisher: { "@id": organizationId },
 };
-
-const structuredData = toInlineScriptJson([organizationData, webSite]);
 ---
 
-<script is:inline type="application/ld+json" set:html={structuredData} />
+<JsonLd graph={[organizationData, webSite]} />

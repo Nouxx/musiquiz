@@ -1,10 +1,10 @@
 ---
 import type { LocalBusiness } from "@repo/services/cms/types";
-import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
 
 import { getOrganizationId } from "../../libs/getOrganizationId";
 import { getSite } from "../../libs/getSite";
 import { getVenueBusinessId } from "../../libs/getVenueBusinessId";
+import JsonLd from "./JsonLd.astro";
 
 interface Props {
   venueSlug: string;
@@ -24,8 +24,7 @@ const priceRange =
     ? `${business.priceRange.lowest} €`
     : `${business.priceRange.lowest}–${business.priceRange.highest} €`);
 
-const structuredData = toInlineScriptJson({
-  "@context": "https://schema.org",
+const entertainmentBusiness = {
   "@type": "EntertainmentBusiness",
   "@id": getVenueBusinessId(site, venueSlug),
   name: `Musi'Quiz ${city}`,
@@ -44,7 +43,7 @@ const structuredData = toInlineScriptJson({
   })),
   priceRange,
   parentOrganization: { "@id": getOrganizationId(site) },
-});
+};
 ---
 
-<script is:inline type="application/ld+json" set:html={structuredData} />
+<JsonLd graph={[entertainmentBusiness]} />

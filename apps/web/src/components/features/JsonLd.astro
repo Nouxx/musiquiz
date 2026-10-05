@@ -1,0 +1,17 @@
+---
+import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
+
+interface Props {
+  /** schema.org nodes, without `@context` */
+  graph: Record<string, unknown>[];
+}
+
+const { graph } = Astro.props;
+
+const structuredData = toInlineScriptJson({
+  "@context": "https://schema.org",
+  "@graph": graph,
+});
+---
+
+<script is:inline type="application/ld+json" set:html={structuredData} />

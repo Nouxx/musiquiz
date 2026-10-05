@@ -2,7 +2,6 @@ import type { BreadcrumbItem } from "@repo/ui/types";
 
 export function toBreadcrumbList(site: URL, items: BreadcrumbItem[]) {
   return {
-    "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: items.map((item, index) => ({
       "@type": "ListItem",

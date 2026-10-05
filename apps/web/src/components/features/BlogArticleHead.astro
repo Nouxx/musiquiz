@@ -2,12 +2,12 @@
 import { getImage } from "astro:assets";
 import type { BlogArticlePage } from "@repo/services/cms/types";
 import type { BreadcrumbItem } from "@repo/ui/types";
-import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
 
 import { getOrganizationId } from "../../libs/getOrganizationId";
 import { getOrganizationLogoUrl } from "../../libs/getOrganizationLogoUrl";
 import { getSite } from "../../libs/getSite";
 import { toBreadcrumbList } from "../../libs/toBreadcrumbList";
+import JsonLd from "./JsonLd.astro";
 
 interface Props {
   data: BlogArticlePage;
@@ -32,7 +32,6 @@ const cover = await getImage({
 });
 
 const blogPosting = {
-  "@context": "https://schema.org",
   "@type": "BlogPosting",
   headline: data.title,
   description: data.excerpt,
@@ -58,7 +57,6 @@ const blogPosting = {
 };
 
 const faqPage = data.faq && {
-  "@context": "https://schema.org",
   "@type": "FAQPage",
   mainEntity: data.faq.questions.map((entry) => ({
     "@type": "Question",
@@ -69,12 +67,12 @@ const faqPage = data.faq && {
     },
   })),
 };
-
-const structuredData = toInlineScriptJson([
-  blogPosting,
-  toBreadcrumbList(site, breadcrumbs),
-  ...(faqPage ? [faqPage] : []),
-]);
 ---
 
-<script is:inline type="application/ld+json" set:html={structuredData} />
+<JsonLd
+  graph={[
+    blogPosting,
+    toBreadcrumbList(site, breadcrumbs),
+    ...(faqPage ? [faqPage] : []),
+  ]}
+/>
