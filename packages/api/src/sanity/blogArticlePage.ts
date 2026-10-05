@@ -51,6 +51,7 @@ function blogArticlePageQuery({ slug }: { slug: string }) {
         bio,
         tone,
         photo ${imageProjection({ lang })},
+        profileUrl,
       },
       "venueBlog": *[_type == "venueBlog" && venue._ref == ^.venue._ref][0]{
         findUs{
@@ -75,7 +76,8 @@ function blogArticlePageQuery({ slug }: { slug: string }) {
         cover ${imageProjection({ lang })},
         excerpt,
       },
-    }
+    },
+    "publisherLogo": *[_type == "siteSettings"][0].footerLogo ${imageProjection({ lang })},
   }`);
 }
 
@@ -125,6 +127,7 @@ const sanityBlogArticlePageSchema = z.strictObject({
       bio: z.string().min(1),
       tone: z.enum(["blue", "red"]),
       photo: sanityImageSchema,
+      profileUrl: z.url().nullable(),
     }),
     venueBlog: z.strictObject({
       findUs: z.strictObject({
@@ -149,6 +152,7 @@ const sanityBlogArticlePageSchema = z.strictObject({
       }),
     ),
   }),
+  publisherLogo: sanityImageSchema,
 });
 
 export type SanityBlogArticlePage = z.infer<typeof sanityBlogArticlePageSchema>;

@@ -245,9 +245,13 @@ export type BlogArticlePage = {
     bio: string;
     tone: "blue" | "red";
     photo: CmsImage;
+    /** @example "https://www.linkedin.com/in/…" */
+    profileUrl: string | undefined;
   };
   findUs: FindUsContent;
   faq: { title: string; questions: FaqQuestion[] } | undefined;
+  /** the brand logo, same as `Organization.logo` */
+  publisherLogo: CmsImage;
   /** same venue, newest first, at most three */
   readMore: BlogArticleSummary[];
   seo: Seo;

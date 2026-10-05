@@ -1,9 +1,9 @@
 ---
-import { getImage } from "astro:assets";
 import type { Organization } from "@repo/services/cms/types";
 import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
 
 import { getOrganizationId } from "../../libs/getOrganizationId";
+import { getOrganizationLogoUrl } from "../../libs/getOrganizationLogoUrl";
 import { getSite } from "../../libs/getSite";
 
 interface Props {
@@ -15,20 +15,13 @@ const { organization } = Astro.props;
 const site = getSite(Astro);
 const organizationId = getOrganizationId(site);
 
-const logo = await getImage({
-  src: organization.logo.url,
-  width: organization.logo.width,
-  height: organization.logo.height,
-  ...(organization.logo.mimeType === "image/svg+xml" && { format: "svg" }),
-});
-
 const organizationData = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "@id": organizationId,
   name: "Musi'Quiz",
   url: site.href,
-  logo: new URL(logo.src, site).href,
+  logo: await getOrganizationLogoUrl(site, organization.logo),
   sameAs: organization.sameAs,
   telephone: organization.telephone,
   email: organization.email,

@@ -42,6 +42,7 @@ function adaptBlogArticlePage({
       bio: author.bio,
       tone: author.tone,
       photo: toCmsImage(author.photo),
+      profileUrl: author.profileUrl ?? undefined,
     },
     findUs: {
       ...venueBlog.findUs,
@@ -60,6 +61,7 @@ function adaptBlogArticlePage({
           })),
         }
       : undefined,
+    publisherLogo: toCmsImage(data.publisherLogo),
     readMore: article.readMore.map((item) => toBlogArticleSummary(item)),
     seo: toSeo({
       data: article.seo,

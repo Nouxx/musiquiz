@@ -4,6 +4,8 @@ import type { BlogArticlePage } from "@repo/services/cms/types";
 import type { BreadcrumbItem } from "@repo/ui/types";
 import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
 
+import { getOrganizationId } from "../../libs/getOrganizationId";
+import { getOrganizationLogoUrl } from "../../libs/getOrganizationLogoUrl";
 import { getSite } from "../../libs/getSite";
 import { toBreadcrumbList } from "../../libs/toBreadcrumbList";
 
@@ -14,10 +16,7 @@ interface Props {
 
 const { data, breadcrumbs } = Astro.props;
 
-// when this was written, there were no `site` in astro.config and schema.org needs absolute urls
-function absolute(path: string) {
-  return Astro.site ? new URL(path, Astro.site).href : path;
-}
+const site = getSite(Astro);
 
 function plainText(spans: { text: string }[]) {
   return spans.map((span) => span.text).join("");
@@ -37,13 +36,25 @@ const blogPosting = {
   "@type": "BlogPosting",
   headline: data.title,
   description: data.excerpt,
-  image: absolute(cover.src),
+  image: new URL(cover.src, site).href,
   datePublished: data.publishedAt,
   dateModified: data.updatedAt ?? data.publishedAt,
   inLanguage: "fr",
-  mainEntityOfPage: absolute(Astro.url.pathname),
-  author: { "@type": "Person", name: data.author.name },
-  publisher: { "@type": "Organization", name: "Musi'Quiz" },
+  mainEntityOfPage: new URL(Astro.url.pathname, site).href,
+  author: {
+    "@type": "Person",
+    name: data.author.name,
+    jobTitle: data.author.jobTitle,
+    url: data.author.profileUrl,
+  },
+  // in full: a bare @id does not reach the Organization node on the homepage
+  publisher: {
+    "@type": "Organization",
+    "@id": getOrganizationId(site),
+    name: "Musi'Quiz",
+    url: site.href,
+    logo: await getOrganizationLogoUrl(site, data.publisherLogo),
+  },
 };
 
 const faqPage = data.faq && {
@@ -61,7 +72,7 @@ const faqPage = data.faq && {
 
 const structuredData = toInlineScriptJson([
   blogPosting,
-  toBreadcrumbList(getSite(Astro), breadcrumbs),
+  toBreadcrumbList(site, breadcrumbs),
   ...(faqPage ? [faqPage] : []),
 ]);
 ---
