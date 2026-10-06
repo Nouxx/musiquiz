@@ -306,12 +306,32 @@ export type VenueEventPage = {
   seo: Seo;
 };
 
-export type Header = {
+export type VenueHeader = {
   logo: CmsImage;
   venue: {
     logo: CmsImage;
     address: string;
     mapsLink: string;
+    mailLabel: string;
+    mailHref: string;
+    phoneLabel: string;
+    phoneHref: string;
+  };
+  experiences: {
+    label: string;
+    url: string;
+  }[];
+  events: {
+    label: string;
+    url: string;
+  }[];
+  socials: Socials;
+};
+
+export type Header = {
+  logo: CmsImage;
+  mobileMenuLogo: CmsImage;
+  contact: {
     mailLabel: string;
     mailHref: string;
     phoneLabel: string;

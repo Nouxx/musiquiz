@@ -1,54 +1,53 @@
 ---
 import Header from "@repo/ui/Header";
-import { getHeaderData } from "@repo/services/cms/getHeaderData";
-import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
-import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
-import { isCurrentUrl } from "@repo/services/routing/isCurrentUrl";
-import { venuesMapAnchorId, type NavLink, type NavMenu } from "@repo/ui/types";
+import { getVenueHeaderData } from "@repo/services/cms/getVenueHeaderData";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getT } from "../../libs/i18n";
 import { getLang } from "../../libs/getLang";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+import { isCurrentUrl } from "@repo/services/routing/isCurrentUrl";
+import { venuesMapAnchorId, type NavLink, type NavMenu } from "@repo/ui/types";
 import { getOtherLang } from "../../libs/getOtherLang";
 import HeaderSocials from "./header/HeaderSocials.astro";
 
 interface Props {
-  alternates: Alternates;
+  venueSlug: string;
 }
 
-const { alternates } = Astro.props;
+const { venueSlug } = Astro.props;
 
 const lang = getLang(Astro);
 
 const t = getT(lang);
 
-const data = await getHeaderData({
-  config: getSanityConfigFromEnvironment(),
+const sanityConfig = getSanityConfigFromEnvironment();
+
+const data = await getVenueHeaderData({
+  config: sanityConfig,
   lang,
+  venueSlug,
 });
 
 const routes = getRoutesForLang(lang);
 
 const otherLang = getOtherLang(lang);
 
-const alternate = alternates[otherLang.lang];
-
 const langSwitcher = {
-  // relative, or the preview worker would link to production
-  url: alternate
-    ? new URL(alternate).pathname
-    : getRoutesForLang(otherLang.lang).home,
+  url: getRoutesForLang(otherLang.lang).venueHome(venueSlug),
   icon: otherLang.icon,
   label: otherLang.label,
 };
 
 const pathname = Astro.url.pathname;
 
-// the collapse breakpoint ("header collapsed", breakpoints.css) was sized for
-// VenueHeader's longer list; this one fits inside it
+// WARNING: when modifying these links
+// the viewport width at which the menu switch to "mobile burger menu"
+// is hardcoded (search for "header collapsed" -- breakpoint.css) and depends on the number of items and their label
+// if this has to be modified, adjust this value
 const mainLinks: (NavLink | NavMenu)[] = [
   {
     label: t("header.home"),
-    url: routes.home,
+    url: routes.venueHome(venueSlug),
   },
   data.experiences.length === 1
     ? {
@@ -62,6 +61,10 @@ const mainLinks: (NavLink | NavMenu)[] = [
   {
     label: t("header.events"),
     links: data.events,
+  },
+  {
+    label: t("header.offerAGame"),
+    url: routes.venueGifting(venueSlug),
   },
 ];
 
@@ -80,24 +83,30 @@ function withCurrent(item: NavLink | NavMenu): NavLink | NavMenu {
 
 const linksTree = mainLinks.map(withCurrent);
 
-// TODO: point to the global booking page once it exists
-const cta = {
-  label: t("header.book"),
+const venueSwitcherLink = {
+  label: t("header.changeVenue"),
   url: routes.home + `#${venuesMapAnchorId}`,
 };
 
+const cta = {
+  label: t("header.book"),
+  url: routes.venueBook(venueSlug),
+};
+
 const contact = {
-  phone: { label: data.contact.phoneLabel, url: data.contact.phoneHref },
-  mail: { label: data.contact.mailLabel, url: data.contact.mailHref },
+  address: { label: data.venue.address, url: data.venue.mapsLink },
+  phone: { label: data.venue.phoneLabel, url: data.venue.phoneHref },
+  mail: { label: data.venue.mailLabel, url: data.venue.mailHref },
 };
 ---
 
 <Header
   logo={data.logo}
-  mobileMenuLogo={data.mobileMenuLogo}
+  mobileMenuLogo={data.venue.logo}
   {linksTree}
   {cta}
   lang={langSwitcher}
+  additionalMobileMenuLink={venueSwitcherLink}
   closeLabel={t("header.closeLabel")}
   {contact}
 >

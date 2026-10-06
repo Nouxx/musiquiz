@@ -10,6 +10,7 @@ import VenuesContact from "@repo/ui/VenuesContact";
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 import Footer from "../features/Footer.astro";
+import Header from "../features/Header.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
 
 interface Props {
@@ -30,6 +31,8 @@ const pageCoverDataWithCta: PageCoverData = {
   cta: { label: t("contactPage.ctaLabel"), url: `#${venuesContactAnchor}` },
 };
 ---
+
+<Header {alternates} />
 
 <VenuePageCover data={pageCoverDataWithCta} height="m" ctaIcon="arrow-down" />
 

@@ -5,6 +5,7 @@ import Button from "@repo/ui/primitives/Button";
 import Text from "@repo/ui/primitives/Text";
 
 import Footer from "../components/features/Footer.astro";
+import Header from "../components/features/Header.astro";
 import Layout from "../layouts/Layout.astro";
 import { getT } from "../libs/i18n";
 import { getSite } from "../libs/getSite";
@@ -30,13 +31,15 @@ const blocks = (["fr", "en"] as const).map((lang) => {
   };
 });
 
-const footerAlternates = getAlternatesUrl(
+const homeAlternates = getAlternatesUrl(
   getSite(Astro),
   (routes) => routes.home,
 );
 ---
 
 <Layout title={getT("fr")("notFound.title")} alternates={undefined}>
+  <Header alternates={homeAlternates} />
+
   <main>
     {
       blocks.map((block, index) => (
@@ -57,7 +60,7 @@ const footerAlternates = getAlternatesUrl(
     }
   </main>
 
-  <Footer alternates={footerAlternates} />
+  <Footer alternates={homeAlternates} />
 </Layout>
 
 <style>

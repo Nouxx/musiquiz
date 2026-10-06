@@ -8,6 +8,8 @@ const frenchRoutes = {
   venueEvent: (venue: string, event: string) =>
     `/${venue}/evenements/${event}/`,
   venueGifting: (venue: string) => `/${venue}/offrir/`,
+  game: (game: string) => `/jeux/${game}/`,
+  event: (event: string) => `/evenements/${event}/`,
   faq: "/faq/",
   contact: "/contact/",
   blog: "/blog/",
@@ -30,6 +32,8 @@ const englishRoutes: Omit<typeof frenchRoutes, BlogRoutes> = {
   venueGame: (venue: string, game: string) => `/en/${venue}/games/${game}/`,
   venueEvent: (venue: string, event: string) => `/en/${venue}/events/${event}/`,
   venueGifting: (venue: string) => `/en/${venue}/gift/`,
+  game: (game: string) => `/en/games/${game}/`,
+  event: (event: string) => `/en/events/${event}/`,
   faq: "/en/faq/",
   contact: "/en/contact/",
   press: "/en/press/",

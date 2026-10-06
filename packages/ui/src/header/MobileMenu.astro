@@ -14,13 +14,13 @@ type ContactLine = { label: string; url: string };
 interface Props {
   logo: ImageSource;
   linksTree: (NavLink | NavMenu)[];
-  additionalMobileMenuLink: NavLink;
+  additionalMobileMenuLink?: NavLink;
   cta: { label: string; url: string };
   closeLabel: string;
   menuLabel?: string;
   languageSwitch?: { url: string; icon: IconName; label: string };
   contact: {
-    address: ContactLine;
+    address?: ContactLine;
     phone: ContactLine;
     mail: ContactLine;
   };
@@ -43,7 +43,9 @@ const groups = additionalMobileMenuLink
   ? [...linksTree, additionalMobileMenuLink]
   : linksTree;
 
-const contactLines = [contact.address, contact.phone, contact.mail];
+const contactLines = [contact.address, contact.phone, contact.mail].filter(
+  (line) => line !== undefined,
+);
 ---
 
 <dialog

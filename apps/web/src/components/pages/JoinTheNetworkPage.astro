@@ -8,6 +8,7 @@ import { venueOpeningFormId } from "@repo/services/contactForm/venueOpening";
 
 import { getLang } from "../../libs/getLang";
 import Footer from "../features/Footer.astro";
+import Header from "../features/Header.astro";
 import PageComponents from "../features/PageComponents.astro";
 import VenueOpeningForm from "../features/VenueOpeningForm.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
@@ -31,6 +32,8 @@ const pageCoverData: PageCoverData = {
   },
 };
 ---
+
+<Header {alternates} />
 
 <VenuePageCover data={pageCoverData} height="full" ctaIcon="arrow-down" />
 

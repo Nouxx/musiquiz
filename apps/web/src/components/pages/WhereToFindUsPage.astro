@@ -7,6 +7,7 @@ import type {
 
 import { getLang } from "../../libs/getLang";
 import Footer from "../features/Footer.astro";
+import Header from "../features/Header.astro";
 import PageComponents from "../features/PageComponents.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
 import VenuesList from "../features/VenuesList.astro";
@@ -28,6 +29,8 @@ const pageCoverDataWithCta: PageCoverData = {
   cta: { label: t("whereToFindUsPage.ctaLabel"), url: `#${venuesMapAnchorId}` },
 };
 ---
+
+<Header {alternates} />
 
 <VenuePageCover data={pageCoverDataWithCta} ctaIcon="arrow-down" />
 

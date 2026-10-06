@@ -4,6 +4,7 @@ import type { BlogPage as BlogPageData } from "@repo/services/cms/types";
 
 import BlogListing from "../features/BlogListing.astro";
 import Footer from "../features/Footer.astro";
+import Header from "../features/Header.astro";
 
 export interface Props {
   data: BlogPageData;
@@ -13,6 +14,8 @@ export interface Props {
 
 const { data, page, alternates } = Astro.props;
 ---
+
+<Header {alternates} />
 
 <BlogListing
   title={data.title}

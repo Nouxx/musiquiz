@@ -26,6 +26,14 @@ export const siteSettingsType = defineType({
       type: "imageWithAlt",
     }),
     defineField({
+      name: "mobileMenuLogo",
+      title: "Mobile menu logo",
+      description: "Shown on the dark background of the mobile menu.",
+      group: "branding",
+      validation: (rule) => rule.required(),
+      type: "imageWithAlt",
+    }),
+    defineField({
       name: "footerLogo",
       title: "Footer logo",
       group: "branding",

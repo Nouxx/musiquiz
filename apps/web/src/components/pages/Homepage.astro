@@ -5,6 +5,7 @@ import PageComponents from "../features/PageComponents.astro";
 import HomepageCover from "../features/HomepageCover.astro";
 import VenuesList from "../features/VenuesList.astro";
 import Footer from "../features/Footer.astro";
+import Header from "../features/Header.astro";
 
 interface Props {
   data: HomepageData;
@@ -13,6 +14,8 @@ interface Props {
 
 const { data, alternates } = Astro.props;
 ---
+
+<Header {alternates} />
 
 <HomepageCover
   logo={data.logo}

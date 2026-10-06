@@ -4,71 +4,53 @@ import { defineQuery } from "groq";
 import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
-import { addressProjection, sanityAddressSchema } from "./shared/address";
 import { imageProjection, sanityImageSchema } from "./shared/image";
 
-function headerQuery({ lang, venueSlug }: { lang: Lang; venueSlug: string }) {
+function headerQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
     "siteSettings": *[_type == "siteSettings"][0]{
       headerLogo ${imageProjection({ lang })},
+      mobileMenuLogo ${imageProjection({ lang })},
+      mainPhone,
+      mainEmail,
       facebookUrl,
       instagramUrl,
       linkedinUrl,
       tiktokUrl,
       youtubeUrl,
     },
-    "venue": *[_type == "venue" && slug.current == "${venueSlug}"][0]{
-      "games": *[_type == "venueGame" && venue._ref == ^._id]
-        | order(coalesce(game->displayOrder, 999) asc, game->name asc){
-        "name": game->name,
-        "slug": game->slug.current
-      },
-      "events": *[_type == "venueEvent" && venue._ref == ^._id]
-        | order(coalesce(event->displayOrder, 999) asc, event->name asc){
-        "name": event->name,
-        "slug": event->slug.current
-      },
-      venueLogoLight ${imageProjection({ lang })},
-      "address": ${addressProjection},
-      phone,
-      mail,
-      googleMapsLink
+    "games": *[_type == "gameFormat" && signature == true]
+      | order(displayOrder asc, name asc){
+      name,
+      "slug": slug.current
+    },
+    "events": *[_type == "eventFormat"]
+      | order(displayOrder asc, name asc){
+      name,
+      "slug": slug.current
     }
   }`);
 }
 
+const formatLinkSchema = z.strictObject({
+  name: z.string().min(1),
+  slug: z.string().min(1),
+});
+
 const sanityHeaderSchema = z.strictObject({
   siteSettings: z.strictObject({
     headerLogo: sanityImageSchema,
+    mobileMenuLogo: sanityImageSchema,
+    mainPhone: z.string().min(1),
+    mainEmail: z.email(),
     facebookUrl: z.url(),
     instagramUrl: z.url(),
     linkedinUrl: z.url(),
     tiktokUrl: z.url(),
     youtubeUrl: z.url(),
   }),
-  venue: z.strictObject({
-    games: z
-      .array(
-        z.strictObject({
-          name: z.string(),
-          slug: z.string(),
-        }),
-      )
-      .min(1),
-    events: z
-      .array(
-        z.strictObject({
-          name: z.string(),
-          slug: z.string(),
-        }),
-      )
-      .min(1),
-    venueLogoLight: sanityImageSchema,
-    address: sanityAddressSchema,
-    phone: z.string().min(1),
-    mail: z.email(),
-    googleMapsLink: z.string(),
-  }),
+  games: z.array(formatLinkSchema).min(1),
+  events: z.array(formatLinkSchema).min(1),
 });
 
 export type SanityHeader = z.infer<typeof sanityHeaderSchema>;
@@ -76,15 +58,13 @@ export type SanityHeader = z.infer<typeof sanityHeaderSchema>;
 export async function fetchHeader({
   config,
   lang,
-  venueSlug,
 }: {
   config: SanityConfig;
   lang: Lang;
-  venueSlug: string;
 }) {
   return fetchSanityData({
     queryName: "header",
-    query: headerQuery({ lang, venueSlug }),
+    query: headerQuery({ lang }),
     schema: sanityHeaderSchema,
     config,
   });
