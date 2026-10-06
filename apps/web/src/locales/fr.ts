@@ -109,6 +109,12 @@ export const fr = {
   joinTheNetworkPage: {
     ctaLabel: "Demander notre plaquette",
   },
+  globalGamePage: {
+    ctaLabel: "Réserver",
+  },
+  globalEventPage: {
+    ctaLabel: "Réserver",
+  },
   venueBookingPage: {
     ctaLabel: "Choisir mon activité",
     secondaryCtaLabel: "Tarifs",

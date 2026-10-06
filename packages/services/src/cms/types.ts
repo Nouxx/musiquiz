@@ -306,6 +306,20 @@ export type VenueEventPage = {
   seo: Seo;
 };
 
+export type GlobalGamePage = {
+  gameName: string;
+  pageCover: PageCover;
+  components: PageComponent[];
+  seo: Seo;
+};
+
+export type GlobalEventPage = {
+  eventName: string;
+  pageCover: PageCover;
+  components: PageComponent[];
+  seo: Seo;
+};
+
 export type VenueHeader = {
   logo: CmsImage;
   venue: {

@@ -1,0 +1,42 @@
+---
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
+import type {
+  GlobalGamePage,
+  PageCover as PageCoverData,
+} from "@repo/services/cms/types";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+
+import { getLang } from "../../libs/getLang";
+import { getT } from "../../libs/i18n";
+import Footer from "../features/Footer.astro";
+import Header from "../features/Header.astro";
+import PageComponents from "../features/PageComponents.astro";
+import VenuePageCover from "../features/VenuePageCover.astro";
+
+interface Props {
+  data: GlobalGamePage;
+  alternates: Alternates;
+}
+
+const lang = getLang(Astro);
+const t = getT(lang);
+
+const { data, alternates } = Astro.props;
+
+// todo: global booking page, see docs/temp/global_header.md
+const pageCoverData: PageCoverData = {
+  ...data.pageCover,
+  cta: {
+    label: t("globalGamePage.ctaLabel"),
+    url: getRoutesForLang(lang).whereToFindUs,
+  },
+};
+---
+
+<Header {alternates} />
+
+<VenuePageCover data={pageCoverData} />
+
+<PageComponents components={data.components} />
+
+<Footer {alternates} />

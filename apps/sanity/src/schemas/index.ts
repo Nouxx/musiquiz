@@ -22,6 +22,8 @@ import { articleBodyType } from "./shared/articleBody";
 import { quotationServiceType, termsArticleType, venueType } from "./venue";
 import { priceType, venueGameType } from "./venueGame";
 import { venueEventType } from "./venueEvent";
+import { globalGameType } from "./globalGame";
+import { globalEventType } from "./globalEvent";
 import { venuePageType } from "./venuePage";
 import { rollingBannerType } from "./shared/pageComponents/rollingBanner";
 import { reviewsType } from "./shared/pageComponents/reviews";
@@ -79,6 +81,8 @@ export const schemaTypes = [
   venuePageType,
   venueGameType,
   venueEventType,
+  globalGameType,
+  globalEventType,
   priceType,
   siteSettingsType,
   teamMemberType,

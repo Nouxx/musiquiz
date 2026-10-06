@@ -93,6 +93,12 @@ export const en: EnglishKeys = {
   joinTheNetworkPage: {
     ctaLabel: "Request our brochure",
   },
+  globalGamePage: {
+    ctaLabel: "Book",
+  },
+  globalEventPage: {
+    ctaLabel: "Book",
+  },
   venueBookingPage: {
     ctaLabel: "Choose my activity",
     secondaryCtaLabel: "Prices",

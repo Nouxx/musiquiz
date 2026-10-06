@@ -42,7 +42,7 @@ One physical Musi'Quiz location, addressed by a slug under `/[venue]`. A city is
 _Avoid_: centre, ville, city, site, location
 
 **Game Format**:
-A kind of game the business runs, named and slugged once for the whole company — "Musi'Quiz", "Pixel Games". It is the same product in Lille and in Pau, which is why it carries no marketing copy and no price: those differ per Venue and belong to a Venue Game. Its `displayOrder` fixes the order games appear in wherever they are listed, at every Venue.
+A kind of game the business runs, named and slugged once for the whole company — "Musi'Quiz", "Pixel Games". It is the same product in Lille and in Pau, which is why it carries no price and no page content: prices and per-Venue copy belong to a Venue Game, and its company-wide page belongs to a Global Game. A signature game is listed in the global header and gets a Global Game route. Its `displayOrder` fixes the order games appear in wherever they are listed, at every Venue.
 _Avoid_: game, game type, product
 
 **Event Format**:
@@ -56,6 +56,14 @@ _Avoid_: offering, venue game page, game page
 **Venue Event**:
 A Venue Game for Event Formats, serving `/[venue]/evenements/[event]`. It carries no price. It is a separate document type rather than a Venue Game with a flag, because a discriminator would make `price` and the reference target conditional. [ADR 0010](./docs/adr/0010-page-content-lives-in-documents.md).
 _Avoid_: offering, event page
+
+**Global Game**:
+The page a Game Format has outside any Venue, at `/jeux/[game]`. One document per Format with a deterministic id, opened from the Format in the Studio. Only signature games get a route, and a signature game with no Global Game fails the build. Its cover's call to action is set in code, not authored. [ADR 0017](./docs/adr/0017-global-game-and-global-event-pages.md).
+_Avoid_: game page, format page
+
+**Global Event**:
+A Global Game for Event Formats, at `/evenements/[event]`. Every event gets a route. [ADR 0017](./docs/adr/0017-global-game-and-global-event-pages.md).
+_Avoid_: event page, format page
 
 **Venue Page**:
 The document holding one of a Venue's three fixed screens — its home page, its gift page, its booking page — distinguished by a `pageType`. One document type for all three: the home page carries a single Page Component array, the gift and booking pages carry two that bracket their Widget, and nothing else differs. It is content, and the component that renders it is a Page. [ADR 0011](./docs/adr/0011-widget-pages-bracket-their-widget.md).
