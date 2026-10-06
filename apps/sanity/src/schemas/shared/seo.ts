@@ -114,7 +114,7 @@ export const seoType = defineType({
       name: "ogImage",
       title: "Sharing image",
       description: ogImageDescription(
-        "Leave empty to use the venue's sharing image, else the one in Site Settings.",
+        "Leave empty to use the page cover photo, else the venue's sharing image, else the one in Site Settings.",
       ),
       type: "image",
       validation: (rule) => rule.custom(ogImageWarning).warning(),

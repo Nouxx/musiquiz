@@ -69,3 +69,11 @@ not all venues have t&c because not all operated by MQ.
 ## Translate UI to FR
 
 https://www.sanity.io/docs/studio/localizing-studio-ui
+
+## Leaflet API KEY
+
+Check why we need it
+
+## Homepage logo, stacked with the rest
+
+It does not look good on desktop

@@ -44,7 +44,7 @@ export const siteSettingsType = defineType({
       name: "ogImage",
       title: "Sharing image",
       description: ogImageDescription(
-        "Used by every page that has no sharing image of its own, nor one from its venue.",
+        "Used by every page that has no sharing image of its own, no cover photo, and none from its venue.",
       ),
       group: "branding",
       type: "image",

@@ -221,7 +221,7 @@ export const venueType = defineType({
       name: "ogImage",
       title: "Sharing image",
       description: ogImageDescription(
-        "Used by every page of this venue that has no sharing image of its own. Leave empty to use the one in Site Settings.",
+        "Used by every page of this venue that has neither a sharing image nor a cover photo of its own. Leave empty to use the one in Site Settings.",
       ),
       type: "image",
       group: "general",

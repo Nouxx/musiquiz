@@ -5,13 +5,14 @@ import { imageProjection, sanityImageSchema } from "./image";
 
 const siteOgImage = `*[_type == "siteSettings"][0].ogImage`;
 
-// `venue` is undefined outside venue documents, which skips that step
+// a missing `pageCover` or `venue` skips its step
 export function seoProjection({ lang }: { lang: Lang }) {
   return `{
     "title": seo.title[language == "${lang}"][0].value,
     "description": seo.description[language == "${lang}"][0].value,
     "ogImage": select(
       defined(seo.ogImage.asset) => seo.ogImage,
+      pageCover.background == "image" && defined(pageCover.media.asset) => pageCover.media,
       defined(venue->ogImage.asset) => venue->ogImage,
       ${siteOgImage}
     ) ${imageProjection({ lang })},
