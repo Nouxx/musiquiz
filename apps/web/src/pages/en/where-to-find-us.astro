@@ -19,9 +19,6 @@ const alternates = getAlternatesUrl(
 );
 ---
 
-<Layout
-  {...data.seo}
-  {alternates}
->
+<Layout {...data.seo} {alternates}>
   <WhereToFindUsPage {data} {alternates} />
 </Layout>

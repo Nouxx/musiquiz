@@ -14,7 +14,7 @@ export const onRequest = defineMiddleware(async function (_context, next) {
   const body = await response.arrayBuffer();
 
   const finalResponse = new Response(body, response);
-  
+
   // robots.txt must keep allowing crawl, or crawlers never see this header
   finalResponse.headers.set("X-Robots-Tag", "noindex, nofollow");
 

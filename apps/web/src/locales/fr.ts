@@ -102,9 +102,12 @@ export const fr = {
     rating: "5/5 sur {{count}} avis",
     ratingStars: "Noté 5 sur 5",
     book: "Réserver à {{venue}}",
+    seeEvent: "Voir l’offre {{event}}",
+    findVenue: "Trouver un centre",
     findUsCta: "Réservez votre activité à {{venue}}",
     author: "L’auteur de cet article",
-    readMore: "À lire aussi à {{venue}}",
+    readMore: "À lire aussi",
+    readMoreVenue: "À lire aussi à {{venue}}",
   },
   joinTheNetworkPage: {
     ctaLabel: "Demander notre plaquette",

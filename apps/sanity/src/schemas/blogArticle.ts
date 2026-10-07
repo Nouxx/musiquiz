@@ -90,8 +90,15 @@ export const blogArticleType = defineType({
       type: "reference",
       to: [{ type: "venue" }],
       description:
-        "The venue also needs its own entry under Blog → Venues, or the site build fails.",
-      validation: (rule) => rule.required(),
+        'Optional. Pick one when the article is about a single venue. Readers are then sent to that venue: the booking buttons open its booking page, the article ends with its address and map, the breadcrumb and the article card show its name, and "À lire aussi" suggests other articles about the same venue. The venue also needs its own entry under Blog → Venues, or the site build fails. When set, it wins over Event.',
+    }),
+    defineField({
+      name: "event",
+      group: "content",
+      type: "reference",
+      to: [{ type: "eventFormat" }],
+      description:
+        'Optional. Pick one when the article is about an occasion rather than a place, like a bachelor party or team building. Used only when Venue is empty: the button then leads to the event\'s page, the breadcrumb and the article card show the event\'s name, "À lire aussi" suggests other articles about the same event, and there is no address or map. With neither a venue nor an event, the button leads to the "Où nous trouver" page and "À lire aussi" shows the latest articles.',
     }),
     defineField({
       name: "author",
@@ -203,13 +210,14 @@ export const blogArticleType = defineType({
     select: {
       title: "title",
       venue: "venue.title",
+      event: "event.name",
       publishedAt: "publishedAt",
       media: "cover",
     },
-    prepare({ title, venue, publishedAt, media }) {
+    prepare({ title, venue, event, publishedAt, media }) {
       return {
         title,
-        subtitle: [venue, publishedAt].filter(Boolean).join(" · "),
+        subtitle: [venue ?? event, publishedAt].filter(Boolean).join(" · "),
         media,
       };
     },

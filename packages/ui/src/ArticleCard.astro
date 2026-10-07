@@ -34,7 +34,13 @@ const wide = layout === "wide";
 
   <div class="content">
     <div class="stack">
-      <Badge color="light" border="muted" icon="pin">{badge}</Badge>
+      {
+        badge && (
+          <Badge color="light" border="muted" icon={badge.icon}>
+            {badge.label}
+          </Badge>
+        )
+      }
 
       <Text as="h3" variant={wide ? "title-h4" : "title-h5"}>{title}</Text>
 

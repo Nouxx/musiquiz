@@ -29,8 +29,23 @@ const t = getT("fr");
 const routes = getRoutesForLang("fr");
 
 const articleAnchor = "article";
-const bookUrl = routes.venueBook(data.venue.slug);
-const venue = data.venue.title;
+const { closesOn } = data;
+
+function toClosingCta() {
+  if (closesOn.kind === "venue") {
+    return {
+      label: t("blogArticlePage.book", { venue: closesOn.title }),
+      url: routes.venueBook(closesOn.slug),
+    };
+  }
+  if (closesOn.kind === "event") {
+    return {
+      label: t("blogArticlePage.seeEvent", { event: closesOn.title }),
+      url: routes.event(closesOn.slug),
+    };
+  }
+  return { label: t("blogArticlePage.findVenue"), url: routes.whereToFindUs };
+}
 
 const date = data.updatedAt
   ? { key: "blogArticlePage.updated" as const, iso: data.updatedAt }
@@ -64,22 +79,29 @@ const date = data.updatedAt
         label: t("blogArticlePage.rating", { count: data.reviewCount }),
         starsLabel: t("blogArticlePage.ratingStars"),
       }}
-  cta={{ label: t("blogArticlePage.book", { venue }), url: bookUrl }}
+  cta={toClosingCta()}
 />
 
 <ArticleBody id={articleAnchor} nodes={data.body} />
 
-<FindUs
-  media={data.findUs.media}
-  badge={data.findUs.badge}
-  title={data.findUs.title}
-  facts={toContactFacts({ component: data.findUs, t })}
-  cta={{ label: t("blogArticlePage.findUsCta", { venue }), url: bookUrl }}
-  map={{
-    ...data.findUs.location,
-    title: t("findUs.mapTitle", { venue }),
-  }}
-/>
+{
+  closesOn.kind === "venue" && (
+    <FindUs
+      media={closesOn.findUs.media}
+      badge={closesOn.findUs.badge}
+      title={closesOn.findUs.title}
+      facts={toContactFacts({ component: closesOn.findUs, t })}
+      cta={{
+        label: t("blogArticlePage.findUsCta", { venue: closesOn.title }),
+        url: routes.venueBook(closesOn.slug),
+      }}
+      map={{
+        ...closesOn.findUs.location,
+        title: t("findUs.mapTitle", { venue: closesOn.title }),
+      }}
+    />
+  )
+}
 
 {
   data.faq && (
@@ -102,7 +124,11 @@ const date = data.updatedAt
 {
   data.readMore.length > 0 && (
     <RelatedArticles
-      title={t("blogArticlePage.readMore", { venue })}
+      title={
+        closesOn.kind === "venue"
+          ? t("blogArticlePage.readMoreVenue", { venue: closesOn.title })
+          : t("blogArticlePage.readMore")
+      }
       articles={data.readMore.map(toArticleCard)}
     />
   )

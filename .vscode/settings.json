@@ -26,9 +26,5 @@
     "**/.sanity": true,
     "**/.wrangler": true
   },
-  "cSpell.words": [
-    "Musi'Quiz",
-    "unlighthouse",
-    "zeptomail"
-  ]
+  "cSpell.words": ["Musi'Quiz", "unlighthouse", "zeptomail"]
 }

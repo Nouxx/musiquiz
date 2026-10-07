@@ -80,8 +80,8 @@ export type CardItem = {
 
 export type ArticleCardItem = {
   media: ImageSource;
-  /** the venue title */
-  badge: string;
+  /** @example { label: "Lille", icon: "pin" } */
+  badge: { label: string; icon: IconName } | undefined;
   title: string;
   body: string;
   cta: CtaLink;

@@ -1,6 +1,6 @@
 # The Blog Article page closes on its Venue
 
-> The FAQ part is superseded by [ADR 0016](./0016-blog-faq-belongs-to-the-article.md).
+> The FAQ part is superseded by [ADR 0016](./0016-blog-faq-belongs-to-the-article.md). The Venue is optional since the amendment at the end.
 
 The article page ends the same way on every article: a Find Us block, an FAQ, the author, and up to three more articles about the same Venue. None of it is composed per article. Three things had to be decided to get there.
 
@@ -23,3 +23,19 @@ The article page ends the same way on every article: a Find Us block, an FAQ, th
 - The page emits `BlogPosting`, `BreadcrumbList` and `FAQPage` JSON-LD. Its urls stay relative until `site` is set in `astro.config`.
 - The Venue crumb links to the Venue home, not a per-Venue blog listing; see [ADR 0015](./0015-blog-venue-crumb-links-to-the-venue-home.md).
 - Reading time is derived at build time from the summary and the body, at 200 words a minute.
+
+## Amendment: an article closes on its Venue, else its Event, else where to find us
+
+The legacy blog's 73 posts are mostly about an occasion, not a city: "idées EVG", "team building musical". Pinning each to a Venue would be false. So `venue` is optional and `blogArticle` gains an optional `event`, a reference to an Event Format. The article closes on the first one set:
+
+| Closes on | Topic crumb  | Call to action           | Find Us | À lire aussi |
+| --------- | ------------ | ------------------------ | ------- | ------------ |
+| Venue     | Venue home   | the Venue's booking page | yes     | same Venue   |
+| Event     | Global Event | the Global Event         | no      | same Event   |
+| neither   | none         | `/ou-nous-trouver/`      | no      | the newest   |
+
+Both can be set; the Venue wins. The Event points at the Global Event because an article about bachelor parties should hand its reader, and its link, to the page that owns that query ([ADR 0017](./0017-global-game-and-global-event-pages.md)), not to a list of cities. The Find Us block is dropped without a Venue: it describes one place. The build still fails when an article's Venue has no `venueBlog`.
+
+- _Venue required, legacy posts pinned to the nearest one_ was rejected: false content, and a Paris crumb on an article about nowhere in particular.
+- _No `event` field, topic links written in the body only_ was rejected: the closing call to action and crumb would all fall back to `/ou-nous-trouver/`, and an editor forgets a link in the body sooner than a dropdown.
+- _A Game Format as a target too_ was left out: Q29 names Global Events only, and no legacy post is about one game. Adding it means one more reference type and one more branch.

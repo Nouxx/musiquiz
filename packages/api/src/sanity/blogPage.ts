@@ -20,6 +20,7 @@ function blogPageQuery() {
       "slug": slug.current,
       publishedAt,
       "venue": venue->title,
+      "event": event->name,
       cover ${imageProjection({ lang })},
       excerpt,
     }
@@ -37,7 +38,8 @@ const sanityBlogPageSchema = z.strictObject({
       title: z.string().min(1),
       slug: z.string().min(1),
       publishedAt: z.iso.date(),
-      venue: z.string().min(1),
+      venue: z.string().min(1).nullable(),
+      event: z.string().min(1).nullable(),
       cover: sanityImageSchema,
       excerpt: z.string().min(1),
     }),

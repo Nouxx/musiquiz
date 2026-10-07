@@ -211,8 +211,8 @@ export type BlogArticleSummary = {
   url: string;
   /** ISO date, `YYYY-MM-DD` */
   publishedAt: string;
-  /** the venue title, drawn as the badge */
-  venue: string;
+  /** the venue it is about, else its event */
+  topic: { kind: "venue" | "event"; title: string } | undefined;
   cover: CmsImage;
   excerpt: string;
 };
@@ -238,7 +238,10 @@ export type BlogArticlePage = {
   reviewCount: number | undefined;
   body: ArticleNode[];
   readingMinutes: number;
-  venue: { title: string; slug: string };
+  closesOn:
+    | { kind: "venue"; title: string; slug: string; findUs: FindUsContent }
+    | { kind: "event"; title: string; slug: string }
+    | { kind: "whereToFindUs" };
   author: {
     name: string;
     jobTitle: string;
@@ -248,11 +251,10 @@ export type BlogArticlePage = {
     /** @example "https://www.linkedin.com/in/…" */
     profileUrl: string | undefined;
   };
-  findUs: FindUsContent;
   faq: { title: string; questions: FaqQuestion[] } | undefined;
   /** the brand logo, same as `Organization.logo` */
   publisherLogo: CmsImage;
-  /** same venue, newest first, at most three */
+  /** same venue, else same event, else any; newest first, at most three */
   readMore: BlogArticleSummary[];
   seo: Seo;
 };

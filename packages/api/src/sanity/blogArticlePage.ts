@@ -44,7 +44,20 @@ function blogArticlePageQuery({ slug }: { slug: string }) {
         "location": location{ lat, lng },
         "address": ${addressProjection},
         googleMapsLink,
+        "blog": *[_type == "venueBlog" && venue._ref == ^._id][0]{
+          findUs{
+            media ${imageProjection({ lang })},
+            badge,
+            title,
+            addressNote,
+            openingTitle,
+            openingNote,
+            contactTitle,
+            contactNote,
+          },
+        },
       },
+      "event": event->{ name, "slug": slug.current },
       "author": author->{
         name,
         "jobTitle": jobTitle[language == "${lang}"][0].value,
@@ -53,26 +66,19 @@ function blogArticlePageQuery({ slug }: { slug: string }) {
         photo ${imageProjection({ lang })},
         profileUrl,
       },
-      "venueBlog": *[_type == "venueBlog" && venue._ref == ^.venue._ref][0]{
-        findUs{
-          media ${imageProjection({ lang })},
-          badge,
-          title,
-          addressNote,
-          openingTitle,
-          openingNote,
-          contactTitle,
-          contactNote,
-        },
-      },
       "readMore": *[_type == "blogArticle"
-        && venue._ref == ^.venue._ref
-        && slug.current != "${slug}"]
+        && slug.current != "${slug}"
+        && select(
+          defined(^.venue) => venue._ref == ^.venue._ref,
+          defined(^.event) => event._ref == ^.event._ref,
+          true
+        )]
         | order(publishedAt desc, _createdAt desc)[0...3]{
         title,
         "slug": slug.current,
         publishedAt,
         "venue": venue->title,
+        "event": event->name,
         cover ${imageProjection({ lang })},
         excerpt,
       },
@@ -114,13 +120,30 @@ const sanityBlogArticlePageSchema = z.strictObject({
           .max(8),
       })
       .nullable(),
-    venue: z.strictObject({
-      title: z.string().min(1),
-      slug: z.string().min(1),
-      location: z.strictObject({ lat: z.number(), lng: z.number() }),
-      address: sanityAddressSchema,
-      googleMapsLink: z.string().min(1),
-    }),
+    venue: z
+      .strictObject({
+        title: z.string().min(1),
+        slug: z.string().min(1),
+        location: z.strictObject({ lat: z.number(), lng: z.number() }),
+        address: sanityAddressSchema,
+        googleMapsLink: z.string().min(1),
+        blog: z.strictObject({
+          findUs: z.strictObject({
+            media: sanityImageSchema,
+            badge: z.string().min(1),
+            title: z.string().min(1),
+            addressNote: z.string().min(1),
+            openingTitle: z.string().min(1),
+            openingNote: z.string().min(1),
+            contactTitle: z.string().min(1),
+            contactNote: z.string().min(1),
+          }),
+        }),
+      })
+      .nullable(),
+    event: z
+      .strictObject({ name: z.string().min(1), slug: z.string().min(1) })
+      .nullable(),
     author: z.strictObject({
       name: z.string().min(1),
       jobTitle: z.string().min(1),
@@ -129,24 +152,13 @@ const sanityBlogArticlePageSchema = z.strictObject({
       photo: sanityImageSchema,
       profileUrl: z.url().nullable(),
     }),
-    venueBlog: z.strictObject({
-      findUs: z.strictObject({
-        media: sanityImageSchema,
-        badge: z.string().min(1),
-        title: z.string().min(1),
-        addressNote: z.string().min(1),
-        openingTitle: z.string().min(1),
-        openingNote: z.string().min(1),
-        contactTitle: z.string().min(1),
-        contactNote: z.string().min(1),
-      }),
-    }),
     readMore: z.array(
       z.strictObject({
         title: z.string().min(1),
         slug: z.string().min(1),
         publishedAt: z.iso.date(),
-        venue: z.string().min(1),
+        venue: z.string().min(1).nullable(),
+        event: z.string().min(1).nullable(),
         cover: sanityImageSchema,
         excerpt: z.string().min(1),
       }),

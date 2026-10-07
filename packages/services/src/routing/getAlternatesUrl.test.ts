@@ -13,7 +13,9 @@ it("pairs a static route with its english twin", () => {
 
 it("passes the same params to both languages", () => {
   expect(
-    getAlternatesUrl(site, (routes) => routes.venueGame("paris", "pixel-games")),
+    getAlternatesUrl(site, (routes) =>
+      routes.venueGame("paris", "pixel-games"),
+    ),
   ).toEqual({
     fr: "https://musiquiz.co/paris/jeux/pixel-games/",
     en: "https://musiquiz.co/en/paris/games/pixel-games/",

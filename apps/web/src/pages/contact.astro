@@ -16,9 +16,6 @@ const data = await getContactPageData({
 const alternates = getAlternatesUrl(getSite(Astro), (routes) => routes.contact);
 ---
 
-<Layout
-  {...data.seo}
-  {alternates}
->
+<Layout {...data.seo} {alternates}>
   <ContactPage {data} {alternates} />
 </Layout>

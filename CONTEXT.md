@@ -74,7 +74,7 @@ A page no Venue owns — join the network, contact, where to find us, legal noti
 _Avoid_: globalPage, generic page, static page, site page
 
 **Blog Article**:
-One post of the blog, written in French only, dated, signed by a Team Member and pinned to the Venue it is about. Nothing on it is translated and no `en` route serves it; the blog exists for search engines and the business writes it in one language. Its page is fixed: cover, summary, Article Body, then the Venue Blog, its own optional FAQ and the author, with no Page Components. [ADR 0013](./docs/adr/0013-blog-is-french-only-and-static.md), [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md), [ADR 0016](./docs/adr/0016-blog-faq-belongs-to-the-article.md).
+One post of the blog, written in French only, dated, signed by a Team Member and pinned to the Venue it is about, else to an Event Format, else to neither. Nothing on it is translated and no `en` route serves it; the blog exists for search engines and the business writes it in one language. Its page is fixed: cover, summary, Article Body, then the Venue Blog when it has a Venue, its own optional FAQ and the author, with no Page Components. [ADR 0013](./docs/adr/0013-blog-is-french-only-and-static.md), [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md), [ADR 0016](./docs/adr/0016-blog-faq-belongs-to-the-article.md).
 _Avoid_: post, news, article (alone), blog entry
 
 **Article Body**:
@@ -164,7 +164,7 @@ The card inside a Detail Group — a Mark over a title, an optional lead-in sent
 _Avoid_: feature card, tile, item
 
 **Article Card**:
-The UI Component drawing one Blog Article in the listing — cover, Venue badge, title, excerpt, a read button and the date on one row. `stacked` in the grid, `wide` for the newest article with the cover beside the copy. Not a Card: a Card pins its call to action alone to the bottom edge, an Article Card pins a button and a date together.
+The UI Component drawing one Blog Article in the listing — cover, a Venue or Event Format badge when it has one, title, excerpt, a read button and the date on one row. `stacked` in the grid, `wide` for the newest article with the cover beside the copy. Not a Card: a Card pins its call to action alone to the bottom edge, an Article Card pins a button and a date together.
 _Avoid_: blog card, post card, card
 
 **Site Chrome**:
