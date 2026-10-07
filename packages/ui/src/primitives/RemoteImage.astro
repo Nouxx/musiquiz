@@ -16,6 +16,8 @@ interface Props {
   image: ImageSource;
   variant: Variant;
   loading?: "lazy" | "eager";
+  /** the page's LCP image, one per page at most */
+  priority?: boolean;
 }
 
 const variants = {
@@ -92,7 +94,7 @@ const variants = {
 
 const SVG_MIME_TYPE = "image/svg+xml";
 
-const { image, variant, loading = "lazy" } = Astro.props;
+const { image, variant, loading, priority } = Astro.props;
 
 const { widths, sizes } = variants[variant];
 
@@ -119,6 +121,7 @@ const srcSetWidths =
       height={image.height}
       format="svg"
       loading={loading}
+      priority={priority}
     />
   ) : (
     <Picture
@@ -131,6 +134,7 @@ const srcSetWidths =
       sizes={sizes}
       formats={["avif", "webp"]}
       loading={loading}
+      priority={priority}
     />
   )
 }
