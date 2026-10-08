@@ -94,6 +94,12 @@ export default defineConfig({
         optional: false,
         url: true,
       }),
+      // the map widget api key (safe to share)
+      CARTO_API_KEY: envField.string({
+        context: "client",
+        access: "public",
+        optional: false,
+      }),
     },
   },
   i18n: {

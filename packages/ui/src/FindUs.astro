@@ -11,6 +11,7 @@ import Text from "./primitives/Text.astro";
 import TwoBlocks from "./primitives/TwoBlocks.astro";
 import Section from "./Section.astro";
 import type { ContactFact, CtaLink, ImageSource } from "./types";
+import { CARTO_API_KEY } from "astro:env/client";
 
 interface Props {
   media: ImageSource;
@@ -23,7 +24,7 @@ interface Props {
 
 const { media, badge, title, facts, cta, map } = Astro.props;
 
-// todo: this helper should be owned by the services and return a object like {url, external} kinda of things
+// todo: this helper should be owned by the services and return a object like {url, external} kind of things
 const external = isExternalUrl(cta.url);
 ---
 
@@ -66,7 +67,12 @@ const external = isExternalUrl(cta.url);
 
     <div slot="second" class="map-block">
       <Card border="thick" class="map-card">
-        <TileMap lat={map.lat} lng={map.lng} title={map.title} />
+        <TileMap
+          lat={map.lat}
+          lng={map.lng}
+          title={map.title}
+          apiKey={CARTO_API_KEY}
+        />
       </Card>
     </div>
   </TwoBlocks>
