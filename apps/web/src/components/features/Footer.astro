@@ -31,8 +31,7 @@ const footerData = await getFooterData({
   config: sanityConfig,
 });
 
-const { logo, socials, contact, gamesFormatsLinks, paymentMethods } =
-  footerData;
+const { logo, socials, contact, games, paymentMethods } = footerData;
 ---
 
 <Footer>
@@ -43,7 +42,7 @@ const { logo, socials, contact, gamesFormatsLinks, paymentMethods } =
 
   <FooterSection>
     <FooterContact {contact} />
-    <FooterGames games={gamesFormatsLinks} />
+    <FooterGames {games} />
     <FooterChooseVenue />
     <FooterGeneralInformation {alternates} />
   </FooterSection>

@@ -19,7 +19,8 @@ function footerQuery({ lang }: { lang: Lang }) {
       mainEmail,
       "acceptedPaymentMethods": acceptedPaymentMethods[] ${imageProjection({ lang })}
     },
-    "gameFormats": *[_type == "gameFormat"]{
+    "games": *[_type == "gameFormat" && signature == true]
+      | order(displayOrder asc, name asc){
       name,
       "slug": slug.current
     }
@@ -38,12 +39,14 @@ const sanityFooterSchema = z.strictObject({
     youtubeUrl: z.url(),
     acceptedPaymentMethods: z.array(sanityImageSchema),
   }),
-  gameFormats: z.array(
-    z.strictObject({
-      name: z.string().min(1),
-      slug: z.string().min(1),
-    }),
-  ),
+  games: z
+    .array(
+      z.strictObject({
+        name: z.string().min(1),
+        slug: z.string().min(1),
+      }),
+    )
+    .min(1),
 });
 
 export type SanityFooter = z.infer<typeof sanityFooterSchema>;

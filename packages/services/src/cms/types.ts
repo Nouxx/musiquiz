@@ -386,7 +386,7 @@ export type Footer = {
     phoneLabel: string;
     phoneHref: string;
   };
-  gamesFormatsLinks: GameFormatLinks[];
+  games: GameFormatLinks[];
   newsletter: boolean;
   paymentMethods: CmsImage[];
 };
