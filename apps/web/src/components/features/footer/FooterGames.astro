@@ -7,23 +7,17 @@ import { getLang } from "../../../libs/getLang";
 import { getT } from "../../../libs/i18n";
 
 interface Props {
-  games: Footer["gamesFormatsLinks"]; // todo: rename games
+  games: Footer["games"];
 }
 
 const { games } = Astro.props;
 
 const t = getT(getLang(Astro));
-
-const gamesWithLink = games.map((game) => ({
-  ...game,
-  // TODO: do we create games page outside of a venue context?
-  url: "#todo",
-}));
 ---
 
 <FooterColumn heading={t("footer.ourGames")} as="ul">
   {
-    gamesWithLink.map((game) => (
+    games.map((game) => (
       <li>
         <Button as="a" href={game.url} tone="light" size="s">
           {game.label}

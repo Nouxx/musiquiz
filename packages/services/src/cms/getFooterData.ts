@@ -4,10 +4,19 @@ import { getTel } from "@repo/utils/getTel";
 import type { Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
+import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { Footer } from "./types";
 import { toCmsImage } from "./utils/toCmsImage";
 
-function adaptFooter({ data }: { data: SanityFooter; lang: Lang }): Footer {
+function adaptFooter({
+  data,
+  lang,
+}: {
+  data: SanityFooter;
+  lang: Lang;
+}): Footer {
+  const routes = getRoutesForLang(lang);
+
   const {
     footerLogo,
     facebookUrl,
@@ -36,9 +45,9 @@ function adaptFooter({ data }: { data: SanityFooter; lang: Lang }): Footer {
       phoneHref: getTel(mainPhone),
     },
     newsletter: false,
-    gamesFormatsLinks: data.gameFormats.map((format) => ({
+    games: data.games.map((format) => ({
       label: format.name,
-      url: "#todo", // TODO: what do we do with this?
+      url: routes.game(format.slug),
     })),
     paymentMethods: acceptedPaymentMethods.map((method) => toCmsImage(method)),
   };
