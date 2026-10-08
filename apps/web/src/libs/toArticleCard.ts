@@ -17,7 +17,10 @@ export function formatBlogDate(iso: string) {
 export function toArticleCard(article: BlogArticleSummary): ArticleCardItem {
   return {
     media: article.cover,
-    badge: article.venue,
+    badge: article.topic && {
+      label: article.topic.title,
+      icon: article.topic.kind === "venue" ? "pin" : "sparkles",
+    },
     title: article.title,
     body: article.excerpt,
     cta: { label: getT("fr")("blogPage.readArticle"), url: article.url },

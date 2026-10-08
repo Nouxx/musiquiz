@@ -3,6 +3,7 @@ import type { Path } from "sanity";
 import { JoystickIcon } from "@sanity/icons/Joystick";
 import { frenchValue, type LocalizedEntry } from "./shared/frenchValue";
 import { findDuplicate, takenFormatIds } from "./shared/venueFormatUniqueness";
+import { pageGroups } from "./shared/seo";
 
 /** the note sits in a narrow card beside the amount, so it has to stay short */
 const NOTE_MAX_LENGTH = 30;
@@ -209,9 +210,11 @@ export const venueGameType = defineType({
         message: `${venue} already has a page for ${game}. Open that page instead — a venue has only one page per game.`,
       };
     }),
+  groups: pageGroups,
   fields: [
     defineField({
       name: "venue",
+      group: "content",
       title: "Venue",
       type: "reference",
       to: [{ type: "venue" }],
@@ -220,6 +223,7 @@ export const venueGameType = defineType({
     }),
     defineField({
       name: "game",
+      group: "content",
       title: "Game",
       description: "Games this venue already has a page for are not listed.",
       type: "reference",
@@ -240,6 +244,7 @@ export const venueGameType = defineType({
     }),
     defineField({
       name: "prices",
+      group: "content",
       title: "Prices",
       description:
         "What this game costs at this venue. Re-order the bands to decide the order they appear in.",
@@ -258,13 +263,20 @@ export const venueGameType = defineType({
     }),
     defineField({
       name: "pageCover",
+      group: "content",
       title: "Page Cover",
       type: "pageCover",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "pageComponents",
+      group: "content",
       type: "pageComponents",
+    }),
+    defineField({
+      name: "seo",
+      type: "seo",
+      group: "seo",
     }),
   ],
   preview: {

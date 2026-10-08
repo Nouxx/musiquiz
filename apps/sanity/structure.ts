@@ -18,6 +18,8 @@ import { HeartIcon } from "@sanity/icons/Heart";
 import { CalendarIcon } from "@sanity/icons/Calendar";
 import type { ComponentType } from "react";
 import {
+  globalEventTemplateId,
+  globalGameTemplateId,
   singletonIds,
   venueBlogTemplateId,
   venueEventTemplateId,
@@ -33,6 +35,10 @@ const nestedTypeIds = [
   "blogArticle",
   "venueBlog",
   "teamMember",
+  "gameFormat",
+  "eventFormat",
+  "globalGame",
+  "globalEvent",
 ];
 
 function venuePageId({
@@ -92,6 +98,50 @@ function venueBlogItem({
     .schemaType("venueBlog")
     .documentId(`venueBlog-${publishedVenueId}`)
     .initialValueTemplate(venueBlogTemplateId, { venueId: publishedVenueId });
+}
+
+function formatChild({
+  S,
+  formatId,
+  formatType,
+  pageType,
+  templateId,
+  templateParameter,
+  icon,
+}: {
+  S: StructureBuilder;
+  formatId: string;
+  formatType: "gameFormat" | "eventFormat";
+  pageType: "globalGame" | "globalEvent";
+  templateId: string;
+  templateParameter: "gameId" | "eventId";
+  icon: ComponentType;
+}) {
+  const publishedFormatId = formatId.replace(/^drafts\./, "");
+
+  return S.list()
+    .title("Format")
+    .items([
+      S.listItem()
+        .title("Format details")
+        .id("details")
+        .icon(InfoOutlineIcon)
+        .child(S.document().schemaType(formatType).documentId(formatId)),
+      S.listItem()
+        .title("Global page")
+        .id("page")
+        .icon(icon)
+        .child(
+          S.document()
+            .schemaType(pageType)
+            // a hyphen, never a dot: see venuePageId
+            .documentId(`${pageType}-${publishedFormatId}`)
+            .title("Global page")
+            .initialValueTemplate(templateId, {
+              [templateParameter]: publishedFormatId,
+            }),
+        ),
+    ]);
 }
 
 function singletonItem({
@@ -270,6 +320,46 @@ export const myStructure: StructureResolver = (S: StructureBuilder) =>
           S.documentTypeList("venue")
             .title("Venues")
             .child((venueId) => venueChild({ S, venueId })),
+        ),
+
+      S.listItem()
+        .title("Games")
+        .id("games")
+        .icon(JoystickIcon)
+        .child(
+          S.documentTypeList("gameFormat")
+            .title("Games")
+            .child((formatId) =>
+              formatChild({
+                S,
+                formatId,
+                formatType: "gameFormat",
+                pageType: "globalGame",
+                templateId: globalGameTemplateId,
+                templateParameter: "gameId",
+                icon: JoystickIcon,
+              }),
+            ),
+        ),
+
+      S.listItem()
+        .title("Events")
+        .id("events")
+        .icon(ConfettiIcon)
+        .child(
+          S.documentTypeList("eventFormat")
+            .title("Events")
+            .child((formatId) =>
+              formatChild({
+                S,
+                formatId,
+                formatType: "eventFormat",
+                pageType: "globalEvent",
+                templateId: globalEventTemplateId,
+                templateParameter: "eventId",
+                icon: ConfettiIcon,
+              }),
+            ),
         ),
 
       ...S.documentTypeListItems().filter((listItem) => {

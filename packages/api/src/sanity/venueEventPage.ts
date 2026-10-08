@@ -9,6 +9,7 @@ import {
   sanityPageComponentSchema,
 } from "./shared/pageComponents";
 import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
+import { sanitySeoSchema, seoProjection } from "./shared/seo";
 
 function venueEventPageQuery({
   lang,
@@ -23,8 +24,10 @@ function venueEventPageQuery({
     "venueEvent": *[_type == "venueEvent"
       && venue->slug.current == "${venueSlug}"
       && event->slug.current == "${eventSlug}"][0]{
+      "venueTitle": venue->title,
       "eventName": event->name,
       pageCover ${pageCoverProjection({ lang })},
+      "seo": ${seoProjection({ lang })},
       "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
     }
   }`);
@@ -32,8 +35,10 @@ function venueEventPageQuery({
 
 const sanityVenueEventPageSchema = z.strictObject({
   venueEvent: z.strictObject({
+    venueTitle: z.string().min(1),
     eventName: z.string().min(1),
     pageCover: sanityPageCoverSchema({ hasCta: true }),
+    seo: sanitySeoSchema,
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
   }),
 });

@@ -1,4 +1,5 @@
 ---
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import type { BlogArticlePage as BlogArticlePageData } from "@repo/services/cms/types";
 import ArticleAuthor from "@repo/ui/ArticleAuthor";
@@ -14,26 +15,45 @@ import { formatBlogDate, toArticleCard } from "../../libs/toArticleCard";
 import { toContactFacts } from "../../libs/toContactFacts";
 import ArticleCover from "../features/ArticleCover.astro";
 import Footer from "../features/Footer.astro";
+import Header from "../features/Header.astro";
+import { CARTO_API_KEY } from "astro:env/client";
 
-// the route fetches, like the listing: docs/adr/0013
 export interface Props {
   data: BlogArticlePageData;
   breadcrumbs: BreadcrumbItem[];
+  alternates: Alternates;
 }
 
-const { data, breadcrumbs } = Astro.props;
+const { data, breadcrumbs, alternates } = Astro.props;
 
 const t = getT("fr");
 const routes = getRoutesForLang("fr");
 
 const articleAnchor = "article";
-const bookUrl = routes.venueBook(data.venue.slug);
-const venue = data.venue.title;
+const { closesOn } = data;
+
+function toClosingCta() {
+  if (closesOn.kind === "venue") {
+    return {
+      label: t("blogArticlePage.book", { venue: closesOn.title }),
+      url: routes.venueBook(closesOn.slug),
+    };
+  }
+  if (closesOn.kind === "event") {
+    return {
+      label: t("blogArticlePage.seeEvent", { event: closesOn.title }),
+      url: routes.event(closesOn.slug),
+    };
+  }
+  return { label: t("blogArticlePage.findVenue"), url: routes.whereToFindUs };
+}
 
 const date = data.updatedAt
   ? { key: "blogArticlePage.updated" as const, iso: data.updatedAt }
   : { key: "blogArticlePage.published" as const, iso: data.publishedAt };
 ---
+
+<Header {alternates} />
 
 <ArticleCover
   items={breadcrumbs}
@@ -60,22 +80,30 @@ const date = data.updatedAt
         label: t("blogArticlePage.rating", { count: data.reviewCount }),
         starsLabel: t("blogArticlePage.ratingStars"),
       }}
-  cta={{ label: t("blogArticlePage.book", { venue }), url: bookUrl }}
+  cta={toClosingCta()}
 />
 
 <ArticleBody id={articleAnchor} nodes={data.body} />
 
-<FindUs
-  media={data.findUs.media}
-  badge={data.findUs.badge}
-  title={data.findUs.title}
-  facts={toContactFacts({ component: data.findUs, t })}
-  cta={{ label: t("blogArticlePage.findUsCta", { venue }), url: bookUrl }}
-  map={{
-    ...data.findUs.location,
-    title: t("findUs.mapTitle", { venue }),
-  }}
-/>
+{
+  closesOn.kind === "venue" && (
+    <FindUs
+      media={closesOn.findUs.media}
+      badge={closesOn.findUs.badge}
+      title={closesOn.findUs.title}
+      facts={toContactFacts({ component: closesOn.findUs, t })}
+      cta={{
+        label: t("blogArticlePage.findUsCta", { venue: closesOn.title }),
+        url: routes.venueBook(closesOn.slug),
+      }}
+      map={{
+        ...closesOn.findUs.location,
+        title: t("findUs.mapTitle", { venue: closesOn.title }),
+        apiKey: CARTO_API_KEY,
+      }}
+    />
+  )
+}
 
 {
   data.faq && (
@@ -98,10 +126,14 @@ const date = data.updatedAt
 {
   data.readMore.length > 0 && (
     <RelatedArticles
-      title={t("blogArticlePage.readMore", { venue })}
+      title={
+        closesOn.kind === "venue"
+          ? t("blogArticlePage.readMoreVenue", { venue: closesOn.title })
+          : t("blogArticlePage.readMore")
+      }
       articles={data.readMore.map(toArticleCard)}
     />
   )
 }
 
-<Footer />
+<Footer {alternates} />

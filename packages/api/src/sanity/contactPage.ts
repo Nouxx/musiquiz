@@ -4,13 +4,16 @@ import { defineQuery } from "groq";
 import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
+import { addressProjection, sanityAddressSchema } from "./shared/address";
 import { imageProjection, sanityImageSchema } from "./shared/image";
 import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
+import { sanitySeoSchema, seoProjection } from "./shared/seo";
 
 function contactPageQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
     "page": *[_type == "contactPage"][0]{
       pageCover ${pageCoverProjection({ lang })},
+      "seo": ${seoProjection({ lang })},
       "teamTitle": teamTitle[language == "${lang}"][0].value,
       "teamIntro": teamIntro[language == "${lang}"][0].value,
       "venuesTitle": venuesTitle[language == "${lang}"][0].value,
@@ -27,7 +30,7 @@ function contactPageQuery({ lang }: { lang: Lang }) {
     "venues": *[_type == "venue"] | order(title asc){
       title,
       venueLogoDark ${imageProjection({ lang })},
-      addressLine,
+      "address": ${addressProjection},
       phone,
       mail,
     },
@@ -37,6 +40,7 @@ function contactPageQuery({ lang }: { lang: Lang }) {
 const sanityContactPageSchema = z.strictObject({
   page: z.strictObject({
     pageCover: sanityPageCoverSchema({ hasCta: false }),
+    seo: sanitySeoSchema,
     teamTitle: z.string().min(1),
     teamIntro: z.string().min(1).nullable(),
     venuesTitle: z.string().min(1),
@@ -59,7 +63,7 @@ const sanityContactPageSchema = z.strictObject({
       z.strictObject({
         title: z.string().min(1),
         venueLogoDark: sanityImageSchema,
-        addressLine: z.string().min(1),
+        address: sanityAddressSchema,
         phone: z.string().min(1),
         mail: z.email(),
       }),

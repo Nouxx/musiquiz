@@ -10,6 +10,7 @@ import {
   pageComponentsProjection,
   sanityPageComponentSchema,
 } from "./shared/pageComponents";
+import { sanitySeoSchema, seoProjection } from "./shared/seo";
 
 function homepageQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
@@ -20,12 +21,23 @@ function homepageQuery({ lang }: { lang: Lang }) {
       cover ${imageProjection({ lang })},
       "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
       "venuesCta": ${optionalCtaProjection({ field: "venuesCta", lang })},
+      "seo": ${seoProjection({ lang })},
     },
     "venues": *[_type == "venue"] | order(title asc){
       "title": title,
       "slug": slug.current,
       regionCode,
       "mapPosition": mapPosition{ x, y }
+    },
+    "siteSettings": *[_type == "siteSettings"][0]{
+      footerLogo ${imageProjection({ lang })},
+      facebookUrl,
+      instagramUrl,
+      linkedinUrl,
+      tiktokUrl,
+      youtubeUrl,
+      mainPhone,
+      mainEmail,
     },
   }`);
 }
@@ -38,6 +50,7 @@ const sanityHomepageSchema = z.strictObject({
     cover: sanityImageSchema,
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
     venuesCta: sanityCtaSchema.nullable(),
+    seo: sanitySeoSchema,
   }),
   venues: z.array(
     z.strictObject({
@@ -47,6 +60,16 @@ const sanityHomepageSchema = z.strictObject({
       mapPosition: z.strictObject({ x: z.number(), y: z.number() }),
     }),
   ),
+  siteSettings: z.strictObject({
+    footerLogo: sanityImageSchema,
+    facebookUrl: z.url(),
+    instagramUrl: z.url(),
+    linkedinUrl: z.url(),
+    tiktokUrl: z.url(),
+    youtubeUrl: z.url(),
+    mainPhone: z.string().min(1),
+    mainEmail: z.email(),
+  }),
 });
 
 export type SanityHomepage = z.infer<typeof sanityHomepageSchema>;

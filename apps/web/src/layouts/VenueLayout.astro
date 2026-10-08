@@ -1,16 +1,18 @@
 ---
-import Header from "../components/features/Header.astro";
+import VenueHeader from "../components/features/VenueHeader.astro";
+import type { Props as SeoProps } from "../components/features/SeoHead.astro";
 import Layout from "./Layout.astro";
 
-interface Props {
+interface Props extends SeoProps {
   venueSlug: string;
 }
 
-const { venueSlug } = Astro.props;
+const { venueSlug, ...seo } = Astro.props;
 ---
 
-<Layout>
-  <Header {venueSlug} />
+<Layout {...seo}>
+  <slot name="head" slot="head" />
+  <VenueHeader {venueSlug} />
 
   <slot />
 </Layout>

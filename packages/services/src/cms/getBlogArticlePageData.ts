@@ -5,11 +5,39 @@ import {
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { BlogArticlePage } from "./types";
+import { toAddressLine } from "./utils/toAddressLine";
 import { toArticleBody } from "./utils/toArticleBody";
 import { toBlogArticleSummary } from "./utils/toBlogArticleSummary";
 import { toCmsImage } from "./utils/toCmsImage";
 import { toReadingMinutes } from "./utils/toReadingMinutes";
 import { toRichText } from "./utils/toRichText";
+import { toSeo } from "./utils/toSeo";
+
+function toClosesOn({
+  venue,
+  event,
+}: Pick<
+  SanityBlogArticlePage["article"],
+  "venue" | "event"
+>): BlogArticlePage["closesOn"] {
+  if (venue) {
+    return {
+      kind: "venue",
+      title: venue.title,
+      slug: venue.slug,
+      findUs: {
+        ...venue.blog.findUs,
+        media: toCmsImage(venue.blog.findUs.media),
+        venueTitle: venue.title,
+        location: venue.location,
+        address: toAddressLine(venue.address),
+        mapsUrl: venue.googleMapsLink,
+      },
+    };
+  }
+  if (event) return { kind: "event", title: event.name, slug: event.slug };
+  return { kind: "whereToFindUs" };
+}
 
 function adaptBlogArticlePage({
   data,
@@ -17,7 +45,7 @@ function adaptBlogArticlePage({
   data: SanityBlogArticlePage;
 }): BlogArticlePage {
   const { article } = data;
-  const { venue, author, venueBlog } = article;
+  const { venue, event, author } = article;
 
   const summary = toRichText(article.summary);
   const body = toArticleBody(article.body);
@@ -33,21 +61,14 @@ function adaptBlogArticlePage({
     reviewCount: article.reviewCount ?? undefined,
     body,
     readingMinutes: toReadingMinutes([...summary, ...body]),
-    venue: { title: venue.title, slug: venue.slug },
+    closesOn: toClosesOn({ venue, event }),
     author: {
       name: author.name,
       jobTitle: author.jobTitle,
       bio: author.bio,
       tone: author.tone,
       photo: toCmsImage(author.photo),
-    },
-    findUs: {
-      ...venueBlog.findUs,
-      media: toCmsImage(venueBlog.findUs.media),
-      venueTitle: venue.title,
-      location: venue.location,
-      address: venue.addressLine,
-      mapsUrl: venue.googleMapsLink,
+      profileUrl: author.profileUrl ?? undefined,
     },
     faq: article.faq
       ? {
@@ -58,7 +79,12 @@ function adaptBlogArticlePage({
           })),
         }
       : undefined,
+    publisherLogo: toCmsImage(data.publisherLogo),
     readMore: article.readMore.map((item) => toBlogArticleSummary(item)),
+    seo: toSeo({
+      data: article.seo,
+      fallback: { title: article.title, description: article.excerpt },
+    }),
   };
 }
 

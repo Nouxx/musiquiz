@@ -6,9 +6,11 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 import { MapPositionInput } from "../components/MapPositionInput";
 import type { StringRule } from "sanity";
 import { frenchValue, type LocalizedEntry } from "./shared/frenchValue";
+import { ogImageDescription, ogImageWarning } from "./shared/seo";
 import TagIcon from "@sanity/icons/Tag";
 import { HomeIcon } from "@sanity/icons/Home";
 import { BookIcon } from "@sanity/icons/Book";
+import { ShareIcon } from "@sanity/icons/Share";
 
 // todo: i18n, "Fermé" is french
 function openingTimeValidation(rule: StringRule) {
@@ -19,6 +21,9 @@ function openingTimeValidation(rule: StringRule) {
       .error('Must match the format "HH:mm - HH:mm" or "Fermé"'),
   ];
 }
+
+const SOCIAL_DESCRIPTION =
+  "Only if this venue has its own account. Leave empty to show the Musi'Quiz one.";
 
 export const venueType = defineType({
   name: "venue",
@@ -35,6 +40,7 @@ export const venueType = defineType({
     { name: "contact", title: "Contact", icon: EnvelopeIcon },
     { name: "location", title: "Location", icon: PinIcon },
     { name: "openHours", title: "Open Hours", icon: ClockIcon },
+    { name: "social", title: "Social", icon: ShareIcon },
     { name: "quotation", title: "Quotation", icon: TagIcon },
     { name: "legal", title: "Legal", icon: BookIcon },
   ],
@@ -149,7 +155,7 @@ export const venueType = defineType({
       title: "Google Maps Link",
       type: "string",
       description:
-        "Paste it from Google Maps, example: https://share.google/pfpYwPnyAXvmLJ1Su",
+        "The venue's own Google listing, not an address search: open the Musi'Quiz place in Google Maps, then Share. Example: https://maps.app.goo.gl/iiMqAVV75RrJsB4cA",
       group: "location",
       validation: (rule) => rule.required(),
     }),
@@ -212,6 +218,16 @@ export const venueType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "ogImage",
+      title: "Sharing image",
+      description: ogImageDescription(
+        "Used by every page of this venue that has neither a sharing image nor a cover photo of its own. Leave empty to use the one in Site Settings.",
+      ),
+      type: "image",
+      group: "general",
+      validation: (rule) => rule.custom(ogImageWarning).warning(),
+    }),
+    defineField({
       name: "quotationServices",
       title: "Prestations",
       description:
@@ -222,12 +238,81 @@ export const venueType = defineType({
       validation: (rule) => rule.required().min(1),
     }),
     defineField({
-      name: "addressLine",
-      title: "Address line",
+      name: "streetAddress",
+      title: "Street address",
       type: "string",
-      description: "Example: 28 boulevard Poissonnière, 75009 Paris",
+      description: "Example: 28 boulevard Poissonnière",
       group: "location",
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "postalCode",
+      title: "Postal code",
+      type: "string",
+      description: "Example: 75009",
+      group: "location",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "addressLocality",
+      title: "City",
+      type: "string",
+      description: "As written on an envelope. Example: Paris",
+      group: "location",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "addressCountry",
+      title: "Country",
+      type: "string",
+      // ISO 3166-1 alpha-2, what schema.org PostalAddress expects
+      options: {
+        list: [
+          { title: "France", value: "FR" },
+          { title: "Belgium", value: "BE" },
+          { title: "Switzerland", value: "CH" },
+        ],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "FR",
+      group: "location",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "facebookUrl",
+      title: "Facebook link",
+      description: SOCIAL_DESCRIPTION,
+      type: "url",
+      group: "social",
+    }),
+    defineField({
+      name: "instagramUrl",
+      title: "Instagram link",
+      description: SOCIAL_DESCRIPTION,
+      type: "url",
+      group: "social",
+    }),
+    defineField({
+      name: "tiktokUrl",
+      title: "TikTok link",
+      description: SOCIAL_DESCRIPTION,
+      type: "url",
+      group: "social",
+    }),
+    defineField({
+      name: "youtubeUrl",
+      title: "Youtube link",
+      description: SOCIAL_DESCRIPTION,
+      type: "url",
+      group: "social",
+    }),
+    defineField({
+      name: "linkedinUrl",
+      title: "Linkedin link",
+      description: SOCIAL_DESCRIPTION,
+      type: "url",
+      group: "social",
     }),
     defineField({
       name: "terms",

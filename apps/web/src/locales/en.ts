@@ -60,7 +60,6 @@ export const en: EnglishKeys = {
     press: "Press",
     joinTheNetwork: "Open your Musi'quiz franchise",
     termsAndConditions: "T&C",
-    gdpr: "GDPR",
     legalNotice: "Legal notice",
     chooseVenue: "Choose a venue",
     changeVenue: "Switch venue",
@@ -93,6 +92,12 @@ export const en: EnglishKeys = {
   },
   joinTheNetworkPage: {
     ctaLabel: "Request our brochure",
+  },
+  globalGamePage: {
+    ctaLabel: "Book",
+  },
+  globalEventPage: {
+    ctaLabel: "Book",
   },
   venueBookingPage: {
     ctaLabel: "Choose my activity",
@@ -377,5 +382,12 @@ export const en: EnglishKeys = {
     friday: "Friday",
     saturday: "Saturday",
     sunday: "Sunday",
+  },
+  notFound: {
+    title: "Page not found",
+    heading: "This page does not exist",
+    body: "The link may be outdated, or the address may contain a typo.",
+    home: "Back to the homepage",
+    whereToFindUs: "Find a venue",
   },
 };

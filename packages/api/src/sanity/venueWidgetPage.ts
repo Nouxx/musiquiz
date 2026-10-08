@@ -9,6 +9,7 @@ import {
   sanityPageComponentSchema,
 } from "./shared/pageComponents";
 import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
+import { sanitySeoSchema, seoProjection } from "./shared/seo";
 
 export type VenueWidgetPageType = "gift" | "book";
 
@@ -25,7 +26,9 @@ function venueWidgetPageQuery({
     "venuePage": *[_type == "venuePage"
       && venue->slug.current == "${venueSlug}"
       && pageType == "${pageType}"][0]{
+      "venueTitle": venue->title,
       pageCover ${pageCoverProjection({ lang })},
+      "seo": ${seoProjection({ lang })},
       "componentsBeforeWidget": ${pageComponentsProjection({ field: "componentsBeforeWidget", lang })},
       "componentsAfterWidget": ${pageComponentsProjection({ field: "componentsAfterWidget", lang })},
     }
@@ -34,8 +37,10 @@ function venueWidgetPageQuery({
 
 const sanityVenueWidgetPageSchema = z.strictObject({
   venuePage: z.strictObject({
+    venueTitle: z.string().min(1),
     // the cover's buttons point at the widget's anchor, which only `apps/web` knows
     pageCover: sanityPageCoverSchema({ hasCta: false }),
+    seo: sanitySeoSchema,
     componentsBeforeWidget: z.array(sanityPageComponentSchema).nullable(),
     componentsAfterWidget: z.array(sanityPageComponentSchema).nullable(),
   }),

@@ -1,31 +1,31 @@
 ---
-import { getHomepageData } from "@repo/services/cms/getHomepageData";
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
+import type { Homepage as HomepageData } from "@repo/services/cms/types";
 import PageComponents from "../features/PageComponents.astro";
 import HomepageCover from "../features/HomepageCover.astro";
 import VenuesList from "../features/VenuesList.astro";
 import Footer from "../features/Footer.astro";
-import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
-import { getLang } from "../../libs/getLang";
+import Header from "../features/Header.astro";
 
-const sanityConfig = getSanityConfigFromEnvironment();
+interface Props {
+  data: HomepageData;
+  alternates: Alternates;
+}
 
-const lang = getLang(Astro);
-
-const pageData = await getHomepageData({
-  lang,
-  config: sanityConfig,
-});
+const { data, alternates } = Astro.props;
 ---
 
+<Header {alternates} />
+
 <HomepageCover
-  logo={pageData.logo}
-  cover={pageData.cover}
-  badgeLabel={pageData.badgeLabel}
-  heading={pageData.heading}
+  logo={data.logo}
+  cover={data.cover}
+  badgeLabel={data.badgeLabel}
+  heading={data.heading}
 />
 
-<PageComponents components={pageData.components} />
+<PageComponents components={data.components} />
 
-<VenuesList venues={pageData.venues} cta={pageData.venuesCta} />
+<VenuesList venues={data.venues} cta={data.venuesCta} />
 
-<Footer />
+<Footer {alternates} />

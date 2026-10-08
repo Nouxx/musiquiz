@@ -55,6 +55,13 @@ export const teamMemberType = defineType({
       type: "email",
       validation: (rule) => rule.required(),
     }),
+    defineField({
+      name: "profileUrl",
+      title: "Public profile",
+      description:
+        "LinkedIn or similar. Search engines use it to identify the author of the blog articles this member signs.",
+      type: "url",
+    }),
     // french only, like the blog it is shown on: docs/adr/0013
     defineField({
       name: "bio",

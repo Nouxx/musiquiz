@@ -12,6 +12,7 @@ apps/web/worker-configuration.d.ts
 **/dist
 **/.sanity
 **/.wrangler
+**/.unlighthouse
 
 .DS_Store
 

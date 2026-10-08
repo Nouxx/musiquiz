@@ -8,6 +8,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 import type { VenueWidgetPage, VenueWidgetPageType } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
 import { toPageCover } from "./utils/toPageCover";
+import { toSeo } from "./utils/toSeo";
 
 function adaptVenueWidgetPage({
   data,
@@ -15,7 +16,15 @@ function adaptVenueWidgetPage({
   data: SanityVenueWidgetPage;
 }): VenueWidgetPage {
   return {
+    venueTitle: data.venuePage.venueTitle,
     pageCover: toPageCover({ data: data.venuePage.pageCover }),
+    seo: toSeo({
+      data: data.venuePage.seo,
+      fallback: {
+        title: data.venuePage.pageCover.heading,
+        description: data.venuePage.pageCover.subHeading,
+      },
+    }),
     componentsBeforeWidget:
       data.venuePage.componentsBeforeWidget?.map((component) =>
         adaptPageComponent(component),

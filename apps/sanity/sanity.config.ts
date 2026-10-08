@@ -28,12 +28,16 @@ const structureOnlyTypes = new Set([
   "venueGame",
   "venueEvent",
   "venueBlog",
+  "globalGame",
+  "globalEvent",
 ]);
 
 export const venuePageTemplateId = "venuePage-by-venue";
 export const venueGameTemplateId = "venueGame-by-venue";
 export const venueEventTemplateId = "venueEvent-by-venue";
 export const venueBlogTemplateId = "venueBlog-by-venue";
+export const globalGameTemplateId = "globalGame-by-game";
+export const globalEventTemplateId = "globalEvent-by-event";
 
 // when a doc is draft, others document that relies on it can have issues
 // because they expect it to be published
@@ -44,6 +48,15 @@ function venueReference(venueId: string) {
     _ref: venueId,
     _weak: true,
     _strengthenOnPublish: { type: "venue" },
+  };
+}
+
+function formatReference(formatId: string, type: "gameFormat" | "eventFormat") {
+  return {
+    _type: "reference",
+    _ref: formatId,
+    _weak: true,
+    _strengthenOnPublish: { type },
   };
 }
 
@@ -118,6 +131,24 @@ export default defineConfig({
         parameters: [{ name: "venueId", type: "string" }],
         value: ({ venueId }: { venueId: string }) => ({
           venue: venueReference(venueId),
+        }),
+      },
+      {
+        id: globalGameTemplateId,
+        title: "Global Game",
+        schemaType: "globalGame",
+        parameters: [{ name: "gameId", type: "string" }],
+        value: ({ gameId }: { gameId: string }) => ({
+          game: formatReference(gameId, "gameFormat"),
+        }),
+      },
+      {
+        id: globalEventTemplateId,
+        title: "Global Event",
+        schemaType: "globalEvent",
+        parameters: [{ name: "eventId", type: "string" }],
+        value: ({ eventId }: { eventId: string }) => ({
+          event: formatReference(eventId, "eventFormat"),
         }),
       },
     ],

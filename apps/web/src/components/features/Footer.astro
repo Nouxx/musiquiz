@@ -1,4 +1,5 @@
 ---
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import { getFooterData } from "@repo/services/cms/getFooterData";
 import Footer from "@repo/ui/Footer";
 import FooterBottom from "@repo/ui/footer/FooterBottom";
@@ -14,6 +15,12 @@ import FooterGames from "./footer/FooterGames.astro";
 import FooterGeneralInformation from "./footer/FooterGeneralInformation.astro";
 import FooterLogo from "./footer/FooterLogo.astro";
 import FooterSocials from "./footer/FooterSocials.astro";
+
+interface Props {
+  alternates: Alternates;
+}
+
+const { alternates } = Astro.props;
 
 const lang = getLang(Astro);
 
@@ -38,7 +45,7 @@ const { logo, socials, contact, gamesFormatsLinks, paymentMethods } =
     <FooterContact {contact} />
     <FooterGames games={gamesFormatsLinks} />
     <FooterChooseVenue />
-    <FooterGeneralInformation />
+    <FooterGeneralInformation {alternates} />
   </FooterSection>
 
   <FooterBottom>

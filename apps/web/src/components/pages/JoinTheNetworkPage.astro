@@ -1,26 +1,31 @@
 ---
-import { getJoinTheNetworkPageData } from "@repo/services/cms/getJoinTheNetworkPageData";
-import type { PageCover as PageCoverData } from "@repo/services/cms/types";
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
+import type {
+  JoinTheNetworkPage as JoinTheNetworkPageData,
+  PageCover as PageCoverData,
+} from "@repo/services/cms/types";
 import { venueOpeningFormId } from "@repo/services/contactForm/venueOpening";
 
 import { getLang } from "../../libs/getLang";
-import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import Footer from "../features/Footer.astro";
+import Header from "../features/Header.astro";
 import PageComponents from "../features/PageComponents.astro";
 import VenueOpeningForm from "../features/VenueOpeningForm.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
 import { getT } from "../../libs/i18n";
 
+interface Props {
+  data: JoinTheNetworkPageData;
+  alternates: Alternates;
+}
+
 const lang = getLang(Astro);
 const t = getT(lang);
 
-const pageData = await getJoinTheNetworkPageData({
-  lang,
-  config: getSanityConfigFromEnvironment(),
-});
+const { data, alternates } = Astro.props;
 
 const pageCoverData: PageCoverData = {
-  ...pageData.pageCover,
+  ...data.pageCover,
   cta: {
     label: t("joinTheNetworkPage.ctaLabel"),
     url: `#${venueOpeningFormId}`,
@@ -28,10 +33,12 @@ const pageCoverData: PageCoverData = {
 };
 ---
 
+<Header {alternates} />
+
 <VenuePageCover data={pageCoverData} height="full" ctaIcon="arrow-down" />
 
-<PageComponents components={pageData.components} />
+<PageComponents components={data.components} />
 
 <VenueOpeningForm />
 
-<Footer />
+<Footer {alternates} />

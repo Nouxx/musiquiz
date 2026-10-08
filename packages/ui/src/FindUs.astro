@@ -18,12 +18,12 @@ interface Props {
   title: string;
   facts: ContactFact[];
   cta: CtaLink;
-  map: { lat: number; lng: number; title: string };
+  map: { lat: number; lng: number; title: string; apiKey: string };
 }
 
 const { media, badge, title, facts, cta, map } = Astro.props;
 
-// todo: this helper should be owned by the services and return a object like {url, external} kinda of things
+// todo: this helper should be owned by the services and return a object like {url, external} kind of things
 const external = isExternalUrl(cta.url);
 ---
 
@@ -66,7 +66,12 @@ const external = isExternalUrl(cta.url);
 
     <div slot="second" class="map-block">
       <Card border="thick" class="map-card">
-        <TileMap lat={map.lat} lng={map.lng} title={map.title} />
+        <TileMap
+          lat={map.lat}
+          lng={map.lng}
+          title={map.title}
+          apiKey={map.apiKey}
+        />
       </Card>
     </div>
   </TwoBlocks>

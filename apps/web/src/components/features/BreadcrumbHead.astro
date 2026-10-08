@@ -1,0 +1,15 @@
+---
+import type { BreadcrumbItem } from "@repo/ui/types";
+
+import { getSite } from "../../libs/getSite";
+import { toBreadcrumbList } from "../../libs/toBreadcrumbList";
+import JsonLd from "./JsonLd.astro";
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<JsonLd graph={[toBreadcrumbList(getSite(Astro), items)]} />

@@ -10,11 +10,13 @@ import {
   sanityPageComponentSchema,
 } from "./shared/pageComponents";
 import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
+import { sanitySeoSchema, seoProjection } from "./shared/seo";
 
 function whereToFindUsPageQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
     "page": *[_type == "whereToFindUsPage"][0]{
       pageCover ${pageCoverProjection({ lang })},
+      "seo": ${seoProjection({ lang })},
       "componentsBeforeMap": ${pageComponentsProjection({ field: "componentsBeforeMap", lang })},
       "venuesCta": ${optionalCtaProjection({ field: "venuesCta", lang })},
       "componentsAfterMap": ${pageComponentsProjection({ field: "componentsAfterMap", lang })},
@@ -31,6 +33,7 @@ function whereToFindUsPageQuery({ lang }: { lang: Lang }) {
 const sanityWhereToFindUsPageSchema = z.strictObject({
   page: z.strictObject({
     pageCover: sanityPageCoverSchema({ hasCta: false }),
+    seo: sanitySeoSchema,
     componentsBeforeMap: z.array(sanityPageComponentSchema).nullable(),
     venuesCta: sanityCtaSchema.nullable(),
     componentsAfterMap: z.array(sanityPageComponentSchema).nullable(),

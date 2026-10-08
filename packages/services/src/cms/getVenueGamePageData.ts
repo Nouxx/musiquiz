@@ -8,6 +8,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 import type { VenueGamePage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
 import { toPageCover } from "./utils/toPageCover";
+import { toSeo } from "./utils/toSeo";
 
 function adaptVenueGamePage({
   data,
@@ -15,8 +16,16 @@ function adaptVenueGamePage({
   data: SanityVenueGamePage;
 }): VenueGamePage {
   return {
+    venueTitle: data.venueGame.venueTitle,
     gameName: data.venueGame.gameName,
     pageCover: toPageCover({ data: data.venueGame.pageCover }),
+    seo: toSeo({
+      data: data.venueGame.seo,
+      fallback: {
+        title: data.venueGame.pageCover.heading,
+        description: data.venueGame.pageCover.subHeading,
+      },
+    }),
     components:
       data.venueGame.pageComponents?.map((component) =>
         adaptPageComponent(component),

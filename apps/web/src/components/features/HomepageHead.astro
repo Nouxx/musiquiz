@@ -1,0 +1,37 @@
+---
+import type { Organization } from "@repo/services/cms/types";
+
+import { getOrganizationId } from "../../libs/getOrganizationId";
+import { getOrganizationLogoUrl } from "../../libs/getOrganizationLogoUrl";
+import { getSite } from "../../libs/getSite";
+import JsonLd from "./JsonLd.astro";
+
+interface Props {
+  organization: Organization;
+}
+
+const { organization } = Astro.props;
+
+const site = getSite(Astro);
+const organizationId = getOrganizationId(site);
+
+const organizationData = {
+  "@type": "Organization",
+  "@id": organizationId,
+  name: "Musi'Quiz",
+  url: site.href,
+  logo: await getOrganizationLogoUrl(site, organization.logo),
+  sameAs: organization.sameAs,
+  telephone: organization.telephone,
+  email: organization.email,
+};
+
+const webSite = {
+  "@type": "WebSite",
+  name: "Musi'Quiz",
+  url: site.href,
+  publisher: { "@id": organizationId },
+};
+---
+
+<JsonLd graph={[organizationData, webSite]} />

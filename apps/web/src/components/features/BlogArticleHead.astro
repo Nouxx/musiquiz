@@ -3,6 +3,12 @@ import { getImage } from "astro:assets";
 import type { BlogArticlePage } from "@repo/services/cms/types";
 import type { BreadcrumbItem } from "@repo/ui/types";
 
+import { getOrganizationId } from "../../libs/getOrganizationId";
+import { getOrganizationLogoUrl } from "../../libs/getOrganizationLogoUrl";
+import { getSite } from "../../libs/getSite";
+import { toBreadcrumbList } from "../../libs/toBreadcrumbList";
+import JsonLd from "./JsonLd.astro";
+
 interface Props {
   data: BlogArticlePage;
   breadcrumbs: BreadcrumbItem[];
@@ -10,16 +16,12 @@ interface Props {
 
 const { data, breadcrumbs } = Astro.props;
 
-// when this was written, there were no `site` in astro.config and schema.org needs absolute urls
-function absolute(path: string) {
-  return Astro.site ? new URL(path, Astro.site).href : path;
-}
+const site = getSite(Astro);
 
 function plainText(spans: { text: string }[]) {
   return spans.map((span) => span.text).join("");
 }
 
-// served from the build like every other image, never from the Sanity CDN
 const cover = await getImage({
   src: data.cover.url,
   width: Math.min(data.cover.width, 1200),
@@ -30,32 +32,31 @@ const cover = await getImage({
 });
 
 const blogPosting = {
-  "@context": "https://schema.org",
   "@type": "BlogPosting",
   headline: data.title,
   description: data.excerpt,
-  image: absolute(cover.src),
+  image: new URL(cover.src, site).href,
   datePublished: data.publishedAt,
   dateModified: data.updatedAt ?? data.publishedAt,
   inLanguage: "fr",
-  mainEntityOfPage: absolute(Astro.url.pathname),
-  author: { "@type": "Person", name: data.author.name },
-  publisher: { "@type": "Organization", name: "Musi'Quiz" },
-};
-
-const breadcrumbList = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: breadcrumbs.map((item, index) => ({
-    "@type": "ListItem",
-    position: index + 1,
-    name: item.label,
-    ...(item.url ? { item: absolute(item.url) } : {}),
-  })),
+  mainEntityOfPage: new URL(Astro.url.pathname, site).href,
+  author: {
+    "@type": "Person",
+    name: data.author.name,
+    jobTitle: data.author.jobTitle,
+    url: data.author.profileUrl,
+  },
+  // in full: a bare @id does not reach the Organization node on the homepage
+  publisher: {
+    "@type": "Organization",
+    "@id": getOrganizationId(site),
+    name: "Musi'Quiz",
+    url: site.href,
+    logo: await getOrganizationLogoUrl(site, data.publisherLogo),
+  },
 };
 
 const faqPage = data.faq && {
-  "@context": "https://schema.org",
   "@type": "FAQPage",
   mainEntity: data.faq.questions.map((entry) => ({
     "@type": "Question",
@@ -66,12 +67,12 @@ const faqPage = data.faq && {
     },
   })),
 };
-
-const structuredData = JSON.stringify([
-  blogPosting,
-  breadcrumbList,
-  ...(faqPage ? [faqPage] : []),
-]).replaceAll("<", "\\u003c"); // escape "<" so a value containing </script> can't terminate this block
 ---
 
-<script is:inline type="application/ld+json" set:html={structuredData} />
+<JsonLd
+  graph={[
+    blogPosting,
+    toBreadcrumbList(site, breadcrumbs),
+    ...(faqPage ? [faqPage] : []),
+  ]}
+/>

@@ -6,13 +6,14 @@ import Text from "@repo/ui/primitives/Text";
 import { getLang } from "../../../libs/getLang";
 import { getT } from "../../../libs/i18n";
 import FooterChangeLang from "./FooterChangeLang.astro";
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 
 interface Props {
-  venueSlug?: string;
+  alternates: Alternates;
 }
 
-const { venueSlug } = Astro.props;
+const { alternates } = Astro.props;
 
 const lang = getLang(Astro);
 
@@ -44,5 +45,5 @@ const links = [
       </li>
     ))
   }
-  <FooterChangeLang slot="below" {venueSlug} />
+  <FooterChangeLang slot="below" {alternates} />
 </FooterColumn>

@@ -21,6 +21,14 @@ export const gameFormatType = defineType({
       validation: (rule) => rule.required().integer().min(0),
     }),
     defineField({
+      name: "signature",
+      title: "Signature game",
+      description:
+        'Listed under "Nos expériences" in the main site header. At least one game must be a signature game.',
+      type: "boolean",
+      initialValue: false,
+    }),
+    defineField({
       name: "image",
       title: "Image",
       description:

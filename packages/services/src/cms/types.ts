@@ -53,6 +53,55 @@ export type Homepage = {
   venues: VenuePin[];
   venuesCta: { label: string; url: string } | undefined;
   components: PageComponent[];
+  seo: Seo;
+  organization: Organization;
+};
+
+export type Organization = {
+  /** square, for search results */
+  logo: CmsImage;
+  /** the brand's social profiles */
+  sameAs: string[];
+  telephone: string;
+  email: string;
+};
+
+export type LocalBusiness = {
+  address: PostalAddress;
+  geo: { latitude: number; longitude: number };
+  telephone: string;
+  email: string;
+  mapUrl: string;
+  /** the venue's Google listing and its own accounts, never the brand's */
+  sameAs: string[];
+  openingHours: OpeningHours[];
+  /** across every game the venue prices, undefined when none is priced */
+  priceRange: { lowest: number; highest: number } | undefined;
+};
+
+export type PostalAddress = {
+  streetAddress: string;
+  postalCode: string;
+  addressLocality: string;
+  /** ISO 3166-1 alpha-2 */
+  addressCountry: string;
+};
+
+export type DayOfWeek =
+  | "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday"
+  | "Saturday"
+  | "Sunday";
+
+export type OpeningHours = {
+  days: DayOfWeek[];
+  /** @example "09:30" */
+  opens: string;
+  /** @example "01:00", earlier than `opens` when it closes after midnight */
+  closes: string;
 };
 
 export type CoverBackground =
@@ -86,16 +135,26 @@ export type PageCover = {
     | undefined;
 };
 
+export type Seo = {
+  /** without the brand and city the head appends */
+  title: string;
+  description: string | undefined;
+  ogImage: CmsImage;
+  noindex: boolean;
+};
+
 export type VenuePageType = "home" | "gift" | "book";
 
 export type JoinTheNetworkPage = {
   pageCover: PageCover;
   components: PageComponent[];
+  seo: Seo;
 };
 
 export type LegalNoticePage = {
   pageCover: PageCover;
   body: RichText;
+  seo: Seo;
 };
 
 export type TermsArticle = {
@@ -114,6 +173,7 @@ export type TermsAndConditionsPage = {
   pageCover: PageCover;
   intro: RichText;
   venues: VenueTerms[];
+  seo: Seo;
 };
 
 export type WhereToFindUsPage = {
@@ -122,6 +182,7 @@ export type WhereToFindUsPage = {
   venues: VenuePin[];
   venuesCta: { label: string; url: string } | undefined;
   componentsAfterMap: PageComponent[];
+  seo: Seo;
 };
 
 export type TeamMember = {
@@ -150,8 +211,8 @@ export type BlogArticleSummary = {
   url: string;
   /** ISO date, `YYYY-MM-DD` */
   publishedAt: string;
-  /** the venue title, drawn as the badge */
-  venue: string;
+  /** the venue it is about, else its event */
+  topic: { kind: "venue" | "event"; title: string } | undefined;
   cover: CmsImage;
   excerpt: string;
 };
@@ -161,6 +222,7 @@ export type BlogPage = {
   intro: string;
   /** every article, newest first; the web app pages them */
   articles: BlogArticleSummary[];
+  seo: Seo;
 };
 
 export type BlogArticlePage = {
@@ -176,18 +238,25 @@ export type BlogArticlePage = {
   reviewCount: number | undefined;
   body: ArticleNode[];
   readingMinutes: number;
-  venue: { title: string; slug: string };
+  closesOn:
+    | { kind: "venue"; title: string; slug: string; findUs: FindUsContent }
+    | { kind: "event"; title: string; slug: string }
+    | { kind: "whereToFindUs" };
   author: {
     name: string;
     jobTitle: string;
     bio: string;
     tone: "blue" | "red";
     photo: CmsImage;
+    /** @example "https://www.linkedin.com/in/…" */
+    profileUrl: string | undefined;
   };
-  findUs: FindUsContent;
   faq: { title: string; questions: FaqQuestion[] } | undefined;
-  /** same venue, newest first, at most three */
+  /** the brand logo, same as `Organization.logo` */
+  publisherLogo: CmsImage;
+  /** same venue, else same event, else any; newest first, at most three */
   readMore: BlogArticleSummary[];
+  seo: Seo;
 };
 
 export type ContactPage = {
@@ -202,39 +271,83 @@ export type ContactPage = {
     intro: string | undefined;
     items: VenueContact[];
   };
+  seo: Seo;
 };
 
 export type VenuePage = {
+  venueTitle: string;
+  business: LocalBusiness;
   pageCover: PageCover;
   components: PageComponent[];
+  seo: Seo;
 };
 
 export type VenueWidgetPageType = "gift" | "book";
 
 export type VenueWidgetPage = {
+  venueTitle: string;
   pageCover: PageCover;
   componentsBeforeWidget: PageComponent[];
   componentsAfterWidget: PageComponent[];
+  seo: Seo;
 };
 
 export type VenueGamePage = {
+  venueTitle: string;
   gameName: string;
   pageCover: PageCover;
   components: PageComponent[];
+  seo: Seo;
 };
 
 export type VenueEventPage = {
+  venueTitle: string;
   eventName: string;
   pageCover: PageCover;
   components: PageComponent[];
+  seo: Seo;
 };
 
-export type Header = {
+export type GlobalGamePage = {
+  gameName: string;
+  pageCover: PageCover;
+  components: PageComponent[];
+  seo: Seo;
+};
+
+export type GlobalEventPage = {
+  eventName: string;
+  pageCover: PageCover;
+  components: PageComponent[];
+  seo: Seo;
+};
+
+export type VenueHeader = {
   logo: CmsImage;
   venue: {
     logo: CmsImage;
     address: string;
     mapsLink: string;
+    mailLabel: string;
+    mailHref: string;
+    phoneLabel: string;
+    phoneHref: string;
+  };
+  experiences: {
+    label: string;
+    url: string;
+  }[];
+  events: {
+    label: string;
+    url: string;
+  }[];
+  socials: Socials;
+};
+
+export type Header = {
+  logo: CmsImage;
+  mobileMenuLogo: CmsImage;
+  contact: {
     mailLabel: string;
     mailHref: string;
     phoneLabel: string;

@@ -8,6 +8,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 import type { JoinTheNetworkPage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
 import { toPageCover } from "./utils/toPageCover";
+import { toSeo } from "./utils/toSeo";
 
 function adaptJoinTheNetworkPage({
   data,
@@ -16,6 +17,13 @@ function adaptJoinTheNetworkPage({
 }): JoinTheNetworkPage {
   return {
     pageCover: toPageCover({ data: data.page.pageCover }),
+    seo: toSeo({
+      data: data.page.seo,
+      fallback: {
+        title: data.page.pageCover.heading,
+        description: data.page.pageCover.subHeading,
+      },
+    }),
     components:
       data.page.pageComponents?.map((component) =>
         adaptPageComponent(component),

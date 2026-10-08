@@ -1,0 +1,101 @@
+---
+import { getImage } from "astro:assets";
+import type { CmsImage } from "@repo/services/cms/types";
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
+
+import { getLang } from "../../libs/getLang";
+import { getSite } from "../../libs/getSite";
+
+export interface Props {
+  /** @example "Pixel Games", rendered "Pixel Games · Musi'Quiz Paris" */
+  title?: string;
+  /** @example "Paris" */
+  city?: string;
+  description?: string;
+  alternates: Alternates | undefined;
+  ogImage?: CmsImage;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  city,
+  description,
+  alternates,
+  ogImage,
+  noindex = false,
+} = Astro.props;
+
+const lang = getLang(Astro);
+
+const canonical = alternates ? alternates[lang] : undefined;
+
+if (alternates && !canonical) {
+  throw new Error(`${Astro.url.pathname} has no ${lang} alternate`);
+}
+
+const brand = "Musi'Quiz";
+const brandWithCity = city ? `${brand} ${city}` : brand;
+const fullTitle = title ? `${title} · ${brandWithCity}` : brandWithCity;
+
+const ogLocales = { fr: "fr_FR", en: "en_GB" } as const;
+const otherLang = lang === "fr" ? "en" : "fr";
+
+// the size Facebook, LinkedIn and WhatsApp crop to
+const OG_WIDTH = 1200;
+const OG_HEIGHT = 630;
+
+const og =
+  ogImage &&
+  (await getImage({
+    src: ogImage.url,
+    width: OG_WIDTH,
+    height: OG_HEIGHT,
+    fit: "cover",
+    format: "jpeg",
+  }));
+const ogImageUrl = og && new URL(og.src, getSite(Astro)).href;
+---
+
+<title>{fullTitle}</title>
+{description && <meta name="description" content={description} />}
+{noindex && <meta name="robots" content="noindex, follow" />}
+
+{canonical && <link rel="canonical" href={canonical} />}
+{
+  alternates?.en && (
+    <>
+      <link rel="alternate" hreflang="fr" href={alternates.fr} />
+      <link rel="alternate" hreflang="en" href={alternates.en} />
+      <link rel="alternate" hreflang="x-default" href={alternates.fr} />
+    </>
+  )
+}
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={brand} />
+<meta property="og:title" content={fullTitle} />
+{description && <meta property="og:description" content={description} />}
+{canonical && <meta property="og:url" content={canonical} />}
+<meta property="og:locale" content={ogLocales[lang]} />
+{
+  alternates?.[otherLang] && (
+    <meta property="og:locale:alternate" content={ogLocales[otherLang]} />
+  )
+}
+{
+  ogImageUrl && (
+    <>
+      <meta property="og:image" content={ogImageUrl} />
+      <meta property="og:image:type" content="image/jpeg" />
+      <meta property="og:image:width" content={String(OG_WIDTH)} />
+      <meta property="og:image:height" content={String(OG_HEIGHT)} />
+      {ogImage.alt && <meta property="og:image:alt" content={ogImage.alt} />}
+    </>
+  )
+}
+{/* X reads title, description and image from the og: tags */}
+<meta
+  name="twitter:card"
+  content={ogImageUrl ? "summary_large_image" : "summary"}
+/>

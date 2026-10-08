@@ -1,0 +1,85 @@
+---
+import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+import Button from "@repo/ui/primitives/Button";
+import Text from "@repo/ui/primitives/Text";
+
+import Footer from "../components/features/Footer.astro";
+import Header from "../components/features/Header.astro";
+import Layout from "../layouts/Layout.astro";
+import { getT } from "../libs/i18n";
+import { getSite } from "../libs/getSite";
+
+// one page for both languages: Cloudflare serves the nearest file named
+// 404.html, and Astro only names the root one that way (en/404.astro would
+// become en/404/index.html)
+const blocks = (["fr", "en"] as const).map((lang) => {
+  const t = getT(lang);
+  const routes = getRoutesForLang(lang);
+  return {
+    lang,
+    heading: t("notFound.heading"),
+    body: t("notFound.body"),
+    links: [
+      { label: t("notFound.home"), url: routes.home, tone: "red" },
+      {
+        label: t("notFound.whereToFindUs"),
+        url: routes.whereToFindUs,
+        tone: "light",
+      },
+    ] as const,
+  };
+});
+
+const homeAlternates = getAlternatesUrl(
+  getSite(Astro),
+  (routes) => routes.home,
+);
+---
+
+<Layout title={getT("fr")("notFound.title")} alternates={undefined}>
+  <Header alternates={homeAlternates} />
+
+  <main>
+    {
+      blocks.map((block, index) => (
+        <section lang={block.lang}>
+          <Text as={index === 0 ? "h1" : "h2"} variant="title-h2">
+            {block.heading}
+          </Text>
+          <Text as="p">{block.body}</Text>
+          <div class="links">
+            {block.links.map((link) => (
+              <Button as="a" href={link.url} tone={link.tone} size="m">
+                {link.label}
+              </Button>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </main>
+
+  <Footer alternates={homeAlternates} />
+</Layout>
+
+<style>
+  main {
+    display: grid;
+    gap: var(--space-10);
+    max-width: 60rem;
+    padding: var(--space-10) var(--space-4);
+    margin-inline: auto;
+  }
+
+  section {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+</style>

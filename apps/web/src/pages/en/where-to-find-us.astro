@@ -1,8 +1,24 @@
 ---
+import { getWhereToFindUsPageData } from "@repo/services/cms/getWhereToFindUsPageData";
+import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
+
 import WhereToFindUsPage from "../../components/pages/WhereToFindUsPage.astro";
 import Layout from "../../layouts/Layout.astro";
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getSite } from "../../libs/getSite";
+
+const data = await getWhereToFindUsPageData({
+  lang: getLang(Astro),
+  config: getSanityConfigFromEnvironment(),
+});
+
+const alternates = getAlternatesUrl(
+  getSite(Astro),
+  (routes) => routes.whereToFindUs,
+);
 ---
 
-<Layout>
-  <WhereToFindUsPage />
+<Layout {...data.seo} {alternates}>
+  <WhereToFindUsPage {data} {alternates} />
 </Layout>

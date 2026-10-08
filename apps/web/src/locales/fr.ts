@@ -53,7 +53,6 @@ export const fr = {
     press: "Presse",
     joinTheNetwork: "Ouvrez votre salle Musi'quiz",
     termsAndConditions: "CGV",
-    gdpr: "RGPD",
     legalNotice: "Mentions légales",
     chooseVenue: "Choisir un centre",
     changeVenue: "Changez de ville",
@@ -92,6 +91,7 @@ export const fr = {
     nextPage: "Page suivante",
     page: "Page {{page}}",
     pageTitle: "{{title}} – page {{page}}",
+    pageDescription: "Page {{page}} – {{description}}",
   },
   blogArticlePage: {
     breadcrumbs: "Fil d’Ariane",
@@ -103,12 +103,21 @@ export const fr = {
     rating: "5/5 sur {{count}} avis",
     ratingStars: "Noté 5 sur 5",
     book: "Réserver à {{venue}}",
+    seeEvent: "Voir l’offre {{event}}",
+    findVenue: "Trouver un centre",
     findUsCta: "Réservez votre activité à {{venue}}",
     author: "L’auteur de cet article",
-    readMore: "À lire aussi à {{venue}}",
+    readMore: "À lire aussi",
+    readMoreVenue: "À lire aussi à {{venue}}",
   },
   joinTheNetworkPage: {
     ctaLabel: "Demander notre plaquette",
+  },
+  globalGamePage: {
+    ctaLabel: "Réserver",
+  },
+  globalEventPage: {
+    ctaLabel: "Réserver",
   },
   venueBookingPage: {
     ctaLabel: "Choisir mon activité",
@@ -395,5 +404,12 @@ export const fr = {
     friday: "Vendredi",
     saturday: "Samedi",
     sunday: "Dimanche",
+  },
+  notFound: {
+    title: "Page introuvable",
+    heading: "Cette page n'existe pas",
+    body: "Le lien est peut-être ancien, ou l'adresse contient une faute de frappe.",
+    home: "Retour à l'accueil",
+    whereToFindUs: "Trouver un centre",
   },
 };

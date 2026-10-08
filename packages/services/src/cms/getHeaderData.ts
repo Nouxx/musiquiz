@@ -11,30 +11,28 @@ import { toCmsImage } from "./utils/toCmsImage";
 function adaptHeader({
   data,
   lang,
-  venueSlug,
 }: {
   data: SanityHeader;
   lang: Lang;
-  venueSlug: string;
 }): Header {
+  const routes = getRoutesForLang(lang);
+
   return {
     logo: toCmsImage(data.siteSettings.headerLogo),
-    venue: {
-      logo: toCmsImage(data.venue.venueLogoLight),
-      address: data.venue.addressLine,
-      mapsLink: data.venue.googleMapsLink,
-      mailLabel: data.venue.mail,
-      mailHref: getMailto(data.venue.mail),
-      phoneLabel: data.venue.phone,
-      phoneHref: getTel(data.venue.phone),
+    mobileMenuLogo: toCmsImage(data.siteSettings.mobileMenuLogo),
+    contact: {
+      mailLabel: data.siteSettings.mainEmail,
+      mailHref: getMailto(data.siteSettings.mainEmail),
+      phoneLabel: data.siteSettings.mainPhone,
+      phoneHref: getTel(data.siteSettings.mainPhone),
     },
-    experiences: data.venue.games.map((format) => ({
+    experiences: data.games.map((format) => ({
       label: format.name,
-      url: getRoutesForLang(lang).venueGame(venueSlug, format.slug),
+      url: routes.game(format.slug),
     })),
-    events: data.venue.events.map((format) => ({
+    events: data.events.map((format) => ({
       label: format.name,
-      url: getRoutesForLang(lang).venueEvent(venueSlug, format.slug),
+      url: routes.event(format.slug),
     })),
     socials: {
       facebookUrl: data.siteSettings.facebookUrl,
@@ -49,13 +47,11 @@ function adaptHeader({
 export async function getHeaderData({
   config,
   lang,
-  venueSlug,
 }: {
   config: SanityConfig;
   lang: Lang;
-  venueSlug: string;
 }) {
-  const data = await fetchHeader({ config, lang, venueSlug });
+  const data = await fetchHeader({ config, lang });
 
-  return adaptHeader({ data, lang, venueSlug });
+  return adaptHeader({ data, lang });
 }

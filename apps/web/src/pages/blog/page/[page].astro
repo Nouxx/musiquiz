@@ -1,11 +1,13 @@
 ---
 import { getBlogPageData } from "@repo/services/cms/getBlogPageData";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 
 import BlogHead from "../../../components/features/BlogHead.astro";
 import BlogPage from "../../../components/pages/BlogPage.astro";
 import Layout from "../../../layouts/Layout.astro";
 import { getBlogPageParameters } from "../../../libs/getBlogPageParameters";
 import { getSanityConfigFromEnvironment } from "../../../libs/getSanityConfigFromEnvironment";
+import { getSite } from "../../../libs/getSite";
 import { getT } from "../../../libs/i18n";
 
 export async function getStaticPaths() {
@@ -18,10 +20,22 @@ const data = await getBlogPageData({
   config: getSanityConfigFromEnvironment(),
 });
 
-const title = getT("fr")("blogPage.pageTitle", { title: data.title, page });
+const title = getT("fr")("blogPage.pageTitle", {
+  title: data.seo.title,
+  page,
+});
+
+const description = getT("fr")("blogPage.pageDescription", {
+  description: data.seo.description,
+  page,
+});
+
+const alternates = {
+  fr: new URL(getRoutesForLang("fr").blogPage(page), getSite(Astro)).href,
+};
 ---
 
-<Layout {title} description={data.intro}>
+<Layout {...data.seo} {title} {description} {alternates}>
   <BlogHead slot="head" articleCount={data.articles.length} {page} />
-  <BlogPage {data} {page} />
+  <BlogPage {data} {page} {alternates} />
 </Layout>

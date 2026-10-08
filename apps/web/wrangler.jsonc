@@ -9,7 +9,8 @@
       "name": "musiquiz-static",
       // the static build ships its own output as assets, there is no worker script
       "assets": {
-        "directory": "./dist/static"
+        "directory": "./dist/static",
+        "not_found_handling": "404-page" // https://developers.cloudflare.com/workers/static-assets/routing/static-site-generation/
       }
     },
     "ssr": {

@@ -1,0 +1,38 @@
+---
+import { getGlobalEventPageData } from "@repo/services/cms/getGlobalEventPageData";
+import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
+
+import BreadcrumbHead from "../../../components/features/BreadcrumbHead.astro";
+import GlobalEventPage from "../../../components/pages/GlobalEventPage.astro";
+import Layout from "../../../layouts/Layout.astro";
+import { getGlobalBreadcrumbs } from "../../../libs/getGlobalBreadcrumbs";
+import { getGlobalEventsSlugParameters } from "../../../libs/getGlobalEventsSlugParameters";
+import { getLang } from "../../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../../libs/getSanityConfigFromEnvironment";
+import { getSite } from "../../../libs/getSite";
+
+export async function getStaticPaths() {
+  return getGlobalEventsSlugParameters();
+}
+
+const { event } = Astro.params;
+
+const lang = getLang(Astro);
+
+const data = await getGlobalEventPageData({
+  lang,
+  eventSlug: event,
+  config: getSanityConfigFromEnvironment(),
+});
+
+const alternates = getAlternatesUrl(getSite(Astro), (routes) =>
+  routes.event(event),
+);
+
+const breadcrumbs = getGlobalBreadcrumbs(lang, data.eventName);
+---
+
+<Layout {...data.seo} {alternates}>
+  <BreadcrumbHead slot="head" items={breadcrumbs} />
+  <GlobalEventPage {data} {alternates} />
+</Layout>

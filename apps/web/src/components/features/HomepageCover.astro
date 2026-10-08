@@ -22,7 +22,7 @@ const t = getT(getLang(Astro));
 ---
 
 <PageCover>
-  <RemoteImage slot="media" image={cover} variant="cover" loading="eager" />
+  <RemoteImage slot="media" image={cover} variant="cover" priority />
   <RemoteImage slot="logo" image={logo} variant="cover-logo" loading="eager" />
 
   <Badge slot="badge">{badgeLabel}</Badge>

@@ -1,8 +1,24 @@
 ---
+import { getLegalNoticePageData } from "@repo/services/cms/getLegalNoticePageData";
+import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
+
 import LegalNoticePage from "../../components/pages/LegalNoticePage.astro";
 import Layout from "../../layouts/Layout.astro";
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getSite } from "../../libs/getSite";
+
+const data = await getLegalNoticePageData({
+  lang: getLang(Astro),
+  config: getSanityConfigFromEnvironment(),
+});
+
+const alternates = getAlternatesUrl(
+  getSite(Astro),
+  (routes) => routes.legalNotice,
+);
 ---
 
-<Layout>
-  <LegalNoticePage />
+<Layout {...data.seo} {alternates}>
+  <LegalNoticePage {data} {alternates} />
 </Layout>

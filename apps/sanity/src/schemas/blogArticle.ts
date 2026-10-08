@@ -2,6 +2,7 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { contentIcons } from "./shared/pageComponents/contentIcons";
 import { richTextFieldType } from "./shared/richText";
+import { pageGroups } from "./shared/seo";
 
 // french only, plain strings on purpose: docs/adr/0013
 export const blogFaqType = defineType({
@@ -49,14 +50,17 @@ export const blogArticleType = defineType({
   title: "Blog article",
   type: "document",
   icon: DocumentTextIcon,
+  groups: pageGroups,
   fields: [
     defineField({
       name: "title",
+      group: "content",
       type: "string",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "slug",
+      group: "content",
       title: "URL slug",
       type: "slug",
       description:
@@ -67,12 +71,14 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "publishedAt",
+      group: "content",
       title: "Publication date",
       type: "date",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "updatedAt",
+      group: "content",
       title: "Update date",
       description:
         'Set it after a real rewrite, not a typo fix. The article then reads "Mis à jour le".',
@@ -80,14 +86,23 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "venue",
+      group: "content",
       type: "reference",
       to: [{ type: "venue" }],
       description:
-        "The venue also needs its own entry under Blog → Venues, or the site build fails.",
-      validation: (rule) => rule.required(),
+        'Optional. Pick one when the article is about a single venue. Readers are then sent to that venue: the booking buttons open its booking page, the article ends with its address and map, the breadcrumb and the article card show its name, and "À lire aussi" suggests other articles about the same venue. The venue also needs its own entry under Blog → Venues, or the site build fails. When set, it wins over Event.',
+    }),
+    defineField({
+      name: "event",
+      group: "content",
+      type: "reference",
+      to: [{ type: "eventFormat" }],
+      description:
+        'Optional. Pick one when the article is about an occasion rather than a place, like a bachelor party or team building. Used only when Venue is empty: the button then leads to the event\'s page, the breadcrumb and the article card show the event\'s name, "À lire aussi" suggests other articles about the same event, and there is no address or map. With neither a venue nor an event, the button leads to the "Où nous trouver" page and "À lire aussi" shows the latest articles.',
     }),
     defineField({
       name: "author",
+      group: "content",
       type: "reference",
       to: [{ type: "teamMember" }],
       description: "The team member must have a short bio.",
@@ -95,12 +110,14 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "cover",
+      group: "content",
       title: "Cover image",
       type: "imageWithAlt",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "excerpt",
+      group: "content",
       type: "text",
       rows: 3,
       description: "Shown on the article card, in the blog listing.",
@@ -108,6 +125,7 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "summary",
+      group: "content",
       title: "Summary",
       description: 'The "Le résumé en 30 secondes" box, above the article.',
       type: "array",
@@ -126,6 +144,7 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "chips",
+      group: "content",
       title: "Key facts",
       description: 'The pills under the summary. Example: "75 min de jeu".',
       type: "array",
@@ -152,6 +171,7 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "reviewCount",
+      group: "content",
       title: "Number of reviews",
       description:
         'Adds a "5/5 sur N avis" pill after the key facts. Leave empty for none.',
@@ -160,16 +180,23 @@ export const blogArticleType = defineType({
     }),
     defineField({
       name: "body",
+      group: "content",
       title: "Article",
       type: "articleBody",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "faq",
+      group: "content",
       title: "FAQ",
       description:
         "Optional. The questions this article answers, also sent to search engines as FAQ data. Leave empty when the article raises none.",
       type: "blogFaq",
+    }),
+    defineField({
+      name: "seo",
+      type: "blogSeo",
+      group: "seo",
     }),
   ],
   orderings: [
@@ -183,13 +210,14 @@ export const blogArticleType = defineType({
     select: {
       title: "title",
       venue: "venue.title",
+      event: "event.name",
       publishedAt: "publishedAt",
       media: "cover",
     },
-    prepare({ title, venue, publishedAt, media }) {
+    prepare({ title, venue, event, publishedAt, media }) {
       return {
         title,
-        subtitle: [venue, publishedAt].filter(Boolean).join(" · "),
+        subtitle: [venue ?? event, publishedAt].filter(Boolean).join(" · "),
         media,
       };
     },

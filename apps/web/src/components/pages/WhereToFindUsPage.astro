@@ -1,36 +1,43 @@
 ---
-import { getWhereToFindUsPageData } from "@repo/services/cms/getWhereToFindUsPageData";
-import type { PageCover as PageCoverData } from "@repo/services/cms/types";
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
+import type {
+  WhereToFindUsPage as WhereToFindUsPageData,
+  PageCover as PageCoverData,
+} from "@repo/services/cms/types";
 
 import { getLang } from "../../libs/getLang";
-import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import Footer from "../features/Footer.astro";
+import Header from "../features/Header.astro";
 import PageComponents from "../features/PageComponents.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
 import VenuesList from "../features/VenuesList.astro";
 import { getT } from "../../libs/i18n";
 import { venuesMapAnchorId } from "@repo/ui/types";
 
+interface Props {
+  data: WhereToFindUsPageData;
+  alternates: Alternates;
+}
+
 const lang = getLang(Astro);
 const t = getT(lang);
 
-const pageData = await getWhereToFindUsPageData({
-  lang,
-  config: getSanityConfigFromEnvironment(),
-});
+const { data, alternates } = Astro.props;
 
 const pageCoverDataWithCta: PageCoverData = {
-  ...pageData.pageCover,
+  ...data.pageCover,
   cta: { label: t("whereToFindUsPage.ctaLabel"), url: `#${venuesMapAnchorId}` },
 };
 ---
 
+<Header {alternates} />
+
 <VenuePageCover data={pageCoverDataWithCta} ctaIcon="arrow-down" />
 
-<PageComponents components={pageData.componentsBeforeMap} />
+<PageComponents components={data.componentsBeforeMap} />
 
-<VenuesList venues={pageData.venues} cta={pageData.venuesCta} />
+<VenuesList venues={data.venues} cta={data.venuesCta} />
 
-<PageComponents components={pageData.componentsAfterMap} />
+<PageComponents components={data.componentsAfterMap} />
 
-<Footer />
+<Footer {alternates} />

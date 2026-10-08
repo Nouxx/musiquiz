@@ -1,22 +1,28 @@
 ---
-import { getContactPageData } from "@repo/services/cms/getContactPageData";
-import type { PageCover as PageCoverData } from "@repo/services/cms/types";
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
+import type {
+  ContactPage as ContactPageData,
+  PageCover as PageCoverData,
+} from "@repo/services/cms/types";
 import TeamMembers from "@repo/ui/TeamMembers";
 import VenuesContact from "@repo/ui/VenuesContact";
 
 import { getLang } from "../../libs/getLang";
-import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getT } from "../../libs/i18n";
 import Footer from "../features/Footer.astro";
+import Header from "../features/Header.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
+
+interface Props {
+  data: ContactPageData;
+  alternates: Alternates;
+}
 
 const lang = getLang(Astro);
 const t = getT(lang);
 
-const { pageCover, team, venues } = await getContactPageData({
-  lang,
-  config: getSanityConfigFromEnvironment(),
-});
+const { data, alternates } = Astro.props;
+const { pageCover, team, venues } = data;
 
 const venuesContactAnchor = "venues-contact";
 
@@ -25,6 +31,8 @@ const pageCoverDataWithCta: PageCoverData = {
   cta: { label: t("contactPage.ctaLabel"), url: `#${venuesContactAnchor}` },
 };
 ---
+
+<Header {alternates} />
 
 <VenuePageCover data={pageCoverDataWithCta} height="m" ctaIcon="arrow-down" />
 
@@ -46,4 +54,4 @@ const pageCoverDataWithCta: PageCoverData = {
   }))}
 />
 
-<Footer />
+<Footer {alternates} />

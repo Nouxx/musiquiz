@@ -6,6 +6,7 @@ import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { Homepage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
 import { toCmsImage } from "./utils/toCmsImage";
+import { toSeo } from "./utils/toSeo";
 
 function adaptVenue({
   data,
@@ -23,6 +24,24 @@ function adaptVenue({
   };
 }
 
+function adaptOrganization(
+  data: SanityHomepage["siteSettings"],
+): Homepage["organization"] {
+  return {
+    logo: toCmsImage(data.footerLogo),
+    // we are not including the venue's socials this they are not the "brand" ones
+    sameAs: [
+      data.facebookUrl,
+      data.instagramUrl,
+      data.linkedinUrl,
+      data.tiktokUrl,
+      data.youtubeUrl,
+    ],
+    telephone: data.mainPhone,
+    email: data.mainEmail,
+  };
+}
+
 function adaptHomepage({
   data,
   lang,
@@ -30,7 +49,7 @@ function adaptHomepage({
   data: SanityHomepage;
   lang: Lang;
 }): Homepage {
-  const { badge, cover, heading, logo, venuesCta } = data.homepage;
+  const { badge, cover, heading, logo, venuesCta, seo } = data.homepage;
 
   return {
     logo: toCmsImage(logo),
@@ -43,6 +62,8 @@ function adaptHomepage({
       data.homepage.pageComponents?.map((component) =>
         adaptPageComponent(component),
       ) ?? [],
+    seo: toSeo({ data: seo, fallback: { title: heading } }),
+    organization: adaptOrganization(data.siteSettings),
   };
 }
 

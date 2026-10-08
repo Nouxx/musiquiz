@@ -1,6 +1,7 @@
 import type { Lang } from "@repo/utils/lang";
 import { z } from "zod";
 
+import { addressProjection, sanityAddressSchema } from "./address";
 import { optionalCtaProjection, sanityCtaSchema } from "./cta";
 import { imageProjection, sanityImageSchema } from "./image";
 import { richTextProjection, sanityRichTextSchema } from "./richText";
@@ -92,7 +93,7 @@ function findUsProjection({ lang }: { lang: Lang }) {
       "media": media ${imageProjection({ lang })},
       "venueTitle": venue->title,
       "location": venue->location{ lat, lng },
-      "address": venue->addressLine,
+      "address": venue->${addressProjection},
       "mapsUrl": venue->googleMapsLink,
       "addressNote": addressNote[language == "${lang}"][0].value,
       "openingTitle": openingTitle[language == "${lang}"][0].value,
@@ -479,7 +480,7 @@ const sanityFindUsSchema = z.strictObject({
   media: sanityImageSchema,
   venueTitle: z.string().min(1),
   location: z.strictObject({ lat: z.number(), lng: z.number() }),
-  address: z.string().min(1),
+  address: sanityAddressSchema,
   mapsUrl: z.string().min(1),
   addressNote: z.string().min(1),
   openingTitle: z.string().min(1),

@@ -25,7 +25,9 @@ function hasAuthorableCta(document: unknown) {
     _type === "termsAndConditionsPage" ||
     _type === "whereToFindUsPage" ||
     _type === "joinTheNetworkPage" ||
-    _type === "contactPage"
+    _type === "contactPage" ||
+    _type === "globalGame" ||
+    _type === "globalEvent"
   ) {
     return false;
   }

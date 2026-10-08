@@ -4,6 +4,7 @@ import { EnvelopeIcon } from "@sanity/icons/Envelope";
 import { ImageIcon } from "@sanity/icons/Image";
 import { ShareIcon } from "@sanity/icons/Share";
 import { UsersIcon } from "@sanity/icons/Users";
+import { ogImageDescription, ogImageWarning } from "./shared/seo";
 
 export const siteSettingsType = defineType({
   name: "siteSettings",
@@ -25,11 +26,32 @@ export const siteSettingsType = defineType({
       type: "imageWithAlt",
     }),
     defineField({
+      name: "mobileMenuLogo",
+      title: "Mobile menu logo",
+      description: "Shown on the dark background of the mobile menu.",
+      group: "branding",
+      validation: (rule) => rule.required(),
+      type: "imageWithAlt",
+    }),
+    defineField({
       name: "footerLogo",
       title: "Footer logo",
       group: "branding",
       validation: (rule) => rule.required(),
       type: "imageWithAlt",
+    }),
+    defineField({
+      name: "ogImage",
+      title: "Sharing image",
+      description: ogImageDescription(
+        "Used by every page that has no sharing image of its own, no cover photo, and none from its venue.",
+      ),
+      group: "branding",
+      type: "image",
+      validation: (rule) => [
+        rule.required(),
+        rule.custom(ogImageWarning).warning(),
+      ],
     }),
     defineField({
       name: "facebookUrl",

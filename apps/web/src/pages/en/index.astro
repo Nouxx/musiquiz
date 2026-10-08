@@ -1,8 +1,23 @@
 ---
-import Layout from "../../layouts/Layout.astro";
+import { getHomepageData } from "@repo/services/cms/getHomepageData";
+import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
+
+import HomepageHead from "../../components/features/HomepageHead.astro";
 import Homepage from "../../components/pages/Homepage.astro";
+import Layout from "../../layouts/Layout.astro";
+import { getLang } from "../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getSite } from "../../libs/getSite";
+
+const data = await getHomepageData({
+  lang: getLang(Astro),
+  config: getSanityConfigFromEnvironment(),
+});
+
+const alternates = getAlternatesUrl(getSite(Astro), (routes) => routes.home);
 ---
 
-<Layout>
-  <Homepage />
+<Layout {...data.seo} {alternates}>
+  <HomepageHead slot="head" organization={data.organization} />
+  <Homepage {data} {alternates} />
 </Layout>

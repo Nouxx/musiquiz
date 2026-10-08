@@ -1,18 +1,16 @@
 ---
 import { Font } from "astro:assets";
 
+import SeoHead, {
+  type Props as SeoProps,
+} from "../components/features/SeoHead.astro";
 import { getLang } from "../libs/getLang";
 // order matters: reset, then the values, then the defaults that use them
 import "@repo/ui/styles/reset.css";
 import "@repo/ui/styles/tokens.css";
 import "@repo/ui/styles/base.css";
 
-interface Props {
-  title?: string;
-  description?: string;
-}
-
-const { title = "Musi'Quiz", description } = Astro.props;
+type Props = SeoProps;
 
 const lang = getLang(Astro);
 ---
@@ -24,11 +22,9 @@ const lang = getLang(Astro);
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
-    <meta name="generator" content={Astro.generator} />
     <Font cssVariable="--font-momo-trust-display" preload />
     <Font cssVariable="--font-funnel-display" preload />
-    <title>{title}</title>
-    {description && <meta name="description" content={description} />}
+    <SeoHead {...Astro.props} />
     <slot name="head" />
   </head>
   <body>

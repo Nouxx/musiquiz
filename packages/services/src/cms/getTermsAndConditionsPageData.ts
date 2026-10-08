@@ -8,6 +8,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 import type { TermsAndConditionsPage } from "./types";
 import { toPageCover } from "./utils/toPageCover";
 import { toRichText } from "./utils/toRichText";
+import { toSeo } from "./utils/toSeo";
 
 function adaptTermsAndConditionsPage({
   data,
@@ -16,6 +17,13 @@ function adaptTermsAndConditionsPage({
 }): TermsAndConditionsPage {
   return {
     pageCover: toPageCover({ data: data.page.pageCover }),
+    seo: toSeo({
+      data: data.page.seo,
+      fallback: {
+        title: data.page.pageCover.heading,
+        description: data.page.pageCover.subHeading,
+      },
+    }),
     intro: toRichText(data.page.intro),
     venues: data.venues.map((venue) => ({
       slug: venue.slug,

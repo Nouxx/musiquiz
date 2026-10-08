@@ -83,6 +83,22 @@ The name is not a choice: the Sanity CLI reads `SANITY_AUTH_TOKEN` from the envi
 
 Secrets do **not** carry across a worker rename — a renamed worker is a new worker, and its secret must be set again.
 
+`CARTO_API_KEY` removes the "API key required" watermark from the CARTO basemap tiles drawn by `TileMap`. It is public, not a secret: the client reads it from `astro:env/client`, so it is inlined into the HTML of every page with a map. CARTO restricts it by `Referer` instead. It is required at build time (`optional: false` in `astro.config.mjs`) and is not needed at runtime, so it lives in:
+
+- `.env.local` for local dev
+- a Cloudflare **build variable**, not a Secret, on both `musiquiz-static` and `musiquiz-ssr`; without it the build fails
+
+To create or rotate the key, fill in the form at: https://carto.com/basemaps/apikey.
+
+| Field                                   | Value                                                                                                      |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Organisation                            | Musiquiz                                                                                                   |
+| Commercial                              | Yes                                                                                                        |
+| What are you building?                  | A website promoting our entertainment business                                                             |
+| Restrict to specific websites (Referer) | Yes, `musiquiz.co`, `musiquiz-ssr.clement-vnnq.workers.dev` and `musiquiz-static.clement-vnnq.workers.dev` |
+
+Accept the terms and submit. The key arrives by email.
+
 ### The `SESSION` KV namespace is pinned on purpose
 
 `env.ssr` in `wrangler.jsonc` declares `SESSION` with an explicit namespace id. `@astrojs/cloudflare` would otherwise inject the binding without one, which forces `wrangler deploy` to provision a namespace at deploy time — something the non-interactive Workers Builds runner cannot be relied on to do.
