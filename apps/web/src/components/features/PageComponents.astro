@@ -28,6 +28,7 @@ import { toOffers } from "../../libs/toOffers";
 import ClientContactForm from "./ClientContactForm.astro";
 import QuotationForm from "./QuotationForm.astro";
 import { WORKER_URL } from "astro:env/client";
+import { CARTO_API_KEY } from "astro:env/client";
 
 interface Props {
   components: PageComponent[];
@@ -164,6 +165,7 @@ const t = getT(lang);
             map={{
               ...component.location,
               title: t("findUs.mapTitle", { venue: component.venueTitle }),
+              apiKey: CARTO_API_KEY,
             }}
           />
         );

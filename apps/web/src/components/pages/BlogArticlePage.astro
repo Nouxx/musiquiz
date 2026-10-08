@@ -16,6 +16,7 @@ import { toContactFacts } from "../../libs/toContactFacts";
 import ArticleCover from "../features/ArticleCover.astro";
 import Footer from "../features/Footer.astro";
 import Header from "../features/Header.astro";
+import { CARTO_API_KEY } from "astro:env/client";
 
 export interface Props {
   data: BlogArticlePageData;
@@ -98,6 +99,7 @@ const date = data.updatedAt
       map={{
         ...closesOn.findUs.location,
         title: t("findUs.mapTitle", { venue: closesOn.title }),
+        apiKey: CARTO_API_KEY
       }}
     />
   )

@@ -11,7 +11,6 @@ import Text from "./primitives/Text.astro";
 import TwoBlocks from "./primitives/TwoBlocks.astro";
 import Section from "./Section.astro";
 import type { ContactFact, CtaLink, ImageSource } from "./types";
-import { CARTO_API_KEY } from "astro:env/client";
 
 interface Props {
   media: ImageSource;
@@ -19,7 +18,7 @@ interface Props {
   title: string;
   facts: ContactFact[];
   cta: CtaLink;
-  map: { lat: number; lng: number; title: string };
+  map: { lat: number; lng: number; title: string, apiKey: string };
 }
 
 const { media, badge, title, facts, cta, map } = Astro.props;
@@ -71,7 +70,7 @@ const external = isExternalUrl(cta.url);
           lat={map.lat}
           lng={map.lng}
           title={map.title}
-          apiKey={CARTO_API_KEY}
+          apiKey={map.apiKey}
         />
       </Card>
     </div>
