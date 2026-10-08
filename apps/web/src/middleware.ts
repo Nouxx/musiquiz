@@ -10,6 +10,7 @@ export const onRequest = defineMiddleware(async function (context, next) {
     (value) => value !== undefined && !isSlug(value),
   );
 
+  // next(path) swaps the route before render; rewrites reset status to 200
   const response = hasUnsafeParameter ? await next("/404/") : await next();
 
   // SSR streams HTML, so the 200 is sent before a child component throws
