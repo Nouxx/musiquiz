@@ -91,6 +91,7 @@ export const fr = {
     nextPage: "Page suivante",
     page: "Page {{page}}",
     pageTitle: "{{title}} – page {{page}}",
+    pageDescription: "Page {{page}} – {{description}}",
   },
   blogArticlePage: {
     breadcrumbs: "Fil d’Ariane",

@@ -88,7 +88,7 @@ Secrets do **not** carry across a worker rename — a renamed worker is a new wo
 - `.env.local` for local dev
 - a Cloudflare **build variable**, not a Secret, on both `musiquiz-static` and `musiquiz-ssr`; without it the build fails
 
-To create or rotate the key, fill in the form at <https://carto.com/basemaps/apikey>:
+To create or rotate the key, fill in the form at: https://carto.com/basemaps/apikey.
 
 | Field                                   | Value                                          |
 | --------------------------------------- | ---------------------------------------------- |

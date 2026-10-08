@@ -38,15 +38,15 @@ Severity: **P0** blocks indexing or ranking; **P1** real loss; **P2** polish.
 
 ### 2.2 Head: titles, descriptions, social
 
-| #   | Finding                                                                                                            | Evidence                    | Sev |
-| --- | ------------------------------------------------------------------------------------------------------------------ | --------------------------- | --- |
-| B1  | 44 / 61 pages have the title `Musi'Quiz`. Only blog pages pass a title.                                            | `Layout.astro` default prop | P0  |
-| B2  | 44 / 61 pages have no meta description.                                                                            | same                        | P0  |
-| B3  | No title template. Blog titles lack the brand, and nothing says which city.                                        | —                           | P1  |
-| B4  | No SEO fields in any Sanity schema: no meta title, meta description, OG image or noindex switch an editor can set. | `apps/sanity/src/schemas/*` | P1  |
-| B5  | No Open Graph or Twitter tags on any page.                                                                         | 0 / 61                      | P1  |
-| B6  | `/blog/page/2` repeats page 1's description.                                                                       | audit script                | P2  |
-| B7  | `<meta name="generator">` exposes the Astro version. No SEO effect, minor fingerprinting.                          | `Layout.astro:27`           | P2  |
+| #   | Finding                                                                                                                                                                       | Evidence                       | Sev |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | --- |
+| B1  | 44 / 61 pages have the title `Musi'Quiz`. Only blog pages pass a title.                                                                                                       | `Layout.astro` default prop    | P0  |
+| B2  | 44 / 61 pages have no meta description.                                                                                                                                       | same                           | P0  |
+| B3  | No title template. Blog titles lack the brand, and nothing says which city.                                                                                                   | —                              | P1  |
+| B4  | No SEO fields in any Sanity schema: no meta title, meta description, OG image or noindex switch an editor can set.                                                            | `apps/sanity/src/schemas/*`    | P1  |
+| B5  | No Open Graph or Twitter tags on any page.                                                                                                                                    | 0 / 61                         | P1  |
+| B6  | `/blog/page/N/` carries its page number in the title and at the head of the description (`blogPage.pageTitle`, `blogPage.pageDescription`), and a self-referencing canonical. | `pages/blog/page/[page].astro` | ✓   |
+| B7  | `<meta name="generator">` exposes the Astro version. No SEO effect, minor fingerprinting.                                                                                     | `Layout.astro:27`              | P2  |
 
 ### 2.3 Internationalization
 
