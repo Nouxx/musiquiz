@@ -23,7 +23,7 @@
     "test": "vitest run",
     "tsc": "pnpm generate-types && astro check",
     "generate-types": "wrangler types --include-runtime=false",
-    "seo:audit": "pnpm unlighthouse --site http://localhost:4321/"
+    "seo:audit": "pnpm unlighthouse --site http://localhost:4321/ --no-cache"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.1.4",
