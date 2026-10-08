@@ -46,7 +46,8 @@ const sanityFooterSchema = z.strictObject({
         slug: z.string().min(1),
       }),
     )
-    .min(1),
+    .min(1)
+    .max(4),
 });
 
 export type SanityFooter = z.infer<typeof sanityFooterSchema>;

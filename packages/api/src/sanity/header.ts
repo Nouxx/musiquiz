@@ -49,7 +49,7 @@ const sanityHeaderSchema = z.strictObject({
     tiktokUrl: z.url(),
     youtubeUrl: z.url(),
   }),
-  games: z.array(formatLinkSchema).min(1),
+  games: z.array(formatLinkSchema).min(1).max(4),
   events: z.array(formatLinkSchema).min(1),
 });
 

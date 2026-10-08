@@ -1,6 +1,8 @@
 import { defineField, defineType } from "sanity";
 import { JoystickIcon } from "@sanity/icons/Joystick";
 
+const MAX_SIGNATURE_GAMES = 4;
+
 export const gameFormatType = defineType({
   name: "gameFormat",
   title: "Game format",
@@ -24,9 +26,32 @@ export const gameFormatType = defineType({
       name: "signature",
       title: "Signature game",
       description:
-        'Listed under "Nos expériences" in the main site header. At least one game must be a signature game.',
+        'Listed under "Nos expériences" in the main site header and in the footer. Between 1 and 4 games must be signature games.',
       type: "boolean",
       initialValue: false,
+      validation: (rule) =>
+        rule.custom(async (value, context) => {
+          const publishedId = (context.document?._id ?? "").replace(
+            /^drafts\./,
+            "",
+          );
+          // other drafts are not counted: only published games reach the site
+          const others = await context
+            .getClient({ apiVersion: "2025-02-06" })
+            .fetch<number>(
+              `count(*[_type == "gameFormat"
+                && signature == true
+                && !(_id in path("drafts.**"))
+                && _id != $publishedId])`,
+              { publishedId },
+            );
+          const total = others + (value ? 1 : 0);
+
+          if (total > MAX_SIGNATURE_GAMES)
+            return `${others} games are already signature games. The header and footer show at most ${MAX_SIGNATURE_GAMES}.`;
+          if (total < 1) return "At least one game must be a signature game.";
+          return true;
+        }),
     }),
     defineField({
       name: "image",
