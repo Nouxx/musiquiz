@@ -2,7 +2,6 @@
 
 - Reviews widget: fetch from Google, by center, from 4 to 5 stars, with word analysis (ex: EVJF)
   - also generate article pills from that (count of reviews + average)
-- Global footer: nos jeux -> only show signature
 - Page de résa global: meme composant que la carte mais pour réserver (update link in global header, check elsewhere)
 - authored URL: provide guidances in Sanity
 - Dedicated funnel for some venues: book button redirects to the partner site (ex: Orléans)
