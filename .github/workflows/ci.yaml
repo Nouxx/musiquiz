@@ -33,6 +33,8 @@ jobs:
         run: pnpm tsc
 
       - name: Build
+        env:
+          CARTO_API_KEY: ${{ secrets.CARTO_API_KEY_CI }}
         run: pnpm --recursive build
 
       - name: test

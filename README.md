@@ -90,12 +90,12 @@ Secrets do **not** carry across a worker rename — a renamed worker is a new wo
 
 To create or rotate the key, fill in the form at: https://carto.com/basemaps/apikey.
 
-| Field                                   | Value                                          |
-| --------------------------------------- | ---------------------------------------------- |
-| Organisation                            | Musiquiz                                       |
-| Commercial                              | Yes                                            |
-| What are you building?                  | A website promoting our entertainment business |
-| Restrict to specific websites (Referer) | Yes, `musiquiz.co`                             |
+| Field                                   | Value                                                                                                      |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Organisation                            | Musiquiz                                                                                                   |
+| Commercial                              | Yes                                                                                                        |
+| What are you building?                  | A website promoting our entertainment business                                                             |
+| Restrict to specific websites (Referer) | Yes, `musiquiz.co`, `musiquiz-ssr.clement-vnnq.workers.dev` and `musiquiz-static.clement-vnnq.workers.dev` |
 
 Accept the terms and submit. The key arrives by email.
 
