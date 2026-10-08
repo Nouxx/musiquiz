@@ -1,79 +1,27 @@
-1. Cloudflare Access policy on musiquiz-ssr. It serves drafts.
-1. SANITY_API_READ_TOKEN as CF secret on musiquiz-ssr (does not carry over from musiquiz-preview).
-1. apps/web/tsconfig.json includes ./worker-configuration.d.ts, which doesn't exist — run pnpm --filter web generate-types, or drop the include.
-1. Validate [venue] before it reaches GROQ, on preview only. Preview builds with output: "server", so getStaticPaths is skipped and Astro.params.venue is a raw URL segment interpolated into slug.current == "...". A segment with a quote in it becomes GROQ, and the preview client reads drafts with a token. Reject unknown slugs (404) at the route or in @repo/services. Blocks the same first deploy as item 1. See ADR 0009.
-
-## Improvements: enter animation for cards
-
-Homepage >
-
-### Reviews widget
+# P0 (top priorities)
 
 - Reviews widget: fetch from Google, by center, from 4 to 5 stars, with word analysis (ex: EVJF)
+  - also generate article pills from that (count of reviews + average)
+- Global footer: nos jeux -> only show signature
+- Page de résa global: meme composant que la carte mais pour réserver (update link in global header, check elsewhere)
+- authored URL: provide guidances in Sanity
+- Dedicated funnel for some venues: book button redirects to the partner site (ex: Orléans)
 
-### Custom venue page
+# P1 (important)
 
-add custom venue page (slug authored from Sanity) - not accessible from the header
+- T&C optional: not all venues have t&c because not all operated by MQ.
+- Cloudflare Access policy on musiquiz-ssr. It serves drafts
+- add custom venue page (slug authored from Sanity) - not accessible from the header
+- global footer: limit the number of signature games (to avoid mess)
+- Sanity UI should require localized strings
+- Proper style on 404 page
+- Blog: add code block (youtube, instagram...)
+- Revoir game prices logic. support exact count: ex: 2 joueurs
 
-## WhereToFindUs
+# P2 (cosmetics)
 
-Strongest liquid glass effect
-
-### Global footer
-
-- Nos jeux: only show signature
-
-### Page de résa global
-
-- Meme composant que la carte mais pour réserver
-
-### Header global
-
-- Accueil: global
-- Nos expériences: signature only
-- Pareil pour occasions (sans le signature)
-- pas de "offrir une partie"
-- Booking CTA goes to a new page: Reserver
-
-### Blog
-
-- Ajouter header
-- Pas de page cover
-- Génération automatique des pills et seulement avis et c'est la moyenne
-- Add code block (youtube, instagram...)
-
-## Logo strip
-
-petit fondu en mode horizontal
-
-## Dedicated funnel for some venues
-
-Reserver button redirects to the partner site (ex: Orléans)
-
-- game price: support exact count: ex: 2 joueurs
 - burger mobile menu: book must be visible at the thumb area
-- scrollable
-
-## Use case SSR
-
-A blog article in draft is breaking the schema in SSR
-
-## CSS liquid glass
-
-- https://musiquiz-ssr.clement-vnnq.workers.dev/lille Safari is doing it better
-
-## T&C optional
-
-not all venues have t&c because not all operated by MQ.
-
-## Translate UI to FR
-
-https://www.sanity.io/docs/studio/localizing-studio-ui
-
-## Leaflet API KEY
-
-Check why we need it
-
-## Homepage logo, stacked with the rest
-
-It does not look good on desktop
+- enter animation for cards (bottom to top)
+- Stronger liquid glass effect on WhereToFindUs (https://musiquiz-ssr.clement-vnnq.workers.dev/lille Safari is doing it better)
+- Logo strip: petit fondu en mode horizontal
+- Translate UI to FR: https://www.sanity.io/docs/studio/localizing-studio-ui
