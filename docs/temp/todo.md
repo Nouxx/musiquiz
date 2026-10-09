@@ -1,6 +1,5 @@
 # P0 (top priorities)
 
-- add booking and gifting id to sanity for venues (must not be shared)
 - authored URL: provide guidances in Sanity
 - add custom venue page (slug authored from Sanity) - not accessible from the header
 - Reviews widget: fetch from Google, by center, from 4 to 5 stars, with word analysis (ex: EVJF)
@@ -26,3 +25,10 @@
 - Stronger liquid glass effect on WhereToFindUs (https://musiquiz-ssr.clement-vnnq.workers.dev/lille Safari is doing it better)
 - Logo strip: petit fondu en mode horizontal
 - Translate UI to FR: https://www.sanity.io/docs/studio/localizing-studio-ui
+- Dev bug in sanity studio: menus disappears
+- Make Zod errors human readable in the build
+
+# Questions
+
+- is gifting widget/page required for all "hosted" venue?
+- what is the format of 4escape widget ids?
