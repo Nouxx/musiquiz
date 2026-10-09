@@ -4,7 +4,7 @@ import { getHeaderData } from "@repo/services/cms/getHeaderData";
 import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import { isCurrentUrl } from "@repo/services/routing/isCurrentUrl";
-import { venuesMapAnchorId, type NavLink, type NavMenu } from "@repo/ui/types";
+import type { NavLink, NavMenu } from "@repo/ui/types";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getT } from "../../libs/i18n";
 import { getLang } from "../../libs/getLang";
@@ -80,11 +80,7 @@ function withCurrent(item: NavLink | NavMenu): NavLink | NavMenu {
 
 const linksTree = mainLinks.map(withCurrent);
 
-// TODO: point to the global booking page once it exists
-const cta = {
-  label: t("header.book"),
-  url: routes.home + `#${venuesMapAnchorId}`,
-};
+const cta = { label: t("header.book"), url: routes.book };
 
 const contact = {
   phone: { label: data.contact.phoneLabel, url: data.contact.phoneHref },

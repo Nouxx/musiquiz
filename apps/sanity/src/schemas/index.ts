@@ -10,6 +10,7 @@ import { gameFormatType } from "./gameFormat";
 import { joinTheNetworkPageType } from "./joinTheNetworkPage";
 import { contactPageType } from "./contactPage";
 import { whereToFindUsPageType } from "./whereToFindUsPage";
+import { globalBookingPageType } from "./globalBookingPage";
 import { legalNoticePageType } from "./legalNoticePage";
 import { termsAndConditionsPageType } from "./termsAndConditionsPage";
 import { homepageType } from "./homepage";
@@ -67,6 +68,7 @@ export const schemaTypes = [
   joinTheNetworkPageType,
   contactPageType,
   whereToFindUsPageType,
+  globalBookingPageType,
   legalNoticePageType,
   termsAndConditionsPageType,
   blogPageType,

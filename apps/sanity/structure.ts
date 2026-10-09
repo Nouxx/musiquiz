@@ -263,6 +263,13 @@ export const myStructure: StructureResolver = (S: StructureBuilder) =>
 
       singletonItem({
         S,
+        type: "globalBookingPage",
+        title: "Booking page",
+        icon: CalendarIcon,
+      }),
+
+      singletonItem({
+        S,
         type: "legalNoticePage",
         title: "Legal notice page",
         icon: DocumentTextIcon,

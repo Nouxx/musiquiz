@@ -185,6 +185,12 @@ export type WhereToFindUsPage = {
   seo: Seo;
 };
 
+export type GlobalBookingPage = {
+  pageCover: PageCover;
+  venues: VenuePin[];
+  seo: Seo;
+};
+
 export type TeamMember = {
   photo: CmsImage;
   name: string;

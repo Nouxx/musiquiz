@@ -1,0 +1,21 @@
+---
+import { getGlobalBookingPageData } from "@repo/services/cms/getGlobalBookingPageData";
+import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
+
+import GlobalBookingPage from "../components/pages/GlobalBookingPage.astro";
+import Layout from "../layouts/Layout.astro";
+import { getLang } from "../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../libs/getSanityConfigFromEnvironment";
+import { getSite } from "../libs/getSite";
+
+const data = await getGlobalBookingPageData({
+  lang: getLang(Astro),
+  config: getSanityConfigFromEnvironment(),
+});
+
+const alternates = getAlternatesUrl(getSite(Astro), (routes) => routes.book);
+---
+
+<Layout {...data.seo} {alternates}>
+  <GlobalBookingPage {data} {alternates} />
+</Layout>

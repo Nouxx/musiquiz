@@ -23,12 +23,11 @@ const t = getT(lang);
 
 const { data, alternates } = Astro.props;
 
-// todo: global booking page, see docs/temp/global_header.md
 const pageCoverData: PageCoverData = {
   ...data.pageCover,
   cta: {
     label: t("globalGamePage.ctaLabel"),
-    url: getRoutesForLang(lang).whereToFindUs,
+    url: getRoutesForLang(lang).book,
   },
 };
 ---

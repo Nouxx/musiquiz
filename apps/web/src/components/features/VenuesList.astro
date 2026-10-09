@@ -8,18 +8,20 @@ import { getT } from "../../libs/i18n";
 export interface Props {
   venues: VenuePin[];
   cta: CtaLink | undefined;
+  badge?: string;
+  heading?: string;
 }
-
-const { venues, cta } = Astro.props;
 
 const lang = getLang(Astro);
 
 const t = getT(lang);
+
+const {
+  venues,
+  cta,
+  badge = t("venues.badge"),
+  heading = t("venues.heading"),
+} = Astro.props;
 ---
 
-<VenuesMap
-  badge={t("venues.badge")}
-  heading={t("venues.heading")}
-  {venues}
-  {cta}
-/>
+<VenuesMap {badge} {heading} {venues} {cta} />
