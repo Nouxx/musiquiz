@@ -1,6 +1,5 @@
 # P0 (top priorities)
 
-- Dedicated funnel for some venues: book button redirects to the partner site (ex: Orléans)
 - add booking and gifting id to sanity for venues (must not be shared)
 - authored URL: provide guidances in Sanity
 - add custom venue page (slug authored from Sanity) - not accessible from the header
@@ -15,6 +14,10 @@
 - Proper style on 404 page
 - Blog: add code block (youtube, instagram...)
 - Revoir game prices logic. support exact count: ex: 2 joueurs
+- Form security: prevent attacks
+  - honey pot
+  - rate limiting by IP
+  - Origin/Referrer check
 
 # P2 (cosmetics)
 
