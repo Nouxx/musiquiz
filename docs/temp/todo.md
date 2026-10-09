@@ -1,6 +1,7 @@
 # P0 (top priorities)
 
 - Dedicated funnel for some venues: book button redirects to the partner site (ex: Orléans)
+- add booking and gifting id to sanity for venues (must not be shared)
 - authored URL: provide guidances in Sanity
 - add custom venue page (slug authored from Sanity) - not accessible from the header
 - Reviews widget: fetch from Google, by center, from 4 to 5 stars, with word analysis (ex: EVJF)
