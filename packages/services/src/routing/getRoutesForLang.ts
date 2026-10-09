@@ -4,6 +4,7 @@ const frenchRoutes = {
   home: "/",
   venueHome: (venue: string) => `/${venue}/`,
   venueBook: (venue: string) => `/${venue}/reserver/`,
+  book: "/reserver/",
   venueGame: (venue: string, game: string) => `/${venue}/jeux/${game}/`,
   venueEvent: (venue: string, event: string) =>
     `/${venue}/evenements/${event}/`,
@@ -29,6 +30,7 @@ const englishRoutes: Omit<typeof frenchRoutes, BlogRoutes> = {
   home: "/en/",
   venueHome: (venue: string) => `/en/${venue}/`,
   venueBook: (venue: string) => `/en/${venue}/book/`,
+  book: "/en/book/",
   venueGame: (venue: string, game: string) => `/en/${venue}/games/${game}/`,
   venueEvent: (venue: string, event: string) => `/en/${venue}/events/${event}/`,
   venueGifting: (venue: string) => `/en/${venue}/gift/`,

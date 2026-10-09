@@ -14,6 +14,7 @@ export const singletonIds = [
   "joinTheNetworkPage",
   "contactPage",
   "whereToFindUsPage",
+  "globalBookingPage",
   "legalNoticePage",
   "termsAndConditionsPage",
   "blogPage",

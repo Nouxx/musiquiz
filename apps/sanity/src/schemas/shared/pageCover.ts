@@ -24,6 +24,7 @@ function hasAuthorableCta(document: unknown) {
     _type === "legalNoticePage" ||
     _type === "termsAndConditionsPage" ||
     _type === "whereToFindUsPage" ||
+    _type === "globalBookingPage" ||
     _type === "joinTheNetworkPage" ||
     _type === "contactPage" ||
     _type === "globalGame" ||

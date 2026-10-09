@@ -8,7 +8,7 @@ The Format's glossary entry said it "carries no marketing copy". That rule was a
 
 **Routes come from the Format, not from the page.** A route exists for every game with `signature == true` and for every event. A missing page document fails the build, the same as a missing Venue Page. The header lists exactly those Formats, so a dead header link becomes a red build instead of a 404 a visitor finds. Unticking `signature` removes the route, and the document stays where it is.
 
-**The cover's call to action is decided in code**, the same as on the other Global Pages. It reads "Réserver" / "Book" and leads to where-to-find-us until a global booking page exists. The Page Cover hides its authored call to action on both types.
+**The cover's call to action is decided in code**, the same as on the other Global Pages. It reads "Réserver" / "Book" and leads to the Global Booking Page. The Page Cover hides its authored call to action on both types.
 
 ## Alternative: fields on the Format
 

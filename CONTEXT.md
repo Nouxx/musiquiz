@@ -70,8 +70,12 @@ The document holding one of a Venue's three fixed screens — its home page, its
 _Avoid_: page, page document, venue content, screen
 
 **Global Page**:
-A page no Venue owns — join the network, contact, where to find us, legal notice, terms and conditions. The phrase names the family, not a type: each is its own document type and its own singleton document, and nothing but the Page Cover is shared between them. [ADR 0012](./docs/adr/0012-one-document-type-per-global-page.md).
+A page no Venue owns — join the network, contact, where to find us, booking, legal notice, terms and conditions. The phrase names the family, not a type: each is its own document type and its own singleton document, and nothing but the Page Cover is shared between them. [ADR 0012](./docs/adr/0012-one-document-type-per-global-page.md).
 _Avoid_: globalPage, generic page, static page, site page
+
+**Global Booking Page**:
+The Global Page at `/reserver/` that sends a visitor to a Venue's booking page: a Page Cover, then the venues map whose links lead to `venueBook`, not `venueHome`. Its cover's call to action is set in code and scrolls to the map. Every "Réserver" outside a Venue leads here — the global header and the Global Game and Global Event covers.
+_Avoid_: booking page (alone, that is a Venue Page), global booking widget
 
 **Blog Article**:
 One post of the blog, written in French only, dated, signed by a Team Member and pinned to the Venue it is about, else to an Event Format, else to neither. Nothing on it is translated and no `en` route serves it; the blog exists for search engines and the business writes it in one language. Its page is fixed: cover, summary, Article Body, then the Venue Blog when it has a Venue, its own optional FAQ and the author, with no Page Components. [ADR 0013](./docs/adr/0013-blog-is-french-only-and-static.md), [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md), [ADR 0016](./docs/adr/0016-blog-faq-belongs-to-the-article.md).

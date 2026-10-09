@@ -1,20 +1,20 @@
 ---
 import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import type {
-  GlobalEventPage,
+  GlobalBookingPage as GlobalBookingPageData,
   PageCover as PageCoverData,
 } from "@repo/services/cms/types";
-import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+import { venuesMapAnchorId } from "@repo/ui/types";
 
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 import Footer from "../features/Footer.astro";
 import Header from "../features/Header.astro";
-import PageComponents from "../features/PageComponents.astro";
 import VenuePageCover from "../features/VenuePageCover.astro";
+import VenuesList from "../features/VenuesList.astro";
 
 interface Props {
-  data: GlobalEventPage;
+  data: GlobalBookingPageData;
   alternates: Alternates;
 }
 
@@ -26,16 +26,21 @@ const { data, alternates } = Astro.props;
 const pageCoverData: PageCoverData = {
   ...data.pageCover,
   cta: {
-    label: t("globalEventPage.ctaLabel"),
-    url: getRoutesForLang(lang).book,
+    label: t("globalBookingPage.ctaLabel"),
+    url: `#${venuesMapAnchorId}`,
   },
 };
 ---
 
 <Header {alternates} />
 
-<VenuePageCover data={pageCoverData} />
+<VenuePageCover data={pageCoverData} ctaIcon="arrow-down" />
 
-<PageComponents components={data.components} />
+<VenuesList
+  venues={data.venues}
+  cta={undefined}
+  badge={t("globalBookingPage.venuesBadge")}
+  heading={t("globalBookingPage.venuesHeading")}
+/>
 
 <Footer {alternates} />

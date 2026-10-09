@@ -113,6 +113,11 @@ export const fr = {
   joinTheNetworkPage: {
     ctaLabel: "Demander notre plaquette",
   },
+  globalBookingPage: {
+    ctaLabel: "Choisir mon centre",
+    venuesBadge: "Nos centres",
+    venuesHeading: "Où voulez-vous jouer ?",
+  },
   globalGamePage: {
     ctaLabel: "Réserver",
   },
