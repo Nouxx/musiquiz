@@ -35,11 +35,18 @@ export type ArticleNode =
   | { type: "list"; items: RichTextSpan[][] }
   | { type: "image"; image: CmsImage };
 
+export type VenueLink = {
+  url: string;
+  /** a partner's site, opened in a new tab */
+  external: boolean;
+};
+
 export type VenuePin = {
   /** the slug, pairs a list link with its dot on the map */
   id: string;
   title: string;
   url: string;
+  external?: boolean;
   detail: string;
   /** percent of the map frame */
   position: { x: number; y: number };
@@ -245,7 +252,13 @@ export type BlogArticlePage = {
   body: ArticleNode[];
   readingMinutes: number;
   closesOn:
-    | { kind: "venue"; title: string; slug: string; findUs: FindUsContent }
+    | {
+        kind: "venue";
+        title: string;
+        slug: string;
+        bookingLink: VenueLink;
+        findUs: FindUsContent;
+      }
     | { kind: "event"; title: string; slug: string }
     | { kind: "whereToFindUs" };
   author: {
@@ -292,6 +305,8 @@ export type VenueWidgetPageType = "gift" | "book";
 
 export type VenueWidgetPage = {
   venueTitle: string;
+  /** @example "fa25b722-264c-4644-b65e-5e8aeb60f7b3" */
+  widgetId: string;
   pageCover: PageCover;
   componentsBeforeWidget: PageComponent[];
   componentsAfterWidget: PageComponent[];
@@ -339,6 +354,9 @@ export type VenueHeader = {
     phoneLabel: string;
     phoneHref: string;
   };
+  bookingLink: VenueLink;
+  /** absent for a venue hosted by a partner that sells no vouchers */
+  giftingLink: VenueLink | undefined;
   experiences: {
     label: string;
     url: string;

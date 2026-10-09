@@ -1,6 +1,7 @@
 import type { SanityPageComponent } from "@repo/api/sanity/shared/pageComponents";
 import { getMailto } from "@repo/utils/getMailto";
 import { getTel } from "@repo/utils/getTel";
+import type { Lang } from "@repo/utils/lang";
 
 import type { PageComponent } from "../pageComponent.types";
 import { toAddressLine } from "./toAddressLine";
@@ -16,8 +17,15 @@ import { toPricesGame } from "./toPricesGame";
 import { toRichText } from "./toRichText";
 import { toTextBlock } from "./toTextBlock";
 import { toTextCard } from "./toTextCard";
+import { toBookingLink } from "./toVenueLinks";
 
-export function adaptPageComponent(data: SanityPageComponent): PageComponent {
+export function adaptPageComponent({
+  data,
+  lang,
+}: {
+  data: SanityPageComponent;
+  lang: Lang;
+}): PageComponent {
   switch (data._type) {
     case "rollingBanner": {
       return {
@@ -65,7 +73,7 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         surface: data.surface,
         cta: toCta(data.cta),
         footnote: data.footnote ?? undefined,
-        venueSlug: data.venueSlug,
+        bookingLink: toBookingLink({ venue: data.venue, lang }),
         games: data.games.map((game) => toPricesGame(game)),
       };
     }
@@ -92,7 +100,7 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
       return {
         type: "contactPanels",
         media: toCmsImage(data.media),
-        venueSlug: data.venueSlug,
+        bookingLink: toBookingLink({ venue: data.venue, lang }),
         venueTitle: data.venueTitle,
         quote: {
           label: data.quoteLabel,
@@ -209,7 +217,7 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         title: data.title,
         subTitle: data.subTitle ?? undefined,
         background: data.background,
-        venueSlug: data.venueSlug,
+        bookingLink: toBookingLink({ venue: data.venue, lang }),
         cta: toCta(data.cta),
         content:
           data.content.layout === "groups"
@@ -252,7 +260,7 @@ export function adaptPageComponent(data: SanityPageComponent): PageComponent {
         surface: data.surface,
         cta: toCta(data.cta),
         footnote: data.footnote ?? undefined,
-        venueSlug: data.venueSlug,
+        bookingLink: toBookingLink({ venue: data.venue, lang }),
         game: toPricesGame(data.game),
       };
     }

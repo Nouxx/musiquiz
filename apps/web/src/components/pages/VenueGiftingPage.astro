@@ -9,7 +9,7 @@ import type {
   PageCover as PageCoverData,
   VenueWidgetPage,
 } from "@repo/services/cms/types";
-import GiftingWidget from "../features/4espace/GiftingWidget.astro";
+import Widget from "../features/4espace/Widget.astro";
 import { giftingAnchor } from "../features/4espace/config";
 
 interface Props {
@@ -36,7 +36,7 @@ const pageCoverData: PageCoverData = {
 
 <PageComponents components={data.componentsBeforeWidget} />
 
-<GiftingWidget />
+<Widget anchor={giftingAnchor} widgetId={data.widgetId} />
 
 <PageComponents components={data.componentsAfterWidget} />
 

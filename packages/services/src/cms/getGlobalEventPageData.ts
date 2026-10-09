@@ -12,8 +12,10 @@ import { toSeo } from "./utils/toSeo";
 
 function adaptGlobalEventPage({
   data,
+  lang,
 }: {
   data: SanityGlobalEventPage;
+  lang: Lang;
 }): GlobalEventPage {
   return {
     eventName: data.globalEvent.eventName,
@@ -27,7 +29,7 @@ function adaptGlobalEventPage({
     }),
     components:
       data.globalEvent.pageComponents?.map((component) =>
-        adaptPageComponent(component),
+        adaptPageComponent({ data: component, lang }),
       ) ?? [],
   };
 }
@@ -43,5 +45,5 @@ export async function getGlobalEventPageData({
 }) {
   const data = await fetchGlobalEventPage({ config, lang, eventSlug });
 
-  return adaptGlobalEventPage({ data });
+  return adaptGlobalEventPage({ data, lang });
 }

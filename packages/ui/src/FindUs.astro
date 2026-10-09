@@ -10,6 +10,7 @@ import RemoteImage from "./primitives/RemoteImage.astro";
 import Text from "./primitives/Text.astro";
 import TwoBlocks from "./primitives/TwoBlocks.astro";
 import Section from "./Section.astro";
+import { linkTarget } from "./lib/linkTarget";
 import type { ContactFact, CtaLink, ImageSource } from "./types";
 
 interface Props {
@@ -22,9 +23,6 @@ interface Props {
 }
 
 const { media, badge, title, facts, cta, map } = Astro.props;
-
-// todo: this helper should be owned by the services and return a object like {url, external} kind of things
-const external = isExternalUrl(cta.url);
 ---
 
 <Section surface="media" width="content">
@@ -55,8 +53,7 @@ const external = isExternalUrl(cta.url);
         as="a"
         href={cta.url}
         tone="blue"
-        target={external ? "_blank" : undefined}
-        rel={external ? "noopener" : undefined}
+        {...linkTarget(cta.external ?? isExternalUrl(cta.url))}
         icon="arrow-right"
         iconPosition="trailing"
       >

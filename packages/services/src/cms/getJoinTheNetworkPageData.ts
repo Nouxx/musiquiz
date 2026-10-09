@@ -12,8 +12,10 @@ import { toSeo } from "./utils/toSeo";
 
 function adaptJoinTheNetworkPage({
   data,
+  lang,
 }: {
   data: SanityJoinTheNetworkPage;
+  lang: Lang;
 }): JoinTheNetworkPage {
   return {
     pageCover: toPageCover({ data: data.page.pageCover }),
@@ -26,7 +28,7 @@ function adaptJoinTheNetworkPage({
     }),
     components:
       data.page.pageComponents?.map((component) =>
-        adaptPageComponent(component),
+        adaptPageComponent({ data: component, lang }),
       ) ?? [],
   };
 }
@@ -40,5 +42,5 @@ export async function getJoinTheNetworkPageData({
 }) {
   const data = await fetchJoinTheNetworkPage({ config, lang });
 
-  return adaptJoinTheNetworkPage({ data });
+  return adaptJoinTheNetworkPage({ data, lang });
 }

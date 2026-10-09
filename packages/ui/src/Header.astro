@@ -5,7 +5,8 @@ import type { FlagIconName } from "./lib/icons";
 import IconChip from "./primitives/IconChip.astro";
 import MenuButton from "./primitives/MenuButton.astro";
 import RemoteImage from "./primitives/RemoteImage.astro";
-import type { ImageSource, NavLink, NavMenu } from "./types";
+import { linkTarget } from "./lib/linkTarget";
+import type { CtaLink, ImageSource, NavLink, NavMenu } from "./types";
 
 /**
  * invariant: bind "dialog" and its opening "button".
@@ -24,10 +25,7 @@ interface Props {
   };
   linksTree: (NavLink | NavMenu)[];
   additionalMobileMenuLink?: NavLink;
-  cta: {
-    label: string;
-    url: string;
-  };
+  cta: CtaLink;
   closeLabel: string;
   menuLabel?: string;
   contact: {
@@ -81,7 +79,11 @@ const hasSocials = Astro.slots.has("socials");
                     <ul class="panel">
                       {item.links.map((link) => (
                         <li>
-                          <MenuButton href={link.url} current={link.current}>
+                          <MenuButton
+                            href={link.url}
+                            {...linkTarget(link.external)}
+                            current={link.current}
+                          >
                             {link.label}
                           </MenuButton>
                         </li>
@@ -91,7 +93,11 @@ const hasSocials = Astro.slots.has("socials");
                 </li>
               ) : (
                 <li>
-                  <MenuButton href={item.url} current={item.current}>
+                  <MenuButton
+                    href={item.url}
+                    {...linkTarget(item.external)}
+                    current={item.current}
+                  >
                     {item.label}
                   </MenuButton>
                 </li>
@@ -101,7 +107,14 @@ const hasSocials = Astro.slots.has("socials");
         </ul>
       </nav>
 
-      <Button as="a" href={cta.url} tone="red" size="m" class="cta">
+      <Button
+        as="a"
+        href={cta.url}
+        {...linkTarget(cta.external)}
+        tone="red"
+        size="m"
+        class="cta"
+      >
         {cta.label}
       </Button>
 

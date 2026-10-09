@@ -5,6 +5,7 @@ import Button from "./primitives/Button.astro";
 import Flex from "./primitives/Flex.astro";
 import Grid from "./primitives/Grid.astro";
 import Text from "./primitives/Text.astro";
+import { linkTarget } from "./lib/linkTarget";
 import { venuesMapAnchorId, type CtaLink, type VenuePin } from "./types";
 import { venuesMap } from "./lib/maps";
 
@@ -40,7 +41,11 @@ const pairingCss = venues
           {
             venues.map((venue) => (
               <li>
-                <a href={venue.url} data-city={venue.id}>
+                <a
+                  href={venue.url}
+                  {...linkTarget(venue.external)}
+                  data-city={venue.id}
+                >
                   <Flex gap="1">
                     <Text variant="title-xl">{venue.title}</Text>
                     <Text variant="paragraph-base">({venue.detail})</Text>

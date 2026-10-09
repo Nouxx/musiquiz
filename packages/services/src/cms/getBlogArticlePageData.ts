@@ -12,19 +12,22 @@ import { toCmsImage } from "./utils/toCmsImage";
 import { toReadingMinutes } from "./utils/toReadingMinutes";
 import { toRichText } from "./utils/toRichText";
 import { toSeo } from "./utils/toSeo";
+import { toBookingLink } from "./utils/toVenueLinks";
 
 function toClosesOn({
   venue,
+  venueLinks,
   event,
 }: Pick<
   SanityBlogArticlePage["article"],
-  "venue" | "event"
+  "venue" | "venueLinks" | "event"
 >): BlogArticlePage["closesOn"] {
-  if (venue) {
+  if (venue && venueLinks) {
     return {
       kind: "venue",
       title: venue.title,
       slug: venue.slug,
+      bookingLink: toBookingLink({ venue: venueLinks, lang: "fr" }),
       findUs: {
         ...venue.blog.findUs,
         media: toCmsImage(venue.blog.findUs.media),
@@ -45,7 +48,7 @@ function adaptBlogArticlePage({
   data: SanityBlogArticlePage;
 }): BlogArticlePage {
   const { article } = data;
-  const { venue, event, author } = article;
+  const { author } = article;
 
   const summary = toRichText(article.summary);
   const body = toArticleBody(article.body);
@@ -61,7 +64,7 @@ function adaptBlogArticlePage({
     reviewCount: article.reviewCount ?? undefined,
     body,
     readingMinutes: toReadingMinutes([...summary, ...body]),
-    closesOn: toClosesOn({ venue, event }),
+    closesOn: toClosesOn(article),
     author: {
       name: author.name,
       jobTitle: author.jobTitle,

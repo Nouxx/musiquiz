@@ -62,10 +62,9 @@ const mainLinks: (NavLink | NavMenu)[] = [
     label: t("header.events"),
     links: data.events,
   },
-  {
-    label: t("header.offerAGame"),
-    url: routes.venueGifting(venueSlug),
-  },
+  ...(data.giftingLink
+    ? [{ label: t("header.offerAGame"), ...data.giftingLink }]
+    : []),
 ];
 
 function withCurrent(item: NavLink | NavMenu): NavLink | NavMenu {
@@ -90,7 +89,7 @@ const venueSwitcherLink = {
 
 const cta = {
   label: t("header.book"),
-  url: routes.venueBook(venueSlug),
+  ...data.bookingLink,
 };
 
 const contact = {

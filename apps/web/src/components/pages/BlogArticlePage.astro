@@ -36,7 +36,7 @@ function toClosingCta() {
   if (closesOn.kind === "venue") {
     return {
       label: t("blogArticlePage.book", { venue: closesOn.title }),
-      url: routes.venueBook(closesOn.slug),
+      ...closesOn.bookingLink,
     };
   }
   if (closesOn.kind === "event") {
@@ -94,7 +94,7 @@ const date = data.updatedAt
       facts={toContactFacts({ component: closesOn.findUs, t })}
       cta={{
         label: t("blogArticlePage.findUsCta", { venue: closesOn.title }),
-        url: routes.venueBook(closesOn.slug),
+        ...closesOn.bookingLink,
       }}
       map={{
         ...closesOn.findUs.location,

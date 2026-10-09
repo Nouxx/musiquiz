@@ -5,10 +5,10 @@ import {
 import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
-import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { GlobalBookingPage, VenuePin } from "./types";
 import { toPageCover } from "./utils/toPageCover";
 import { toSeo } from "./utils/toSeo";
+import { toBookingLink } from "./utils/toVenueLinks";
 
 function adaptVenue({
   data,
@@ -17,10 +17,13 @@ function adaptVenue({
   data: SanityGlobalBookingPage["venues"][number];
   lang: Lang;
 }): VenuePin {
+  const booking = toBookingLink({ venue: data.links, lang });
+
   return {
-    id: data.slug,
+    id: data.links.slug,
     title: data.title,
-    url: getRoutesForLang(lang).venueBook(data.slug),
+    url: booking.url,
+    external: booking.external,
     detail: data.regionCode,
     position: data.mapPosition,
   };

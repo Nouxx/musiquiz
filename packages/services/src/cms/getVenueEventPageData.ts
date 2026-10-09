@@ -12,8 +12,10 @@ import { toSeo } from "./utils/toSeo";
 
 function adaptVenueEventPage({
   data,
+  lang,
 }: {
   data: SanityVenueEventPage;
+  lang: Lang;
 }): VenueEventPage {
   return {
     venueTitle: data.venueEvent.venueTitle,
@@ -28,7 +30,7 @@ function adaptVenueEventPage({
     }),
     components:
       data.venueEvent.pageComponents?.map((component) =>
-        adaptPageComponent(component),
+        adaptPageComponent({ data: component, lang }),
       ) ?? [],
   };
 }
@@ -51,5 +53,5 @@ export async function getVenueEventPageData({
     eventSlug,
   });
 
-  return adaptVenueEventPage({ data });
+  return adaptVenueEventPage({ data, lang });
 }

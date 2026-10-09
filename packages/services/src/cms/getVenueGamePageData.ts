@@ -12,8 +12,10 @@ import { toSeo } from "./utils/toSeo";
 
 function adaptVenueGamePage({
   data,
+  lang,
 }: {
   data: SanityVenueGamePage;
+  lang: Lang;
 }): VenueGamePage {
   return {
     venueTitle: data.venueGame.venueTitle,
@@ -28,7 +30,7 @@ function adaptVenueGamePage({
     }),
     components:
       data.venueGame.pageComponents?.map((component) =>
-        adaptPageComponent(component),
+        adaptPageComponent({ data: component, lang }),
       ) ?? [],
   };
 }
@@ -46,5 +48,5 @@ export async function getVenueGamePageData({
 }) {
   const data = await fetchVenueGamePage({ config, lang, venueSlug, gameSlug });
 
-  return adaptVenueGamePage({ data });
+  return adaptVenueGamePage({ data, lang });
 }

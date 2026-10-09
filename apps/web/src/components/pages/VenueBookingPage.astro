@@ -9,7 +9,7 @@ import type {
   PageCover as PageCoverData,
   VenueWidgetPage,
 } from "@repo/services/cms/types";
-import BookingWidget from "../features/4espace/BookingWidget.astro";
+import Widget from "../features/4espace/Widget.astro";
 import { bookingAnchor } from "../features/4espace/config";
 
 interface Props {
@@ -40,7 +40,7 @@ const pageCoverData: PageCoverData = {
 
 <PageComponents components={data.componentsBeforeWidget} />
 
-<BookingWidget />
+<Widget anchor={bookingAnchor} widgetId={data.widgetId} />
 
 <PageComponents components={data.componentsAfterWidget} />
 

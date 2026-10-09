@@ -6,6 +6,7 @@ import { optionalCtaProjection, sanityCtaSchema } from "./cta";
 import { imageProjection, sanityImageSchema } from "./image";
 import { richTextProjection, sanityRichTextSchema } from "./richText";
 import { sanityTextBlockSchema, textBlockProjection } from "./textBlock";
+import { sanityVenueLinksSchema, venueLinksProjection } from "./venueLinks";
 
 function rollingBannerProjection({ lang }: { lang: Lang }) {
   return `
@@ -58,7 +59,7 @@ function venuePricesProjection({ lang }: { lang: Lang }) {
       "surface": coalesce(surface, "muted"),
       "cta": ${optionalCtaProjection({ field: "cta", lang })},
       ${footnoteProjection({ lang })},
-      "venueSlug": venue->slug.current,
+      "venue": venue->${venueLinksProjection},
       "games": *[
         _type == "venueGame"
         && venue._ref == ^.venue._ref
@@ -75,7 +76,7 @@ function gamePricesProjection({ lang }: { lang: Lang }) {
       "surface": coalesce(surface, "muted"),
       "cta": ${optionalCtaProjection({ field: "cta", lang })},
       ${footnoteProjection({ lang })},
-      "venueSlug": venue->slug.current,
+      "venue": venue->${venueLinksProjection},
       "game": *[
         _type == "venueGame"
         && venue._ref == ^.venue._ref
@@ -108,7 +109,7 @@ function contactPanelsProjection({ lang }: { lang: Lang }) {
   return `
     _type == "contactPanels" => {
       "media": media ${imageProjection({ lang })},
-      "venueSlug": venue->slug.current,
+      "venue": venue->${venueLinksProjection},
       "venueTitle": venue->title,
       "phone": venue->phone,
       "mail": venue->mail,
@@ -321,7 +322,7 @@ function offersProjection({ lang }: { lang: Lang }) {
       "title": title[language == "${lang}"][0].value,
       "subTitle": subTitle[language == "${lang}"][0].value,
       "background": coalesce(background, "default"),
-      "venueSlug": venue->slug.current,
+      "venue": venue->${venueLinksProjection},
       "cta": ${optionalCtaProjection({ field: "cta", lang })},
       "content": select(
         layout == "groups" => {
@@ -457,7 +458,7 @@ const sanityVenuePricesSchema = z.strictObject({
   surface: z.enum(["default", "muted"]),
   cta: sanityCtaSchema.nullable(),
   footnote: sanityPricesFootnoteSchema.nullable(),
-  venueSlug: z.string().min(1),
+  venue: sanityVenueLinksSchema,
   games: z.array(sanityPricedGameSchema),
 });
 
@@ -467,7 +468,7 @@ const sanityGamePricesSchema = z.strictObject({
   surface: z.enum(["default", "muted"]),
   cta: sanityCtaSchema.nullable(),
   footnote: sanityPricesFootnoteSchema.nullable(),
-  venueSlug: z.string().min(1),
+  venue: sanityVenueLinksSchema,
   // not nullable: a section pointing at a deleted venueGame has nothing to render
   // and no other game to fall back on, so it fails the build rather than rendering a heading over nothing
   game: sanityPricedGameSchema,
@@ -492,7 +493,7 @@ const sanityFindUsSchema = z.strictObject({
 const sanityContactPanelsSchema = z.strictObject({
   _type: z.literal("contactPanels"),
   media: sanityImageSchema,
-  venueSlug: z.string().min(1),
+  venue: sanityVenueLinksSchema,
   venueTitle: z.string().min(1),
   phone: z.string().min(1),
   mail: z.string().min(1),
@@ -696,7 +697,7 @@ const sanityOffersSchema = z.strictObject({
   title: z.string().min(1),
   subTitle: z.string().min(1).nullable(),
   background: z.enum(["default", "muted"]),
-  venueSlug: z.string().min(1),
+  venue: sanityVenueLinksSchema,
   cta: sanityCtaSchema.nullable(),
   content: z.discriminatedUnion("layout", [
     z.strictObject({

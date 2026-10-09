@@ -11,6 +11,7 @@ import TagIcon from "@sanity/icons/Tag";
 import { HomeIcon } from "@sanity/icons/Home";
 import { BookIcon } from "@sanity/icons/Book";
 import { ShareIcon } from "@sanity/icons/Share";
+import { CalendarIcon } from "@sanity/icons/Calendar";
 
 // todo: i18n, "Fermé" is french
 function openingTimeValidation(rule: StringRule) {
@@ -19,6 +20,22 @@ function openingTimeValidation(rule: StringRule) {
     rule
       .regex(/^(Fermé|([01]\d|2[0-3]):[0-5]\d - ([01]\d|2[0-3]):[0-5]\d)$/)
       .error('Must match the format "HH:mm - HH:mm" or "Fermé"'),
+  ];
+}
+
+const WIDGET_ID_DESCRIPTION =
+  "The `data-widget-id` of this venue's catalog widget in the 4escape back office.";
+
+function widgetIdValidation(rule: StringRule) {
+  return [
+    rule.custom((value, { document }) =>
+      !document?.hostedByPartner && !value
+        ? "Required for a venue not hosted by a partner"
+        : true,
+    ),
+    rule
+      .regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
+      .error("Must be a widget ID, like fa25b722-264c-4644-b65e-5e8aeb60f7b3"),
   ];
 }
 
@@ -37,6 +54,7 @@ export const venueType = defineType({
       icon: InfoOutlineIcon,
       default: true,
     },
+    { name: "booking", title: "Booking", icon: CalendarIcon },
     { name: "contact", title: "Contact", icon: EnvelopeIcon },
     { name: "location", title: "Location", icon: PinIcon },
     { name: "openHours", title: "Open Hours", icon: ClockIcon },
@@ -69,6 +87,56 @@ export const venueType = defineType({
       options: {
         source: "title",
       },
+    }),
+    defineField({
+      name: "hostedByPartner",
+      title: "Hosted by a partner",
+      description:
+        "This venue sits inside a partner's premises and the partner's site takes the bookings. Its booking and gift pages are not published.",
+      type: "boolean",
+      group: "booking",
+      initialValue: false,
+    }),
+    defineField({
+      name: "partnerBookingUrl",
+      title: "Partner booking link",
+      description: "Where every “Réserver” of this venue leads.",
+      type: "url",
+      group: "booking",
+      hidden: ({ document }) => !document?.hostedByPartner,
+      validation: (rule) =>
+        rule.custom((value, { document }) =>
+          document?.hostedByPartner && !value
+            ? "Required for a venue hosted by a partner"
+            : true,
+        ),
+    }),
+    defineField({
+      name: "partnerGiftingUrl",
+      title: "Partner gifting link",
+      description:
+        "Where “Offrir une partie” leads. Leave empty if the partner sells no vouchers: the link is then hidden.",
+      type: "url",
+      group: "booking",
+      hidden: ({ document }) => !document?.hostedByPartner,
+    }),
+    defineField({
+      name: "bookingWidgetId",
+      title: "Booking widget ID",
+      description: WIDGET_ID_DESCRIPTION,
+      type: "string",
+      group: "booking",
+      hidden: ({ document }) => Boolean(document?.hostedByPartner),
+      validation: (rule) => widgetIdValidation(rule),
+    }),
+    defineField({
+      name: "giftingWidgetId",
+      title: "Gifting widget ID",
+      description: WIDGET_ID_DESCRIPTION,
+      type: "string",
+      group: "booking",
+      hidden: ({ document }) => Boolean(document?.hostedByPartner),
+      validation: (rule) => widgetIdValidation(rule),
     }),
     defineField({
       name: "mondayOpeningHours",

@@ -60,7 +60,7 @@ function adaptHomepage({
     venuesCta: venuesCta ?? undefined,
     components:
       data.homepage.pageComponents?.map((component) =>
-        adaptPageComponent(component),
+        adaptPageComponent({ data: component, lang }),
       ) ?? [],
     seo: toSeo({ data: seo, fallback: { title: heading } }),
     organization: adaptOrganization(data.siteSettings),

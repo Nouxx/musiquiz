@@ -5,6 +5,7 @@ import Card from "./primitives/Card.astro";
 import RemoteImage from "./primitives/RemoteImage.astro";
 import Text from "./primitives/Text.astro";
 import Section from "./Section.astro";
+import { linkTarget } from "./lib/linkTarget";
 import type { ContactFact, CtaLink, ImageSource } from "./types";
 
 interface Props {
@@ -53,7 +54,12 @@ const { media, offer, questions } = Astro.props;
           )
         }
 
-        <Button as="a" href={offer.bookCta.url} tone="red">
+        <Button
+          as="a"
+          href={offer.bookCta.url}
+          {...linkTarget(offer.bookCta.external)}
+          tone="red"
+        >
           {offer.bookCta.label}
         </Button>
       </div>
