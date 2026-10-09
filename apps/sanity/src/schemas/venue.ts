@@ -90,7 +90,7 @@ export const venueType = defineType({
     }),
     defineField({
       name: "hostedByPartner",
-      title: "Hosted by a partner venue",
+      title: "Hosted by a partner",
       description:
         "This venue sits inside a partner's premises and the partner's site takes the bookings. Its booking and gift pages are not published.",
       type: "boolean",
