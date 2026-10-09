@@ -19,6 +19,7 @@ function adaptVenueWidgetPage({
 }): VenueWidgetPage {
   return {
     venueTitle: data.venuePage.venueTitle,
+    widgetId: data.venuePage.widgetId,
     pageCover: toPageCover({ data: data.venuePage.pageCover }),
     seo: toSeo({
       data: data.venuePage.seo,

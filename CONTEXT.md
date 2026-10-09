@@ -114,7 +114,7 @@ One entry in the ordered array an editor composes a page body from — a Rolling
 _Avoid_: block, section, module, widget
 
 **Widget**:
-The booking or gifting interface 4escape hosts, mounted at runtime into a container `apps/web` renders and themes. It is not content and not a Page Component — an editor cannot add one, remove one, or move one, and each of the two pages that has one has exactly one. The **Booking Widget** sells sessions and anchors at `#booking`; the **Gifting Widget** sells vouchers and anchors at `#gifting`. Editors write around it, in the Page Component arrays named for the sides of it. [ADR 0011](./docs/adr/0011-widget-pages-bracket-their-widget.md).
+The booking or gifting interface 4escape hosts, mounted at runtime into a container `apps/web` renders and themes. It is not content and not a Page Component — an editor cannot add one, remove one, or move one, and each of the two pages that has one has exactly one. The **Booking Widget** sells sessions and anchors at `#booking`; the **Gifting Widget** sells vouchers and anchors at `#gifting`. Each Venue that is not a Hosted Venue carries its own `bookingWidgetId` and `giftingWidgetId`; 4escape tells venues apart by widget id alone. Editors write around it, in the Page Component arrays named for the sides of it. [ADR 0011](./docs/adr/0011-widget-pages-bracket-their-widget.md).
 _Avoid_: embed, iframe, booking form, 4escape (the vendor, not the thing)
 
 ## Components

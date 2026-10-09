@@ -16,3 +16,4 @@ Some Venues sit inside another business's premises — Orléans runs in a karaok
 
 - A Venue Page of type `book` or `gift` on a Hosted Venue is never rendered; the Studio warns on it.
 - The partner links are dropped in the query once the flag is off, so a leftover value never leaks. A Hosted Venue with no booking URL fails the build.
+- The other way round, a Venue that is not hosted carries its booking and gifting widget ids, and the build fails without them.
