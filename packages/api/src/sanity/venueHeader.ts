@@ -6,6 +6,10 @@ import { z } from "zod";
 import { fetchSanityData } from "./fetchData";
 import { addressProjection, sanityAddressSchema } from "./shared/address";
 import { imageProjection, sanityImageSchema } from "./shared/image";
+import {
+  sanityVenueLinksSchema,
+  venueLinksProjection,
+} from "./shared/venueLinks";
 
 function venueHeaderQuery({
   lang,
@@ -39,7 +43,8 @@ function venueHeaderQuery({
       phone,
       mail,
       googleMapsLink
-    }
+    },
+    "venueLinks": *[_type == "venue" && slug.current == "${venueSlug}"][0]${venueLinksProjection}
   }`);
 }
 
@@ -75,6 +80,7 @@ const sanityVenueHeaderSchema = z.strictObject({
     mail: z.email(),
     googleMapsLink: z.string(),
   }),
+  venueLinks: sanityVenueLinksSchema,
 });
 
 export type SanityVenueHeader = z.infer<typeof sanityVenueHeaderSchema>;

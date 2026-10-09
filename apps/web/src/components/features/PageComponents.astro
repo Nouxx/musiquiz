@@ -20,7 +20,6 @@ import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 import Reviews from "@repo/ui/Reviews";
 import Prices from "@repo/ui/Prices";
-import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import { toPriceOffer } from "../../libs/toPriceOffer";
 import { toContactFacts } from "../../libs/toContactFacts";
 import { toContactPanels } from "../../libs/toContactPanels";
@@ -143,7 +142,7 @@ const t = getT(lang);
             perPersonLabel={t("prices.perPerson")}
             bookCta={{
               label: t("prices.book"),
-              url: getRoutesForLang(lang).venueBook(component.venueSlug),
+              ...component.bookingLink,
             }}
             cta={component.cta}
             footnote={component.footnote}
@@ -171,11 +170,7 @@ const t = getT(lang);
         );
       }
       case "contactPanels": {
-        const { media, offer, questions } = toContactPanels({
-          component,
-          t,
-          lang,
-        });
+        const { media, offer, questions } = toContactPanels({ component, t });
 
         return <ContactPanels {media} {offer} {questions} />;
       }
@@ -363,7 +358,7 @@ const t = getT(lang);
             perPersonLabel={t("prices.perPerson")}
             bookCta={{
               label: t("prices.book"),
-              url: getRoutesForLang(lang).venueBook(component.venueSlug),
+              ...component.bookingLink,
             }}
             cta={component.cta}
             footnote={component.footnote}

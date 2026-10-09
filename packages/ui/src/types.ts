@@ -18,6 +18,8 @@ export type SpaceScale =
 export type NavLink = {
   label: string;
   url: string;
+  /** opens in a new tab */
+  external?: boolean;
   current?: boolean;
 };
 
@@ -38,6 +40,8 @@ export type ImageSource = {
 export type CtaLink = {
   label: string;
   url: string;
+  /** opens in a new tab */
+  external?: boolean;
 };
 
 export type TeamMember = {
@@ -236,6 +240,7 @@ export type VenuePin = {
   /** @example "75", "BE" */
   detail: string;
   url: string;
+  external?: boolean;
   /** percent of the map frame */
   position: { x: number; y: number };
 };

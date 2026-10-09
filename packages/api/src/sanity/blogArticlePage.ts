@@ -15,6 +15,10 @@ import {
   unlocalizedRichTextProjection,
 } from "./shared/richText";
 import { blogSeoProjection, sanitySeoSchema } from "./shared/seo";
+import {
+  sanityVenueLinksSchema,
+  venueLinksProjection,
+} from "./shared/venueLinks";
 
 const lang = "fr";
 
@@ -57,6 +61,7 @@ function blogArticlePageQuery({ slug }: { slug: string }) {
           },
         },
       },
+      "venueLinks": venue->${venueLinksProjection},
       "event": event->{ name, "slug": slug.current },
       "author": author->{
         name,
@@ -120,6 +125,7 @@ const sanityBlogArticlePageSchema = z.strictObject({
           .max(8),
       })
       .nullable(),
+    venueLinks: sanityVenueLinksSchema.nullable(),
     venue: z
       .strictObject({
         title: z.string().min(1),

@@ -1,4 +1,9 @@
-import { defineField, defineType } from "sanity";
+import {
+  defineField,
+  defineType,
+  type Reference,
+  type ValidationContext,
+} from "sanity";
 import { DocumentIcon } from "@sanity/icons/Document";
 import { pageGroups } from "./shared/seo";
 
@@ -13,6 +18,22 @@ export const pageTypes = [
  */
 export function hasWidget(pageType: unknown) {
   return pageType === "gift" || pageType === "book";
+}
+
+async function unpublishedOnHostedVenue(
+  value: Reference | undefined,
+  { document, getClient }: ValidationContext,
+) {
+  if (!value?._ref || !hasWidget(document?.pageType)) return true;
+
+  const hosted = await getClient({ apiVersion: "2025-02-06" }).fetch<boolean>(
+    `*[_id == $id][0].hostedByPartner == true`,
+    { id: value._ref },
+  );
+
+  return hosted
+    ? "Not published: this venue is hosted by a partner, whose site takes its bookings and gifts."
+    : true;
 }
 
 export const venuePageType = defineType({
@@ -30,7 +51,10 @@ export const venuePageType = defineType({
       type: "reference",
       to: [{ type: "venue" }],
       readOnly: true,
-      validation: (rule) => rule.required(),
+      validation: (rule) => [
+        rule.required(),
+        rule.custom(unpublishedOnHostedVenue).warning(),
+      ],
     }),
     defineField({
       name: "pageType",

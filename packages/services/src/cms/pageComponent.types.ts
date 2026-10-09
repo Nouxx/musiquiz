@@ -1,4 +1,4 @@
-import type { CmsImage, RichText } from "./types";
+import type { CmsImage, RichText, VenueLink } from "./types";
 
 type RollingBanner = {
   type: "rollingBanner";
@@ -68,7 +68,7 @@ type VenuePrices = {
   surface: "default" | "muted";
   cta: Cta | undefined;
   footnote: PricesFootnote | undefined;
-  venueSlug: string;
+  bookingLink: VenueLink;
   games: PricesGame[];
 };
 
@@ -78,7 +78,7 @@ type GamePrices = {
   surface: "default" | "muted";
   cta: Cta | undefined;
   footnote: PricesFootnote | undefined;
-  venueSlug: string;
+  bookingLink: VenueLink;
   game: PricesGame;
 };
 
@@ -108,7 +108,7 @@ type ContactPanelRow = {
 type ContactPanels = {
   type: "contactPanels";
   media: CmsImage;
-  venueSlug: string;
+  bookingLink: VenueLink;
   venueTitle: string;
   quote: ContactPanelRow;
   booking: ContactPanelRow;
@@ -296,7 +296,7 @@ type Offers = {
   title: string;
   subTitle: string | undefined;
   background: "default" | "muted";
-  venueSlug: string;
+  bookingLink: VenueLink;
   cta: Cta | undefined;
   content:
     | { layout: "cards"; cards: OfferCard[] }

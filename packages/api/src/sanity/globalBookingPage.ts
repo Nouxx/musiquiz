@@ -6,6 +6,10 @@ import { z } from "zod";
 import { fetchSanityData } from "./fetchData";
 import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
 import { sanitySeoSchema, seoProjection } from "./shared/seo";
+import {
+  sanityVenueLinksSchema,
+  venueLinksProjection,
+} from "./shared/venueLinks";
 
 function globalBookingPageQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
@@ -15,9 +19,9 @@ function globalBookingPageQuery({ lang }: { lang: Lang }) {
     },
     "venues": *[_type == "venue"] | order(title asc){
       "title": title,
-      "slug": slug.current,
       regionCode,
-      "mapPosition": mapPosition{ x, y }
+      "mapPosition": mapPosition{ x, y },
+      "links": ${venueLinksProjection}
     },
   }`);
 }
@@ -30,9 +34,9 @@ const sanityGlobalBookingPageSchema = z.strictObject({
   venues: z.array(
     z.strictObject({
       title: z.string(),
-      slug: z.string(),
       regionCode: z.string(),
       mapPosition: z.strictObject({ x: z.number(), y: z.number() }),
+      links: sanityVenueLinksSchema,
     }),
   ),
 });

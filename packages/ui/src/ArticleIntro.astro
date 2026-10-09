@@ -5,6 +5,7 @@ import Card from "./primitives/Card.astro";
 import Icon from "./primitives/Icon.astro";
 import RichText from "./primitives/RichText.astro";
 import Section from "./Section.astro";
+import { linkTarget } from "./lib/linkTarget";
 import type { ArticleChip, CtaLink, RichTextNode } from "./types";
 
 interface Props {
@@ -60,7 +61,9 @@ const { summaryBadge, summary, chips, rating, cta } = Astro.props;
     }
 
     <div>
-      <Button as="a" href={cta.url} tone="red">{cta.label}</Button>
+      <Button as="a" href={cta.url} {...linkTarget(cta.external)} tone="red">
+        {cta.label}
+      </Button>
     </div>
   </div>
 </Section>

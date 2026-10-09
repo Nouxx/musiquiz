@@ -12,8 +12,10 @@ import { toSeo } from "./utils/toSeo";
 
 function adaptVenueWidgetPage({
   data,
+  lang,
 }: {
   data: SanityVenueWidgetPage;
+  lang: Lang;
 }): VenueWidgetPage {
   return {
     venueTitle: data.venuePage.venueTitle,
@@ -27,11 +29,11 @@ function adaptVenueWidgetPage({
     }),
     componentsBeforeWidget:
       data.venuePage.componentsBeforeWidget?.map((component) =>
-        adaptPageComponent(component),
+        adaptPageComponent({ data: component, lang }),
       ) ?? [],
     componentsAfterWidget:
       data.venuePage.componentsAfterWidget?.map((component) =>
-        adaptPageComponent(component),
+        adaptPageComponent({ data: component, lang }),
       ) ?? [],
   };
 }
@@ -54,5 +56,5 @@ export async function getVenueWidgetPageData({
     pageType,
   });
 
-  return adaptVenueWidgetPage({ data });
+  return adaptVenueWidgetPage({ data, lang });
 }

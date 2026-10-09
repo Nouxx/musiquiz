@@ -9,11 +9,11 @@ import { getLang } from "../../libs/getLang";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getSite } from "../../libs/getSite";
 import { getVenueBreadcrumbs } from "../../libs/getVenueBreadcrumbs";
-import { getVenuesSlugParameters } from "../../libs/getVenuesSlugParameters";
+import { getWidgetVenuesSlugParameters } from "../../libs/getWidgetVenuesSlugParameters";
 import { getT } from "../../libs/i18n";
 
 export async function getStaticPaths() {
-  const params = await getVenuesSlugParameters();
+  const params = await getWidgetVenuesSlugParameters();
   return params;
 }
 

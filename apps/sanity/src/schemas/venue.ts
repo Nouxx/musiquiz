@@ -71,6 +71,38 @@ export const venueType = defineType({
       },
     }),
     defineField({
+      name: "hostedByPartner",
+      title: "Hosted by a partner venue",
+      description:
+        "This venue sits inside a partner's premises and the partner's site takes the bookings. Its booking and gift pages are not published.",
+      type: "boolean",
+      group: "general",
+      initialValue: false,
+    }),
+    defineField({
+      name: "partnerBookingUrl",
+      title: "Partner booking link",
+      description: "Where every “Réserver” of this venue leads.",
+      type: "url",
+      group: "general",
+      hidden: ({ document }) => !document?.hostedByPartner,
+      validation: (rule) =>
+        rule.custom((value, { document }) =>
+          document?.hostedByPartner && !value
+            ? "Required for a venue hosted by a partner"
+            : true,
+        ),
+    }),
+    defineField({
+      name: "partnerGiftingUrl",
+      title: "Partner gifting link",
+      description:
+        "Where “Offrir une partie” leads. Leave empty if the partner sells no vouchers: the link is then hidden.",
+      type: "url",
+      group: "general",
+      hidden: ({ document }) => !document?.hostedByPartner,
+    }),
+    defineField({
       name: "mondayOpeningHours",
       title: "Monday opening hours",
       description: 'Opening hours on Mondays. Example: "09:30 - 20:00"',

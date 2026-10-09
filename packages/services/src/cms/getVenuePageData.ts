@@ -46,7 +46,13 @@ function adaptBusiness(
   };
 }
 
-function adaptVenuePage({ data }: { data: SanityVenuePage }): VenuePage {
+function adaptVenuePage({
+  data,
+  lang,
+}: {
+  data: SanityVenuePage;
+  lang: Lang;
+}): VenuePage {
   return {
     venueTitle: data.venuePage.venueTitle,
     business: adaptBusiness(data.venuePage.venue),
@@ -60,7 +66,7 @@ function adaptVenuePage({ data }: { data: SanityVenuePage }): VenuePage {
     }),
     components:
       data.venuePage.pageComponents?.map((component) =>
-        adaptPageComponent(component),
+        adaptPageComponent({ data: component, lang }),
       ) ?? [],
   };
 }
@@ -76,5 +82,5 @@ export async function getVenuePageData({
 }) {
   const data = await fetchVenuePage({ config, lang, venueSlug });
 
-  return adaptVenuePage({ data });
+  return adaptVenuePage({ data, lang });
 }

@@ -11,6 +11,7 @@ import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { VenueHeader } from "./types";
 import { toAddressLine } from "./utils/toAddressLine";
 import { toCmsImage } from "./utils/toCmsImage";
+import { toBookingLink, toGiftingLink } from "./utils/toVenueLinks";
 
 function adaptVenueHeader({
   data,
@@ -32,6 +33,8 @@ function adaptVenueHeader({
       phoneLabel: data.venue.phone,
       phoneHref: getTel(data.venue.phone),
     },
+    bookingLink: toBookingLink({ venue: data.venueLinks, lang }),
+    giftingLink: toGiftingLink({ venue: data.venueLinks, lang }),
     experiences: data.venue.games.map((format) => ({
       label: format.name,
       url: getRoutesForLang(lang).venueGame(venueSlug, format.slug),

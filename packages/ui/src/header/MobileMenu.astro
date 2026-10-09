@@ -7,7 +7,8 @@ import Link from "../primitives/Link.astro";
 import MenuButton from "../primitives/MenuButton.astro";
 import RemoteImage from "../primitives/RemoteImage.astro";
 import Text from "../primitives/Text.astro";
-import type { ImageSource, NavLink, NavMenu } from "../types";
+import { linkTarget } from "../lib/linkTarget";
+import type { CtaLink, ImageSource, NavLink, NavMenu } from "../types";
 
 type ContactLine = { label: string; url: string };
 
@@ -15,7 +16,7 @@ interface Props {
   logo: ImageSource;
   linksTree: (NavLink | NavMenu)[];
   additionalMobileMenuLink?: NavLink;
-  cta: { label: string; url: string };
+  cta: CtaLink;
   closeLabel: string;
   menuLabel?: string;
   languageSwitch?: { url: string; icon: IconName; label: string };
@@ -102,7 +103,11 @@ const contactLines = [contact.address, contact.phone, contact.mail].filter(
                 <ul class="panel">
                   {item.links.map((link) => (
                     <li>
-                      <MenuButton href={link.url} current={link.current}>
+                      <MenuButton
+                        href={link.url}
+                        {...linkTarget(link.external)}
+                        current={link.current}
+                      >
                         {link.label}
                       </MenuButton>
                     </li>
@@ -112,7 +117,11 @@ const contactLines = [contact.address, contact.phone, contact.mail].filter(
             </li>
           ) : (
             <li>
-              <MenuButton href={item.url} current={item.current}>
+              <MenuButton
+                href={item.url}
+                {...linkTarget(item.external)}
+                current={item.current}
+              >
                 {item.label}
               </MenuButton>
             </li>
@@ -141,7 +150,13 @@ const contactLines = [contact.address, contact.phone, contact.mail].filter(
       }
 
       <div class="actions">
-        <Button as="a" href={cta.url} tone="red" size="l">
+        <Button
+          as="a"
+          href={cta.url}
+          {...linkTarget(cta.external)}
+          tone="red"
+          size="l"
+        >
           {cta.label}
         </Button>
 

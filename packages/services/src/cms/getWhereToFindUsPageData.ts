@@ -47,13 +47,13 @@ function adaptWhereToFindUsPage({
     }),
     componentsBeforeMap:
       page.componentsBeforeMap?.map((component) =>
-        adaptPageComponent(component),
+        adaptPageComponent({ data: component, lang }),
       ) ?? [],
     venues: venues.map((venue) => adaptVenue({ data: venue, lang })),
     venuesCta: page.venuesCta ?? undefined,
     componentsAfterMap:
       page.componentsAfterMap?.map((component) =>
-        adaptPageComponent(component),
+        adaptPageComponent({ data: component, lang }),
       ) ?? [],
   };
 }

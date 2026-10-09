@@ -12,8 +12,10 @@ import { toSeo } from "./utils/toSeo";
 
 function adaptGlobalGamePage({
   data,
+  lang,
 }: {
   data: SanityGlobalGamePage;
+  lang: Lang;
 }): GlobalGamePage {
   return {
     gameName: data.globalGame.gameName,
@@ -27,7 +29,7 @@ function adaptGlobalGamePage({
     }),
     components:
       data.globalGame.pageComponents?.map((component) =>
-        adaptPageComponent(component),
+        adaptPageComponent({ data: component, lang }),
       ) ?? [],
   };
 }
@@ -43,5 +45,5 @@ export async function getGlobalGamePageData({
 }) {
   const data = await fetchGlobalGamePage({ config, lang, gameSlug });
 
-  return adaptGlobalGamePage({ data });
+  return adaptGlobalGamePage({ data, lang });
 }

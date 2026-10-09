@@ -4,6 +4,7 @@ import Button from "./primitives/Button.astro";
 import Card from "./primitives/Card.astro";
 import Text from "./primitives/Text.astro";
 import Section from "./Section.astro";
+import { linkTarget } from "./lib/linkTarget";
 import type { CtaLink, PriceOffer } from "./types";
 
 interface Props {
@@ -78,7 +79,12 @@ const group = `prices-${crypto.randomUUID()}`;
         )
       }
 
-      <Button as="a" href={bookCta.url} tone="blue">{bookCta.label}</Button>
+      <Button
+        as="a"
+        href={bookCta.url}
+        {...linkTarget(bookCta.external)}
+        tone="blue">{bookCta.label}</Button
+      >
     </div>
 
     {

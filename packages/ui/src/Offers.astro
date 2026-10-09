@@ -4,6 +4,7 @@ import OfferCard from "./primitives/OfferCard.astro";
 import RichText from "./primitives/RichText.astro";
 import Text from "./primitives/Text.astro";
 import Section from "./Section.astro";
+import { linkTarget } from "./lib/linkTarget";
 import type { CtaLink, OfferCard as OfferCardItem, OfferGroup } from "./types";
 
 type Shape =
@@ -89,7 +90,12 @@ const {
         )
       }
 
-      <Button as="a" href={bookCta.url} tone="red">{bookCta.label}</Button>
+      <Button
+        as="a"
+        href={bookCta.url}
+        {...linkTarget(bookCta.external)}
+        tone="red">{bookCta.label}</Button
+      >
     </div>
   </div>
 </Section>

@@ -4,7 +4,6 @@ import type {
   OfferPrice,
   PageComponent,
 } from "@repo/services/cms/pageComponent.types";
-import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import type {
   OfferCard as UiOfferCard,
   OfferGroup as UiOfferGroup,
@@ -92,7 +91,7 @@ export function toOffers({
     cta: component.cta,
     bookCta: {
       label: t("offers.book"),
-      url: getRoutesForLang(lang).venueBook(component.venueSlug),
+      ...component.bookingLink,
     },
   };
 

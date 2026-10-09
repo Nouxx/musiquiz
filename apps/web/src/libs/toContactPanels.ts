@@ -1,6 +1,4 @@
 import type { PageComponent } from "@repo/services/cms/pageComponent.types";
-import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
-import type { Lang } from "@repo/utils/lang";
 
 import type { getT } from "./i18n";
 
@@ -11,11 +9,9 @@ type ContactPanels = Extract<PageComponent, { type: "contactPanels" }>;
 export function toContactPanels({
   component,
   t,
-  lang,
 }: {
   component: ContactPanels;
   t: Translate;
-  lang: Lang;
 }) {
   return {
     media: component.media,
@@ -37,7 +33,7 @@ export function toContactPanels({
       quoteCta: component.quoteCta,
       bookCta: {
         label: t("contactPanels.book"),
-        url: getRoutesForLang(lang).venueBook(component.venueSlug),
+        ...component.bookingLink,
       },
     },
     questions: {
