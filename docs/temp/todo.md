@@ -6,6 +6,7 @@
 - add custom venue page (slug authored from Sanity) - not accessible from the header
 - Reviews widget: fetch from Google, by center, from 4 to 5 stars, with word analysis (ex: EVJF)
   - also generate article pills from that (count of reviews + average)
+- Sanity deploy widget: generate a new site with all published content
 
 # P1 (important)
 

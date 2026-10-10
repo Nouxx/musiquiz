@@ -47,7 +47,7 @@ function externalUrlValidation(rule: UrlRule, providerField: ProviderField) {
     if (document?.[providerField] === "external" && !value) {
       return "Required when an external site is the provider";
     }
-    if (value?.startsWith("http:")) return "Must use https";
+    if (!value?.startsWith("https")) return "Must use https";
     return true;
   });
 }
