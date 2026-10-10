@@ -1,5 +1,7 @@
 # A Hosted Venue books on its partner's site
 
+> Superseded by [ADR 0019](./0019-booking-and-gifting-each-pick-a-provider.md).
+
 Some Venues sit inside another business's premises — Orléans runs in a karaoke bar — and that partner already sells the sessions through its own booking site. Such a Venue is a **Hosted Venue**: `hostedByPartner` on the `venue` document, with a `partnerBookingUrl` and an optional `partnerGiftingUrl`, neither localized.
 
 **The partner owns booking, so the site has no booking page for it.** `/[venue]/reserver/` and `/en/[venue]/book/` are not generated, and every "Réserver" of the Venue opens the partner URL in a new tab: the venue header, the Prices, Offers and Contact Panels sections, the blog article closing on it, and the Global Booking Page map.

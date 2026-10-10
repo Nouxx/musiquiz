@@ -31,3 +31,6 @@ figma-out
 
 # local QA playground, never committed
 apps/web/src/pages/zz-scratch.astro
+
+# scratch doc
+docs/scratch.md

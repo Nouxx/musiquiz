@@ -355,7 +355,7 @@ export type VenueHeader = {
     phoneHref: string;
   };
   bookingLink: VenueLink;
-  /** absent for a venue hosted by a partner that sells no vouchers */
+  /** absent for a venue that sells no vouchers */
   giftingLink: VenueLink | undefined;
   experiences: {
     label: string;

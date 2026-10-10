@@ -27,7 +27,7 @@ function venueWidgetPageQuery({
       && venue->slug.current == "${venueSlug}"
       && pageType == "${pageType}"][0]{
       "venueTitle": venue->title,
-      "widgetId": select(venue->hostedByPartner != true => venue->${pageType === "book" ? "bookingWidgetId" : "giftingWidgetId"}),
+      "widgetId": ${pageType === "book" ? `select(venue->bookingProvider == "4escape" => venue->bookingWidgetId)` : `select(venue->giftingProvider == "4escape" => venue->giftingWidgetId)`},
       pageCover ${pageCoverProjection({ lang })},
       "seo": ${seoProjection({ lang })},
       "componentsBeforeWidget": ${pageComponentsProjection({ field: "componentsBeforeWidget", lang })},

@@ -13,7 +13,7 @@ import { getWidgetVenuesSlugParameters } from "../../../libs/getWidgetVenuesSlug
 import { getT } from "../../../libs/i18n";
 
 export async function getStaticPaths() {
-  const params = await getWidgetVenuesSlugParameters();
+  const params = await getWidgetVenuesSlugParameters("gift");
   return params;
 }
 

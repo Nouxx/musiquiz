@@ -20,20 +20,25 @@ export function hasWidget(pageType: unknown) {
   return pageType === "gift" || pageType === "book";
 }
 
-async function unpublishedOnHostedVenue(
+async function unpublishedWithoutWidget(
   value: Reference | undefined,
   { document, getClient }: ValidationContext,
 ) {
   if (!value?._ref || !hasWidget(document?.pageType)) return true;
 
-  const hosted = await getClient({ apiVersion: "2025-02-06" }).fetch<boolean>(
-    `*[_id == $id][0].hostedByPartner == true`,
-    { id: value._ref },
-  );
+  const providerField =
+    document?.pageType === "book" ? "bookingProvider" : "giftingProvider";
+  const provider = await getClient({ apiVersion: "2025-02-06" }).fetch<
+    string | null
+  >(`*[_id == $id][0].${providerField}`, { id: value._ref });
 
-  return hosted
-    ? "Not published: this venue is hosted by a partner, whose site takes its bookings and gifts."
-    : true;
+  if (provider === "external") {
+    return "Not published: this venue's provider is an external site.";
+  }
+  if (provider === "none") {
+    return "Not published: this venue sells no vouchers.";
+  }
+  return true;
 }
 
 export const venuePageType = defineType({
@@ -53,7 +58,7 @@ export const venuePageType = defineType({
       readOnly: true,
       validation: (rule) => [
         rule.required(),
-        rule.custom(unpublishedOnHostedVenue).warning(),
+        rule.custom(unpublishedWithoutWidget).warning(),
       ],
     }),
     defineField({
