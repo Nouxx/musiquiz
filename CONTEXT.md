@@ -41,9 +41,9 @@ They sit in `~/.claude/projects/-Users-clement-GitHub-musiquiz/memory/`, indexed
 One physical Musi'Quiz location, addressed by a slug under `/[venue]`. A city is an attribute of a Venue, not a synonym for one — a city may hold more than one Venue. Its French UI label is "centre"; that label is copy, and the code says Venue everywhere. A Venue holds only facts about the place — address, opening hours, contact, logo — and owns no page content; what a visitor reads lives in a Venue Page, a Venue Game or a Venue Event. [ADR 0010](./docs/adr/0010-page-content-lives-in-documents.md).
 _Avoid_: centre, ville, city, site, location
 
-**Hosted Venue**:
-A Venue inside a partner's premises whose bookings the partner's site takes. It has no booking page and no gift page; every "Réserver" opens the partner's booking URL in a new tab, and "Offrir une partie" opens the partner's gifting URL, or is hidden when there is none. The partner is the other business, never a Venue of ours. [ADR 0018](./docs/adr/0018-hosted-venue-books-on-the-partner-site.md).
-_Avoid_: partner venue, external venue
+**Booking Provider** / **Gifting Provider**:
+Who sells a Venue's sessions, and who sells its vouchers, chosen separately. `4escape` means our Widget on our booking or gift page; `external` means another business's site, opened in a new tab, with no page of ours; gifting may also be `none`, and then "Offrir une partie" is hidden. [ADR 0019](./docs/adr/0019-booking-and-gifting-each-pick-a-provider.md).
+_Avoid_: hosted venue, partner venue
 
 **Game Format**:
 A kind of game the business runs, named and slugged once for the whole company — "Musi'Quiz", "Pixel Games". It is the same product in Lille and in Pau, which is why it carries no price and no page content: prices and per-Venue copy belong to a Venue Game, and its company-wide page belongs to a Global Game. A signature game is listed in the global header and gets a Global Game route. Its `displayOrder` fixes the order games appear in wherever they are listed, at every Venue.
@@ -114,7 +114,7 @@ One entry in the ordered array an editor composes a page body from — a Rolling
 _Avoid_: block, section, module, widget
 
 **Widget**:
-The booking or gifting interface 4escape hosts, mounted at runtime into a container `apps/web` renders and themes. It is not content and not a Page Component — an editor cannot add one, remove one, or move one, and each of the two pages that has one has exactly one. The **Booking Widget** sells sessions and anchors at `#booking`; the **Gifting Widget** sells vouchers and anchors at `#gifting`. Each Venue that is not a Hosted Venue carries its own `bookingWidgetId` and `giftingWidgetId`; 4escape tells venues apart by widget id alone. Editors write around it, in the Page Component arrays named for the sides of it. [ADR 0011](./docs/adr/0011-widget-pages-bracket-their-widget.md).
+The booking or gifting interface 4escape hosts, mounted at runtime into a container `apps/web` renders and themes. It is not content and not a Page Component — an editor cannot add one, remove one, or move one, and each of the two pages that has one has exactly one. The **Booking Widget** sells sessions and anchors at `#booking`; the **Gifting Widget** sells vouchers and anchors at `#gifting`. Each Venue whose Booking or Gifting Provider is 4escape carries that side's `bookingWidgetId` or `giftingWidgetId`; 4escape tells venues apart by widget id alone. Editors write around it, in the Page Component arrays named for the sides of it. [ADR 0011](./docs/adr/0011-widget-pages-bracket-their-widget.md).
 _Avoid_: embed, iframe, booking form, 4escape (the vendor, not the thing)
 
 ## Components

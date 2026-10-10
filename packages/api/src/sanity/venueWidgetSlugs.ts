@@ -3,10 +3,18 @@ import { defineQuery } from "groq";
 import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
+import type { VenueWidgetPageType } from "./venueWidgetPage";
 
-// a venue hosted by a partner books and gifts on the partner's site
-function venueWidgetSlugsQuery() {
-  return defineQuery(`*[_type == "venue" && hostedByPartner != true]{
+// a venue whose provider is not 4escape has no widget page
+function venueWidgetSlugsQuery({
+  pageType,
+}: {
+  pageType: VenueWidgetPageType;
+}) {
+  const providerField =
+    pageType === "book" ? "bookingProvider" : "giftingProvider";
+
+  return defineQuery(`*[_type == "venue" && ${providerField} == "4escape"]{
     "slug": slug.current
   }`);
 }
@@ -21,12 +29,14 @@ export type SanityVenueWidgetSlugs = z.infer<
 
 export async function fetchVenueWidgetSlugs({
   config,
+  pageType,
 }: {
   config: SanityConfig;
+  pageType: VenueWidgetPageType;
 }) {
   return fetchSanityData({
     queryName: "venueWidgetSlugs",
-    query: venueWidgetSlugsQuery(),
+    query: venueWidgetSlugsQuery({ pageType }),
     schema: sanityVenueWidgetSlugsSchema,
     config,
   });

@@ -11,11 +11,17 @@ export function toBookingLink({
   venue: SanityVenueLinks;
   lang: Lang;
 }): VenueLink {
-  if (venue.hostedByPartner) {
-    return { url: venue.partnerBookingUrl, external: true };
+  switch (venue.booking.provider) {
+    case "4escape": {
+      return {
+        url: getRoutesForLang(lang).venueBook(venue.slug),
+        external: false,
+      };
+    }
+    case "external": {
+      return { url: venue.booking.url, external: true };
+    }
   }
-
-  return { url: getRoutesForLang(lang).venueBook(venue.slug), external: false };
 }
 
 export function toGiftingLink({
@@ -25,14 +31,18 @@ export function toGiftingLink({
   venue: SanityVenueLinks;
   lang: Lang;
 }): VenueLink | undefined {
-  if (venue.hostedByPartner) {
-    return venue.partnerGiftingUrl
-      ? { url: venue.partnerGiftingUrl, external: true }
-      : undefined;
+  switch (venue.gifting.provider) {
+    case "4escape": {
+      return {
+        url: getRoutesForLang(lang).venueGifting(venue.slug),
+        external: false,
+      };
+    }
+    case "external": {
+      return { url: venue.gifting.url, external: true };
+    }
+    case "none": {
+      return undefined;
+    }
   }
-
-  return {
-    url: getRoutesForLang(lang).venueGifting(venue.slug),
-    external: false,
-  };
 }

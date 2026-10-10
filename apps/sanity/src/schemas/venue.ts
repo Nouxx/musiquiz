@@ -4,7 +4,7 @@ import InfoOutlineIcon from "@sanity/icons/InfoOutline";
 import PinIcon from "@sanity/icons/Pin";
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { MapPositionInput } from "../components/MapPositionInput";
-import type { StringRule } from "sanity";
+import type { StringRule, UrlRule } from "sanity";
 import { frenchValue, type LocalizedEntry } from "./shared/frenchValue";
 import { ogImageDescription, ogImageWarning } from "./shared/seo";
 import TagIcon from "@sanity/icons/Tag";
@@ -26,17 +26,30 @@ function openingTimeValidation(rule: StringRule) {
 const WIDGET_ID_DESCRIPTION =
   "The `data-widget-id` of this venue's catalog widget in the 4escape back office.";
 
-function widgetIdValidation(rule: StringRule) {
+type ProviderField = "bookingProvider" | "giftingProvider";
+
+function widgetIdValidation(rule: StringRule, providerField: ProviderField) {
   return [
     rule.custom((value, { document }) =>
-      !document?.hostedByPartner && !value
-        ? "Required for a venue not hosted by a partner"
+      document?.[providerField] === "4escape" && !value
+        ? "Required when 4escape is the provider"
         : true,
     ),
     rule
       .regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)
       .error("Must be a widget ID, like fa25b722-264c-4644-b65e-5e8aeb60f7b3"),
   ];
+}
+
+function externalUrlValidation(rule: UrlRule, providerField: ProviderField) {
+  // the url type validates the format already, a second rule.uri() repeats its error
+  return rule.custom((value, { document }) => {
+    if (document?.[providerField] === "external" && !value) {
+      return "Required when an external site is the provider";
+    }
+    if (value?.startsWith("http:")) return "Must use https";
+    return true;
+  });
 }
 
 const SOCIAL_DESCRIPTION =
@@ -61,6 +74,10 @@ export const venueType = defineType({
     { name: "social", title: "Social", icon: ShareIcon },
     { name: "quotation", title: "Quotation", icon: TagIcon },
     { name: "legal", title: "Legal", icon: BookIcon },
+  ],
+  fieldsets: [
+    { name: "booking", title: "Booking" },
+    { name: "gifting", title: "Gifting" },
   ],
   fields: [
     defineField({
@@ -89,36 +106,23 @@ export const venueType = defineType({
       },
     }),
     defineField({
-      name: "hostedByPartner",
-      title: "Hosted by a partner",
+      name: "bookingProvider",
+      title: "Booking provider",
       description:
-        "This venue sits inside a partner's premises and the partner's site takes the bookings. Its booking and gift pages are not published.",
-      type: "boolean",
+        "Who takes this venue's bookings. External: every “Réserver” leads to that site and the booking page is not published.",
+      type: "string",
       group: "booking",
-      initialValue: false,
-    }),
-    defineField({
-      name: "partnerBookingUrl",
-      title: "Partner booking link",
-      description: "Where every “Réserver” of this venue leads.",
-      type: "url",
-      group: "booking",
-      hidden: ({ document }) => !document?.hostedByPartner,
-      validation: (rule) =>
-        rule.custom((value, { document }) =>
-          document?.hostedByPartner && !value
-            ? "Required for a venue hosted by a partner"
-            : true,
-        ),
-    }),
-    defineField({
-      name: "partnerGiftingUrl",
-      title: "Partner gifting link",
-      description:
-        "Where “Offrir une partie” leads. Leave empty if the partner sells no vouchers: the link is then hidden.",
-      type: "url",
-      group: "booking",
-      hidden: ({ document }) => !document?.hostedByPartner,
+      fieldset: "booking",
+      options: {
+        list: [
+          { title: "4escape", value: "4escape" },
+          { title: "External site", value: "external" },
+        ],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "4escape",
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "bookingWidgetId",
@@ -126,8 +130,39 @@ export const venueType = defineType({
       description: WIDGET_ID_DESCRIPTION,
       type: "string",
       group: "booking",
-      hidden: ({ document }) => Boolean(document?.hostedByPartner),
-      validation: (rule) => widgetIdValidation(rule),
+      fieldset: "booking",
+      hidden: ({ document }) => document?.bookingProvider !== "4escape",
+      validation: (rule) => widgetIdValidation(rule, "bookingProvider"),
+    }),
+    defineField({
+      name: "externalBookingUrl",
+      title: "External booking link",
+      description: "Where every “Réserver” of this venue leads.",
+      type: "url",
+      group: "booking",
+      fieldset: "booking",
+      hidden: ({ document }) => document?.bookingProvider !== "external",
+      validation: (rule) => externalUrlValidation(rule, "bookingProvider"),
+    }),
+    defineField({
+      name: "giftingProvider",
+      title: "Gifting provider",
+      description:
+        "Who sells this venue's vouchers. External or none: the gift page is not published, and with none “Offrir une partie” is hidden.",
+      type: "string",
+      group: "booking",
+      fieldset: "gifting",
+      options: {
+        list: [
+          { title: "4escape", value: "4escape" },
+          { title: "External site", value: "external" },
+          { title: "None", value: "none" },
+        ],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "4escape",
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "giftingWidgetId",
@@ -135,8 +170,19 @@ export const venueType = defineType({
       description: WIDGET_ID_DESCRIPTION,
       type: "string",
       group: "booking",
-      hidden: ({ document }) => Boolean(document?.hostedByPartner),
-      validation: (rule) => widgetIdValidation(rule),
+      fieldset: "gifting",
+      hidden: ({ document }) => document?.giftingProvider !== "4escape",
+      validation: (rule) => widgetIdValidation(rule, "giftingProvider"),
+    }),
+    defineField({
+      name: "externalGiftingUrl",
+      title: "External gifting link",
+      description: "Where “Offrir une partie” leads.",
+      type: "url",
+      group: "booking",
+      fieldset: "gifting",
+      hidden: ({ document }) => document?.giftingProvider !== "external",
+      validation: (rule) => externalUrlValidation(rule, "giftingProvider"),
     }),
     defineField({
       name: "mondayOpeningHours",
