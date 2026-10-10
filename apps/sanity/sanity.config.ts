@@ -6,6 +6,7 @@ import { myStructure } from "./structure";
 import { internationalizedArray } from "sanity-plugin-internationalized-array";
 import { dataset, projectId } from "./src/environments";
 import { richTextFieldType } from "./src/schemas/shared/richText";
+import { siteUrlsTool } from "./src/tools/siteUrls";
 
 const singletonActions = new Set(["publish", "discardChanges", "restore"]);
 
@@ -78,6 +79,7 @@ export default defineConfig({
       fieldTypes: ["string", "text", richTextFieldType],
     }),
   ],
+  tools: (tools) => [...tools, siteUrlsTool],
   schema: {
     types: schemaTypes,
     templates: (templates) => [
