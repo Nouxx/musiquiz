@@ -15,7 +15,7 @@ function termsAndConditionsPageQuery({ lang }: { lang: Lang }) {
       "seo": ${seoProjection({ lang })},
       "intro": ${richTextProjection({ field: "intro", lang })},
     },
-    "venues": *[_type == "venue"] | order(title asc){
+    "venues": *[_type == "venue" && count(terms) > 0] | order(title asc){
       title,
       "slug": slug.current,
       "terms": terms[]{
