@@ -432,11 +432,10 @@ export const venueType = defineType({
       name: "terms",
       title: "Terms and conditions",
       description:
-        'The articles of this venue\'s terms, shown on the Terms and conditions page. Numbered in order, so write the title without "Article N".',
+        'The articles of this venue\'s terms, shown on the Terms and conditions page. Numbered in order, so write the title without "Article N". Leave empty when the venue has no terms of its own: it is left off the page.',
       type: "array",
       of: [defineArrayMember({ type: "termsArticle" })],
       group: "legal",
-      validation: (rule) => rule.required().min(1),
     }),
   ],
 });
