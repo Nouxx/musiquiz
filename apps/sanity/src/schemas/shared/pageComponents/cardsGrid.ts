@@ -121,10 +121,10 @@ export const cardsGridType = defineType({
       name: "cards",
       title: "Cards",
       description:
-        "Three to eight. Three gives the larger card, with room for a body and a button; four or more gives the shorter one, four to a row.",
+        "2 to 8. 2 or 3 give the larger card, with room for a body and a button; 4 or more give the shorter one, 4 to a row.",
       type: "array",
       of: [defineArrayMember({ type: "card" })],
-      validation: (rule) => rule.required().min(3).max(8),
+      validation: (rule) => rule.required().min(2).max(8),
     }),
   ],
   preview: {
