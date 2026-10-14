@@ -3,27 +3,24 @@ import { defineQuery } from "groq";
 import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
+import {
+  sanityVenueLinksSchema,
+  venueLinksProjection,
+} from "./shared/venueLinks";
 
 // display only: which pages exist is decided by the *Slugs queries the build uses
 function venueUrlGuideQuery() {
   return defineQuery(`*[_type == "venue"] | order(title asc){
     title,
-    "slug": slug.current,
-    bookingProvider,
-    externalBookingUrl,
-    giftingProvider,
-    externalGiftingUrl
+    "links": ${venueLinksProjection}
   }`);
 }
 
+// the build's venue links schema, so the guide rejects what the build rejects
 const sanityVenueUrlGuideSchema = z.array(
   z.strictObject({
     title: z.string(),
-    slug: z.string(),
-    bookingProvider: z.enum(["4escape", "external"]),
-    externalBookingUrl: z.string().nullable(),
-    giftingProvider: z.enum(["4escape", "external", "none"]),
-    externalGiftingUrl: z.string().nullable(),
+    links: sanityVenueLinksSchema,
   }),
 );
 

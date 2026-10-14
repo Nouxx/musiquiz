@@ -11,16 +11,15 @@ import {
 const paris: VenueUrlInput = {
   name: "Paris",
   slug: "paris",
-  bookingProvider: "4escape",
-  giftingProvider: "4escape",
+  booking: { provider: "4escape" },
+  gifting: { provider: "4escape" },
 };
 
 const lyon: VenueUrlInput = {
   name: "Lyon",
   slug: "lyon",
-  bookingProvider: "external",
-  externalBookingUrl: "https://partner.example/book",
-  giftingProvider: "none",
+  booking: { provider: "external", url: "https://partner.example/book" },
+  gifting: { provider: "none" },
 };
 
 function venueUrls(venues: VenueUrlInput[] = [paris, lyon]) {

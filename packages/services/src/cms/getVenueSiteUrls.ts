@@ -27,11 +27,9 @@ export async function getVenueSiteUrls({ config }: { config: SanityConfig }) {
   return toVenueUrls({
     venues: venues.map((venue) => ({
       name: venue.title,
-      slug: venue.slug,
-      bookingProvider: venue.bookingProvider,
-      externalBookingUrl: venue.externalBookingUrl ?? undefined,
-      giftingProvider: venue.giftingProvider,
-      externalGiftingUrl: venue.externalGiftingUrl ?? undefined,
+      slug: venue.links.slug,
+      booking: venue.links.booking,
+      gifting: venue.links.gifting,
     })),
     venueSlugs,
     bookingVenueSlugs,

@@ -30,10 +30,11 @@ export type VenueUrls = {
 export type VenueUrlInput = {
   name: string;
   slug: string;
-  bookingProvider: "4escape" | "external";
-  externalBookingUrl?: string;
-  giftingProvider: "4escape" | "external" | "none";
-  externalGiftingUrl?: string;
+  booking: { provider: "4escape" } | { provider: "external"; url: string };
+  gifting:
+    | { provider: "4escape" }
+    | { provider: "external"; url: string }
+    | { provider: "none" };
 };
 
 function staticUrl(
@@ -82,11 +83,11 @@ export function toGlobalUrls({
 function toPartnerLinks(venue: VenueUrlInput): PartnerLink[] {
   const links: PartnerLink[] = [];
 
-  if (venue.bookingProvider === "external" && venue.externalBookingUrl) {
-    links.push({ kind: "booking", url: venue.externalBookingUrl });
+  if (venue.booking.provider === "external") {
+    links.push({ kind: "booking", url: venue.booking.url });
   }
-  if (venue.giftingProvider === "external" && venue.externalGiftingUrl) {
-    links.push({ kind: "gifting", url: venue.externalGiftingUrl });
+  if (venue.gifting.provider === "external") {
+    links.push({ kind: "gifting", url: venue.gifting.url });
   }
 
   return links;

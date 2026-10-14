@@ -197,7 +197,7 @@ function UrlRow({ row }: { row: Row }) {
 
 function UrlSection({ section }: { section: Section }) {
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       <Heading as="h2" size={1}>
         {section.title}
       </Heading>
@@ -254,11 +254,13 @@ function LoadedSections<T>({
   if (load.status === "error") {
     return (
       <Card padding={4} radius={2} tone="critical" border>
-        <Stack space={3}>
+        <Stack gap={3}>
           <Text size={1} weight="semibold">
-            The {name} could not be listed: some content is incomplete.
+            The {name} could not be listed.
           </Text>
-          <Text size={1}>{load.message}</Text>
+          <Text size={1} style={{ whiteSpace: "pre-wrap" }}>
+            {load.message}
+          </Text>
         </Stack>
       </Card>
     );
@@ -275,7 +277,7 @@ function Rules() {
 
   return (
     <Card padding={4} radius={2} tone="primary" border>
-      <Stack space={3}>
+      <Stack gap={3}>
         <Text size={1} weight="semibold">
           Copy a URL from this list rather than typing one: a URL that is not
           listed here leads to a “page not found”.
