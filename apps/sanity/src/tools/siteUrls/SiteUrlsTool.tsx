@@ -56,18 +56,21 @@ function useLoad<T>(load: () => Promise<T>, revision: number): Load<T> {
   useEffect(() => {
     let live = true;
 
-    load()
-      .then((data) => {
+    async function run() {
+      try {
+        const data = await load();
         if (live) setState({ status: "ready", data });
-      })
-      .catch((error: unknown) => {
+      } catch (error) {
         if (live) {
           setState({
             status: "error",
             message: error instanceof Error ? error.message : String(error),
           });
         }
-      });
+      }
+    }
+
+    void run();
 
     return () => {
       live = false;
@@ -333,7 +336,7 @@ export function SiteUrlsTool() {
   return (
     <Card height="fill" overflow="auto">
       <Container width={3} paddingX={4} paddingY={5}>
-        <Stack space={5}>
+        <Stack gap={5}>
           <Heading as="h1" size={3}>
             Site URLs
           </Heading>
