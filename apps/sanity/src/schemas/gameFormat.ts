@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { JoystickIcon } from "@sanity/icons/Joystick";
+import { SANITY_API_VERSION } from "@repo/utils/sanityConfig";
 
 const MAX_SIGNATURE_GAMES = 4;
 
@@ -37,7 +38,7 @@ export const gameFormatType = defineType({
           );
           // other drafts are not counted: only published games reach the site
           const others = await context
-            .getClient({ apiVersion: "2025-02-06" })
+            .getClient({ apiVersion: SANITY_API_VERSION })
             .fetch<number>(
               `count(*[_type == "gameFormat"
                 && signature == true

@@ -4,3 +4,5 @@ export type SanityConfig = {
   draft: boolean;
   token?: string;
 };
+
+export const SANITY_API_VERSION = "2025-02-06";

@@ -3,6 +3,7 @@ import { getGlobalSiteUrls } from "@repo/services/cms/getGlobalSiteUrls";
 import { getVenueSiteUrls } from "@repo/services/cms/getVenueSiteUrls";
 import type { SiteUrl, VenueUrls } from "@repo/services/routing/siteUrls";
 import { PRODUCTION_SITE_URL } from "@repo/utils/productionSiteUrl";
+import { SANITY_API_VERSION } from "@repo/utils/sanityConfig";
 import { CopyIcon } from "@sanity/icons/Copy";
 import { SearchIcon } from "@sanity/icons/Search";
 import {
@@ -309,7 +310,7 @@ function Rules() {
 }
 
 export function SiteUrlsTool() {
-  const client = useClient({ apiVersion: "2025-02-06" });
+  const client = useClient({ apiVersion: SANITY_API_VERSION });
 
   const [revision, setRevision] = useState(0);
   const [search, setSearch] = useState("");

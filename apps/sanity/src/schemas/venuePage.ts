@@ -5,6 +5,7 @@ import {
   type ValidationContext,
 } from "sanity";
 import { DocumentIcon } from "@sanity/icons/Document";
+import { SANITY_API_VERSION } from "@repo/utils/sanityConfig";
 import { pageGroups } from "./shared/seo";
 
 export const pageTypes = [
@@ -28,7 +29,7 @@ async function unpublishedWithoutWidget(
 
   const providerField =
     document?.pageType === "book" ? "bookingProvider" : "giftingProvider";
-  const provider = await getClient({ apiVersion: "2025-02-06" }).fetch<
+  const provider = await getClient({ apiVersion: SANITY_API_VERSION }).fetch<
     string | null
   >(`*[_id == $id][0].${providerField}`, { id: value._ref });
 

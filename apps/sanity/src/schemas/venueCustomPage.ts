@@ -7,9 +7,8 @@ import {
 } from "sanity";
 import { DocumentsIcon } from "@sanity/icons/Documents";
 import { getReservedCustomPageSlugs } from "@repo/services/routing/getReservedCustomPageSlugs";
+import { SANITY_API_VERSION } from "@repo/utils/sanityConfig";
 import { pageGroups } from "./shared/seo";
-
-const API_VERSION = "2025-02-06";
 
 const reservedSlugs = getReservedCustomPageSlugs();
 
@@ -29,7 +28,7 @@ async function isUniqueInVenue(slug: string, context: SlugValidationContext) {
 
   const id = document._id.replace(/^drafts\./, "");
 
-  return !(await getClient({ apiVersion: API_VERSION }).fetch<boolean>(
+  return !(await getClient({ apiVersion: SANITY_API_VERSION }).fetch<boolean>(
     `count(*[_type == "venueCustomPage"
       && venue._ref == $venueRef
       && slug.current == $slug
