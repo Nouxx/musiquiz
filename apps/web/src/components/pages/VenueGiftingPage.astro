@@ -3,7 +3,7 @@ import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 import VenueFooter from "../features/VenueFooter.astro";
-import VenuePageCover from "../features/VenuePageCover.astro";
+import CmsPageCover from "../features/CmsPageCover.astro";
 import PageComponents from "../features/PageComponents.astro";
 import type {
   PageCover as PageCoverData,
@@ -32,7 +32,7 @@ const pageCoverData: PageCoverData = {
 };
 ---
 
-<VenuePageCover data={pageCoverData} />
+<CmsPageCover data={pageCoverData} />
 
 <PageComponents components={data.componentsBeforeWidget} />
 

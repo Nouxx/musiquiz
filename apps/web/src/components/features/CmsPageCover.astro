@@ -10,11 +10,17 @@ import type { ComponentProps } from "astro/types";
 
 interface Props {
   data: PageCoverData;
+  align?: "left" | "center";
   height?: "full" | "m";
   ctaIcon?: "arrow-down" | "arrow-left";
 }
 
-const { data, height = "full", ctaIcon = "arrow-right" } = Astro.props;
+const {
+  data,
+  align = "left",
+  height = "full",
+  ctaIcon = "arrow-right",
+} = Astro.props;
 
 const { background, aside, badge, heading, subHeading, cta, secondaryCta } =
   data;
@@ -22,15 +28,13 @@ const { background, aside, badge, heading, subHeading, cta, secondaryCta } =
 // a gradient has no photo to fill a tall screen with, so it is sized by its content
 const coverProps: ComponentProps<typeof PageCover> =
   background.kind === "image"
-    ? { align: "left", height }
+    ? { align, height }
     : {
-        align: "left",
+        align,
         height: "l",
         background: "gradient",
         surface: background.kind,
       };
-
-// todo: rename this component to PageCover (not only tied to venue now)
 ---
 
 <PageCover {...coverProps}>
@@ -50,7 +54,7 @@ const coverProps: ComponentProps<typeof PageCover> =
       <RemoteImage
         slot="logo"
         image={aside.logo}
-        variant="cover-logo-side"
+        variant={align === "center" ? "cover-logo" : "cover-logo-side"}
         loading="eager"
       />
     )

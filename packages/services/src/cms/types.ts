@@ -53,10 +53,7 @@ export type VenuePin = {
 };
 
 export type Homepage = {
-  logo: CmsImage;
-  cover: CmsImage;
-  badgeLabel: string;
-  heading: string;
+  pageCover: PageCover;
   venues: VenuePin[];
   venuesCta: { label: string; url: string } | undefined;
   components: PageComponent[];

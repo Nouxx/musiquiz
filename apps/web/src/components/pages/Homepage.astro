@@ -1,8 +1,15 @@
 ---
 import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
-import type { Homepage as HomepageData } from "@repo/services/cms/types";
+import type {
+  Homepage as HomepageData,
+  PageCover as PageCoverData,
+} from "@repo/services/cms/types";
+import { venuesMapAnchorId } from "@repo/ui/types";
+
+import { getLang } from "../../libs/getLang";
+import { getT } from "../../libs/i18n";
+import CmsPageCover from "../features/CmsPageCover.astro";
 import PageComponents from "../features/PageComponents.astro";
-import HomepageCover from "../features/HomepageCover.astro";
 import VenuesList from "../features/VenuesList.astro";
 import Footer from "../features/Footer.astro";
 import Header from "../features/Header.astro";
@@ -12,17 +19,19 @@ interface Props {
   alternates: Alternates;
 }
 
+const t = getT(getLang(Astro));
+
 const { data, alternates } = Astro.props;
+
+const pageCoverData: PageCoverData = {
+  ...data.pageCover,
+  cta: { label: t("cover.chooseVenue"), url: `#${venuesMapAnchorId}` },
+};
 ---
 
 <Header {alternates} />
 
-<HomepageCover
-  logo={data.logo}
-  cover={data.cover}
-  badgeLabel={data.badgeLabel}
-  heading={data.heading}
-/>
+<CmsPageCover data={pageCoverData} align="center" ctaIcon="arrow-down" />
 
 <PageComponents components={data.components} />
 

@@ -110,7 +110,7 @@ _Avoid_: blog, blog archive, blog listing (that is the UI Component), news page
 Every page of the site but the blog's is a document with exactly these two things, differing only in what else it carries.
 
 **Page Cover**:
-The block at the top of every page — media, badge, heading, sub-heading, and up to two calls to action. Who decides the destination depends on the page. On the Global Pages, the Global Game and Global Event, and the two widget pages, the button is set in code from the page's kind, and the authored fields are hidden. On the homepage, a Venue's home page, a Venue Game, a Venue Event and a Venue Custom Page, the editor authors both the label and a localized url, with the Site URLs tool as their guide ([ADR 0020](./docs/adr/0020-studio-lists-the-site-urls.md)). Authored as one object type reused across every content document, rendered by the `PageCover` UI Component.
+The block at the top of every page — media, badge, heading, sub-heading, and up to two calls to action. Who decides the destination depends on the page. On the homepage, the Global Pages, the Global Game and Global Event, and the two widget pages, the button is set in code from the page's kind, and the authored fields are hidden. On a Venue's home page, a Venue Game, a Venue Event and a Venue Custom Page, the editor authors both the label and a localized url, with the Site URLs tool as their guide ([ADR 0020](./docs/adr/0020-studio-lists-the-site-urls.md)). The homepage's cover is centered with the logo above the text, and always carries that logo. Authored as one object type reused across every content document, rendered by the `PageCover` UI Component.
 _Avoid_: hero, banner, header, masthead
 
 **Page Component**:

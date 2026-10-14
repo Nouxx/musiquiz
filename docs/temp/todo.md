@@ -8,6 +8,7 @@
 - Grids cards minimum 3, reduce to 2
 - Order venues by alphabetical order on the venuesMap
 - Details tab, max 10
+- Video on page cover and carousel
 
 # P1 (important)
 

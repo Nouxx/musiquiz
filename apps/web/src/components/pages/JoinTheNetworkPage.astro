@@ -11,7 +11,7 @@ import Footer from "../features/Footer.astro";
 import Header from "../features/Header.astro";
 import PageComponents from "../features/PageComponents.astro";
 import VenueOpeningForm from "../features/VenueOpeningForm.astro";
-import VenuePageCover from "../features/VenuePageCover.astro";
+import CmsPageCover from "../features/CmsPageCover.astro";
 import { getT } from "../../libs/i18n";
 
 interface Props {
@@ -35,7 +35,7 @@ const pageCoverData: PageCoverData = {
 
 <Header {alternates} />
 
-<VenuePageCover data={pageCoverData} height="full" ctaIcon="arrow-down" />
+<CmsPageCover data={pageCoverData} height="full" ctaIcon="arrow-down" />
 
 <PageComponents components={data.components} />
 

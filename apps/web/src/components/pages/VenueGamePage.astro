@@ -2,7 +2,7 @@
 import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import type { VenueGamePage } from "@repo/services/cms/types";
 import VenueFooter from "../features/VenueFooter.astro";
-import VenuePageCover from "../features/VenuePageCover.astro";
+import CmsPageCover from "../features/CmsPageCover.astro";
 import PageComponents from "../features/PageComponents.astro";
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 const { venueSlug, data, alternates } = Astro.props;
 ---
 
-<VenuePageCover data={data.pageCover} />
+<CmsPageCover data={data.pageCover} />
 
 <PageComponents components={data.components} />
 
