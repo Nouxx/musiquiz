@@ -60,7 +60,7 @@ const CAROUSEL_VIDEOS = `pageComponents[_type == "carousel"].slides[_type == "vi
 const QUERY = `*[defined(pageCover.video.file.asset) || count(${CAROUSEL_VIDEOS}) > 0]{
   _id,
   "cover": pageCover.video.file.asset->{ _id, url },
-  "carousel": ${CAROUSEL_VIDEOS}.file.asset->{ _id, url }
+  "carousel": coalesce(${CAROUSEL_VIDEOS}[defined(file.asset)].file.asset->{ _id, url }, [])
 }`;
 
 async function fetchVideos() {
@@ -91,10 +91,8 @@ async function fetchVideos() {
     if (cover) {
       add(cover, "cover", _id);
     }
-    for (const asset of carousel ?? []) {
-      if (asset) {
-        add(asset, "carousel", _id);
-      }
+    for (const asset of carousel) {
+      add(asset, "carousel", _id);
     }
   }
 

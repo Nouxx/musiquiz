@@ -37,23 +37,32 @@ const { sources } = Astro.props;
 </style>
 
 <script>
+  async function play(video: HTMLVideoElement) {
+    try {
+      await video.play();
+    } catch {
+      // a refused autoplay (low power mode, data saver) leaves the poster showing
+    }
+  }
+
   if (matchMedia("(prefers-reduced-motion: no-preference)").matches) {
     const observer = new IntersectionObserver((entries) => {
       for (const { target, isIntersecting } of entries) {
         const video = target as HTMLVideoElement;
 
         if (isIntersecting) {
-          // a refused autoplay (low power mode, data saver) leaves the poster showing
-          video.play().catch(() => {});
+          play(video);
         } else {
           video.pause();
         }
       }
     });
 
-    for (const video of document.querySelectorAll<HTMLVideoElement>(
+    const videos = document.querySelectorAll<HTMLVideoElement>(
       "[data-background-video]",
-    )) {
+    );
+
+    for (const video of videos) {
       observer.observe(video);
     }
   }
