@@ -12,6 +12,7 @@ export const homepageType = defineType({
       group: "content",
       title: "Page Cover",
       type: "pageCover",
+      initialValue: { aside: "logo" },
     }),
     defineField({
       name: "venuesCta",
