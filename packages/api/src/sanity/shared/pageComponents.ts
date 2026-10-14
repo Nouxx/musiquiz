@@ -416,7 +416,7 @@ const sanityCardsGridSchema = z.strictObject({
   align: z.enum(["left", "center"]),
   background: z.enum(["vivid", "muted"]),
   cta: sanityCtaSchema.nullable(),
-  cards: z.array(sanityCardSchema).min(3).max(8),
+  cards: z.array(sanityCardSchema).min(2).max(8),
 });
 
 const sanityCarouselSchema = z.strictObject({
@@ -579,7 +579,7 @@ const sanityDetailCardSchema = z.strictObject({
 
 const sanityDetailGroupSchema = z.strictObject({
   name: z.string().min(1),
-  cards: z.array(sanityDetailCardSchema).min(2).max(6),
+  cards: z.array(sanityDetailCardSchema).min(2).max(12),
 });
 
 export type SanityDetailGroup = z.infer<typeof sanityDetailGroupSchema>;
