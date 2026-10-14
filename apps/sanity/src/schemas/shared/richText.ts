@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField } from "sanity";
+import { trailingSlashWarning } from "./trailingSlashWarning";
 
 export const richTextFieldType = defineField({
   name: "richText",
@@ -16,12 +17,13 @@ export const richTextFieldType = defineField({
             name: "link",
             title: "Link",
             type: "object",
+            validation: (rule) => rule.custom(trailingSlashWarning).warning(),
             fields: [
               defineField({
                 name: "href",
                 title: "URL",
                 description:
-                  "The full address, starting with https:// — or mailto: / tel:. A path like /reserver is refused on purpose: it would skip the language prefix and 404 in the other language.",
+                  "The full address, starting with https:// — or mailto: / tel:. A path like /reserver is refused on purpose: it would skip the language prefix and 404 in the other language. Every page of this site is listed in the Site URLs tab.",
                 type: "url",
                 validation: (rule) =>
                   rule.required().uri({

@@ -17,7 +17,9 @@
     "import": "sanity dataset import production.tar.gz dev --replace"
   },
   "dependencies": {
+    "@repo/services": "workspace:*",
     "@repo/ui": "workspace:*",
+    "@repo/utils": "workspace:*",
     "@sanity/icons": "^5.2.1",
     "@sanity/ui": "^3.4.5",
     "@sanity/vision": "^6.6.0",

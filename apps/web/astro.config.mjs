@@ -1,6 +1,7 @@
 // @ts-check
 import cloudflare from "@astrojs/cloudflare";
 import sitemap from "@astrojs/sitemap";
+import { PRODUCTION_SITE_URL } from "@repo/utils/productionSiteUrl";
 import { defineConfig, envField, fontProviders } from "astro/config";
 
 // WARNING: process.env reads variables set by the CLI
@@ -9,7 +10,7 @@ const isSsrBuild = process.env.SSR_BUILD === "true";
 
 export default defineConfig({
   // a build variable, so the preview build can emit its own canonical and hreflang
-  site: process.env.SITE_URL ?? "https://musiquiz.co",
+  site: process.env.SITE_URL ?? PRODUCTION_SITE_URL,
 
   // help enforcing the always trailing slashes policy on URLs
   // because the previous site already has this URL pattern (simplify migration)

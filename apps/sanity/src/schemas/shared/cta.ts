@@ -22,7 +22,7 @@ export const ctaType = defineType({
       name: "url",
       title: "URL",
       description:
-        "Where the button leads, once per language. Start with / for a page of this site — including its language prefix, so /en/… for English — with # for a section of the page this button sits on, or with https:// for another site.",
+        "Where the button leads, once per language. Start with / for a page of this site — including its language prefix, so /en/… for English — with # for a section of the page this button sits on, or with https:// for another site. Every page of this site is listed in the Site URLs tab.",
       type: "internationalizedArrayString", // the url is localized because fr and en are different paths
       validation: (rule) =>
         rule.required().custom((entries?: LocalizedEntry[]) => {

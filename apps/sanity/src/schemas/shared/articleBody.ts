@@ -25,7 +25,7 @@ export const articleBodyType = defineType({
                 name: "href",
                 title: "URL",
                 description:
-                  "A full address, or a path on this site like /paris/reserver. Paths are safe here: the blog has no English version.",
+                  "A full address, or a path on this site like /paris/reserver/. Paths are safe here: the blog has no English version. Every page of this site is listed in the Site URLs tab.",
                 type: "url",
                 validation: (rule) =>
                   rule.required().uri({
