@@ -11,7 +11,7 @@ import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 import Footer from "../features/Footer.astro";
 import Header from "../features/Header.astro";
-import VenuePageCover from "../features/VenuePageCover.astro";
+import CmsPageCover from "../features/CmsPageCover.astro";
 
 interface Props {
   data: ContactPageData;
@@ -34,7 +34,7 @@ const pageCoverDataWithCta: PageCoverData = {
 
 <Header {alternates} />
 
-<VenuePageCover data={pageCoverDataWithCta} height="m" ctaIcon="arrow-down" />
+<CmsPageCover data={pageCoverDataWithCta} height="m" ctaIcon="arrow-down" />
 
 <TeamMembers
   title={team.title}

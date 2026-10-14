@@ -16,7 +16,7 @@ export const en: EnglishKeys = {
   carousel: {
     previous: "Previous image",
     next: "Next image",
-    goToImage: "Go to image",
+    goToSlide: "Go to slide",
   },
   prices: {
     perPerson: "Per person",

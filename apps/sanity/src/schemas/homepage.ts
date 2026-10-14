@@ -8,27 +8,10 @@ export const homepageType = defineType({
   groups: pageGroups,
   fields: [
     defineField({
-      name: "logo",
+      name: "pageCover",
       group: "content",
-      title: "Homepage logo",
-      type: "imageWithAlt",
-    }),
-    defineField({
-      name: "cover",
-      group: "content",
-      title: "Homepage cover",
-      type: "imageWithAlt",
-    }),
-    defineField({
-      name: "badge",
-      group: "content",
-      title: "Badge label",
-      type: "internationalizedArrayString",
-    }),
-    defineField({
-      name: "heading",
-      group: "content",
-      type: "internationalizedArrayString",
+      title: "Page Cover",
+      type: "pageCover",
     }),
     defineField({
       name: "venuesCta",

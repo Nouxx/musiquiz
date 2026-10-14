@@ -17,7 +17,7 @@ interface Props {
   images: ImageSource[];
   previousLabel: string;
   nextLabel: string;
-  goToImageLabel: string;
+  goToSlideLabel: string;
 }
 
 const {
@@ -32,7 +32,7 @@ const {
   images,
   previousLabel,
   nextLabel,
-  goToImageLabel,
+  goToSlideLabel,
 } = Astro.props;
 
 const slideshowFirst = slideshowPosition === "left";
@@ -63,7 +63,7 @@ const slideshowFirst = slideshowPosition === "left";
           label={title}
           {previousLabel}
           {nextLabel}
-          {goToImageLabel}
+          {goToSlideLabel}
         />
       </div>
     </div>

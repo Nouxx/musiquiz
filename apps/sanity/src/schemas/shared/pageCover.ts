@@ -12,6 +12,11 @@ type PageCoverDocument = {
   pageType?: string;
 };
 
+// the homepage cover is centered with the logo on top; nothing else fits that layout
+function isHomepage(document: unknown) {
+  return (document as PageCoverDocument | undefined)?._type === "homepage";
+}
+
 function parentOf(parent: unknown) {
   return parent as PageCoverParent | undefined;
 }
@@ -21,6 +26,7 @@ function hasAuthorableCta(document: unknown) {
   const { _type, pageType } = (document as PageCoverDocument | undefined) ?? {};
 
   if (
+    _type === "homepage" ||
     _type === "legalNoticePage" ||
     _type === "termsAndConditionsPage" ||
     _type === "whereToFindUsPage" ||
@@ -46,13 +52,14 @@ export const pageCoverType = defineType({
       name: "background",
       title: "Background",
       description:
-        "A photo behind the text, or one of the two gradients on its own.",
+        "A photo or a looping video behind the text, or one of the two gradients on its own.",
       type: "string",
       initialValue: "image",
       validation: (rule) => rule.required(),
       options: {
         list: [
           { title: "Image", value: "image" },
+          { title: "Video", value: "video" },
           { title: "Brand gradient", value: "brand" },
           { title: "Vivid gradient", value: "vivid" },
         ],
@@ -72,13 +79,24 @@ export const pageCoverType = defineType({
         ),
     }),
     defineField({
+      name: "video",
+      title: "Video",
+      type: "video",
+      hidden: ({ parent }) => parentOf(parent)?.background !== "video",
+      validation: (rule) =>
+        rule.custom((value, context) =>
+          parentOf(context.parent)?.background === "video" && !value
+            ? "Required for a video background"
+            : true,
+        ),
+    }),
+    defineField({
       name: "aside",
       title: "Beside the text",
       description:
         "The right-hand side of the cover: nothing, the game's logo, or two columns of photos drifting past each other.",
       type: "string",
       initialValue: "none",
-      validation: (rule) => rule.required(),
       options: {
         list: [
           { title: "None", value: "none" },
@@ -87,6 +105,15 @@ export const pageCoverType = defineType({
         ],
         layout: "radio",
       },
+      hidden: ({ document }) => isHomepage(document),
+      validation: (rule) =>
+        rule
+          .required()
+          .custom((value, context) =>
+            isHomepage(context.document) && value !== "logo"
+              ? "The homepage cover always shows the logo"
+              : true,
+          ),
     }),
     defineField({
       name: "logo",

@@ -10,15 +10,13 @@ import {
   pageComponentsProjection,
   sanityPageComponentSchema,
 } from "./shared/pageComponents";
+import { pageCoverProjection, sanityPageCoverSchema } from "./shared/pageCover";
 import { sanitySeoSchema, seoProjection } from "./shared/seo";
 
 function homepageQuery({ lang }: { lang: Lang }) {
   return defineQuery(`{
     "homepage": *[_type == "homepage"][0]{
-      "badge": badge[language == "${lang}"][0].value,
-      "heading": heading[language == "${lang}"][0].value,
-      logo ${imageProjection({ lang })},
-      cover ${imageProjection({ lang })},
+      pageCover ${pageCoverProjection({ lang })},
       "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
       "venuesCta": ${optionalCtaProjection({ field: "venuesCta", lang })},
       "seo": ${seoProjection({ lang })},
@@ -44,10 +42,7 @@ function homepageQuery({ lang }: { lang: Lang }) {
 
 const sanityHomepageSchema = z.strictObject({
   homepage: z.strictObject({
-    badge: z.string().min(1),
-    heading: z.string().min(1),
-    logo: sanityImageSchema,
-    cover: sanityImageSchema,
+    pageCover: sanityPageCoverSchema({ hasCta: false }),
     pageComponents: z.array(sanityPageComponentSchema).nullable(),
     venuesCta: sanityCtaSchema.nullable(),
     seo: sanitySeoSchema,

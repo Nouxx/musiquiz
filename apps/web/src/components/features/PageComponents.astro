@@ -24,6 +24,7 @@ import { toPriceOffer } from "../../libs/toPriceOffer";
 import { toContactFacts } from "../../libs/toContactFacts";
 import { toContactPanels } from "../../libs/toContactPanels";
 import { toOffers } from "../../libs/toOffers";
+import { getVideoSources } from "../../libs/getVideoSources";
 import ClientContactForm from "./ClientContactForm.astro";
 import QuotationForm from "./QuotationForm.astro";
 import { WORKER_URL } from "astro:env/client";
@@ -68,10 +69,18 @@ const t = getT(lang);
             body={component.body}
             cta={component.cta}
             ctaTone={component.ctaTone}
-            images={component.images}
+            slides={component.slides.map((slide) =>
+              slide.kind === "image"
+                ? slide
+                : {
+                    kind: "video",
+                    sources: getVideoSources(slide.video, "carousel"),
+                    poster: slide.poster,
+                  },
+            )}
             previousLabel={t("carousel.previous")}
             nextLabel={t("carousel.next")}
-            goToImageLabel={t("carousel.goToImage")}
+            goToSlideLabel={t("carousel.goToSlide")}
           />
         );
       }
@@ -193,7 +202,7 @@ const t = getT(lang);
             mediaLabel={t("contactForm.mediaLabel")}
             previousLabel={t("carousel.previous")}
             nextLabel={t("carousel.next")}
-            goToImageLabel={t("carousel.goToImage")}
+            goToSlideLabel={t("carousel.goToSlide")}
             firstNameLabel={t("contactForm.firstName")}
             firstNamePlaceholder={t("contactForm.firstNamePlaceholder")}
             mailLabel={t("contactForm.mail")}
@@ -284,7 +293,7 @@ const t = getT(lang);
             images={component.images}
             previousLabel={t("carousel.previous")}
             nextLabel={t("carousel.next")}
-            goToImageLabel={t("carousel.goToImage")}
+            goToSlideLabel={t("carousel.goToSlide")}
           />
         );
       }

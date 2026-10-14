@@ -1,4 +1,4 @@
-import type { CmsImage, RichText, VenueLink } from "./types";
+import type { CmsImage, CmsVideo, RichText, VenueLink } from "./types";
 
 type RollingBanner = {
   type: "rollingBanner";
@@ -29,6 +29,10 @@ type CardsGrid = {
   cards: Card[];
 };
 
+export type CarouselSlide =
+  | { kind: "image"; image: CmsImage }
+  | { kind: "video"; video: CmsVideo; poster: CmsImage };
+
 type Carousel = {
   type: "carousel";
   badge: string | undefined;
@@ -36,7 +40,7 @@ type Carousel = {
   body: string;
   cta: Cta | undefined;
   ctaTone: "red" | "blue";
-  images: CmsImage[];
+  slides: CarouselSlide[];
 };
 
 type Reviews = {

@@ -37,6 +37,12 @@ export type ImageSource = {
   alt: string;
 };
 
+export type VideoSource = {
+  src: string;
+  /** @example 'video/mp4; codecs="av01.0.08M.08"' */
+  type: string;
+};
+
 export type CtaLink = {
   label: string;
   url: string;

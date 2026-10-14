@@ -7,6 +7,7 @@ import type { PageComponent } from "../pageComponent.types";
 import { toAddressLine } from "./toAddressLine";
 import { toCard } from "./toCard";
 import { toCmsImage } from "./toCmsImage";
+import { toCmsVideo } from "./toCmsVideo";
 import { toCta } from "./toCta";
 import { toDeckCard } from "./toDeckCard";
 import { toDetailGroup } from "./toDetailGroup";
@@ -55,7 +56,11 @@ export function adaptPageComponent({
         body: data.body,
         cta: toCta(data.cta),
         ctaTone: data.ctaTone,
-        images: data.images.map((image) => toCmsImage(image)),
+        slides: data.slides.map((slide) =>
+          slide.kind === "video"
+            ? { kind: "video", ...toCmsVideo(slide.video) }
+            : { kind: "image", image: toCmsImage(slide.image) },
+        ),
       };
     }
 

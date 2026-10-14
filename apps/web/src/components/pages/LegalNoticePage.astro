@@ -4,7 +4,7 @@ import type { LegalNoticePage as LegalNoticePageData } from "@repo/services/cms/
 import TextBody from "@repo/ui/TextBody";
 
 import Footer from "../features/Footer.astro";
-import VenuePageCover from "../features/VenuePageCover.astro";
+import CmsPageCover from "../features/CmsPageCover.astro";
 
 interface Props {
   data: LegalNoticePageData;
@@ -14,7 +14,7 @@ interface Props {
 const { data, alternates } = Astro.props;
 ---
 
-<VenuePageCover data={data.pageCover} height="m" />
+<CmsPageCover data={data.pageCover} height="m" />
 
 <TextBody body={data.body} />
 

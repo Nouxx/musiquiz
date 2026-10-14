@@ -9,7 +9,7 @@ export const fr = {
   carousel: {
     previous: "Image précédente",
     next: "Image suivante",
-    goToImage: "Aller à l'image",
+    goToSlide: "Aller à la diapositive",
   },
   prices: {
     perPerson: "Par personne",

@@ -1,0 +1,69 @@
+---
+import type { VideoSource } from "../types";
+
+interface Props {
+  /** in order of preference, the browser plays the first it can */
+  sources: VideoSource[];
+}
+
+const { sources } = Astro.props;
+
+// no `autoplay`: the script starts it, so a visitor who turns motion off never downloads it
+---
+
+<video
+  class="background-video"
+  muted
+  loop
+  playsinline
+  preload="none"
+  aria-hidden="true"
+  tabindex="-1"
+  disablepictureinpicture
+  data-background-video
+>
+  {sources.map(({ src, type }) => <source {src} {type} />)}
+</video>
+
+<style>
+  .background-video {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  async function play(video: HTMLVideoElement) {
+    try {
+      await video.play();
+    } catch {
+      // a refused autoplay (low power mode, data saver) leaves the poster showing
+    }
+  }
+
+  if (matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+    const observer = new IntersectionObserver((entries) => {
+      for (const { target, isIntersecting } of entries) {
+        const video = target as HTMLVideoElement;
+
+        if (isIntersecting) {
+          play(video);
+        } else {
+          video.pause();
+        }
+      }
+    });
+
+    const videos = document.querySelectorAll<HTMLVideoElement>(
+      "[data-background-video]",
+    );
+
+    for (const video of videos) {
+      observer.observe(video);
+    }
+  }
+</script>

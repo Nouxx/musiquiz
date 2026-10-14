@@ -6,6 +6,7 @@ import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { Homepage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
 import { toCmsImage } from "./utils/toCmsImage";
+import { toPageCover } from "./utils/toPageCover";
 import { toSeo } from "./utils/toSeo";
 
 function adaptVenue({
@@ -49,20 +50,22 @@ function adaptHomepage({
   data: SanityHomepage;
   lang: Lang;
 }): Homepage {
-  const { badge, cover, heading, logo, venuesCta, seo } = data.homepage;
+  const { venuesCta, seo } = data.homepage;
+  const pageCover = toPageCover({ data: data.homepage.pageCover });
+
+  if (pageCover.aside.kind !== "logo") {
+    throw new Error("homepage: the cover needs a logo aside");
+  }
 
   return {
-    logo: toCmsImage(logo),
-    cover: toCmsImage(cover),
-    badgeLabel: badge,
-    heading,
+    pageCover,
     venues: data.venues.map((venue) => adaptVenue({ data: venue, lang })),
     venuesCta: venuesCta ?? undefined,
     components:
       data.homepage.pageComponents?.map((component) =>
         adaptPageComponent({ data: component, lang }),
       ) ?? [],
-    seo: toSeo({ data: seo, fallback: { title: heading } }),
+    seo: toSeo({ data: seo, fallback: { title: pageCover.heading } }),
     organization: adaptOrganization(data.siteSettings),
   };
 }

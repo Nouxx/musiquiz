@@ -53,10 +53,7 @@ export type VenuePin = {
 };
 
 export type Homepage = {
-  logo: CmsImage;
-  cover: CmsImage;
-  badgeLabel: string;
-  heading: string;
+  pageCover: PageCover;
   venues: VenuePin[];
   venuesCta: { label: string; url: string } | undefined;
   components: PageComponent[];
@@ -113,8 +110,16 @@ export type OpeningHours = {
 
 export type CoverBackground =
   | { kind: "image"; media: CmsImage }
+  | { kind: "video"; video: CmsVideo; poster: CmsImage }
   | { kind: "brand" }
   | { kind: "vivid" };
+
+export type CmsVideo = {
+  /** @example "file-fa8e60c4186df0a5e62d31e0b36dc5bfbf839bcf-mp4" */
+  assetId: string;
+  /** the raw upload, the static build serves its own encodes instead */
+  url: string;
+};
 
 export type CoverAside =
   | { kind: "none" }

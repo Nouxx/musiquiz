@@ -1,6 +1,7 @@
 ---
 import Badge from "@repo/ui/Badge";
 import PageCover from "@repo/ui/PageCover";
+import BackgroundVideo from "@repo/ui/primitives/BackgroundVideo";
 import Button from "@repo/ui/primitives/Button";
 import DriftingColumns from "@repo/ui/primitives/DriftingColumns";
 import RemoteImage from "@repo/ui/primitives/RemoteImage";
@@ -8,29 +9,35 @@ import Text from "@repo/ui/primitives/Text";
 import type { PageCover as PageCoverData } from "@repo/services/cms/types";
 import type { ComponentProps } from "astro/types";
 
+import { getVideoSources } from "../../libs/getVideoSources";
+
 interface Props {
   data: PageCoverData;
+  align?: "left" | "center";
   height?: "full" | "m";
   ctaIcon?: "arrow-down" | "arrow-left";
 }
 
-const { data, height = "full", ctaIcon = "arrow-right" } = Astro.props;
+const {
+  data,
+  align = "left",
+  height = "full",
+  ctaIcon = "arrow-right",
+} = Astro.props;
 
 const { background, aside, badge, heading, subHeading, cta, secondaryCta } =
   data;
 
 // a gradient has no photo to fill a tall screen with, so it is sized by its content
 const coverProps: ComponentProps<typeof PageCover> =
-  background.kind === "image"
-    ? { align: "left", height }
+  background.kind === "image" || background.kind === "video"
+    ? { align, height }
     : {
-        align: "left",
+        align,
         height: "l",
         background: "gradient",
         surface: background.kind,
       };
-
-// todo: rename this component to PageCover (not only tied to venue now)
 ---
 
 <PageCover {...coverProps}>
@@ -46,11 +53,20 @@ const coverProps: ComponentProps<typeof PageCover> =
   }
 
   {
+    background.kind === "video" && (
+      <Fragment slot="media">
+        <RemoteImage image={background.poster} variant="cover" priority />
+        <BackgroundVideo sources={getVideoSources(background.video, "cover")} />
+      </Fragment>
+    )
+  }
+
+  {
     aside.kind === "logo" && (
       <RemoteImage
         slot="logo"
         image={aside.logo}
-        variant="cover-logo-side"
+        variant={align === "center" ? "cover-logo" : "cover-logo-side"}
         loading="eager"
       />
     )
