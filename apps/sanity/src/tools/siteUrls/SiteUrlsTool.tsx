@@ -346,6 +346,7 @@ export function SiteUrlsTool() {
           <TextInput
             icon={SearchIcon}
             placeholder="Search a venue, a page, a path…"
+            aria-label="Search site URLs"
             value={search}
             onChange={(event) => setSearch(event.currentTarget.value)}
           />
