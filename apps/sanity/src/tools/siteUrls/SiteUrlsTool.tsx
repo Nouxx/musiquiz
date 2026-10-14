@@ -136,10 +136,17 @@ function filterSection(section: Section, search: string): Section {
 function CopyablePath({ path }: { path: string }) {
   const toast = useToast();
 
-  function copy() {
-    void navigator.clipboard.writeText(path).then(() => {
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(path);
       toast.push({ status: "success", title: `Copied ${path}` });
-    });
+    } catch {
+      toast.push({
+        status: "error",
+        title: `Could not copy ${path}`,
+        description: "Select the path and copy it by hand.",
+      });
+    }
   }
 
   return (
