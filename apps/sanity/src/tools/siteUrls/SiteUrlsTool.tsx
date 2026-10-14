@@ -97,7 +97,7 @@ function toRow(url: SiteUrl): Row {
 
   return {
     id: url.fr,
-    label: url.slug ? `${label} · ${url.slug}` : label,
+    label: url.slug ? `${label} · ${url.title ?? url.slug}` : label,
     fr: url.fr,
     en: url.en,
   };

@@ -1,0 +1,49 @@
+---
+import { getVenueCustomPageData } from "@repo/services/cms/getVenueCustomPageData";
+import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
+
+import BreadcrumbHead from "../../../components/features/BreadcrumbHead.astro";
+import VenueCustomPage from "../../../components/pages/VenueCustomPage.astro";
+import VenueLayout from "../../../layouts/VenueLayout.astro";
+import { getLang } from "../../../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../../../libs/getSanityConfigFromEnvironment";
+import { getSite } from "../../../libs/getSite";
+import { getVenueBreadcrumbs } from "../../../libs/getVenueBreadcrumbs";
+import { getVenueCustomPagesSlugParameters } from "../../../libs/getVenueCustomPagesSlugParameters";
+
+export async function getStaticPaths() {
+  const params = await getVenueCustomPagesSlugParameters();
+  return params;
+}
+
+const { venue, page } = Astro.params;
+
+const lang = getLang(Astro);
+
+const data = await getVenueCustomPageData({
+  lang,
+  venueSlug: venue,
+  pageSlug: page,
+  config: getSanityConfigFromEnvironment(),
+});
+
+const alternates = getAlternatesUrl(getSite(Astro), (routes) =>
+  routes.venueCustomPage(venue, page),
+);
+
+const breadcrumbs = getVenueBreadcrumbs(
+  lang,
+  { slug: venue, title: data.venueTitle },
+  data.title,
+);
+---
+
+<VenueLayout
+  venueSlug={venue}
+  city={data.venueTitle}
+  {...data.seo}
+  {alternates}
+>
+  <BreadcrumbHead slot="head" items={breadcrumbs} />
+  <VenueCustomPage venueSlug={venue} {data} {alternates} />
+</VenueLayout>

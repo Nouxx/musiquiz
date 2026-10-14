@@ -329,6 +329,14 @@ export type VenueEventPage = {
   seo: Seo;
 };
 
+export type VenueCustomPage = {
+  venueTitle: string;
+  title: string;
+  pageCover: PageCover;
+  components: PageComponent[];
+  seo: Seo;
+};
+
 export type GlobalGamePage = {
   gameName: string;
   pageCover: PageCover;

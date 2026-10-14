@@ -2,6 +2,7 @@ import { fetchVenueUrlGuide } from "@repo/api/sanity/venueUrlGuide";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import { toVenueUrls } from "../routing/siteUrls";
+import { getVenueCustomPageSlugs } from "./getVenueCustomPageSlugs";
 import { getVenueEventSlugs } from "./getVenueEventSlugs";
 import { getVenueGameSlugs } from "./getVenueGameSlugs";
 import { getVenueSlugs } from "./getVenueSlugs";
@@ -15,6 +16,7 @@ export async function getVenueSiteUrls({ config }: { config: SanityConfig }) {
     giftingVenueSlugs,
     venueGames,
     venueEvents,
+    venueCustomPages,
   ] = await Promise.all([
     fetchVenueUrlGuide({ config }),
     getVenueSlugs({ config }),
@@ -22,6 +24,7 @@ export async function getVenueSiteUrls({ config }: { config: SanityConfig }) {
     getVenueWidgetSlugs({ config, pageType: "gift" }),
     getVenueGameSlugs({ config }),
     getVenueEventSlugs({ config }),
+    getVenueCustomPageSlugs({ config }),
   ]);
 
   return toVenueUrls({
@@ -36,5 +39,6 @@ export async function getVenueSiteUrls({ config }: { config: SanityConfig }) {
     giftingVenueSlugs,
     venueGames,
     venueEvents,
+    venueCustomPages,
   });
 }

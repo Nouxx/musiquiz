@@ -15,6 +15,7 @@ export const routeLabels: Record<SiteUrlRoute, string> = {
   venueGifting: "Gifting",
   venueGame: "Game",
   venueEvent: "Event",
+  venueCustomPage: "Custom page",
   blog: "Blog home",
   blogArticle: "Article",
 };

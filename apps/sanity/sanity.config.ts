@@ -29,6 +29,7 @@ const structureOnlyTypes = new Set([
   "venuePage",
   "venueGame",
   "venueEvent",
+  "venueCustomPage",
   "venueBlog",
   "globalGame",
   "globalEvent",
@@ -37,6 +38,7 @@ const structureOnlyTypes = new Set([
 export const venuePageTemplateId = "venuePage-by-venue";
 export const venueGameTemplateId = "venueGame-by-venue";
 export const venueEventTemplateId = "venueEvent-by-venue";
+export const venueCustomPageTemplateId = "venueCustomPage-by-venue";
 export const venueBlogTemplateId = "venueBlog-by-venue";
 export const globalGameTemplateId = "globalGame-by-game";
 export const globalEventTemplateId = "globalEvent-by-event";
@@ -131,6 +133,15 @@ export default defineConfig({
         id: venueEventTemplateId,
         title: "Venue Event",
         schemaType: "venueEvent",
+        parameters: [{ name: "venueId", type: "string" }],
+        value: ({ venueId }: { venueId: string }) => ({
+          venue: venueReference(venueId),
+        }),
+      },
+      {
+        id: venueCustomPageTemplateId,
+        title: "Venue Custom Page",
+        schemaType: "venueCustomPage",
         parameters: [{ name: "venueId", type: "string" }],
         value: ({ venueId }: { venueId: string }) => ({
           venue: venueReference(venueId),
