@@ -4,6 +4,22 @@ import type { CoverAside, CoverBackground, PageCover } from "../types";
 import { toCmsImage } from "./toCmsImage";
 
 function toBackground(data: SanityPageCover): CoverBackground {
+  if (data.background === "video") {
+    if (!data.video?.poster) {
+      throw new Error(
+        "page cover: a video background needs a video and a poster",
+      );
+    }
+
+    const { url, mimeType, poster } = data.video;
+
+    return {
+      kind: "video",
+      video: { url, mimeType },
+      poster: toCmsImage(poster),
+    };
+  }
+
   if (data.background !== "image") {
     return { kind: data.background };
   }

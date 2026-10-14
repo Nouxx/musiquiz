@@ -1,0 +1,47 @@
+---
+interface Props {
+  src: string;
+  /** @example "video/mp4" */
+  mimeType: string;
+}
+
+const { src, mimeType } = Astro.props;
+
+// no `autoplay`: the script starts it, so a visitor who turns motion off never downloads it
+---
+
+<video
+  class="background-video"
+  muted
+  loop
+  playsinline
+  preload="none"
+  aria-hidden="true"
+  tabindex="-1"
+  disablepictureinpicture
+  data-background-video
+>
+  <source {src} type={mimeType} />
+</video>
+
+<style>
+  .background-video {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  if (matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+    const videos = document.querySelectorAll<HTMLVideoElement>(
+      "[data-background-video]",
+    );
+
+    // a refused autoplay (low power mode, data saver) leaves the poster showing
+    await Promise.allSettled([...videos].map((video) => video.play()));
+  }
+</script>

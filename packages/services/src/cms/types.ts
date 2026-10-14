@@ -110,8 +110,15 @@ export type OpeningHours = {
 
 export type CoverBackground =
   | { kind: "image"; media: CmsImage }
+  | { kind: "video"; video: CmsVideo; poster: CmsImage }
   | { kind: "brand" }
   | { kind: "vivid" };
+
+export type CmsVideo = {
+  url: string;
+  /** @example "video/mp4" */
+  mimeType: string;
+};
 
 export type CoverAside =
   | { kind: "none" }

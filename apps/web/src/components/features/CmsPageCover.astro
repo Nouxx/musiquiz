@@ -1,6 +1,7 @@
 ---
 import Badge from "@repo/ui/Badge";
 import PageCover from "@repo/ui/PageCover";
+import BackgroundVideo from "@repo/ui/primitives/BackgroundVideo";
 import Button from "@repo/ui/primitives/Button";
 import DriftingColumns from "@repo/ui/primitives/DriftingColumns";
 import RemoteImage from "@repo/ui/primitives/RemoteImage";
@@ -27,7 +28,7 @@ const { background, aside, badge, heading, subHeading, cta, secondaryCta } =
 
 // a gradient has no photo to fill a tall screen with, so it is sized by its content
 const coverProps: ComponentProps<typeof PageCover> =
-  background.kind === "image"
+  background.kind === "image" || background.kind === "video"
     ? { align, height }
     : {
         align,
@@ -46,6 +47,18 @@ const coverProps: ComponentProps<typeof PageCover> =
         variant="cover"
         priority
       />
+    )
+  }
+
+  {
+    background.kind === "video" && (
+      <Fragment slot="media">
+        <RemoteImage image={background.poster} variant="cover" priority />
+        <BackgroundVideo
+          src={background.video.url}
+          mimeType={background.video.mimeType}
+        />
+      </Fragment>
     )
   }
 

@@ -1,3 +1,4 @@
+import { SANITY_API_VERSION } from "@repo/utils/sanityConfig";
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 import { hasWidget } from "../venuePage";
@@ -16,6 +17,9 @@ type PageCoverDocument = {
 function isHomepage(document: unknown) {
   return (document as PageCoverDocument | undefined)?._type === "homepage";
 }
+
+// 8MB
+const MAX_VIDEO_BYTES = 8 * 1024 * 1024;
 
 function parentOf(parent: unknown) {
   return parent as PageCoverParent | undefined;
@@ -52,13 +56,14 @@ export const pageCoverType = defineType({
       name: "background",
       title: "Background",
       description:
-        "A photo behind the text, or one of the two gradients on its own.",
+        "A photo or a looping video behind the text, or one of the two gradients on its own.",
       type: "string",
       initialValue: "image",
       validation: (rule) => rule.required(),
       options: {
         list: [
           { title: "Image", value: "image" },
+          { title: "Video", value: "video" },
           { title: "Brand gradient", value: "brand" },
           { title: "Vivid gradient", value: "vivid" },
         ],
@@ -76,6 +81,52 @@ export const pageCoverType = defineType({
             ? "Required for an image background"
             : true,
         ),
+    }),
+    defineField({
+      name: "video",
+      title: "Video",
+      type: "object",
+      hidden: ({ parent }) => parentOf(parent)?.background !== "video",
+      validation: (rule) =>
+        rule.custom((value, context) =>
+          parentOf(context.parent)?.background === "video" && !value
+            ? "Required for a video background"
+            : true,
+        ),
+      fields: [
+        defineField({
+          name: "file",
+          title: "Video file",
+          description:
+            "Plays muted and on a loop, without controls. Export as MP4 (H.264), at most 1080p and 15 seconds, under 8 MB.",
+          type: "file",
+          options: { accept: "video/mp4,video/webm" },
+          validation: (rule) =>
+            rule.required().custom(async (value, context) => {
+              const ref = value?.asset?._ref;
+
+              if (!ref) {
+                return true;
+              }
+
+              const size = await context
+                .getClient({ apiVersion: SANITY_API_VERSION })
+                .fetch<number | null>(`*[_id == $ref][0].size`, { ref });
+
+              return size && size > MAX_VIDEO_BYTES
+                ? `${(size / 1024 / 1024).toFixed(1)} MB. Keep it under 8 MB.`
+                : true;
+            }),
+        }),
+        defineField({
+          name: "poster",
+          title: "Poster",
+          description:
+            "Shown while the video loads, and instead of it for visitors who turn motion off. Use a frame of the video.",
+          type: "image",
+          validation: (rule) => rule.required(),
+        }),
+      ],
     }),
     defineField({
       name: "aside",
