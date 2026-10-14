@@ -46,6 +46,14 @@ Those commands are deliberately bare script names. Every decision they expand to
 
 `.github/workflows/ci.yaml` deploys nothing — it is a pre-merge gate (format, lint, typecheck, build) that runs on pull requests and holds no secrets. Workers Builds is used for the web deploy instead of an Actions deploy because it exposes a **deploy hook URL** that Sanity can call on publish, with no GitHub token to mint, store or rotate.
 
+### Cover videos are encoded in the static build
+
+`build:static` runs `apps/web/scripts/encodeCoverVideos.js` before `astro build`. It encodes every published cover video into an AV1 and an H.264 MP4, which the build bundles into `dist/static/_astro/` ([ADR 0022](./docs/adr/0022-cover-video-is-a-plain-file-asset.md)). `dev` and `musiquiz-ssr` play the raw upload instead.
+
+- **ffmpeg comes from `node-av`.** Its postinstall downloads a pinned ffmpeg build with SVT-AV1 and x264 for the host platform. pnpm only runs it because `node-av` is in `onlyBuiltDependencies` (`pnpm-workspace.yaml`). Nothing to install on the machine. The Linux binary needs Ubuntu 24.04 or later.
+- **Encodes are cached** in `apps/web/node_modules/.astro/cover-video/`, keyed by the Sanity asset id, so only a new upload costs build time. Workers Builds keeps Astro's cache directory between builds.
+- **An encode over 10 MB fails the build** and names the document. Trim the clip and publish again.
+
 ## The Studio deploys from GitHub Actions
 
 `.github/workflows/deploy-sanity.yaml` deploys the new Sanity Studio version on every push to `main`. The web workers and the Studio therefore deploy from two independent systems triggered by the same push: they run in parallel, neither knows about the other, and one failing leaves the other deployed. There is nothing to roll back because there is nothing joining them.

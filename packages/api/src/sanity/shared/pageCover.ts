@@ -13,8 +13,8 @@ export function pageCoverProjection({ lang }: { lang: Lang }) {
         "background": coalesce(background, "image"),
         "media": ${optionalImageProjection({ field: "media", lang })},
         "video": select(defined(video.file.asset) => video{
+          "assetId": file.asset._ref,
           "url": file.asset->url,
-          "mimeType": file.asset->mimeType,
           "poster": ${optionalImageProjection({ field: "poster", lang })},
         }),
         "aside": coalesce(aside, "none"),
@@ -33,8 +33,8 @@ const basePageCoverSchema = z.strictObject({
   media: sanityImageSchema.nullable(),
   video: z
     .strictObject({
+      assetId: z.string(),
       url: z.url(),
-      mimeType: z.enum(["video/mp4", "video/webm"]),
       poster: sanityImageSchema.nullable(),
     })
     .nullable(),

@@ -18,8 +18,7 @@ function isHomepage(document: unknown) {
   return (document as PageCoverDocument | undefined)?._type === "homepage";
 }
 
-// 8MB
-const MAX_VIDEO_BYTES = 8 * 1024 * 1024;
+const MAX_VIDEO_BYTES = 15 * 1024 * 1024;
 
 function parentOf(parent: unknown) {
   return parent as PageCoverParent | undefined;
@@ -98,9 +97,9 @@ export const pageCoverType = defineType({
           name: "file",
           title: "Video file",
           description:
-            "Plays muted and on a loop, without controls. Export as MP4 (H.264), at most 1080p and 15 seconds, under 8 MB.",
+            "Plays muted and on a loop, without controls. MP4 only: convert any other format first. At most 15 seconds, under 15 MB. The site encodes its own lighter versions when it builds.",
           type: "file",
-          options: { accept: "video/mp4,video/webm" },
+          options: { accept: "video/mp4" },
           validation: (rule) =>
             rule.required().custom(async (value, context) => {
               const ref = value?.asset?._ref;
@@ -109,12 +108,24 @@ export const pageCoverType = defineType({
                 return true;
               }
 
-              const size = await context
+              const asset = await context
                 .getClient({ apiVersion: SANITY_API_VERSION })
-                .fetch<number | null>(`*[_id == $ref][0].size`, { ref });
+                .fetch<{
+                  size: number;
+                  mimeType: string;
+                } | null>(`*[_id == $ref][0]{ size, mimeType }`, { ref });
 
-              return size && size > MAX_VIDEO_BYTES
-                ? `${(size / 1024 / 1024).toFixed(1)} MB. Keep it under 8 MB.`
+              if (!asset) {
+                return true;
+              }
+
+              // `accept` only filters the file picker, a dropped file skips it
+              if (asset.mimeType !== "video/mp4") {
+                return "MP4 only. Convert the video to MP4 (H.264) first.";
+              }
+
+              return asset.size > MAX_VIDEO_BYTES
+                ? `${(asset.size / 1024 / 1024).toFixed(1)} MB. Keep it under 15 MB.`
                 : true;
             }),
         }),

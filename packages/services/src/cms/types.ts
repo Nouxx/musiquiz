@@ -115,9 +115,10 @@ export type CoverBackground =
   | { kind: "vivid" };
 
 export type CmsVideo = {
+  /** @example "file-fa8e60c4186df0a5e62d31e0b36dc5bfbf839bcf-mp4" */
+  assetId: string;
+  /** the raw upload, the static build serves its own encodes instead */
   url: string;
-  /** @example "video/mp4" */
-  mimeType: string;
 };
 
 export type CoverAside =

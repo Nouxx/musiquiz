@@ -1,11 +1,14 @@
 ---
 interface Props {
-  src: string;
-  /** @example "video/mp4" */
-  mimeType: string;
+  /** in order of preference, the browser plays the first it can */
+  sources: {
+    src: string;
+    /** @example 'video/mp4; codecs="av01.0.08M.08"' */
+    type: string;
+  }[];
 }
 
-const { src, mimeType } = Astro.props;
+const { sources } = Astro.props;
 
 // no `autoplay`: the script starts it, so a visitor who turns motion off never downloads it
 ---
@@ -21,7 +24,7 @@ const { src, mimeType } = Astro.props;
   disablepictureinpicture
   data-background-video
 >
-  <source {src} type={mimeType} />
+  {sources.map(({ src, type }) => <source {src} {type} />)}
 </video>
 
 <style>

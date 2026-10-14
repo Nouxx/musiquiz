@@ -11,11 +11,11 @@ function toBackground(data: SanityPageCover): CoverBackground {
       );
     }
 
-    const { url, mimeType, poster } = data.video;
+    const { assetId, url, poster } = data.video;
 
     return {
       kind: "video",
-      video: { url, mimeType },
+      video: { assetId, url },
       poster: toCmsImage(poster),
     };
   }
