@@ -2,22 +2,15 @@ import type { SanityPageCover } from "@repo/api/sanity/shared/pageCover";
 
 import type { CoverAside, CoverBackground, PageCover } from "../types";
 import { toCmsImage } from "./toCmsImage";
+import { toCmsVideo } from "./toCmsVideo";
 
 function toBackground(data: SanityPageCover): CoverBackground {
   if (data.background === "video") {
-    if (!data.video?.poster) {
-      throw new Error(
-        "page cover: a video background needs a video and a poster",
-      );
+    if (!data.video) {
+      throw new Error("page cover: a video background needs a video");
     }
 
-    const { assetId, url, poster } = data.video;
-
-    return {
-      kind: "video",
-      video: { assetId, url },
-      poster: toCmsImage(poster),
-    };
+    return { kind: "video", ...toCmsVideo(data.video) };
   }
 
   if (data.background !== "image") {

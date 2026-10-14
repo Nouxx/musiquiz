@@ -1,11 +1,16 @@
 ---
 import Badge from "./Badge.astro";
+import BackgroundVideo from "./primitives/BackgroundVideo.astro";
 import Button from "./primitives/Button.astro";
 import CarouselControls from "./primitives/CarouselControls.astro";
 import RemoteImage from "./primitives/RemoteImage.astro";
 import Text from "./primitives/Text.astro";
 import Section from "./Section.astro";
-import type { CtaLink, ImageSource } from "./types";
+import type { CtaLink, ImageSource, VideoSource } from "./types";
+
+type Slide =
+  | { kind: "image"; image: ImageSource }
+  | { kind: "video"; sources: VideoSource[]; poster: ImageSource };
 
 interface Props {
   badge?: string;
@@ -13,10 +18,10 @@ interface Props {
   body: string;
   cta?: CtaLink;
   ctaTone?: "red" | "blue";
-  images: ImageSource[];
+  slides: Slide[];
   previousLabel: string;
   nextLabel: string;
-  goToImageLabel: string;
+  goToSlideLabel: string;
 }
 
 const {
@@ -25,16 +30,16 @@ const {
   body,
   cta,
   ctaTone = "red",
-  images,
+  slides,
   previousLabel,
   nextLabel,
-  goToImageLabel,
+  goToSlideLabel,
 } = Astro.props;
 
 // the widest band shows five slots, so a set of five never overflows there:
 // no controls, and no scroll range for the valley to ride either — that case
 // falls back to the resting offsets. See `.fits-wide` below.
-const fitsWide = images.length <= 5;
+const fitsWide = slides.length <= 5;
 
 const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
 ---
@@ -65,13 +70,13 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
 
         <div class="controls-row">
           <CarouselControls
-            count={images.length}
+            count={slides.length}
             controls={trackId}
             slots="band"
             flank
             {previousLabel}
             {nextLabel}
-            {goToImageLabel}
+            {goToSlideLabel}
           />
         </div>
       </div>
@@ -85,11 +90,19 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
       data-carousel-track
     >
       {
-        images.map((image: ImageSource) => (
-          <li>
-            <RemoteImage image={image} variant="carousel-media" />
-          </li>
-        ))
+        slides.map((slide) =>
+          slide.kind === "image" ? (
+            <li>
+              <RemoteImage image={slide.image} variant="carousel-media" />
+            </li>
+          ) : (
+            // decorative: the slide does not exist for assistive tech
+            <li aria-hidden="true">
+              <RemoteImage image={slide.poster} variant="carousel-media" />
+              <BackgroundVideo sources={slide.sources} />
+            </li>
+          ),
+        )
       }
     </ul>
   </div>

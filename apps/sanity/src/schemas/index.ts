@@ -4,6 +4,7 @@ import { pageComponentsType } from "./shared/pageComponents";
 import { cardsGridType, cardType } from "./shared/pageComponents/cardsGrid";
 import { carouselType } from "./shared/pageComponents/carousel";
 import { pageCoverType } from "./shared/pageCover";
+import { videoType } from "./shared/video";
 import { pricesFootnoteType } from "./shared/pricesFootnote";
 import { eventFormatType } from "./eventFormat";
 import { gameFormatType } from "./gameFormat";
@@ -95,6 +96,7 @@ export const schemaTypes = [
   imageWithAltType,
   pageComponentsType,
   pageCoverType,
+  videoType,
   ctaType,
   rollingBannerType,
   cardsGridType,

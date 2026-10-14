@@ -151,6 +151,10 @@ _Avoid_: text section, copy block, intro, prose
 A Page Component pairing a Text Block with a horizontally scrolling set of cards. The cards are not built yet — it renders the Text Block alone in the first half of a `TwoBlocks`, so the copy already sits at the width it keeps once they land, and the empty half reads as unfinished rather than as broken.
 _Avoid_: carousel (a different Page Component), slider, cards row
 
+**Carousel**:
+A Page Component holding a heading, a body, an optional call to action, and 5 to 12 Slides in a horizontal band that dips into a valley at its centre. Each Slide is a photo or a short looping video, cropped to the same tall portrait. A video Slide is decorative: muted, without controls, and hidden from assistive tech ([ADR 0023](./docs/adr/0023-carousel-video.md)).
+_Avoid_: slider, gallery
+
 **FAQ**:
 A Page Component pairing a set of questions with a strip of photos. Only one answer is open at a time, which is the `name` attribute on `<details>` doing it and not a script — so the whole section works with JavaScript off. The photo strip is decoration: it is two columns drifting past each other, it never decides how tall the section is, and it is not rendered at all below the width where it fits. Questions are authored on the page that shows them, so a venue's answers can name its city; there is no shared question set.
 _Avoid_: accordion (that is the UI Component inside it), questions block, help section

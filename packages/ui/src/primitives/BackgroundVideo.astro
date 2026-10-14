@@ -1,11 +1,9 @@
 ---
+import type { VideoSource } from "../types";
+
 interface Props {
   /** in order of preference, the browser plays the first it can */
-  sources: {
-    src: string;
-    /** @example 'video/mp4; codecs="av01.0.08M.08"' */
-    type: string;
-  }[];
+  sources: VideoSource[];
 }
 
 const { sources } = Astro.props;
@@ -40,11 +38,23 @@ const { sources } = Astro.props;
 
 <script>
   if (matchMedia("(prefers-reduced-motion: no-preference)").matches) {
-    const videos = document.querySelectorAll<HTMLVideoElement>(
-      "[data-background-video]",
-    );
+    const observer = new IntersectionObserver((entries) => {
+      for (const { target, isIntersecting } of entries) {
+        const video = target as HTMLVideoElement;
 
-    // a refused autoplay (low power mode, data saver) leaves the poster showing
-    await Promise.allSettled([...videos].map((video) => video.play()));
+        if (isIntersecting) {
+          // a refused autoplay (low power mode, data saver) leaves the poster showing
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      }
+    });
+
+    for (const video of document.querySelectorAll<HTMLVideoElement>(
+      "[data-background-video]",
+    )) {
+      observer.observe(video);
+    }
   }
 </script>

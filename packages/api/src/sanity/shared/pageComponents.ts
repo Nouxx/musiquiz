@@ -7,6 +7,7 @@ import { imageProjection, sanityImageSchema } from "./image";
 import { richTextProjection, sanityRichTextSchema } from "./richText";
 import { sanityTextBlockSchema, textBlockProjection } from "./textBlock";
 import { sanityVenueLinksSchema, venueLinksProjection } from "./venueLinks";
+import { sanityVideoSchema, videoProjection } from "./video";
 
 function rollingBannerProjection({ lang }: { lang: Lang }) {
   return `
@@ -151,7 +152,11 @@ function carouselProjection({ lang }: { lang: Lang }) {
       "body": body[language == "${lang}"][0].value,
       "cta": ${optionalCtaProjection({ field: "cta", lang })},
       "ctaTone": coalesce(ctaTone, "red"),
-      "images": images[] ${imageProjection({ lang })}
+      "slides": slides[]{
+        "kind": select(_type == "video" => "video", "image"),
+        _type == "video" => { "video": @ ${videoProjection({ lang })} },
+        _type != "video" => { "image": @ ${imageProjection({ lang })} }
+      }
     }
   `;
 }
@@ -421,7 +426,15 @@ const sanityCarouselSchema = z.strictObject({
   body: z.string().min(1),
   cta: sanityCtaSchema.nullable(),
   ctaTone: z.enum(["red", "blue"]),
-  images: z.array(sanityImageSchema).min(5).max(12),
+  slides: z
+    .array(
+      z.discriminatedUnion("kind", [
+        z.strictObject({ kind: z.literal("image"), image: sanityImageSchema }),
+        z.strictObject({ kind: z.literal("video"), video: sanityVideoSchema }),
+      ]),
+    )
+    .min(5)
+    .max(12),
 });
 
 const sanityReviewsSchema = z.strictObject({

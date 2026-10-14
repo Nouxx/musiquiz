@@ -22,7 +22,7 @@ interface Props {
   flank?: boolean;
   previousLabel: string;
   nextLabel: string;
-  goToImageLabel: string;
+  goToSlideLabel: string;
 }
 
 const {
@@ -34,7 +34,7 @@ const {
   flank = false,
   previousLabel,
   nextLabel,
-  goToImageLabel,
+  goToSlideLabel,
 } = Astro.props;
 
 const positions = Array.from({ length: count }, (_, index) => index);
@@ -50,7 +50,7 @@ const positions = Array.from({ length: count }, (_, index) => index);
           <button
             type="button"
             class="dot"
-            aria-label={`${goToImageLabel} ${index + 1}`}
+            aria-label={`${goToSlideLabel} ${index + 1}`}
             aria-controls={controls}
             data-carousel-dot={index}
           />

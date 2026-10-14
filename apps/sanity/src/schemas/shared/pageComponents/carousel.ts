@@ -51,12 +51,15 @@ export const carouselType = defineType({
       },
     }),
     defineField({
-      name: "images",
-      title: "Images",
+      name: "slides",
+      title: "Slides",
       description:
-        "Between 5 and 12. Each one is cropped hard to a tall portrait from its centre, so pick photos whose subject sits in the middle and survives losing most of its width.",
+        "Between 5 and 12 photos or videos. Each one is cropped hard to a tall portrait from its centre, so pick photos whose subject sits in the middle and survives losing most of its width. A vertical phone video fits as it is.",
       type: "array",
-      of: [defineArrayMember({ type: "imageWithAlt" })],
+      of: [
+        defineArrayMember({ type: "imageWithAlt" }),
+        defineArrayMember({ type: "video" }),
+      ],
       validation: (rule) => rule.required().min(5).max(12),
       // deliberately NOT `options: { layout: "grid" }`
       // this makes the alt un-authorable
@@ -66,20 +69,20 @@ export const carouselType = defineType({
   preview: {
     select: {
       title: "title",
-      images: "images",
+      slides: "slides",
     },
     prepare({
       title,
-      images,
+      slides,
     }: {
       title?: LocalizedEntry[];
-      images?: unknown[];
+      slides?: unknown[];
     }) {
-      const count = images?.length ?? 0;
+      const count = slides?.length ?? 0;
 
       return {
         title: frenchValue(title) ?? "Carrousel",
-        subtitle: `Carrousel · ${count} image${count === 1 ? "" : "s"}`,
+        subtitle: `Carrousel · ${count} slide${count === 1 ? "" : "s"}`,
       };
     },
   },

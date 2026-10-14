@@ -10,10 +10,10 @@ interface Props {
   label: string;
   previousLabel: string;
   nextLabel: string;
-  goToImageLabel: string;
+  goToSlideLabel: string;
 }
 
-const { images, label, previousLabel, nextLabel, goToImageLabel } = Astro.props;
+const { images, label, previousLabel, nextLabel, goToSlideLabel } = Astro.props;
 
 // one image is a picture frame, not a carousel: nothing to scroll to
 const hasControls = images.length > 1;
@@ -49,7 +49,7 @@ const trackId = `mini-carousel-${crypto.randomUUID().slice(0, 8)}`;
         layout="split"
         {previousLabel}
         {nextLabel}
-        {goToImageLabel}
+        {goToSlideLabel}
       />
     )
   }

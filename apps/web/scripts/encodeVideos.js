@@ -9,24 +9,34 @@ import { promisify } from "node:util";
 import { ffmpegPath, isFfmpegAvailable } from "node-av/ffmpeg";
 
 /**
- * Encodes every published cover video into an AV1 and an H.264 MP4, for the
- * static build to bundle. See docs/adr/0022-cover-video-is-a-plain-file-asset.md
+ * Encodes every published cover and carousel video into an AV1 and an H.264
+ * MP4, for the static build to bundle. See docs/adr/0022-cover-video-is-a-plain-file-asset.md
+ * and docs/adr/0023-carousel-video.md
  */
 const run = promisify(execFile);
 
 // Workers Builds keeps Astro's cache directory between builds, nothing else of ours
-const CACHE = "./node_modules/.astro/cover-video";
-const OUT = "./src/generated/cover-video";
+const CACHE = "./node_modules/.astro/video";
+const OUT = "./src/generated/video";
 
-const MAX_BYTES = 10 * 1024 * 1024;
+const MB = 1024 * 1024;
 
-// fits 1920x1080, or 1080x1920 for a portrait clip, never upscaled
-const FILTERS =
-  "scale=w='min(iw,if(gte(iw,ih),1920,1080))':h='min(ih,if(gte(iw,ih),1080,1920))'" +
-  ":force_original_aspect_ratio=decrease:force_divisible_by=2" +
-  ",fps=fps='min(source_fps,30)'";
+// a carousel slot is at most 282px wide, 563px on a 2x screen
+const PROFILES = {
+  cover: { long: 1920, short: 1080, maxBytes: 10 * MB },
+  carousel: { long: 1280, short: 720, maxBytes: 5 * MB },
+};
 
-// src/libs/getCoverVideoSources.ts declares this profile in its codecs string
+// fits long x short, or short x long for a portrait clip, never upscaled
+function filters({ long, short }) {
+  return (
+    `scale=w='min(iw,if(gte(iw,ih),${long},${short}))':h='min(ih,if(gte(iw,ih),${short},${long}))'` +
+    ":force_original_aspect_ratio=decrease:force_divisible_by=2" +
+    ",fps=fps='min(source_fps,30)'"
+  );
+}
+
+// src/libs/getVideoSources.ts declares this profile in its codecs string
 const AV1 = [
   ["-c:v", "libsvtav1"],
   ["-preset", "6"],
@@ -45,9 +55,12 @@ const H264 = [
 // asset urls are public: drop the phone's GPS and device tags
 const COMMON = ["-map_metadata", "-1", "-movflags", "+faststart"];
 
-const QUERY = `*[defined(pageCover.video.file.asset)]{
+const CAROUSEL_VIDEOS = `pageComponents[_type == "carousel"].slides[_type == "video"]`;
+
+const QUERY = `*[defined(pageCover.video.file.asset) || count(${CAROUSEL_VIDEOS}) > 0]{
   _id,
-  "asset": pageCover.video.file.asset->{ _id, url }
+  "cover": pageCover.video.file.asset->{ _id, url },
+  "carousel": ${CAROUSEL_VIDEOS}.file.asset->{ _id, url }
 }`;
 
 async function fetchVideos() {
@@ -65,10 +78,24 @@ async function fetchVideos() {
   const { result } = await response.json();
 
   const videos = new Map();
-  for (const { _id, asset } of result) {
-    const video = videos.get(asset._id) ?? { ...asset, documents: [] };
-    video.documents.push(_id);
-    videos.set(asset._id, video);
+  function add(asset, profile, document) {
+    const key = `${asset._id}_${profile}`;
+    const video = videos.get(key) ?? { ...asset, profile, documents: [] };
+    if (!video.documents.includes(document)) {
+      video.documents.push(document);
+    }
+    videos.set(key, video);
+  }
+
+  for (const { _id, cover, carousel } of result) {
+    if (cover) {
+      add(cover, "cover", _id);
+    }
+    for (const asset of carousel ?? []) {
+      if (asset) {
+        add(asset, "carousel", _id);
+      }
+    }
   }
 
   return videos.values().toArray();
@@ -91,18 +118,24 @@ async function ffmpeg(options) {
   );
 }
 
+function baseName(video) {
+  return `${video._id}_${video.profile}`;
+}
+
 async function encode(video) {
-  const main = `${CACHE}/${video._id}_main.mp4`;
-  const fallback = `${CACHE}/${video._id}_fallback.mp4`;
+  const name = baseName(video);
+  const profile = PROFILES[video.profile];
+  const main = `${CACHE}/${name}_main.mp4`;
+  const fallback = `${CACHE}/${name}_fallback.mp4`;
 
   if ((await exists(main)) && (await exists(fallback))) {
-    console.log(`${video._id}: cached`);
+    console.log(`${name}: cached`);
     return;
   }
 
-  console.log(`${video._id}: encoding`);
+  console.log(`${name}: encoding`);
 
-  const source = `${CACHE}/${video._id}.source`;
+  const source = `${CACHE}/${name}.source`;
   const response = await fetch(video.url);
   if (!response.ok) {
     throw new Error(`${video.url}: ${response.status}`);
@@ -110,18 +143,18 @@ async function encode(video) {
   await pipeline(Readable.fromWeb(response.body), createWriteStream(source));
 
   // `V`, not `v`: skips a cover-art still, and the audio goes with every other stream
-  const input = ["-i", source, "-map", "0:V:0", "-vf", FILTERS];
+  const input = ["-i", source, "-map", "0:V:0", "-vf", filters(profile)];
   await ffmpeg([...input, ...AV1, ...COMMON, `${main}.tmp.mp4`]);
   await ffmpeg([...input, ...H264, ...COMMON, `${fallback}.tmp.mp4`]);
   await rm(source);
 
   for (const path of [main, fallback]) {
     const { size } = await stat(`${path}.tmp.mp4`);
-    if (size > MAX_BYTES) {
+    if (size > profile.maxBytes) {
       await rm(`${path}.tmp.mp4`);
       throw new Error(
-        `${video._id} encodes to ${(size / 1024 / 1024).toFixed(1)} MB, the cap is 10 MB. ` +
-          `Trim the cover video of ${video.documents.join(", ")} and publish again.`,
+        `${name} encodes to ${(size / MB).toFixed(1)} MB, the cap is ${profile.maxBytes / MB} MB. ` +
+          `Trim the ${video.profile} video of ${video.documents.join(", ")} and publish again.`,
       );
     }
   }
@@ -149,7 +182,7 @@ async function main() {
   await mkdir(OUT, { recursive: true });
   for (const video of videos) {
     for (const suffix of ["main", "fallback"]) {
-      const name = `${video._id}_${suffix}.mp4`;
+      const name = `${baseName(video)}_${suffix}.mp4`;
       await copyFile(`${CACHE}/${name}`, `${OUT}/${name}`);
     }
   }

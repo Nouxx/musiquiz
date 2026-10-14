@@ -1,30 +1,33 @@
 import type { CmsVideo } from "@repo/services/cms/types";
 import { SSR_BUILD } from "astro:env/server";
 
-// written by scripts/encodeCoverVideos.js before the static build
-const encodes = import.meta.glob<string>("../generated/cover-video/*.mp4", {
+// written by scripts/encodeVideos.js before the static build
+const encodes = import.meta.glob<string>("../generated/video/*.mp4", {
   query: "?url",
   import: "default",
   eager: true,
 });
 
-// the profile scripts/encodeCoverVideos.js encodes (Main, level 4.0, 8-bit).
+// the profile scripts/encodeVideos.js encodes (Main, level 4.0, 8-bit).
 // without the codecs, Safari on hardware with no AV1 decoder picks it and fails
 const AV1_TYPE = 'video/mp4; codecs="av01.0.08M.08"';
 
-export function getCoverVideoSources(video: CmsVideo) {
+export function getVideoSources(
+  video: CmsVideo,
+  profile: "cover" | "carousel",
+) {
   // only the static build runs the encoder
   if (import.meta.env.DEV || SSR_BUILD) {
     return [{ src: video.url, type: "video/mp4" }];
   }
 
-  const main = encodes[`../generated/cover-video/${video.assetId}_main.mp4`];
-  const fallback =
-    encodes[`../generated/cover-video/${video.assetId}_fallback.mp4`];
+  const prefix = `../generated/video/${video.assetId}_${profile}`;
+  const main = encodes[`${prefix}_main.mp4`];
+  const fallback = encodes[`${prefix}_fallback.mp4`];
 
   if (!main || !fallback) {
     throw new Error(
-      `cover video ${video.assetId} was not encoded: run scripts/encodeCoverVideos.js before astro build`,
+      `video ${video.assetId} has no ${profile} encode: run scripts/encodeVideos.js before astro build`,
     );
   }
 

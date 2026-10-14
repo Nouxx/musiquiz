@@ -7,16 +7,13 @@ import {
   optionalImageProjection,
   sanityImageSchema,
 } from "./image";
+import { sanityVideoSchema, videoProjection } from "./video";
 
 export function pageCoverProjection({ lang }: { lang: Lang }) {
   return `{
         "background": coalesce(background, "image"),
         "media": ${optionalImageProjection({ field: "media", lang })},
-        "video": select(defined(video.file.asset) => video{
-          "assetId": file.asset._ref,
-          "url": file.asset->url,
-          "poster": ${optionalImageProjection({ field: "poster", lang })},
-        }),
+        "video": select(defined(video.file.asset) => video ${videoProjection({ lang })}),
         "aside": coalesce(aside, "none"),
         "logo": ${optionalImageProjection({ field: "logo", lang })},
         "images": images[] ${imageProjection({ lang })},
@@ -31,13 +28,7 @@ export function pageCoverProjection({ lang }: { lang: Lang }) {
 const basePageCoverSchema = z.strictObject({
   background: z.enum(["image", "video", "brand", "vivid"]),
   media: sanityImageSchema.nullable(),
-  video: z
-    .strictObject({
-      assetId: z.string(),
-      url: z.url(),
-      poster: sanityImageSchema.nullable(),
-    })
-    .nullable(),
+  video: sanityVideoSchema.nullable(),
   aside: z.enum(["none", "logo", "columns"]),
   logo: sanityImageSchema.nullable(),
   images: z.array(sanityImageSchema).min(6).max(12).nullable(),
