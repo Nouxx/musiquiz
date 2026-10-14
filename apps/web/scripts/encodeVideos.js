@@ -64,17 +64,23 @@ function h264(kbps) {
 // asset urls are public: drop the phone's GPS and device tags
 const COMMON = ["-map_metadata", "-1", "-movflags", "+faststart"];
 
-const CAROUSEL_VIDEOS = `pageComponents[_type == "carousel"].slides[_type == "video"]`;
+const CAROUSEL_VIDEOS = `(
+   coalesce(pageComponents, []) +
+   coalesce(componentsBeforeWidget, []) +
+   coalesce(componentsAfterWidget, []) +
+   coalesce(componentsBeforeMap, []) +
+   coalesce(componentsAfterMap, [])
+ )[_type == "carousel"].slides[_type == "video"]`;
 
-const QUERY = `*[defined(pageCover.video.file.asset) || count(${CAROUSEL_VIDEOS}) > 0]{
+const QUERY = `*[(pageCover.background == "video" && defined(pageCover.video.file.asset)) || count(${CAROUSEL_VIDEOS}) > 0]{
   _id,
-  "cover": pageCover.video.file.asset->{ _id, url },
+  "cover": select(pageCover.background == "video" => pageCover.video.file.asset->{ _id, url }),
   "carousel": coalesce(${CAROUSEL_VIDEOS}[defined(file.asset)].file.asset->{ _id, url }, [])
 }`;
 
 async function fetchVideos() {
   const url = new URL(
-    `https://${env.SANITY_STUDIO_PROJECT_ID}.apicdn.sanity.io/v2025-02-06/data/query/${env.SANITY_STUDIO_DATASET}`,
+    `https://${env.SANITY_STUDIO_PROJECT_ID}.api.sanity.io/v2025-02-06/data/query/${env.SANITY_STUDIO_DATASET}`,
   );
   url.searchParams.set("query", QUERY);
   url.searchParams.set("perspective", "published");
