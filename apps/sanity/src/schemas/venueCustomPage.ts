@@ -41,6 +41,7 @@ function slugRule(value?: SlugValue) {
   const slug = value?.current;
 
   if (!slug) return true;
+  if (slug.length > 100) return "Use at most 100 characters.";
   if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) {
     return "Lowercase letters, digits and single hyphens only.";
   }
