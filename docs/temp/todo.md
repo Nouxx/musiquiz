@@ -10,7 +10,6 @@
 
 # P1 (important)
 
-- T&C optional: not all venues have t&c because not all operated by MQ.
 - Cloudflare Access policy on musiquiz-ssr. It serves drafts
 - Sanity UI should require localized strings
 - Proper style on 404 page
