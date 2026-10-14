@@ -23,8 +23,8 @@ const MB = 1024 * 1024;
 
 // a carousel slot is at most 282px wide, 563px on a 2x screen
 const PROFILES = {
-  cover: { long: 1920, short: 1080, maxBytes: 10 * MB },
-  carousel: { long: 1280, short: 720, maxBytes: 5 * MB },
+  cover: { long: 1920, short: 1080, maxKbps: 4000, maxBytes: 10 * MB },
+  carousel: { long: 1280, short: 720, maxKbps: 1200, maxBytes: 5 * MB },
 };
 
 // fits long x short, or short x long for a portrait clip, never upscaled
@@ -36,21 +36,30 @@ function filters({ long, short }) {
   );
 }
 
+// CRF alone spends bits on a social-media export's compression artifacts and
+// comes out heavier than the upload, so the bitrate is capped too.
 // src/libs/getVideoSources.ts declares this profile in its codecs string
-const AV1 = [
-  ["-c:v", "libsvtav1"],
-  ["-preset", "6"],
-  ["-crf", "35"],
-  ["-pix_fmt", "yuv420p"],
-].flat();
+function av1(kbps) {
+  return [
+    ["-c:v", "libsvtav1"],
+    ["-preset", "6"],
+    ["-crf", "35"],
+    ["-svtav1-params", `mbr=${kbps}`],
+    ["-pix_fmt", "yuv420p"],
+  ].flat();
+}
 
-const H264 = [
-  ["-c:v", "libx264"],
-  ["-preset", "slow"],
-  ["-crf", "23"],
-  ["-profile:v", "high"],
-  ["-pix_fmt", "yuv420p"],
-].flat();
+function h264(kbps) {
+  return [
+    ["-c:v", "libx264"],
+    ["-preset", "slow"],
+    ["-crf", "23"],
+    ["-maxrate", `${kbps}k`],
+    ["-bufsize", `${2 * kbps}k`],
+    ["-profile:v", "high"],
+    ["-pix_fmt", "yuv420p"],
+  ].flat();
+}
 
 // asset urls are public: drop the phone's GPS and device tags
 const COMMON = ["-map_metadata", "-1", "-movflags", "+faststart"];
@@ -116,6 +125,20 @@ async function ffmpeg(options) {
   );
 }
 
+// node-av ships no ffprobe; `ffmpeg -i` alone exits with an error after printing the bitrate
+async function sourceKbps(source) {
+  try {
+    await run(ffmpegPath(), ["-hide_banner", "-i", source]);
+  } catch (error) {
+    const match = /bitrate: (\d+) kb\/s/.exec(error.stderr ?? "");
+    if (match) {
+      return Number(match[1]);
+    }
+  }
+
+  return Infinity;
+}
+
 function baseName(video) {
   return `${video._id}_${video.profile}`;
 }
@@ -142,8 +165,10 @@ async function encode(video) {
 
   // `V`, not `v`: skips a cover-art still, and the audio goes with every other stream
   const input = ["-i", source, "-map", "0:V:0", "-vf", filters(profile)];
-  await ffmpeg([...input, ...AV1, ...COMMON, `${main}.tmp.mp4`]);
-  await ffmpeg([...input, ...H264, ...COMMON, `${fallback}.tmp.mp4`]);
+  // never heavier than the upload
+  const kbps = Math.min(profile.maxKbps, await sourceKbps(source));
+  await ffmpeg([...input, ...av1(kbps), ...COMMON, `${main}.tmp.mp4`]);
+  await ffmpeg([...input, ...h264(kbps), ...COMMON, `${fallback}.tmp.mp4`]);
   await rm(source);
 
   for (const path of [main, fallback]) {

@@ -8,7 +8,7 @@ A carousel video is decorative, like the cover's. It plays muted, on a loop, wit
 
 `BackgroundVideo` now plays a video only while it is in view and pauses it when it leaves, through an `IntersectionObserver`. The observer takes the track's overflow into account, so a slide scrolled out of the band pauses too. The cover is in view on load, so it starts as before, and now also pauses once the visitor scrolls past it. The reduced-motion gate is unchanged.
 
-The build encodes a carousel video with its own profile: fitted into 720×1280 (portrait) or 1280×720, and failing over **5 MB**. A slot is at most 282px wide, 563px on a 2x screen, so the cover's 1080p would be wasted pixels. An asset used in both a cover and a carousel is encoded once per profile. Encodes are keyed `<assetId>_<profile>`.
+The build encodes a carousel video with its own profile: fitted into 720×1280 (portrait) or 1280×720, and failing over **5 MB**. A slot is at most 282px wide, 563px on a 2x screen, so the cover's 1080p would be wasted pixels. Both profiles also cap the bitrate: 1.2 Mb/s for a carousel slide and 4 Mb/s for a cover, and never above the upload's own bitrate. The quality target alone does not do it. A social-media export is already heavily compressed, and the encoder spends bits reproducing its artifacts: a 5 MB, 26 s upload came out at 11 MB. The Studio's 15 second limit is guidance only, since Sanity does not record a file's duration. The byte budget is what actually stops a long clip. An asset used in both a cover and a carousel is encoded once per profile. Encodes are keyed `<assetId>_<profile>`.
 
 There is no cap on how many slides are videos.
 
