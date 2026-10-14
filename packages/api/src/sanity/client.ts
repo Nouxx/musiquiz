@@ -1,4 +1,7 @@
-import type { SanityConfig } from "@repo/utils/sanityConfig";
+import {
+  SANITY_API_VERSION,
+  type SanityConfig,
+} from "@repo/utils/sanityConfig";
 import { createClient } from "@sanity/client";
 
 // todo: better to export the const or a function?
@@ -15,7 +18,7 @@ export function getSanityClient({ config }: { config: SanityConfig }) {
     projectId,
     dataset,
     useCdn: false, // the site is either SSG or SSR for preview, we never need the CDN cache
-    apiVersion: "2025-02-06",
+    apiVersion: SANITY_API_VERSION,
     perspective: draft ? "drafts" : "published",
     token: draft ? token : undefined,
   });

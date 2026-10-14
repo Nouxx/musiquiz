@@ -16,12 +16,14 @@ import { BlockContentIcon } from "@sanity/icons/BlockContent";
 import { UsersIcon } from "@sanity/icons/Users";
 import { HeartIcon } from "@sanity/icons/Heart";
 import { CalendarIcon } from "@sanity/icons/Calendar";
+import { DocumentsIcon } from "@sanity/icons/Documents";
 import type { ComponentType } from "react";
 import {
   globalEventTemplateId,
   globalGameTemplateId,
   singletonIds,
   venueBlogTemplateId,
+  venueCustomPageTemplateId,
   venueEventTemplateId,
   venueGameTemplateId,
   venuePageTemplateId,
@@ -32,6 +34,7 @@ const nestedTypeIds = [
   "venuePage",
   "venueGame",
   "venueEvent",
+  "venueCustomPage",
   "blogArticle",
   "venueBlog",
   "teamMember",
@@ -209,6 +212,23 @@ function venueChild({ S, venueId }: { S: StructureBuilder; venueId: string }) {
             .params({ venueId: venueId.replace(/^drafts\./, "") })
             .initialValueTemplates([
               S.initialValueTemplateItem(venueEventTemplateId, {
+                venueId: venueId.replace(/^drafts\./, ""),
+              }),
+            ]),
+        ),
+
+      S.listItem()
+        .title("Custom Pages")
+        .id("customPages")
+        .icon(DocumentsIcon)
+        .child(
+          S.documentList()
+            .title("Custom Pages")
+            .schemaType("venueCustomPage")
+            .filter('_type == "venueCustomPage" && venue._ref == $venueId')
+            .params({ venueId: venueId.replace(/^drafts\./, "") })
+            .initialValueTemplates([
+              S.initialValueTemplateItem(venueCustomPageTemplateId, {
                 venueId: venueId.replace(/^drafts\./, ""),
               }),
             ]),

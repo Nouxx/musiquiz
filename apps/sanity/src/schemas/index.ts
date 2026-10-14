@@ -23,6 +23,7 @@ import { articleBodyType } from "./shared/articleBody";
 import { quotationServiceType, termsArticleType, venueType } from "./venue";
 import { priceType, venueGameType } from "./venueGame";
 import { venueEventType } from "./venueEvent";
+import { venueCustomPageType } from "./venueCustomPage";
 import { globalGameType } from "./globalGame";
 import { globalEventType } from "./globalEvent";
 import { venuePageType } from "./venuePage";
@@ -83,6 +84,7 @@ export const schemaTypes = [
   venuePageType,
   venueGameType,
   venueEventType,
+  venueCustomPageType,
   globalGameType,
   globalEventType,
   priceType,

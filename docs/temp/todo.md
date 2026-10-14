@@ -1,12 +1,13 @@
 # P0 (top priorities)
 
-- authored URL: provide guidances in Sanity
-  - handle external in components
-  - proper URL
-- add custom venue page (slug authored from Sanity) - not accessible from the header
 - Reviews widget: fetch from Google, by center, from 4 to 5 stars, with word analysis (ex: EVJF)
   - also generate article pills from that (count of reviews + average)
 - Sanity deploy widget: generate a new site with all published content
+- GTM Analytics
+- Currency (CH)
+- Grids cards minimum 3, reduce to 2
+- Order venues by alphabetical order on the venuesMap
+- Details tab, max 10
 
 # P1 (important)
 
@@ -19,6 +20,7 @@
   - honey pot
   - rate limiting by IP
   - Origin/Referrer check
+- UI bug: cards scroller z-index conflicts with header
 
 # P2 (cosmetics)
 
@@ -29,6 +31,10 @@
 - Translate UI to FR: https://www.sanity.io/docs/studio/localizing-studio-ui
 - Dev bug in sanity studio: menus disappears
 - Make Zod errors human readable in the build
+- Mobile header not looking good, to investigate
+- Carousel arrows under, not above
+- Footer mobile, weird line breaks
+- Top margin on mobile for booking page
 
 # Questions
 

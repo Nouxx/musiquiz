@@ -12,6 +12,8 @@ export type SiteUrl = {
   route: SiteUrlRoute;
   /** the dynamic part, set on a game, event or article url */
   slug?: string;
+  /** set on a custom page, whose slug is not a name */
+  title?: string;
   fr: string;
   /** missing on the blog, French only: docs/adr/0013 */
   en?: string;
@@ -100,6 +102,7 @@ export function toVenueUrls({
   giftingVenueSlugs,
   venueGames,
   venueEvents,
+  venueCustomPages,
 }: {
   venues: VenueUrlInput[];
   venueSlugs: string[];
@@ -107,6 +110,7 @@ export function toVenueUrls({
   giftingVenueSlugs: string[];
   venueGames: { venueSlug: string; gameSlug: string }[];
   venueEvents: { venueSlug: string; eventSlug: string }[];
+  venueCustomPages: { venueSlug: string; pageSlug: string; title: string }[];
 }): VenueUrls[] {
   return venues
     .filter((venue) => venueSlugs.includes(venue.slug))
@@ -151,6 +155,15 @@ export function toVenueUrls({
             slug: eventSlug,
             fr: frenchRoutes.venueEvent(slug, eventSlug),
             en: englishRoutes.venueEvent(slug, eventSlug),
+          })),
+        ...venueCustomPages
+          .filter((page) => page.venueSlug === slug)
+          .map(({ pageSlug, title }) => ({
+            route: "venueCustomPage" as const,
+            slug: pageSlug,
+            title,
+            fr: frenchRoutes.venueCustomPage(slug, pageSlug),
+            en: englishRoutes.venueCustomPage(slug, pageSlug),
           })),
       );
 

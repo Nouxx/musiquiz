@@ -33,6 +33,9 @@ function venueUrls(venues: VenueUrlInput[] = [paris, lyon]) {
       { venueSlug: "lyon", gameSlug: "karaoke" },
     ],
     venueEvents: [{ venueSlug: "paris", eventSlug: "anniversaire" }],
+    venueCustomPages: [
+      { venueSlug: "paris", pageSlug: "noel", title: "Noël au quiz" },
+    ],
   });
 }
 
@@ -72,6 +75,7 @@ describe("toVenueUrls", () => {
       "/paris/offrir/",
       "/paris/jeux/blind-test/",
       "/paris/evenements/anniversaire/",
+      "/paris/noel/",
     ]);
     expect(parisUrls?.partnerLinks).toEqual([]);
   });
@@ -106,6 +110,7 @@ describe("toVenueUrls", () => {
       giftingVenueSlugs: [],
       venueGames: [],
       venueEvents: [],
+      venueCustomPages: [],
     });
 
     expect(urls).toEqual([]);

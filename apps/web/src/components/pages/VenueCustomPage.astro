@@ -1,0 +1,21 @@
+---
+import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
+import type { VenueCustomPage } from "@repo/services/cms/types";
+import VenueFooter from "../features/VenueFooter.astro";
+import VenuePageCover from "../features/VenuePageCover.astro";
+import PageComponents from "../features/PageComponents.astro";
+
+interface Props {
+  venueSlug: string;
+  data: VenueCustomPage;
+  alternates: Alternates;
+}
+
+const { venueSlug, data, alternates } = Astro.props;
+---
+
+<VenuePageCover data={data.pageCover} />
+
+<PageComponents components={data.components} />
+
+<VenueFooter {venueSlug} {alternates} />

@@ -1,8 +1,7 @@
 import { defineField, defineType } from "sanity";
 import type { Reference, ValidationContext } from "sanity";
 import { frenchValue, type LocalizedEntry } from "../frenchValue";
-
-const API_VERSION = "2025-02-06";
+import { SANITY_API_VERSION } from "@repo/utils/sanityConfig";
 
 type GetClient = ValidationContext["getClient"];
 
@@ -30,7 +29,7 @@ async function gameIdsAtVenue({
 
   if (!venueRef) return [];
 
-  return getClient({ apiVersion: API_VERSION }).fetch<string[]>(
+  return getClient({ apiVersion: SANITY_API_VERSION }).fetch<string[]>(
     `*[_type == "venueGame" && venue._ref == $venueRef].game._ref`,
     { venueRef },
   );

@@ -1,6 +1,5 @@
 import type { Reference, SanityDocument, ValidationContext } from "sanity";
-
-const API_VERSION = "2025-02-06";
+import { SANITY_API_VERSION } from "@repo/utils/sanityConfig";
 
 type GetClient = ValidationContext["getClient"];
 
@@ -36,7 +35,7 @@ export async function takenFormatIds({
   if (!venueRef) return [];
 
   // the field name is interpolated: GROQ takes a parameter for a value, never for an attribute
-  return getClient({ apiVersion: API_VERSION }).fetch<string[]>(
+  return getClient({ apiVersion: SANITY_API_VERSION }).fetch<string[]>(
     `*[_type == $documentType
       && venue._ref == $venueRef
       && !(_id in [$publishedId, "drafts." + $publishedId])].${field}._ref`,
@@ -59,7 +58,7 @@ export async function findDuplicate({
 
   if (!venueRef || !formatRef) return null;
 
-  return getClient({ apiVersion: API_VERSION }).fetch<{
+  return getClient({ apiVersion: SANITY_API_VERSION }).fetch<{
     venueTitle: string | null;
     formatName: string | null;
   } | null>(

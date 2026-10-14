@@ -38,7 +38,7 @@ They sit in `~/.claude/projects/-Users-clement-GitHub-musiquiz/memory/`, indexed
 ## Domain
 
 **Venue**:
-One physical Musi'Quiz location, addressed by a slug under `/[venue]`. A city is an attribute of a Venue, not a synonym for one — a city may hold more than one Venue. Its French UI label is "centre"; that label is copy, and the code says Venue everywhere. A Venue holds only facts about the place — address, opening hours, contact, logo — and owns no page content; what a visitor reads lives in a Venue Page, a Venue Game or a Venue Event. [ADR 0010](./docs/adr/0010-page-content-lives-in-documents.md).
+One physical Musi'Quiz location, addressed by a slug under `/[venue]`. A city is an attribute of a Venue, not a synonym for one — a city may hold more than one Venue. Its French UI label is "centre"; that label is copy, and the code says Venue everywhere. A Venue holds only facts about the place — address, opening hours, contact, logo — and owns no page content; what a visitor reads lives in a Venue Page, a Venue Game, a Venue Event or a Venue Custom Page. [ADR 0010](./docs/adr/0010-page-content-lives-in-documents.md).
 _Avoid_: centre, ville, city, site, location
 
 **Booking Provider** / **Gifting Provider**:
@@ -60,6 +60,10 @@ _Avoid_: offering, venue game page, game page
 **Venue Event**:
 A Venue Game for Event Formats, serving `/[venue]/evenements/[event]`. It carries no price. It is a separate document type rather than a Venue Game with a flag, because a discriminator would make `price` and the reference target conditional. [ADR 0010](./docs/adr/0010-page-content-lives-in-documents.md).
 _Avoid_: offering, event page
+
+**Venue Custom Page**:
+A page a Venue publishes outside its fixed screens, at `/[venue]/[slug]/`, with any number per Venue. It is linked from no menu: visitors reach it through links an editor writes elsewhere, which is why its path is listed in the Studio's Site URLs tool. It has the Venue Event shape (Page Cover, Page Components, SEO) plus a short `title` for the breadcrumb. One slug serves both languages. It is unique per Venue, and it may not be the first segment of another venue route. [ADR 0021](./docs/adr/0021-venue-custom-pages.md).
+_Avoid_: landing page, free page, custom page (alone), page
 
 **Global Game**:
 The page a Game Format has outside any Venue, at `/jeux/[game]`. One document per Format with a deterministic id, opened from the Format in the Studio. Only signature games get a route, and a signature game with no Global Game fails the build. Its cover's call to action is set in code, not authored. [ADR 0017](./docs/adr/0017-global-game-and-global-event-pages.md).
@@ -106,7 +110,7 @@ _Avoid_: blog, blog archive, blog listing (that is the UI Component), news page
 Every page of the site but the blog's is a document with exactly these two things, differing only in what else it carries.
 
 **Page Cover**:
-The block at the top of every page — media, badge, heading, sub-heading, and a call-to-action label. The call to action's **label** is content; its **destination is not**. Where the button goes is decided in code from the page's kind, so `getRoutesForLang` stays the only source of routing truth and an editor cannot author a URL that skips the locale prefix or 404s. Authored as one object type reused across every content document, rendered by the `PageCover` UI Component.
+The block at the top of every page — media, badge, heading, sub-heading, and up to two calls to action. Who decides the destination depends on the page. On the Global Pages, the Global Game and Global Event, and the two widget pages, the button is set in code from the page's kind, and the authored fields are hidden. On the homepage, a Venue's home page, a Venue Game, a Venue Event and a Venue Custom Page, the editor authors both the label and a localized url, with the Site URLs tool as their guide ([ADR 0020](./docs/adr/0020-studio-lists-the-site-urls.md)). Authored as one object type reused across every content document, rendered by the `PageCover` UI Component.
 _Avoid_: hero, banner, header, masthead
 
 **Page Component**:
