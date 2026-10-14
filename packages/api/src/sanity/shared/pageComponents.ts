@@ -579,7 +579,7 @@ const sanityDetailCardSchema = z.strictObject({
 
 const sanityDetailGroupSchema = z.strictObject({
   name: z.string().min(1),
-  cards: z.array(sanityDetailCardSchema).min(2).max(6),
+  cards: z.array(sanityDetailCardSchema).min(2).max(12),
 });
 
 export type SanityDetailGroup = z.infer<typeof sanityDetailGroupSchema>;

@@ -73,10 +73,10 @@ export const detailGroupType = defineType({
     defineField({
       name: "cards",
       title: "Cards",
-      description: "Two to six, in this order.",
+      description: "2 to 12, in this order.",
       type: "array",
       of: [defineArrayMember({ type: "detailCard" })],
-      validation: (rule) => rule.required().min(2).max(6),
+      validation: (rule) => rule.required().min(2).max(12),
     }),
   ],
   preview: {
