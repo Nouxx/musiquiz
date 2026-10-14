@@ -44,7 +44,7 @@ type Load<T> =
 
 type Row = { id: string; label: string; fr: string; en?: string };
 
-type Section = { title: string; rows: Row[] };
+type Section = { id: string; title: string; rows: Row[] };
 
 function isPublishedId(id: string) {
   return !id.startsWith("drafts.") && !id.startsWith("versions.");
@@ -105,6 +105,7 @@ function toRow(url: SiteUrl): Row {
 
 function toVenueSection(venue: VenueUrls): Section {
   return {
+    id: venue.slug,
     title: venue.name,
     rows: [
       ...venue.urls.map(toRow),
@@ -269,7 +270,7 @@ function LoadedSections<T>({
   return toSections(load.data)
     .map((section) => filterSection(section, search))
     .filter((section) => section.rows.length > 0)
-    .map((section) => <UrlSection key={section.title} section={section} />);
+    .map((section) => <UrlSection key={section.id} section={section} />);
 }
 
 function Rules() {
@@ -355,7 +356,7 @@ export function SiteUrlsTool() {
             load={global}
             search={query}
             toSections={(urls) => [
-              { title: "Global pages", rows: urls.map(toRow) },
+              { id: "global", title: "Global pages", rows: urls.map(toRow) },
             ]}
           />
           <LoadedSections
@@ -369,7 +370,7 @@ export function SiteUrlsTool() {
             load={blog}
             search={query}
             toSections={(urls) => [
-              { title: "Blog, French only", rows: urls.map(toRow) },
+              { id: "blog", title: "Blog, French only", rows: urls.map(toRow) },
             ]}
           />
         </Stack>
