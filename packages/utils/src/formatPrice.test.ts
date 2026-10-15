@@ -1,6 +1,6 @@
 import { expect, it } from "vitest";
 
-import { formatPrice } from "./formatPrice";
+import { formatPrice, formatPriceParts } from "./formatPrice";
 
 const euros = { currency: "EUR" } as const;
 const francs = { currency: "CHF" } as const;
@@ -50,4 +50,18 @@ it("writes francs after the amount, in the language's style", () => {
   expect(formatPrice({ amount: 21.5, lang: "en", ...francs })).toBe(
     "21.50\u{00A0}CHF",
   );
+});
+
+it("glues a symbol to the amount", () => {
+  expect(formatPriceParts({ amount: 21.5, lang: "fr", ...euros })).toEqual({
+    amount: "21,50€",
+    unit: undefined,
+  });
+});
+
+it("keeps a code apart, for the UI to draw as a unit", () => {
+  expect(formatPriceParts({ amount: 21.5, lang: "fr", ...francs })).toEqual({
+    amount: "21,50",
+    unit: "CHF",
+  });
 });

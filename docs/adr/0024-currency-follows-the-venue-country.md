@@ -8,6 +8,8 @@ Every price carries its currency, not just the page. `@repo/services` emits `{ a
 
 `formatPrice({ amount, lang, currency })` replaces `formatEuros`. Euros render as before: `16€`, `21,50€`. Francs go after the amount, separated by a no-break space: `16 CHF`, `21,50 CHF`. The number follows the site language, not Swiss usage, so a French page writes `21,50 CHF` rather than `CHF 21.50`. The JSON-LD `priceRange` and the Studio previews use the same function.
 
+On a card, a code is drawn as a unit: `formatPriceParts` returns `{ amount, unit }`, and the Price Tier and offer cards draw `CHF` in a smaller title style beside the amount. At the amount's size, `33,50 CHF` pushed "Par personne" onto two lines. `€` stays glued and full size, so French cards look the same as before.
+
 Out of scope:
 
 - The 4escape widget's currency, which is set in the 4escape back office.

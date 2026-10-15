@@ -3,7 +3,7 @@ import type {
   PricesGame,
 } from "@repo/services/cms/pageComponent.types";
 import type { PriceOffer, PriceTier } from "@repo/ui/types";
-import { formatPrice } from "@repo/utils/formatPrice";
+import { formatPriceParts } from "@repo/utils/formatPrice";
 import type { Lang } from "@repo/utils/lang";
 
 import type { getT } from "./i18n";
@@ -43,7 +43,7 @@ function toPriceTier({
   return {
     label: priceLabel(price, t),
     icon: priceIcon(price),
-    amountWithCurrency: formatPrice({
+    ...formatPriceParts({
       amount: price.amount,
       lang,
       currency: price.currency,

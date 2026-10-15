@@ -9,7 +9,7 @@ import type {
   OfferGroup as UiOfferGroup,
   OfferPrice as UiOfferPrice,
 } from "@repo/ui/types";
-import { formatPrice } from "@repo/utils/formatPrice";
+import { formatPriceParts } from "@repo/utils/formatPrice";
 import type { Lang } from "@repo/utils/lang";
 
 import type { getT } from "./i18n";
@@ -35,7 +35,7 @@ function toPrice({
   if (price.quotation) return { amount: t("offers.quotation") };
 
   return {
-    amount: formatPrice({
+    ...formatPriceParts({
       amount: price.amount,
       lang,
       currency: price.currency,

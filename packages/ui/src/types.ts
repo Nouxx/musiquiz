@@ -132,8 +132,10 @@ export type PriceTier = {
   /** @example "De 4 à 6 joueurs", "Tarif unique" */
   label: string;
   icon: IconName;
-  /** @example "16€", "16 CHF" */
-  amountWithCurrency: string;
+  /** @example "16€", "16" */
+  amount: string;
+  /** drawn smaller beside the amount @example "CHF" */
+  unit?: string;
   note?: string;
 };
 
@@ -200,8 +202,10 @@ export type FaqQuestion = {
 export type Tone = "blue" | "red";
 
 export type OfferPrice = {
-  /** @example "28€", "28 CHF", "Sur devis" */
+  /** @example "28€", "28", "Sur devis" */
   amount: string;
+  /** drawn smaller beside the amount @example "CHF" */
+  unit?: string;
   /** carries its own separator @example " HT/joueur", "/enfant" */
   label?: string;
 };
