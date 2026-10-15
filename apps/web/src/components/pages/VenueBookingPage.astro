@@ -40,7 +40,11 @@ const pageCoverData: PageCoverData = {
 
 <PageComponents components={data.componentsBeforeWidget} />
 
-<Widget anchor={bookingAnchor} widgetId={data.widgetId} />
+<Widget
+  anchor={bookingAnchor}
+  widgetId={data.widgetId}
+  settings={data.forEscapeSettings}
+/>
 
 <PageComponents components={data.componentsAfterWidget} />
 

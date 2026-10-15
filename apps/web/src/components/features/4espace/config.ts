@@ -1,13 +1,9 @@
-// base64 encode of "{"domain":"musiquiz.4escape.io"}"
-export const forEscapeSetting =
-  "b64.eyJkb21haW4iOiJtdXNpcXVpei40ZXNjYXBlLmlvIn0=";
-
 export const bookingAnchor = "booking";
 export const giftingAnchor = "gifting";
 
 // data-settings only carries the tenant API base: the widget picks `instance`
-// and `domain` out of the decoded JSON and drops everything else. The venue is
-// not in there — one widget id per venue is the only lever.
+// and `domain` out of the decoded JSON and drops everything else. Each venue is
+// its own tenant, so the value comes from the venue in Sanity.
 
 // locale comes from a `?locale=` / `?lng=` query param (hash is read too),
 // and /api/public/boot advertises languagesAllowed ["fr"], localesAllowed ["en"].
@@ -29,7 +25,7 @@ export const giftingAnchor = "gifting";
 //              https://widgets.4escape.app
 //              https://booking.thegame-france.com              (icons hardcoded in main.css)
 //              data:
-// connect-src  https://musiquiz.4escape.io
+// connect-src  each venue's tenant domain, https://*.4escape.io
 //              https://ip2c.org                                (phone input country guess)
 //              https://checkoutshopper-live.adyen.com
 // frame-src    https://checkoutshopper-live.adyen.com

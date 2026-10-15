@@ -20,6 +20,7 @@ function adaptVenueWidgetPage({
   return {
     venueTitle: data.venuePage.venueTitle,
     widgetId: data.venuePage.widgetId,
+    forEscapeSettings: data.venuePage.forEscapeSettings,
     pageCover: toPageCover({ data: data.venuePage.pageCover }),
     seo: toSeo({
       data: data.venuePage.seo,

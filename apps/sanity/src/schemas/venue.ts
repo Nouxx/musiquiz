@@ -106,6 +106,25 @@ export const venueType = defineType({
       },
     }),
     defineField({
+      name: "forEscapeSettings",
+      title: "4escape settings",
+      description:
+        "The `data-settings` value from this venue's 4escape embed snippet, starting with `b64.`",
+      type: "string",
+      group: "booking",
+      hidden: ({ document }) =>
+        document?.bookingProvider !== "4escape" &&
+        document?.giftingProvider !== "4escape",
+      validation: (rule) =>
+        rule.custom((value, { document }) =>
+          (document?.bookingProvider === "4escape" ||
+            document?.giftingProvider === "4escape") &&
+          !value
+            ? "Required when 4escape is a provider"
+            : true,
+        ),
+    }),
+    defineField({
       name: "bookingProvider",
       title: "Booking provider",
       description:

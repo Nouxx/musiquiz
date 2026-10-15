@@ -1,26 +1,26 @@
 ---
 import Section from "@repo/ui/Section";
-import { forEscapeSetting } from "./config";
 
 interface Props {
   widgetId: string;
+  settings: string;
   /** the cover's cta links to it */
   anchor: string;
 }
 
-const { widgetId, anchor } = Astro.props;
+const { widgetId, settings, anchor } = Astro.props;
 ---
 
 <Section id={anchor}>
   <div
     class="forescape-catalog"
     data-widget-id={widgetId}
-    data-settings={forEscapeSetting}
+    data-settings={settings}
   >
   </div>
 </Section>
 
-<div class="forescape-cart" data-settings={forEscapeSetting}></div>
+<div class="forescape-cart" data-settings={settings}></div>
 
 <script>
   /* 4escape widget: injected at runtime, per vendor instructions */

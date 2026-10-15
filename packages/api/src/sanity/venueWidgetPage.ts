@@ -28,6 +28,7 @@ function venueWidgetPageQuery({
       && pageType == "${pageType}"][0]{
       "venueTitle": venue->title,
       "widgetId": ${pageType === "book" ? `select(venue->bookingProvider == "4escape" => venue->bookingWidgetId)` : `select(venue->giftingProvider == "4escape" => venue->giftingWidgetId)`},
+      "forEscapeSettings": ${pageType === "book" ? `select(venue->bookingProvider == "4escape" => venue->forEscapeSettings)` : `select(venue->giftingProvider == "4escape" => venue->forEscapeSettings)`},
       pageCover ${pageCoverProjection({ lang })},
       "seo": ${seoProjection({ lang })},
       "componentsBeforeWidget": ${pageComponentsProjection({ field: "componentsBeforeWidget", lang })},
@@ -41,6 +42,7 @@ const sanityVenueWidgetPageSchema = z.strictObject({
     venueTitle: z.string().min(1),
     // todo: confirm the actual format of 4escape ids
     widgetId: z.guid(),
+    forEscapeSettings: z.string().min(1),
     // the cover's buttons point at the widget's anchor, which only `apps/web` knows
     pageCover: sanityPageCoverSchema({ hasCta: false }),
     seo: sanitySeoSchema,

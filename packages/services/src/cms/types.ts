@@ -312,6 +312,8 @@ export type VenueWidgetPage = {
   venueTitle: string;
   /** @example "fa25b722-264c-4644-b65e-5e8aeb60f7b3" */
   widgetId: string;
+  /** @example "b64.eyJkb21haW4iOiJtdXNpcXVpei40ZXNjYXBlLmlvIn0=" */
+  forEscapeSettings: string;
   pageCover: PageCover;
   componentsBeforeWidget: PageComponent[];
   componentsAfterWidget: PageComponent[];
