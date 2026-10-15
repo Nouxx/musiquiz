@@ -42,6 +42,12 @@ const {
 
   <p class="price">
     <Text variant="title-h4">{price.amount}</Text>{
+      price.unit && (
+        <span class="unit">
+          <Text variant="title-base">{price.unit}</Text>
+        </span>
+      )
+    }{
       price.label && (
         <span class="label">
           <Text>{price.label}</Text>
@@ -107,6 +113,10 @@ const {
 
   .price {
     margin: 0;
+  }
+
+  .unit {
+    margin-inline-start: var(--space-1);
   }
 
   .label {

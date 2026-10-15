@@ -1,6 +1,9 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import type { Path } from "sanity";
 import { JoystickIcon } from "@sanity/icons/Joystick";
+import { currencyOf, type Currency } from "@repo/utils/currency";
+import { formatPrice } from "@repo/utils/formatPrice";
+import { PriceRowPreview } from "../components/PriceRowPreview";
 import { frenchValue, type LocalizedEntry } from "./shared/frenchValue";
 import { findDuplicate, takenFormatIds } from "./shared/venueFormatUniqueness";
 import { pageGroups } from "./shared/seo";
@@ -19,24 +22,20 @@ type PriceValue = {
   note?: LocalizedEntry[];
 };
 
-/**
- * "16€" for a round amount, "21,50€" otherwise — the same shape the front
- * renders, so a preview never shows a price the page will not
- */
-function formatEuros(amount: number) {
-  return Number.isSafeInteger(amount)
-    ? `${amount}€`
-    : `${amount.toFixed(2).replace(".", ",")}€`;
-}
-
 /** "16€" for one amount or many identical ones, "16€ – 25€" for a range */
-function formatSpan(amounts: number[]) {
-  const lowest = Math.min(...amounts);
-  const highest = Math.max(...amounts);
+function formatSpan(amounts: number[], currency: Currency) {
+  const lowest = formatPrice({
+    amount: Math.min(...amounts),
+    lang: "fr",
+    currency,
+  });
+  const highest = formatPrice({
+    amount: Math.max(...amounts),
+    lang: "fr",
+    currency,
+  });
 
-  return lowest === highest
-    ? formatEuros(lowest)
-    : `${formatEuros(lowest)} – ${formatEuros(highest)}`;
+  return lowest === highest ? lowest : `${lowest} – ${highest}`;
 }
 
 function pluralPlayers(count: number) {
@@ -139,7 +138,8 @@ export const priceType = defineType({
     defineField({
       name: "amount",
       title: "Amount",
-      description: "In euros, per player.",
+      description:
+        "Per player, in the venue's currency: francs in Switzerland, euros elsewhere.",
       type: "number",
       validation: (rule) => rule.required().min(1).precision(2),
     }),
@@ -169,20 +169,17 @@ export const priceType = defineType({
       amount: "amount",
       note: "note",
     },
+    // the amount belongs in the subtitle: two bands sharing a lower count are
+    // otherwise the same row twice once collapsed. PriceRowPreview writes it
     prepare({ playerCountFrom, playerCountTo, amount, note }: PriceValue) {
       return {
         title: playerRangeLabel({ playerCountFrom, playerCountTo }),
-        // the amount belongs here: two bands sharing a lower count are otherwise
-        // the same row twice once collapsed
-        subtitle: [
-          amount == null ? undefined : formatEuros(amount),
-          frenchValue(note),
-        ]
-          .filter(Boolean)
-          .join(" · "),
+        amount,
+        note: frenchValue(note),
       };
     },
   },
+  components: { preview: PriceRowPreview },
 });
 
 export const venueGameType = defineType({
@@ -283,15 +280,18 @@ export const venueGameType = defineType({
     select: {
       gameName: "game.name",
       venueTitle: "venue.title",
+      venueCountry: "venue.addressCountry",
       prices: "prices",
     },
     prepare({
       gameName,
       venueTitle,
+      venueCountry,
       prices,
     }: {
       gameName?: string;
       venueTitle?: string;
+      venueCountry?: string;
       prices?: PriceValue[];
     }) {
       const amounts = (prices ?? [])
@@ -300,7 +300,10 @@ export const venueGameType = defineType({
 
       // the span is what an editor scans this list for; the count is already
       // visible from the array itself
-      const span = amounts.length === 0 ? undefined : formatSpan(amounts);
+      const span =
+        amounts.length === 0 || !venueCountry
+          ? undefined
+          : formatSpan(amounts, currencyOf(venueCountry));
 
       return {
         title: gameName ?? "No game selected",

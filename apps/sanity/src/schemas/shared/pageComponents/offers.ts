@@ -72,7 +72,8 @@ export const offerCardType = defineType({
     defineField({
       name: "amount",
       title: "Amount",
-      description: "In euros, without the currency.",
+      description:
+        "In the venue's currency, without it: francs in Switzerland, euros elsewhere.",
       type: "number",
       fieldset: "price",
       hidden: ({ parent }) =>

@@ -1,4 +1,5 @@
 import type { SanityPageComponent } from "@repo/api/sanity/shared/pageComponents";
+import { currencyOf } from "@repo/utils/currency";
 import { getMailto } from "@repo/utils/getMailto";
 import { getTel } from "@repo/utils/getTel";
 import type { Lang } from "@repo/utils/lang";
@@ -79,7 +80,9 @@ export function adaptPageComponent({
         cta: toCta(data.cta),
         footnote: data.footnote ?? undefined,
         bookingLink: toBookingLink({ venue: data.venue, lang }),
-        games: data.games.map((game) => toPricesGame(game)),
+        games: data.games.map((game) =>
+          toPricesGame({ game, currency: currencyOf(data.addressCountry) }),
+        ),
       };
     }
 
@@ -217,6 +220,8 @@ export function adaptPageComponent({
     }
 
     case "offers": {
+      const currency = currencyOf(data.addressCountry);
+
       return {
         type: "offers",
         title: data.title,
@@ -229,13 +234,15 @@ export function adaptPageComponent({
             ? {
                 layout: "groups",
                 groups: [
-                  toOfferGroup(data.content.groups[0]),
-                  toOfferGroup(data.content.groups[1]),
+                  toOfferGroup({ group: data.content.groups[0], currency }),
+                  toOfferGroup({ group: data.content.groups[1], currency }),
                 ],
               }
             : {
                 layout: "cards",
-                cards: data.content.cards.map((card) => toOfferCard(card)),
+                cards: data.content.cards.map((card) =>
+                  toOfferCard({ card, currency }),
+                ),
               },
       };
     }
@@ -266,7 +273,10 @@ export function adaptPageComponent({
         cta: toCta(data.cta),
         footnote: data.footnote ?? undefined,
         bookingLink: toBookingLink({ venue: data.venue, lang }),
-        game: toPricesGame(data.game),
+        game: toPricesGame({
+          game: data.game,
+          currency: currencyOf(data.addressCountry),
+        }),
       };
     }
   }

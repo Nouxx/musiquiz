@@ -45,6 +45,10 @@ _Avoid_: centre, ville, city, site, location
 Who sells a Venue's sessions, and who sells its vouchers, chosen separately. `4escape` means our Widget on our booking or gift page; `external` means another business's site, opened in a new tab, with no page of ours; gifting may also be `none`, and then "Offrir une partie" is hidden. [ADR 0019](./docs/adr/0019-booking-and-gifting-each-pick-a-provider.md).
 _Avoid_: hosted venue, partner venue
 
+**Currency**:
+What a Venue's prices are in, read off its country: francs in Switzerland, euros elsewhere. Every price carries its own, because a Prices section or an Offers block can show a Venue other than the page's. [ADR 0024](./docs/adr/0024-currency-follows-the-venue-country.md).
+_Avoid_: devise, money
+
 **Game Format**:
 A kind of game the business runs, named and slugged once for the whole company — "Musi'Quiz", "Pixel Games". It is the same product in Lille and in Pau, which is why it carries no price and no page content: prices and per-Venue copy belong to a Venue Game, and its company-wide page belongs to a Global Game. A signature game is listed in the global header and gets a Global Game route. Its `displayOrder` fixes the order games appear in wherever they are listed, at every Venue.
 _Avoid_: game, game type, product
