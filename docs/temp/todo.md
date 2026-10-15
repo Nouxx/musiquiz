@@ -5,9 +5,7 @@
 - Sanity deploy widget: generate a new site with all published content
 - GTM Analytics
 - Currency (CH)
-- Grids cards minimum 3, reduce to 2
 - Order venues by alphabetical order on the venuesMap
-- Details tab, max 10
 
 # P1 (important)
 
