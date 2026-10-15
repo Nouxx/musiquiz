@@ -26,6 +26,7 @@ function useVenueCurrency() {
     let live = true;
 
     client
+      .withConfig({ perspective: "drafts", useCdn: false })
       .fetch<string | null>(`*[_id == $venueId][0].addressCountry`, {
         venueId,
       })
