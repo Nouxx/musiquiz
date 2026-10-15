@@ -1,3 +1,5 @@
+import type { Currency } from "@repo/utils/currency";
+
 import type {
   ContentIcon,
   FaqQuestion,
@@ -80,7 +82,9 @@ export type LocalBusiness = {
   sameAs: string[];
   openingHours: OpeningHours[];
   /** across every game the venue prices, undefined when none is priced */
-  priceRange: { lowest: number; highest: number } | undefined;
+  priceRange:
+    | { lowest: number; highest: number; currency: Currency }
+    | undefined;
 };
 
 export type PostalAddress = {

@@ -4,7 +4,6 @@
   - also generate article pills from that (count of reviews + average)
 - Sanity deploy widget: generate a new site with all published content
 - GTM Analytics
-- Currency (CH)
 - Order venues by alphabetical order on the venuesMap
 
 # P1 (important)

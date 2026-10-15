@@ -1,6 +1,8 @@
 ---
 import type { LocalBusiness } from "@repo/services/cms/types";
+import { formatPrice } from "@repo/utils/formatPrice";
 
+import { getLang } from "../../libs/getLang";
 import { getOrganizationId } from "../../libs/getOrganizationId";
 import { getSite } from "../../libs/getSite";
 import { getVenueBusinessId } from "../../libs/getVenueBusinessId";
@@ -18,11 +20,20 @@ const { venueSlug, city, business } = Astro.props;
 const site = getSite(Astro);
 const url = new URL(Astro.url.pathname, site).href;
 
-const priceRange =
-  business.priceRange &&
-  (business.priceRange.lowest === business.priceRange.highest
-    ? `${business.priceRange.lowest} €`
-    : `${business.priceRange.lowest}–${business.priceRange.highest} €`);
+function toPriceRange({
+  lowest,
+  highest,
+  currency,
+}: NonNullable<LocalBusiness["priceRange"]>) {
+  const lang = getLang(Astro);
+  const low = formatPrice({ amount: lowest, lang, currency });
+
+  return lowest === highest
+    ? low
+    : `${low}–${formatPrice({ amount: highest, lang, currency })}`;
+}
+
+const priceRange = business.priceRange && toPriceRange(business.priceRange);
 
 const entertainmentBusiness = {
   "@type": "EntertainmentBusiness",

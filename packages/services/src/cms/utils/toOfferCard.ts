@@ -1,9 +1,16 @@
 import type { SanityOfferCard } from "@repo/api/sanity/shared/pageComponents";
+import type { Currency } from "@repo/utils/currency";
 
 import type { OfferCard } from "../pageComponent.types";
 import { toRichText } from "./toRichText";
 
-export function toOfferCard(card: SanityOfferCard): OfferCard {
+export function toOfferCard({
+  card,
+  currency,
+}: {
+  card: SanityOfferCard;
+  currency: Currency;
+}): OfferCard {
   return {
     icon: card.icon,
     title: card.title,
@@ -13,6 +20,7 @@ export function toOfferCard(card: SanityOfferCard): OfferCard {
       : {
           quotation: false,
           amount: card.price.amount,
+          currency,
           label: card.price.label ?? undefined,
         },
     content:

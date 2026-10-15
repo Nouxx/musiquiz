@@ -61,6 +61,7 @@ function venuePricesProjection({ lang }: { lang: Lang }) {
       "cta": ${optionalCtaProjection({ field: "cta", lang })},
       ${footnoteProjection({ lang })},
       "venue": venue->${venueLinksProjection},
+      "addressCountry": venue->addressCountry,
       "games": *[
         _type == "venueGame"
         && venue._ref == ^.venue._ref
@@ -78,6 +79,7 @@ function gamePricesProjection({ lang }: { lang: Lang }) {
       "cta": ${optionalCtaProjection({ field: "cta", lang })},
       ${footnoteProjection({ lang })},
       "venue": venue->${venueLinksProjection},
+      "addressCountry": venue->addressCountry,
       "game": *[
         _type == "venueGame"
         && venue._ref == ^.venue._ref
@@ -328,6 +330,7 @@ function offersProjection({ lang }: { lang: Lang }) {
       "subTitle": subTitle[language == "${lang}"][0].value,
       "background": coalesce(background, "default"),
       "venue": venue->${venueLinksProjection},
+      "addressCountry": venue->addressCountry,
       "cta": ${optionalCtaProjection({ field: "cta", lang })},
       "content": select(
         layout == "groups" => {
@@ -472,6 +475,7 @@ const sanityVenuePricesSchema = z.strictObject({
   cta: sanityCtaSchema.nullable(),
   footnote: sanityPricesFootnoteSchema.nullable(),
   venue: sanityVenueLinksSchema,
+  addressCountry: z.string().length(2),
   games: z.array(sanityPricedGameSchema),
 });
 
@@ -482,6 +486,7 @@ const sanityGamePricesSchema = z.strictObject({
   cta: sanityCtaSchema.nullable(),
   footnote: sanityPricesFootnoteSchema.nullable(),
   venue: sanityVenueLinksSchema,
+  addressCountry: z.string().length(2),
   // not nullable: a section pointing at a deleted venueGame has nothing to render
   // and no other game to fall back on, so it fails the build rather than rendering a heading over nothing
   game: sanityPricedGameSchema,
@@ -711,6 +716,7 @@ const sanityOffersSchema = z.strictObject({
   subTitle: z.string().min(1).nullable(),
   background: z.enum(["default", "muted"]),
   venue: sanityVenueLinksSchema,
+  addressCountry: z.string().length(2),
   cta: sanityCtaSchema.nullable(),
   content: z.discriminatedUnion("layout", [
     z.strictObject({

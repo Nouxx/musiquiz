@@ -1,3 +1,5 @@
+import type { Currency } from "@repo/utils/currency";
+
 import type { CmsImage, CmsVideo, RichText, VenueLink } from "./types";
 
 type RollingBanner = {
@@ -52,6 +54,7 @@ export type GamePrice = {
   playerCountFrom: number | undefined;
   playerCountTo: number | undefined;
   amount: number;
+  currency: Currency;
   note: string | undefined;
 };
 
@@ -274,7 +277,12 @@ type TextCardsGrid = {
 
 export type OfferPrice =
   | { quotation: true }
-  | { quotation: false; amount: number; label: string | undefined };
+  | {
+      quotation: false;
+      amount: number;
+      currency: Currency;
+      label: string | undefined;
+    };
 
 export type OfferCardContent =
   | { kind: "list"; intro: string | undefined; items: string[] }

@@ -2,6 +2,7 @@ import {
   fetchVenuePage,
   type SanityVenuePage,
 } from "@repo/api/sanity/venuePage";
+import { currencyOf } from "@repo/utils/currency";
 import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
@@ -41,7 +42,11 @@ function adaptBusiness(
     }),
     priceRange:
       amounts.length > 0
-        ? { lowest: Math.min(...amounts), highest: Math.max(...amounts) }
+        ? {
+            lowest: Math.min(...amounts),
+            highest: Math.max(...amounts),
+            currency: currencyOf(venue.address.addressCountry),
+          }
         : undefined,
   };
 }
