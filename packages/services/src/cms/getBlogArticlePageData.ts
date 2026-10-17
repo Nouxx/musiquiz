@@ -27,6 +27,7 @@ function toClosesOn({
       kind: "venue",
       title: venue.title,
       slug: venue.slug,
+      googlePlaceId: venue.googlePlaceId,
       bookingLink: toBookingLink({ venue: venueLinks, lang: "fr" }),
       findUs: {
         ...venue.blog.findUs,
@@ -61,7 +62,6 @@ function adaptBlogArticlePage({
     cover: toCmsImage(article.cover),
     summary,
     chips: article.chips ?? [],
-    reviewCount: article.reviewCount ?? undefined,
     body,
     readingMinutes: toReadingMinutes([...summary, ...body]),
     closesOn: toClosesOn(article),

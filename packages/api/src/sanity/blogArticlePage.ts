@@ -32,7 +32,6 @@ function blogArticlePageQuery({ slug }: { slug: string }) {
       cover ${imageProjection({ lang })},
       "summary": ${unlocalizedRichTextProjection({ field: "summary" })},
       chips[]{ icon, label },
-      reviewCount,
       "seo": ${blogSeoProjection()},
       "body": ${articleBodyProjection({ field: "body" })},
       faq{
@@ -48,6 +47,7 @@ function blogArticlePageQuery({ slug }: { slug: string }) {
         "location": location{ lat, lng },
         "address": ${addressProjection},
         googleMapsLink,
+        googlePlaceId,
         "blog": *[_type == "venueBlog" && venue._ref == ^._id][0]{
           findUs{
             media ${imageProjection({ lang })},
@@ -108,7 +108,6 @@ const sanityBlogArticlePageSchema = z.strictObject({
         }),
       )
       .nullable(),
-    reviewCount: z.number().int().positive().nullable(),
     seo: sanitySeoSchema,
     body: sanityArticleBodySchema,
     faq: z
@@ -133,6 +132,7 @@ const sanityBlogArticlePageSchema = z.strictObject({
         location: z.strictObject({ lat: z.number(), lng: z.number() }),
         address: sanityAddressSchema,
         googleMapsLink: z.string().min(1),
+        googlePlaceId: z.string().min(1),
         blog: z.strictObject({
           findUs: z.strictObject({
             media: sanityImageSchema,

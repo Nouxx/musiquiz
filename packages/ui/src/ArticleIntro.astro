@@ -13,7 +13,9 @@ interface Props {
   summary: RichTextNode[];
   chips: ArticleChip[];
   rating?: {
-    /** @example "5/5 sur 421 avis" */
+    /** out of 5, whole */
+    stars: number;
+    /** @example "4,7/5 sur 421 avis" */
     label: string;
     starsLabel: string;
   };
@@ -47,8 +49,10 @@ const { summaryBadge, summary, chips, rating, cta } = Astro.props;
               <Badge color="light" border="muted" tilt={false}>
                 <span class="rating">
                   <span class="stars" role="img" aria-label={rating.starsLabel}>
-                    {[1, 2, 3, 4, 5].map(() => (
-                      <Icon name="star" size="s" />
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span class:list={{ muted: star > rating.stars }}>
+                        <Icon name="star" size="s" />
+                      </span>
                     ))}
                   </span>
                   {rating.label}
@@ -108,5 +112,9 @@ const { summaryBadge, summary, chips, rating, cta } = Astro.props;
     display: inline-flex;
     gap: 2px;
     color: var(--yellow-600);
+  }
+
+  .muted {
+    color: var(--grey-400);
   }
 </style>

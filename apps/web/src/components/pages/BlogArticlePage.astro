@@ -2,6 +2,7 @@
 import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import type { BlogArticlePage as BlogArticlePageData } from "@repo/services/cms/types";
+import type { VenueReviews } from "@repo/services/reviews/getVenueReviews";
 import ArticleAuthor from "@repo/ui/ArticleAuthor";
 import ArticleBody from "@repo/ui/ArticleBody";
 import ArticleIntro from "@repo/ui/ArticleIntro";
@@ -20,14 +21,39 @@ import { CARTO_API_KEY } from "astro:env/client";
 
 export interface Props {
   data: BlogArticlePageData;
+  reviews: VenueReviews | undefined;
   breadcrumbs: BreadcrumbItem[];
   alternates: Alternates;
 }
 
-const { data, breadcrumbs, alternates } = Astro.props;
+const { data, reviews, breadcrumbs, alternates } = Astro.props;
 
 const t = getT("fr");
 const routes = getRoutesForLang("fr");
+
+const numberFormat = new Intl.NumberFormat("fr-FR", {
+  maximumFractionDigits: 1,
+});
+
+// a weaker rating does more harm than no rating
+const MIN_STARS = 4;
+
+function toRating() {
+  if (!reviews) return;
+
+  const stars = Math.round(reviews.averageRating);
+  if (stars < MIN_STARS) return;
+
+  const rating = numberFormat.format(reviews.averageRating);
+  return {
+    stars,
+    label: t("blogArticlePage.rating", {
+      rating,
+      reviews: numberFormat.format(reviews.reviewsCount),
+    }),
+    starsLabel: t("blogArticlePage.ratingStars", { rating }),
+  };
+}
 
 const articleAnchor = "article";
 const { closesOn } = data;
@@ -74,12 +100,7 @@ const date = data.updatedAt
   summaryBadge={t("blogArticlePage.summary")}
   summary={data.summary}
   chips={data.chips}
-  rating={data.reviewCount === undefined
-    ? undefined
-    : {
-        label: t("blogArticlePage.rating", { count: data.reviewCount }),
-        starsLabel: t("blogArticlePage.ratingStars"),
-      }}
+  rating={toRating()}
   cta={toClosingCta()}
 />
 

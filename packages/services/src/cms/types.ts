@@ -257,7 +257,6 @@ export type BlogArticlePage = {
   cover: CmsImage;
   summary: RichText;
   chips: { icon: ContentIcon; label: string }[];
-  reviewCount: number | undefined;
   body: ArticleNode[];
   readingMinutes: number;
   closesOn:
@@ -265,6 +264,7 @@ export type BlogArticlePage = {
         kind: "venue";
         title: string;
         slug: string;
+        googlePlaceId: string;
         bookingLink: VenueLink;
         findUs: FindUsContent;
       }
