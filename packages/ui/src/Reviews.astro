@@ -1,9 +1,5 @@
 ---
 import Badge from "./Badge.astro";
-import Icon from "./primitives/Icon.astro";
-import IconChip from "./primitives/IconChip.astro";
-import RemoteImage from "./primitives/RemoteImage.astro";
-import ScrollArrow from "./primitives/ScrollArrow.astro";
 import Text from "./primitives/Text.astro";
 import Section from "./Section.astro";
 import type { Review } from "./types";
@@ -26,15 +22,7 @@ const {
   ratingLabel,
   ratingValue,
   surface = "default",
-  reviews,
-  previousLabel,
-  nextLabel,
-  starsLabel,
 } = Astro.props;
-
-const STARS = [1, 2, 3, 4, 5];
-
-const trackId = `reviews-${crypto.randomUUID().slice(0, 8)}`;
 ---
 
 <Section surface={surface === "muted" ? "muted" : "default"} width="wide">
@@ -53,65 +41,15 @@ const trackId = `reviews-${crypto.randomUUID().slice(0, 8)}`;
           <Text as="p" variant="paragraph-base-sm">{ratingValue}</Text>
         </div>
       </div>
-
-      <div class="arrows">
-        <ScrollArrow
-          direction="previous"
-          label={previousLabel}
-          controls={trackId}
-        />
-
-        <ScrollArrow direction="next" label={nextLabel} controls={trackId} />
-      </div>
     </div>
 
-    <ul
-      class="track"
-      id={trackId}
-      tabindex="0"
-      aria-label={title}
-      data-reviews-track
-    >
-      {
-        reviews.map((review: Review) => (
-          <li class="card">
-            <div class="card-header">
-              {review.avatar ? (
-                <div class="avatar">
-                  <RemoteImage image={review.avatar} variant="review-avatar" />
-                </div>
-              ) : (
-                <IconChip name="user" size="xl" tone="muted" />
-              )}
-
-              <Icon name="google" size="xl" />
-            </div>
-
-            <div class="card-body">
-              <div class="card-text">
-                <Text as="h3" variant="title-xl">
-                  <span class="name">{review.name}</span>
-                </Text>
-
-                <p class="quote">{review.body}</p>
-              </div>
-
-              <div
-                class="stars"
-                role="img"
-                aria-label={starsLabel(review.score)}
-              >
-                {STARS.map((star: number) => (
-                  <span class:list={["star", { filled: star <= review.score }]}>
-                    <Icon name="star" size="s" />
-                  </span>
-                ))}
-              </div>
-            </div>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="widget">
+      <script
+        defer
+        async
+        src="https://cdn.trustindex.io/loader.js?62e1429833237885e81601a7c4a"
+      ></script>
+    </div>
   </div>
 </Section>
 
@@ -150,11 +88,6 @@ const trackId = `reviews-${crypto.randomUUID().slice(0, 8)}`;
   /* Figma said #524B47, we use the nearest token --grey-600, as ImageCard does */
   .rating {
     color: var(--color-text-muted);
-  }
-
-  .arrows {
-    display: flex;
-    gap: var(--space-4);
   }
 
   .track {
@@ -268,79 +201,10 @@ const trackId = `reviews-${crypto.randomUUID().slice(0, 8)}`;
       inline-size: 325px;
     }
 
-    .track {
+    .track,
+    .widget {
       flex: 1;
       min-inline-size: 0;
     }
   }
 </style>
-
-<script>
-  const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)");
-
-  function setUpReviews(reviews: HTMLElement) {
-    const track = reviews.querySelector<HTMLElement>("[data-reviews-track]");
-    const previous = reviews.querySelector('[data-scroll-arrow="previous"]');
-    const next = reviews.querySelector('[data-scroll-arrow="next"]');
-
-    if (!track || !previous || !next) {
-      return;
-    }
-
-    const scroller: HTMLElement = track;
-
-    function step() {
-      const [first, second] = scroller.children;
-
-      if (!first || !second) {
-        return scroller.clientWidth;
-      }
-
-      return (
-        second.getBoundingClientRect().left - first.getBoundingClientRect().left
-      );
-    }
-
-    function lastPosition() {
-      const scrollable = scroller.scrollWidth - scroller.clientWidth;
-
-      return Math.max(0, Math.round(scrollable / step()));
-    }
-
-    function currentPosition() {
-      const position = Math.round(scroller.scrollLeft / step());
-
-      if (position < 0) {
-        return 0;
-      }
-
-      return Math.min(position, lastPosition());
-    }
-
-    function goTo(position: number) {
-      scroller.scrollTo({
-        left: position * step(),
-        behavior: REDUCED_MOTION.matches ? "auto" : "smooth",
-      });
-    }
-
-    previous.addEventListener("click", () => {
-      const position = currentPosition();
-
-      // rewind effect
-      goTo(position === 0 ? lastPosition() : position - 1);
-    });
-
-    next.addEventListener("click", () => {
-      const position = currentPosition();
-
-      goTo(position === lastPosition() ? 0 : position + 1);
-    });
-  }
-
-  for (const reviews of document.querySelectorAll<HTMLElement>(
-    "[data-reviews]",
-  )) {
-    setUpReviews(reviews);
-  }
-</script>

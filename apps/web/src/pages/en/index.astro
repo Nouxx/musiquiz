@@ -3,6 +3,7 @@ import { getHomepageData } from "@repo/services/cms/getHomepageData";
 import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
 
 import HomepageHead from "../../components/features/HomepageHead.astro";
+import PageComponentsHead from "../../components/features/PageComponentsHead.astro";
 import Homepage from "../../components/pages/Homepage.astro";
 import Layout from "../../layouts/Layout.astro";
 import { getLang } from "../../libs/getLang";
@@ -19,5 +20,6 @@ const alternates = getAlternatesUrl(getSite(Astro), (routes) => routes.home);
 
 <Layout {...data.seo} {alternates}>
   <HomepageHead slot="head" organization={data.organization} />
+  <PageComponentsHead slot="head" components={data.components} />
   <Homepage {data} {alternates} />
 </Layout>

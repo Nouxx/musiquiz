@@ -2,6 +2,7 @@
 import { getWhereToFindUsPageData } from "@repo/services/cms/getWhereToFindUsPageData";
 import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
 
+import PageComponentsHead from "../../components/features/PageComponentsHead.astro";
 import WhereToFindUsPage from "../../components/pages/WhereToFindUsPage.astro";
 import Layout from "../../layouts/Layout.astro";
 import { getLang } from "../../libs/getLang";
@@ -20,5 +21,9 @@ const alternates = getAlternatesUrl(
 ---
 
 <Layout {...data.seo} {alternates}>
+  <PageComponentsHead
+    slot="head"
+    components={[...data.componentsBeforeMap, ...data.componentsAfterMap]}
+  />
   <WhereToFindUsPage {data} {alternates} />
 </Layout>
