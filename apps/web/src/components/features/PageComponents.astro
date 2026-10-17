@@ -145,10 +145,7 @@ const t = getT(lang);
           <Prices
             title={component.title}
             surface={component.surface}
-            games={component.games.map((game) =>
-              toPriceOffer({ game, t, lang }),
-            )}
-            perPersonLabel={t("prices.perPerson")}
+            games={component.games.map((game) => toPriceOffer({ game, lang }))}
             bookCta={{
               label: t("prices.book"),
               ...component.bookingLink,
@@ -363,8 +360,7 @@ const t = getT(lang);
           <Prices
             title={component.title}
             surface={component.surface}
-            games={[toPriceOffer({ game: component.game, t, lang })]}
-            perPersonLabel={t("prices.perPerson")}
+            games={[toPriceOffer({ game: component.game, lang })]}
             bookCta={{
               label: t("prices.book"),
               ...component.bookingLink,

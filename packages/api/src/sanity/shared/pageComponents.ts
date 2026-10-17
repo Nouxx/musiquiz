@@ -34,9 +34,10 @@ function pricedGameProjection({ lang }: { lang: Lang }) {
     "name": game->name,
     "image": game->image ${imageProjection({ lang })},
     prices[]{
-      playerCountFrom,
-      playerCountTo,
+      "label": label[language == "${lang}"][0].value,
+      icon,
       amount,
+      "caption": caption[language == "${lang}"][0].value,
       "note": note[language == "${lang}"][0].value
     }
   }`;
@@ -448,10 +449,40 @@ const sanityReviewsSchema = z.strictObject({
   searchTerm: z.string().min(1).nullable(),
 });
 
+export const sanityContentIconSchema = z.enum([
+  "calendar",
+  "camera",
+  "check-circle",
+  "clock",
+  "cocktail",
+  "coins",
+  "cube",
+  "die-1",
+  "die-2",
+  "disc",
+  "hourglass",
+  "house",
+  "lock",
+  "mail",
+  "medal",
+  "music-note",
+  "phone",
+  "pin",
+  "question",
+  "rosette",
+  "sparkles",
+  "star",
+  "user",
+  "users-2",
+  "users-3",
+  "users-4",
+]);
+
 const sanityPriceSchema = z.strictObject({
-  playerCountFrom: z.number().int().positive().nullable(),
-  playerCountTo: z.number().int().positive().nullable(),
-  amount: z.number().positive(),
+  label: z.string().min(1),
+  icon: sanityContentIconSchema,
+  amount: z.number().nonnegative(),
+  caption: z.string().min(1),
   note: z.string().min(1).nullable(),
 });
 
@@ -614,35 +645,6 @@ const sanityTextBodySchema = z.strictObject({
   _type: z.literal("textBody"),
   body: sanityRichTextSchema,
 });
-
-export const sanityContentIconSchema = z.enum([
-  "calendar",
-  "camera",
-  "check-circle",
-  "clock",
-  "cocktail",
-  "coins",
-  "cube",
-  "die-1",
-  "die-2",
-  "disc",
-  "hourglass",
-  "house",
-  "lock",
-  "mail",
-  "medal",
-  "music-note",
-  "phone",
-  "pin",
-  "question",
-  "rosette",
-  "sparkles",
-  "star",
-  "user",
-  "users-2",
-  "users-3",
-  "users-4",
-]);
 
 const sanityTextCardSchema = z.strictObject({
   icon: sanityContentIconSchema,

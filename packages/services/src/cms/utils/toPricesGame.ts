@@ -15,10 +15,11 @@ export function toPricesGame({
     name: game.name,
     image: toCmsImage(game.image),
     prices: game.prices.map((price) => ({
-      playerCountFrom: price.playerCountFrom ?? undefined,
-      playerCountTo: price.playerCountTo ?? undefined,
+      label: price.label,
+      icon: price.icon,
       amount: price.amount,
       currency,
+      caption: price.caption,
       note: price.note ?? undefined,
     })),
   };

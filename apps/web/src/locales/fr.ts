@@ -12,15 +12,7 @@ export const fr = {
     goToSlide: "Aller à la diapositive",
   },
   prices: {
-    perPerson: "Par personne",
     book: "Réservez votre activité",
-    // shown when a game has a single price: it applies whatever the group size
-    unique: "Tarif unique",
-    range: "De {{from}} à {{to}} joueurs",
-    fromOnly_one: "{{count}} joueur et plus",
-    fromOnly_other: "{{count}} joueurs et plus",
-    exact_one: "{{count}} joueur",
-    exact_other: "{{count}} joueurs",
   },
   cardsScroller: {
     nextCard: "Carte suivante",
