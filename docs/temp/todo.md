@@ -5,9 +5,6 @@
 - Sanity deploy widget: generate a new site with all published content
 - GTM Analytics
 - Order venues by alphabetical order on the venuesMap
-- Prices: "- On est confronté à une difficulté sur les tarifs. On a un centre qui ne fonctionne par personne mais tarif à la salle / temps de jeu sur son activité annexe.
-  Il propose 30€ pour 20 minutes de jeu (quelque soit la taille du groupe) et 55€ les 40 minutes de jeu.
-  Je suis bloqué dans ce cas-là :/"
 
 # P1 (important)
 
@@ -23,6 +20,7 @@
 - UI bug: cards scroller z-index conflicts with header
 - Header on mobile: booking button should always be there
 - Tight page cover + badge = collapse
+- preview icon in Sanity
 
 ![](./bug_header.png)
 
