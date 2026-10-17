@@ -5,6 +5,9 @@
 - Sanity deploy widget: generate a new site with all published content
 - GTM Analytics
 - Order venues by alphabetical order on the venuesMap
+- Prices: "- On est confronté à une difficulté sur les tarifs. On a un centre qui ne fonctionne par personne mais tarif à la salle / temps de jeu sur son activité annexe.
+  Il propose 30€ pour 20 minutes de jeu (quelque soit la taille du groupe) et 55€ les 40 minutes de jeu.
+  Je suis bloqué dans ce cas-là :/"
 
 # P1 (important)
 
@@ -18,6 +21,13 @@
   - rate limiting by IP
   - Origin/Referrer check
 - UI bug: cards scroller z-index conflicts with header
+- Header on mobile: booking button should always be there
+- Tight page cover + badge = collapse
+
+![](./bug_header.png)
+
+- Weird line breaks with "?" and "!"
+- Pour la version mobile, est-ce qu’il est possible pour les onglets Défis / Jokers / Thèmes de les centrer quand c’est retour à la ligne et sur les tarifs activités, on peut pas trouver un Moyer de les mettre sur une ligne quand il n’y en a que 2 ?
 
 # P2 (cosmetics)
 
@@ -32,6 +42,13 @@
 - Carousel arrows under, not above
 - Footer mobile, weird line breaks
 - Top margin on mobile for booking page
+- Footer revamp: make a grid
+  - also: the bottom line can have weird display
+  - the copyright should be last in this situation
+
+![](./bug_line_footer.png)
+
+- Titles and subTitle for some components (ex: cardsGrid) should have more horizontal space
 
 # Questions
 
