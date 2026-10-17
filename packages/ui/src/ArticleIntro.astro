@@ -6,12 +6,12 @@ import Icon from "./primitives/Icon.astro";
 import RichText from "./primitives/RichText.astro";
 import Section from "./Section.astro";
 import { linkTarget } from "./lib/linkTarget";
-import type { ArticleChip, CtaLink, RichTextNode } from "./types";
+import googleMapsLogo from "./logos/google-maps.svg?raw";
+import type { CtaLink, RichTextNode } from "./types";
 
 interface Props {
   summaryBadge: string;
   summary: RichTextNode[];
-  chips: ArticleChip[];
   rating?: {
     /** out of 5, whole */
     stars: number;
@@ -22,7 +22,7 @@ interface Props {
   cta: CtaLink;
 }
 
-const { summaryBadge, summary, chips, rating, cta } = Astro.props;
+const { summaryBadge, summary, rating, cta } = Astro.props;
 ---
 
 <Section spacing="m">
@@ -34,33 +34,29 @@ const { summaryBadge, summary, chips, rating, cta } = Astro.props;
     </Card>
 
     {
-      (chips.length > 0 || rating) && (
-        <ul class="chips">
-          {chips.map((chip) => (
-            <li>
-              <Badge color="light" border="muted" tilt={false} icon={chip.icon}>
-                {chip.label}
-              </Badge>
-            </li>
-          ))}
-
-          {rating && (
-            <li>
-              <Badge color="light" border="muted" tilt={false}>
-                <span class="rating">
-                  <span class="stars" role="img" aria-label={rating.starsLabel}>
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <span class:list={{ muted: star > rating.stars }}>
-                        <Icon name="star" size="s" />
-                      </span>
-                    ))}
+      rating && (
+        <div>
+          <Badge color="light" border="muted" tilt={false}>
+            <span class="rating">
+              <span class="stars" role="img" aria-label={rating.starsLabel}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span class:list={{ muted: star > rating.stars }}>
+                    <Icon name="star" size="s" />
                   </span>
-                  {rating.label}
-                </span>
-              </Badge>
-            </li>
-          )}
-        </ul>
+                ))}
+              </span>
+              {rating.label}
+              {/* Places API terms: the official logo, unmodified, labelled "Google Maps" in every language */}
+              <span
+                class="google-maps"
+                role="img"
+                aria-label="Google Maps"
+                translate="no"
+                set:html={googleMapsLogo}
+              />
+            </span>
+          </Badge>
+        </div>
       )
     }
 
@@ -94,14 +90,6 @@ const { summaryBadge, summary, chips, rating, cta } = Astro.props;
     background-color: var(--red-100);
   }
 
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-4);
-    padding: 0;
-    list-style: none;
-  }
-
   .rating {
     display: inline-flex;
     gap: var(--space-3);
@@ -112,6 +100,13 @@ const { summaryBadge, summary, chips, rating, cta } = Astro.props;
     display: inline-flex;
     gap: 2px;
     color: var(--yellow-600);
+  }
+
+  /* the terms bound the logo to 16–19px tall */
+  .google-maps :global(svg) {
+    display: block;
+    block-size: 16px;
+    inline-size: auto;
   }
 
   .muted {

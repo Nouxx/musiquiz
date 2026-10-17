@@ -107,7 +107,7 @@ To create or rotate the key, fill in the form at: https://carto.com/basemaps/api
 
 Accept the terms and submit. The key arrives by email.
 
-`GOOGLE_PLACES_API_KEY` reads each venue's Google rating and review count, shown in the key facts of a blog article about that venue. It is a secret: the server reads it from `astro:env/server`, and every call is billed. `musiquiz-static` calls Google at build time and `musiquiz-ssr` per request, so it lives in:
+`GOOGLE_PLACES_API_KEY` reads each venue's Google rating and review count, shown under the summary of a blog article about that venue. It is a secret: the server reads it from `astro:env/server`, and every call is billed. `musiquiz-static` calls Google at build time and `musiquiz-ssr` per request, so it lives in:
 
 - `.env.local` for local dev
 - a Cloudflare **build variable** on `musiquiz-static`

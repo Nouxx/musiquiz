@@ -15,6 +15,7 @@ function buildUrl({ placeId }: { placeId: string }) {
 function buildHeaders({ apiKey }: { apiKey: string }) {
   return {
     "X-Goog-Api-Key": apiKey,
+    // rating and userRatingCount bill as Place Details Enterprise, see docs/adr/0027
     "X-Goog-FieldMask": "id,rating,userRatingCount",
     "Content-Type": "application/json",
   };

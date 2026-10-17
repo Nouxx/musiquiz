@@ -61,7 +61,6 @@ function adaptBlogArticlePage({
     updatedAt: article.updatedAt ?? undefined,
     cover: toCmsImage(article.cover),
     summary,
-    chips: article.chips ?? [],
     body,
     readingMinutes: toReadingMinutes([...summary, ...body]),
     closesOn: toClosesOn(article),

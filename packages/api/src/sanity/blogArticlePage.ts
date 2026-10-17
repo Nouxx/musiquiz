@@ -9,7 +9,6 @@ import {
   sanityArticleBodySchema,
 } from "./shared/articleBody";
 import { imageProjection, sanityImageSchema } from "./shared/image";
-import { sanityContentIconSchema } from "./shared/pageComponents";
 import {
   sanityRichTextSchema,
   unlocalizedRichTextProjection,
@@ -31,7 +30,6 @@ function blogArticlePageQuery({ slug }: { slug: string }) {
       excerpt,
       cover ${imageProjection({ lang })},
       "summary": ${unlocalizedRichTextProjection({ field: "summary" })},
-      chips[]{ icon, label },
       "seo": ${blogSeoProjection()},
       "body": ${articleBodyProjection({ field: "body" })},
       faq{
@@ -100,14 +98,6 @@ const sanityBlogArticlePageSchema = z.strictObject({
     excerpt: z.string().min(1),
     cover: sanityImageSchema,
     summary: sanityRichTextSchema,
-    chips: z
-      .array(
-        z.strictObject({
-          icon: sanityContentIconSchema,
-          label: z.string().min(1),
-        }),
-      )
-      .nullable(),
     seo: sanitySeoSchema,
     body: sanityArticleBodySchema,
     faq: z

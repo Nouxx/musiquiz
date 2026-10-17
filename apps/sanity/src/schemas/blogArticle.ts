@@ -1,6 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
-import { contentIcons } from "./shared/pageComponents/contentIcons";
 import { richTextFieldType } from "./shared/richText";
 import { pageGroups } from "./shared/seo";
 
@@ -90,7 +89,7 @@ export const blogArticleType = defineType({
       type: "reference",
       to: [{ type: "venue" }],
       description:
-        'Optional. Pick one when the article is about a single venue. Readers are then sent to that venue: the booking buttons open its booking page, the article ends with its address and map, the breadcrumb and the article card show its name, the key facts show its Google rating, and "À lire aussi" suggests other articles about the same venue. The venue also needs its own entry under Blog → Venues, or the site build fails. When set, it wins over Event.',
+        'Optional. Pick one when the article is about a single venue. Readers are then sent to that venue: the booking buttons open its booking page, the article ends with its address and map, the breadcrumb and the article card show its name, the summary is followed by its Google rating, and "À lire aussi" suggests other articles about the same venue. The venue also needs its own entry under Blog → Venues, or the site build fails. When set, it wins over Event.',
     }),
     defineField({
       name: "event",
@@ -141,33 +140,6 @@ export const blogArticleType = defineType({
         }),
       ],
       validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "chips",
-      group: "content",
-      title: "Key facts",
-      description: 'The pills under the summary. Example: "75 min de jeu".',
-      type: "array",
-      of: [
-        defineArrayMember({
-          name: "chip",
-          type: "object",
-          fields: [
-            defineField({
-              name: "icon",
-              type: "string",
-              options: { list: contentIcons },
-              validation: (rule) => rule.required(),
-            }),
-            defineField({
-              name: "label",
-              type: "string",
-              validation: (rule) => rule.required(),
-            }),
-          ],
-          preview: { select: { title: "label", subtitle: "icon" } },
-        }),
-      ],
     }),
     defineField({
       name: "body",

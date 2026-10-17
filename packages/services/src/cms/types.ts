@@ -1,7 +1,6 @@
 import type { Currency } from "@repo/utils/currency";
 
 import type {
-  ContentIcon,
   FaqQuestion,
   FindUsContent,
   PageComponent,
@@ -256,7 +255,6 @@ export type BlogArticlePage = {
   updatedAt: string | undefined;
   cover: CmsImage;
   summary: RichText;
-  chips: { icon: ContentIcon; label: string }[];
   body: ArticleNode[];
   readingMinutes: number;
   closesOn:
