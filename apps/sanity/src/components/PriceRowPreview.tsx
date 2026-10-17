@@ -11,6 +11,7 @@ import {
 
 type PriceRowPreviewProps = PreviewProps & {
   amount?: number;
+  caption?: string;
   note?: string;
 };
 
@@ -43,7 +44,7 @@ function useVenueCurrency() {
 }
 
 export function PriceRowPreview(props: PriceRowPreviewProps) {
-  const { amount, note, renderDefault } = props;
+  const { amount, caption, renderDefault } = props;
   const currency = useVenueCurrency();
 
   const price =
@@ -53,6 +54,6 @@ export function PriceRowPreview(props: PriceRowPreviewProps) {
 
   return renderDefault({
     ...props,
-    subtitle: [price, note].filter(Boolean).join(" · "),
+    subtitle: [price, caption].filter(Boolean).join(" · "),
   });
 }

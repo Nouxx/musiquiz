@@ -4,40 +4,47 @@ import Card from "../primitives/Card.astro";
 import Text from "../primitives/Text.astro";
 import type { PriceTier } from "../types";
 
-interface Props {
-  tier: PriceTier;
-  perPersonLabel: string;
+interface Props extends PriceTier {
   class?: string;
 }
 
-const { tier, perPersonLabel, class: className } = Astro.props;
+const {
+  label,
+  labelIcon,
+  price,
+  currency,
+  caption,
+  note,
+  class: className,
+} = Astro.props;
 ---
 
 <Card border="thick" class:list={["card", className]}>
-  <Badge color="light" size="small" icon={tier.icon}>
-    {tier.label}
+  <Badge color="light" size="small" icon={labelIcon}>
+    {label}
   </Badge>
 
   <div class="amount">
     <p class="price">
-      <Text variant="title-h3">{tier.amount}</Text>{
-        tier.unit && (
-          <span class="unit">
-            <Text variant="title-xl">{tier.unit}</Text>
+      <Text variant="title-h3">{price}</Text>
+      {
+        currency && (
+          <span class="currency">
+            <Text variant="title-xl">{currency}</Text>
           </span>
         )
       }
     </p>
 
     <Text as="p" variant="paragraph-base">
-      {perPersonLabel}
+      {caption}
     </Text>
   </div>
 
   {
-    tier.note && (
+    note && (
       <Text as="p" variant="paragraph-base">
-        {tier.note}
+        {note}
       </Text>
     )
   }
@@ -64,7 +71,7 @@ const { tier, perPersonLabel, class: className } = Astro.props;
     white-space: nowrap;
   }
 
-  .unit {
+  .currency {
     margin-inline-start: var(--space-1);
   }
 

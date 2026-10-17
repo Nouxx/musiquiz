@@ -2,6 +2,7 @@
 import { getJoinTheNetworkPageData } from "@repo/services/cms/getJoinTheNetworkPageData";
 import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
 
+import PageComponentsHead from "../../components/features/PageComponentsHead.astro";
 import JoinTheNetworkPage from "../../components/pages/JoinTheNetworkPage.astro";
 import Layout from "../../layouts/Layout.astro";
 import { getLang } from "../../libs/getLang";
@@ -20,5 +21,6 @@ const alternates = getAlternatesUrl(
 ---
 
 <Layout {...data.seo} {alternates}>
+  <PageComponentsHead slot="head" components={data.components} />
   <JoinTheNetworkPage {data} {alternates} />
 </Layout>

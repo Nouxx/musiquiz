@@ -1,25 +1,20 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import type { Path } from "sanity";
 import { JoystickIcon } from "@sanity/icons/Joystick";
 import { currencyOf, type Currency } from "@repo/utils/currency";
 import { formatPrice } from "@repo/utils/formatPrice";
 import { PriceRowPreview } from "../components/PriceRowPreview";
 import { frenchValue, type LocalizedEntry } from "./shared/frenchValue";
+import { contentIcons } from "./shared/pageComponents/contentIcons";
 import { findDuplicate, takenFormatIds } from "./shared/venueFormatUniqueness";
 import { pageGroups } from "./shared/seo";
 
-/** the note sits in a narrow card beside the amount, so it has to stay short */
+/** the price card is narrow, these keep each line from wrapping */
+const LABEL_MAX_LENGTH = 30;
+const CAPTION_MAX_LENGTH = 20;
 const NOTE_MAX_LENGTH = 30;
 
-/** past this the tier column outgrows the image it stands next to */
-const MAX_PRICES = 5;
-
 type PriceValue = {
-  _key?: string;
-  playerCountFrom?: number;
-  playerCountTo?: number;
   amount?: number;
-  note?: LocalizedEntry[];
 };
 
 /** "16€" for one amount or many identical ones, "16€ – 25€" for a range */
@@ -38,67 +33,16 @@ function formatSpan(amounts: number[], currency: Currency) {
   return lowest === highest ? lowest : `${lowest} – ${highest}`;
 }
 
-function pluralPlayers(count: number) {
-  return count > 1 ? `${count} joueurs` : `${count} joueur`;
-}
+// the value is an array of one entry per language, so `max` would count
+// languages rather than characters
+function maxLength(max: number) {
+  return function validate(entries?: LocalizedEntry[]) {
+    const tooLong = entries?.some((entry) => (entry.value?.length ?? 0) > max);
 
-/**
- * The badge the front puts on the card, repeated here so a collapsed row reads
- * the way the page will. french only, like every other preview in this studio
- */
-function playerRangeLabel({
-  playerCountFrom,
-  playerCountTo,
-}: Pick<PriceValue, "playerCountFrom" | "playerCountTo">) {
-  if (playerCountFrom == null) {
-    if (playerCountTo == null) return "Tarif unique";
-
-    // rejected by validation: a row in this state is on its way somewhere, and a
-    // preview still has to say something about it
-    return `Jusqu'à ${pluralPlayers(playerCountTo)}`;
-  }
-
-  if (playerCountTo == null) return `${pluralPlayers(playerCountFrom)} et plus`;
-
-  return playerCountTo === playerCountFrom
-    ? pluralPlayers(playerCountFrom)
-    : `De ${playerCountFrom} à ${pluralPlayers(playerCountTo)}`;
-}
-
-function pathToRow(price: PriceValue, field: string): Path | undefined {
-  return price._key ? [{ _key: price._key }, field] : undefined;
-}
-
-function priceListErrors(prices: PriceValue[] | undefined) {
-  if (!prices?.length) return [];
-
-  if (prices.length === 1) {
-    const [only] = prices;
-
-    if (only.playerCountFrom == null && only.playerCountTo == null) return [];
-
-    return [
-      {
-        message:
-          "A lone price applies whatever the group size, and the page says so. Clear the player counts, or add a second price.",
-        // pinned to whichever count the editor actually filled in
-        path: pathToRow(
-          only,
-          only.playerCountFrom != null ? "playerCountFrom" : "playerCountTo",
-        ),
-      },
-    ];
-  }
-
-  return prices
-    .filter((price) => price.playerCountFrom == null)
-    .map((price) => ({
-      message:
-        price.playerCountTo == null
-          ? "With more than one price, every one of them needs a lower player count."
-          : "An upper count needs a lower one beside it — the card reads “De 4 à 6 joueurs”, never “jusqu’à 6”.",
-      path: pathToRow(price, "playerCountFrom"),
-    }));
+    return tooLong
+      ? `Keep it to ${max} characters — it sits in a narrow card.`
+      : true;
+  };
 }
 
 export const priceType = defineType({
@@ -107,74 +51,80 @@ export const priceType = defineType({
   type: "object",
   fields: [
     defineField({
-      name: "playerCountFrom",
-      title: "From (players)",
-      description:
-        "The smallest group this price applies to. Leave empty, along with the upper count, when this is the only price.",
-      type: "number",
-      validation: (rule) => rule.integer().min(1),
+      name: "label",
+      title: "Label",
+      description: `Who this price is for, in the badge at the top of the card. Example: "De 4 à 6 joueurs", "Tarif unique". ${LABEL_MAX_LENGTH} characters at most.`,
+      type: "internationalizedArrayString",
+      validation: (rule) => rule.required().custom(maxLength(LABEL_MAX_LENGTH)),
     }),
     defineField({
-      name: "playerCountTo",
-      title: "Up to (players)",
-      description:
-        'The largest group this price applies to. Leave empty for "and more".',
-      type: "number",
-      validation: (rule) =>
-        rule
-          .integer()
-          .min(1)
-          .custom((value: number | undefined, context) => {
-            const from = (context.parent as PriceValue | undefined)
-              ?.playerCountFrom;
-
-            if (value == null || from == null) return true;
-
-            return value >= from
-              ? true
-              : "The upper count cannot be below the lower one.";
-          }),
+      name: "icon",
+      title: "Label icon",
+      type: "string",
+      options: { list: contentIcons },
+      initialValue: "users-2",
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "amount",
       title: "Amount",
       description:
-        "Per player, in the venue's currency: francs in Switzerland, euros elsewhere.",
+        "In the venue's currency: francs in Switzerland, euros elsewhere.",
       type: "number",
-      validation: (rule) => rule.required().min(1).precision(2),
+      validation: (rule) => rule.required().min(0).precision(2),
+    }),
+    defineField({
+      name: "caption",
+      title: "Caption",
+      description: `Beside the amount. Example: "Par personne", "Par groupe". ${CAPTION_MAX_LENGTH} characters at most.`,
+      type: "internationalizedArrayString",
+      initialValue: [
+        {
+          _type: "internationalizedArrayStringValue",
+          language: "fr",
+          value: "Par personne",
+        },
+        {
+          _type: "internationalizedArrayStringValue",
+          language: "en",
+          value: "Per person",
+        },
+      ],
+      validation: (rule) =>
+        rule.required().custom(maxLength(CAPTION_MAX_LENGTH)),
     }),
     defineField({
       name: "note",
       title: "Note",
-      description: `A condition attached to this price, shown under "Par personne" rather than in place of it. Example: "Si combiné avec Musi'Quiz". ${NOTE_MAX_LENGTH} characters at most.`,
+      description: `A condition attached to this price, shown under the amount. Example: "Si combiné avec Musi'Quiz". ${NOTE_MAX_LENGTH} characters at most.`,
       type: "internationalizedArrayString",
-      validation: (rule) =>
-        // the value is an array of one entry per language, so `max` would count
-        // languages rather than characters
-        rule.custom((entries?: LocalizedEntry[]) => {
-          const tooLong = entries?.filter(
-            (entry) => (entry.value?.length ?? 0) > NOTE_MAX_LENGTH,
-          );
-
-          return tooLong?.length
-            ? `Keep the note to ${NOTE_MAX_LENGTH} characters — it sits in a narrow card beside the amount.`
-            : true;
-        }),
+      validation: (rule) => rule.custom(maxLength(NOTE_MAX_LENGTH)),
     }),
   ],
   preview: {
     select: {
-      playerCountFrom: "playerCountFrom",
-      playerCountTo: "playerCountTo",
+      label: "label",
       amount: "amount",
+      caption: "caption",
       note: "note",
     },
-    // the amount belongs in the subtitle: two bands sharing a lower count are
+    // the amount belongs in the subtitle: two rows sharing a label are
     // otherwise the same row twice once collapsed. PriceRowPreview writes it
-    prepare({ playerCountFrom, playerCountTo, amount, note }: PriceValue) {
+    prepare({
+      label,
+      amount,
+      caption,
+      note,
+    }: {
+      label?: LocalizedEntry[];
+      amount?: number;
+      caption?: LocalizedEntry[];
+      note?: LocalizedEntry[];
+    }) {
       return {
-        title: playerRangeLabel({ playerCountFrom, playerCountTo }),
+        title: frenchValue(label),
         amount,
+        caption: frenchValue(caption),
         note: frenchValue(note),
       };
     },
@@ -244,19 +194,10 @@ export const venueGameType = defineType({
       group: "content",
       title: "Prices",
       description:
-        "What this game costs at this venue. Re-order the bands to decide the order they appear in.",
+        "What this game costs at this venue. Re-order them to decide the order they appear in.",
       type: "array",
       of: [defineArrayMember({ type: "price" })],
-      validation: (rule) => [
-        rule.required().min(1).max(MAX_PRICES),
-        // messages are pinned to the row that earned them: one complaint over a
-        // list of five leaves the editor guessing which
-        rule.custom((prices?: PriceValue[]) => {
-          const errors = priceListErrors(prices);
-
-          return errors.length ? errors : true;
-        }),
-      ],
+      validation: (rule) => rule.required().min(1).max(5),
     }),
     defineField({
       name: "pageCover",

@@ -199,7 +199,7 @@ The section that says what a game costs at a Venue — one game's Price Tiers at
 _Avoid_: pricing, tarifs, rates, price table
 
 **Price Tier**:
-One bracket of a game's price at a Venue — a player-count band, an amount per person, and an optional note. A game with a single flat price still has one Tier; the band is what the Tier names, never the game.
+One row of a game's price at a Venue: an authored label with its icon, an amount, a caption ("Par personne"), and an optional note. A game with a single flat price still has one Tier. Nothing checks that a game's Tiers agree with each other; the editor is responsible. [ADR 0025](./docs/adr/0025-price-tiers-are-authored-not-derived.md).
 _Avoid_: price, rate, package
 
 **Venue Prices**:

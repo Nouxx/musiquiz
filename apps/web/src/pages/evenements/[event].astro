@@ -3,6 +3,7 @@ import { getGlobalEventPageData } from "@repo/services/cms/getGlobalEventPageDat
 import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
 
 import BreadcrumbHead from "../../components/features/BreadcrumbHead.astro";
+import PageComponentsHead from "../../components/features/PageComponentsHead.astro";
 import GlobalEventPage from "../../components/pages/GlobalEventPage.astro";
 import Layout from "../../layouts/Layout.astro";
 import { getGlobalBreadcrumbs } from "../../libs/getGlobalBreadcrumbs";
@@ -34,5 +35,6 @@ const breadcrumbs = getGlobalBreadcrumbs(lang, data.eventName);
 
 <Layout {...data.seo} {alternates}>
   <BreadcrumbHead slot="head" items={breadcrumbs} />
+  <PageComponentsHead slot="head" components={data.components} />
   <GlobalEventPage {data} {alternates} />
 </Layout>

@@ -1,0 +1,18 @@
+---
+import type { PageComponent } from "@repo/services/cms/pageComponent.types";
+
+interface Props {
+  components: PageComponent[];
+}
+
+const { components } = Astro.props;
+
+const hasReviews = components.some((component) => component.type === "reviews");
+---
+
+{
+  hasReviews && (
+    // no crossorigin: loader.js is fetched no-cors, a CORS preconnect would go unused
+    <link rel="preconnect" href="https://cdn.trustindex.io" />
+  )
+}

@@ -5,10 +5,9 @@ import type { PriceOffer } from "../types";
 
 interface Props {
   offer: PriceOffer;
-  perPersonLabel: string;
 }
 
-const { offer, perPersonLabel } = Astro.props;
+const { offer } = Astro.props;
 ---
 
 <div class="offer">
@@ -17,11 +16,7 @@ const { offer, perPersonLabel } = Astro.props;
   </div>
 
   <div class="tiers">
-    {
-      offer.tiers.map((tier) => (
-        <PriceCard {tier} {perPersonLabel} class="tier" />
-      ))
-    }
+    {offer.tiers.map((tier) => <PriceCard {...tier} class="tier" />)}
   </div>
 </div>
 

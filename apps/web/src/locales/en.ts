@@ -19,15 +19,7 @@ export const en: EnglishKeys = {
     goToSlide: "Go to slide",
   },
   prices: {
-    perPerson: "Per person",
     book: "Book your activity",
-    // shown when a game has a single price: it applies whatever the group size
-    unique: "Single rate",
-    range: "From {{from}} to {{to}} players",
-    fromOnly_one: "{{count}} player and up",
-    fromOnly_other: "{{count}} players and up",
-    exact_one: "{{count}} player",
-    exact_other: "{{count}} players",
   },
   cardsScroller: {
     nextCard: "Next card",
@@ -37,11 +29,6 @@ export const en: EnglishKeys = {
   },
   faq: {
     badge: "FAQ",
-  },
-  reviews: {
-    previous: "Previous review",
-    next: "Next review",
-    stars: "{{score}} out of 5",
   },
   header: {
     home: "Home",

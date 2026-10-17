@@ -73,13 +73,6 @@ export type VenueContact = {
   phoneHref: string;
 };
 
-export type Review = {
-  name: string;
-  body: string;
-  score: number;
-  avatar?: ImageSource;
-};
-
 export type CardItem = {
   media: ImageSource;
   badge?: string;
@@ -131,11 +124,13 @@ export type DeckCard = {
 export type PriceTier = {
   /** @example "De 4 à 6 joueurs", "Tarif unique" */
   label: string;
-  icon: IconName;
+  labelIcon: IconName;
   /** @example "16€", "16" */
-  amount: string;
-  /** drawn smaller beside the amount @example "CHF" */
-  unit?: string;
+  price: string;
+  /** drawn smaller beside the price @example "CHF" */
+  currency?: string;
+  /** @example "Par personne" */
+  caption: string;
   note?: string;
 };
 

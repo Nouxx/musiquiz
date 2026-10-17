@@ -47,14 +47,18 @@ type Carousel = {
 
 type Reviews = {
   type: "reviews";
+  widgetId: string;
+  badge: string;
+  title: string;
   surface: "default" | "muted";
 };
 
 export type GamePrice = {
-  playerCountFrom: number | undefined;
-  playerCountTo: number | undefined;
+  label: string;
+  icon: ContentIcon;
   amount: number;
   currency: Currency;
+  caption: string;
   note: string | undefined;
 };
 

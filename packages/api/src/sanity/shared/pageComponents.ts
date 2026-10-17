@@ -18,13 +18,13 @@ function rollingBannerProjection({ lang }: { lang: Lang }) {
   `;
 }
 
-function reviewsProjection() {
+function reviewsProjection({ lang }: { lang: Lang }) {
   return `
     _type == "reviews" => {
-      "venueSlug": venue->slug.current,
-      starsThreshold,
-      "surface": coalesce(surface, "default"),
-      searchTerm
+      widgetId,
+      "badge": badge[language == "${lang}"][0].value,
+      "title": title[language == "${lang}"][0].value,
+      "surface": coalesce(surface, "default")
     }
   `;
 }
@@ -34,9 +34,10 @@ function pricedGameProjection({ lang }: { lang: Lang }) {
     "name": game->name,
     "image": game->image ${imageProjection({ lang })},
     prices[]{
-      playerCountFrom,
-      playerCountTo,
+      "label": label[language == "${lang}"][0].value,
+      icon,
       amount,
+      "caption": caption[language == "${lang}"][0].value,
       "note": note[language == "${lang}"][0].value
     }
   }`;
@@ -374,7 +375,7 @@ export function pageComponentsProjection({
       ${rollingBannerProjection({ lang })},
       ${cardsGridProjection({ lang })},
       ${carouselProjection({ lang })},
-      ${reviewsProjection()},
+      ${reviewsProjection({ lang })},
       ${venuePricesProjection({ lang })},
       ${gamePricesProjection({ lang })},
       ${findUsProjection({ lang })},
@@ -442,16 +443,46 @@ const sanityCarouselSchema = z.strictObject({
 
 const sanityReviewsSchema = z.strictObject({
   _type: z.literal("reviews"),
-  venueSlug: z.string().min(1).nullable(),
-  starsThreshold: z.union([z.literal(4), z.literal(5)]),
+  widgetId: z.string().min(1),
+  badge: z.string().min(1),
+  title: z.string().min(1),
   surface: z.enum(["default", "muted"]),
-  searchTerm: z.string().min(1).nullable(),
 });
 
+export const sanityContentIconSchema = z.enum([
+  "calendar",
+  "camera",
+  "check-circle",
+  "clock",
+  "cocktail",
+  "coins",
+  "cube",
+  "die-1",
+  "die-2",
+  "disc",
+  "hourglass",
+  "house",
+  "lock",
+  "mail",
+  "medal",
+  "music-note",
+  "phone",
+  "pin",
+  "question",
+  "rosette",
+  "sparkles",
+  "star",
+  "user",
+  "users-2",
+  "users-3",
+  "users-4",
+]);
+
 const sanityPriceSchema = z.strictObject({
-  playerCountFrom: z.number().int().positive().nullable(),
-  playerCountTo: z.number().int().positive().nullable(),
-  amount: z.number().positive(),
+  label: z.string().min(1),
+  icon: sanityContentIconSchema,
+  amount: z.number().nonnegative(),
+  caption: z.string().min(1),
   note: z.string().min(1).nullable(),
 });
 
@@ -614,35 +645,6 @@ const sanityTextBodySchema = z.strictObject({
   _type: z.literal("textBody"),
   body: sanityRichTextSchema,
 });
-
-export const sanityContentIconSchema = z.enum([
-  "calendar",
-  "camera",
-  "check-circle",
-  "clock",
-  "cocktail",
-  "coins",
-  "cube",
-  "die-1",
-  "die-2",
-  "disc",
-  "hourglass",
-  "house",
-  "lock",
-  "mail",
-  "medal",
-  "music-note",
-  "phone",
-  "pin",
-  "question",
-  "rosette",
-  "sparkles",
-  "star",
-  "user",
-  "users-2",
-  "users-3",
-  "users-4",
-]);
 
 const sanityTextCardSchema = z.strictObject({
   icon: sanityContentIconSchema,
