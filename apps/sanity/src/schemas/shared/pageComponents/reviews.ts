@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { frenchValue, type LocalizedEntry } from "../frenchValue";
 
 export const reviewsType = defineType({
   name: "reviews",
@@ -6,24 +7,48 @@ export const reviewsType = defineType({
   type: "object",
   fields: [
     defineField({
-      name: "venue",
-      title: "Venue",
-      description: "Only fetch reviews for a specific venue",
-      type: "reference",
-      to: [{ type: "venue" }],
+      name: "widgetId",
+      title: "Trustindex widget ID",
+      description:
+        "Each reviews block needs its own widget, created in Trustindex. The ID is the text after '?' in the embed code, ex: 'xxx' in https://cdn.trustindex.io/loader.js?xxx",
+      type: "string",
+      validation: (rule) => [rule.required()],
     }),
     defineField({
-      name: "starsThreshold",
-      title: "Minimum number of stars",
-      type: "number",
-      initialValue: 5,
-      options: {
-        list: [
-          { title: "4", value: 4 },
-          { title: "5", value: 5 },
-        ],
-        layout: "radio",
-      },
+      name: "badge",
+      title: "Badge",
+      description: "The small tilted pill above the title.",
+      type: "internationalizedArrayString",
+      initialValue: [
+        {
+          _type: "internationalizedArrayStringValue",
+          language: "fr",
+          value: "Témoignages",
+        },
+        {
+          _type: "internationalizedArrayStringValue",
+          language: "en",
+          value: "Testimonials",
+        },
+      ],
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "title",
+      title: "Title",
+      type: "internationalizedArrayString",
+      initialValue: [
+        {
+          _type: "internationalizedArrayStringValue",
+          language: "fr",
+          value: "Ils ont testé... et approuvé !",
+        },
+        {
+          _type: "internationalizedArrayStringValue",
+          language: "en",
+          value: "They tried it... and loved it!",
+        },
+      ],
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -40,22 +65,16 @@ export const reviewsType = defineType({
       },
       validation: (rule) => rule.required(),
     }),
-    defineField({
-      name: "searchTerm",
-      title: "Word filter",
-      description:
-        "Filter reviews with a word, example: 'evjf' (case insensitive)",
-      type: "string",
-    }),
   ],
   preview: {
     select: {
-      venueTitle: "venue.title",
+      title: "title",
+      widgetId: "widgetId",
     },
-    prepare({ venueTitle }: { venueTitle?: string }) {
+    prepare({ title }: { title?: LocalizedEntry[] }) {
       return {
-        title: "Reviews",
-        subtitle: venueTitle ? `for ${venueTitle}` : "Global",
+        title: frenchValue(title) ?? "Reviews",
+        subtitle: "Reviews",
       };
     },
   },

@@ -68,6 +68,9 @@ export function adaptPageComponent({
     case "reviews": {
       return {
         type: "reviews",
+        widgetId: data.widgetId,
+        badge: data.badge,
+        title: data.title,
         surface: data.surface,
       };
     }

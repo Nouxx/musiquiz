@@ -73,13 +73,6 @@ export type VenueContact = {
   phoneHref: string;
 };
 
-export type Review = {
-  name: string;
-  body: string;
-  score: number;
-  avatar?: ImageSource;
-};
-
 export type CardItem = {
   media: ImageSource;
   badge?: string;

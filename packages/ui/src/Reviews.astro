@@ -2,191 +2,48 @@
 import Badge from "./Badge.astro";
 import Text from "./primitives/Text.astro";
 import Section from "./Section.astro";
-import type { Review } from "./types";
 
 interface Props {
+  widgetId: string;
   badge: string;
   title: string;
-  ratingLabel: string;
-  ratingValue: string;
   surface?: "default" | "muted";
-  reviews: Review[];
-  previousLabel: string;
-  nextLabel: string;
-  starsLabel: (score: number) => string;
 }
 
-const {
-  badge,
-  title,
-  ratingLabel,
-  ratingValue,
-  surface = "default",
-} = Astro.props;
+const { widgetId, badge, title, surface = "default" } = Astro.props;
 ---
 
 <Section surface={surface === "muted" ? "muted" : "default"} width="wide">
-  <div class:list={["reviews", surface]} data-reviews>
-    <div class="column">
-      <div class="intro">
-        <div class="heading">
-          <Badge color="light">{badge}</Badge>
+  <div class="reviews">
+    <div class="heading">
+      <Badge color="light">{badge}</Badge>
 
-          <Text as="h2" variant="title-h2">{title}</Text>
-        </div>
-
-        <div class="rating">
-          <Text as="p" variant="paragraph-base">{ratingLabel}</Text>
-
-          <Text as="p" variant="paragraph-base-sm">{ratingValue}</Text>
-        </div>
-      </div>
+      <Text as="h2" variant="title-h2">{title}</Text>
     </div>
 
     <div class="widget">
       <script
+        is:inline
         defer
         async
-        src="https://cdn.trustindex.io/loader.js?62e1429833237885e81601a7c4a"
-      ></script>
+        src={`https://cdn.trustindex.io/loader.js?${widgetId}`}></script>
     </div>
   </div>
 </Section>
 
 <style>
   .reviews {
-    --card-inline: clamp(260px, 66vw, 294px);
-    --card-block: 255px;
-    --gap: var(--space-6);
-
     display: flex;
     flex-direction: column;
     gap: var(--space-10);
   }
 
-  .column {
-    display: flex;
-    flex: none;
-    flex-direction: column;
-    gap: var(--space-6);
-    align-items: flex-start;
-  }
-
-  .intro {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-  }
-
   .heading {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    align-items: flex-start;
-  }
-
-  /* Figma said #524B47, we use the nearest token --grey-600, as ImageCard does */
-  .rating {
-    color: var(--color-text-muted);
-  }
-
-  .track {
-    display: flex;
-    gap: var(--gap);
-    align-items: flex-start;
-    padding-inline: 0 var(--space-6);
-    margin-inline: 0 calc(50% - 50vw);
-    overflow-x: auto;
-    overflow-y: hidden;
-    list-style: none;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-  }
-
-  .track::-webkit-scrollbar {
-    display: none;
-  }
-
-  .card {
-    display: flex;
-    flex: 0 0 var(--card-inline);
-    flex-direction: column;
-    gap: var(--space-6);
-    padding: var(--space-6);
-    block-size: var(--card-block);
-    background-color: var(--color-surface-muted);
-    border: 1px solid var(--color-border);
-    border-width: 1px 3px 3px 1px;
-    border-radius: var(--radius-l);
-    scroll-snap-align: start;
-  }
-
-  .muted .card {
-    background-color: var(--color-surface);
-  }
-
-  .card-header {
-    display: flex;
     flex: none;
-    align-items: flex-start;
-    justify-content: space-between;
-  }
-
-  .avatar {
-    inline-size: 40px;
-    block-size: 40px;
-    border-radius: var(--radius-pill);
-    overflow: hidden;
-  }
-
-  .avatar > :global(picture) {
-    display: block;
-    block-size: 100%;
-  }
-
-  .card-body {
-    display: flex;
-    flex: 1;
     flex-direction: column;
     gap: var(--space-4);
-    min-block-size: 0;
-  }
-
-  .card-text {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    min-block-size: 0;
-  }
-
-  .name {
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .quote {
-    display: -webkit-box;
-    margin: 0;
-    overflow: hidden;
-    font: var(--paragraph-s);
-    color: var(--color-text-muted);
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
-  }
-
-  .stars {
-    display: flex;
-    flex: none;
-    gap: var(--space-1);
-    align-items: center;
-    margin-block-start: auto;
-    color: var(--color-fill-indicator);
-  }
-
-  .star.filled {
-    color: var(--yellow-600);
+    align-items: flex-start;
   }
 
   /* 60rem — reviews columns stacked. see styles/breakpoints.css */
@@ -197,11 +54,10 @@ const {
       align-items: flex-start;
     }
 
-    .column {
+    .heading {
       inline-size: 325px;
     }
 
-    .track,
     .widget {
       flex: 1;
       min-inline-size: 0;

@@ -23,11 +23,6 @@ export const fr = {
   faq: {
     badge: "FAQ",
   },
-  reviews: {
-    previous: "Avis précédent",
-    next: "Avis suivant",
-    stars: "{{score}} sur 5",
-  },
   header: {
     home: "Accueil",
     concept: "Concept",

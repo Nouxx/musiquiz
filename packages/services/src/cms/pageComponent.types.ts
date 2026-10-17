@@ -47,6 +47,9 @@ type Carousel = {
 
 type Reviews = {
   type: "reviews";
+  widgetId: string;
+  badge: string;
+  title: string;
   surface: "default" | "muted";
 };
 

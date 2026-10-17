@@ -30,11 +30,6 @@ export const en: EnglishKeys = {
   faq: {
     badge: "FAQ",
   },
-  reviews: {
-    previous: "Previous review",
-    next: "Next review",
-    stars: "{{score}} out of 5",
-  },
   header: {
     home: "Home",
     concept: "Concept",

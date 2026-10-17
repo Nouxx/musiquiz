@@ -18,13 +18,13 @@ function rollingBannerProjection({ lang }: { lang: Lang }) {
   `;
 }
 
-function reviewsProjection() {
+function reviewsProjection({ lang }: { lang: Lang }) {
   return `
     _type == "reviews" => {
-      "venueSlug": venue->slug.current,
-      starsThreshold,
-      "surface": coalesce(surface, "default"),
-      searchTerm
+      widgetId,
+      "badge": badge[language == "${lang}"][0].value,
+      "title": title[language == "${lang}"][0].value,
+      "surface": coalesce(surface, "default")
     }
   `;
 }
@@ -375,7 +375,7 @@ export function pageComponentsProjection({
       ${rollingBannerProjection({ lang })},
       ${cardsGridProjection({ lang })},
       ${carouselProjection({ lang })},
-      ${reviewsProjection()},
+      ${reviewsProjection({ lang })},
       ${venuePricesProjection({ lang })},
       ${gamePricesProjection({ lang })},
       ${findUsProjection({ lang })},
@@ -443,10 +443,10 @@ const sanityCarouselSchema = z.strictObject({
 
 const sanityReviewsSchema = z.strictObject({
   _type: z.literal("reviews"),
-  venueSlug: z.string().min(1).nullable(),
-  starsThreshold: z.union([z.literal(4), z.literal(5)]),
+  widgetId: z.string().min(1),
+  badge: z.string().min(1),
+  title: z.string().min(1),
   surface: z.enum(["default", "muted"]),
-  searchTerm: z.string().min(1).nullable(),
 });
 
 export const sanityContentIconSchema = z.enum([
