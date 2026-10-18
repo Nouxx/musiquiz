@@ -17,6 +17,7 @@ Chaque page pousse aussi le centre, le type de page et la langue, pour que le GA
 **À noter sur 4escape**
 
 4escape ne remplit pas le dataLayer lui-même : il émet seulement une partie des événements, et ni `begin_checkout` ni `purchase`. J'ai donc fait le pont côté site. Ça fonctionne, mais ça dépend du fonctionnement interne de leur widget, qui peut changer sans prévenir. Pouvez-vous leur demander :
+
 - s'ils prévoient d'envoyer eux-mêmes les événements GA4 dans le dataLayer (dans ce cas je retire mon pont) ;
 - si un envoi « purchase » côté serveur (GA4) est activé sur vos comptes, pour éviter de compter deux fois ;
 - de ne pas modifier l'URL de retour après paiement dans leur back-office (elle doit revenir sur notre page Réserver / Offrir).

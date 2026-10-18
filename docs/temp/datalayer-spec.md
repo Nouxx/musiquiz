@@ -29,23 +29,23 @@ Le bandeau cookies (CMP), chargé par le conteneur global, envoie le `consent up
 
 Premier élément du `dataLayer` sur chaque page, avant `gtm.js` :
 
-| Clé | Valeurs |
-| --- | --- |
-| `venue` | slug du centre (`paris`, `lille`, `avignon`…). Absent hors pages centre. |
-| `page_type` | `book` (Réserver), `gift` (Offrir), `content` (le reste) |
-| `language` | `fr`, `en` |
+| Clé         | Valeurs                                                                  |
+| ----------- | ------------------------------------------------------------------------ |
+| `venue`     | slug du centre (`paris`, `lille`, `avignon`…). Absent hors pages centre. |
+| `page_type` | `book` (Réserver), `gift` (Offrir), `content` (le reste)                 |
+| `language`  | `fr`, `en`                                                               |
 
 ## Tunnel de réservation (pages `book` et `gift`)
 
 Événements e-commerce GA4. Chaque push est précédé de `{ ecommerce: null }`.
 
-| Événement | Déclencheur |
-| --- | --- |
-| `add_to_cart` | ajout au panier (session, options, bon cadeau) |
-| `remove_from_cart` | retrait du panier |
-| `begin_checkout` | arrivée sur l'étape coordonnées / paiement |
-| `add_payment_info` | choix du mode de paiement (`payment_type`) |
-| `purchase` | paiement confirmé |
+| Événement          | Déclencheur                                    |
+| ------------------ | ---------------------------------------------- |
+| `add_to_cart`      | ajout au panier (session, options, bon cadeau) |
+| `remove_from_cart` | retrait du panier                              |
+| `begin_checkout`   | arrivée sur l'étape coordonnées / paiement     |
+| `add_payment_info` | choix du mode de paiement (`payment_type`)     |
+| `purchase`         | paiement confirmé                              |
 
 Format de `ecommerce`, fourni par 4escape (valeurs d’exemple) :
 
@@ -80,10 +80,10 @@ Après un envoi réussi :
 { event: "generate_lead", form_name: "quotation", venue: "paris" }
 ```
 
-| `form_name` | Formulaire | `venue` |
-| --- | --- | --- |
-| `quotation` | demande de devis | centre du formulaire |
-| `contact` | contact centre | centre du formulaire |
-| `franchise` | rejoindre le réseau | absent |
+| `form_name` | Formulaire          | `venue`              |
+| ----------- | ------------------- | -------------------- |
+| `quotation` | demande de devis    | centre du formulaire |
+| `contact`   | contact centre      | centre du formulaire |
+| `franchise` | rejoindre le réseau | absent               |
 
 Aucune donnée personnelle dans le `dataLayer`.
