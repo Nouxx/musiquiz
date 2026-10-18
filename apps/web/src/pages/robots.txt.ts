@@ -8,7 +8,7 @@ export function GET(context: APIContext) {
 
   // the preview build has no sitemap
   if (!SSR_BUILD) {
-    const sitemap = new URL("sitemap-index.xml", getSite(context));
+    const sitemap = new URL("sitemap.xml", getSite(context));
     lines.push("", `Sitemap: ${sitemap.href}`);
   }
 

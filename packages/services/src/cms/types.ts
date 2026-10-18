@@ -496,3 +496,11 @@ export type LlmsTxt = {
   articles: LlmsTxtLink[];
   pages: { route: LlmsTxtPageRoute; fr: string; en: string }[];
 };
+
+export type SitemapEntry = {
+  fr: string;
+  /** missing on the blog, French only: docs/adr/0013 */
+  en?: string;
+  /** @example "2026-10-18T20:45:31Z" */
+  lastmod: string;
+};

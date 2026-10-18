@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.1.4",
-    "@astrojs/sitemap": "^3.7.4",
     "@repo/services": "workspace:*",
     "@repo/ui": "workspace:*",
     "@repo/utils": "workspace:*",

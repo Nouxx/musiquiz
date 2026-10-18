@@ -14,7 +14,7 @@ Builds on [`seo-audit.md`](./seo-audit.md). Classic SEO foundations (canonical, 
 | `llms.txt`                    | Missing.                                                                                                | ✗       |
 | JSON-LD                       | Homepage, venue home, breadcrumbs, blog article. Games, events, FAQ components, listings: nothing.      | partial |
 | Entity graph                  | `Organization` only on the homepage; other pages point to an `@id` that is not on the page.             | partial |
-| Freshness signals             | No `lastmod` in the sitemap, no `dateModified` outside blog articles.                                   | ✗       |
+| Freshness signals             | Sitemap `lastmod` from `_updatedAt`; no `dateModified` outside blog articles.                           | partial |
 | Reviews                       | TrustIndex widget, JS-only. Invisible to AI crawlers.                                                   | ✗       |
 | Bing indexing                 | ChatGPT search and Copilot lean on Bing. No IndexNow, Bing Webmaster planned (seo-audit Phase 6).       | partial |
 
@@ -261,16 +261,15 @@ seo-audit D5 said "do not add more": right for Google rich results (restricted t
 
 ## 5. Other code and configuration
 
-### 5.1 Sitemap `lastmod` (high)
+### 5.1 Sitemap `lastmod` (high) — done
 
-`@astrojs/sitemap` runs with no options, so no `<lastmod>`. Bing and Google use it to schedule recrawls; Bing's AI answers depend on Bing freshness.
+`@astrojs/sitemap` is replaced by `src/pages/sitemap.xml.ts`, prerendered in the static build and 404 in the preview build, like `llms.txt`.
 
-The integration only sees URLs, not content. Two ways:
-
-- `serialize(item)` looking up `lastmod` in a `Map<url, _updatedAt>` built from Sanity at config time. Config-time Sanity fetches go around the `astro:env` setup; doable, a bit awkward.
-- Replace the integration by a `sitemap-index.xml.ts` endpoint fed by the same `get*SiteUrls` services as `llms.txt` plus `_updatedAt`. One source of truth for "what pages exist" across sitemap, `llms.txt` and the Studio tool.
-
-Recommendation: the endpoint. It removes the comment in `astro.config.mjs` about localized slugs breaking i18n pairing, too.
+- The list comes from the `get*SiteUrls` services, the same source as `llms.txt` and the Studio tool. A URL with no page document fails the build.
+- `<lastmod>` is the page document's `_updatedAt` (`fetchSitemap`). Shared documents (venue, game format, header) do not bump it.
+- `noindex` pages are left out. So is `/blog/page/N/`: the articles are listed directly.
+- Each fr/en pair carries `xhtml:link` alternates, the same as the HTML hreflang.
+- One `/sitemap.xml`, no index file: one file holds 50,000 URLs. `robots.txt` points to it. Submit `/sitemap.xml` in Search Console and Bing Webmaster.
 
 ### 5.2 IndexNow on deploy (medium)
 
@@ -307,7 +306,7 @@ Render them as text in the `reviews` component's static HTML, next to the widget
 | 4  | J3 venue node on every venue page + `subOrganization`           | S      | High   | —                           |
 | 5  | J4 games as `Service` + `Offer`s                                | M      | High   | optional (player counts)    |
 | 6  | J6 `FAQPage` from `faq` components                              | S      | Medium | —                           |
-| 7  | `_updatedAt` in query modules → J2 `WebPage` + sitemap `lastmod` (§5.1) | M | High | —                         |
+| 7  | `_updatedAt` in query modules → J2 `WebPage` (sitemap `lastmod` done, §5.1) | M | High | —                     |
 | 8  | ~~`llms.txt` endpoint (§3)~~ done; summary drafted, unpublished | S      | Low–Med | `siteSettings.llmsSummary` |
 | 9  | J5 events as `Service`                                          | S      | Medium | optional (audience ages)    |
 | 10 | Reviews rating as visible text (§5.3)                           | S      | Medium | —                           |
