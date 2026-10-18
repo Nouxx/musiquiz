@@ -16,7 +16,7 @@ Builds on [`seo-audit.md`](./seo-audit.md). Classic SEO foundations (canonical, 
 | Entity graph                  | `Organization` only on the homepage; other pages point to an `@id` that is not on the page.             | partial |
 | Freshness signals             | Sitemap `lastmod` from `_updatedAt`; no `dateModified` outside blog articles.                           | partial |
 | Reviews                       | TrustIndex widget, JS-only. Invisible to AI crawlers.                                                   | ✗       |
-| Bing indexing                 | ChatGPT search and Copilot lean on Bing. No IndexNow, Bing Webmaster planned (seo-audit Phase 6).       | partial |
+| Bing indexing                 | ChatGPT search and Copilot lean on Bing. IndexNow on deploy; Bing Webmaster planned (seo-audit Phase 6).  | partial |
 
 ## 2. AI crawler access
 
@@ -271,13 +271,20 @@ seo-audit D5 said "do not add more": right for Google rich results (restricted t
 - Each fr/en pair carries `xhtml:link` alternates, the same as the HTML hreflang.
 - One `/sitemap.xml`, no index file: one file holds 50,000 URLs. `robots.txt` points to it. Submit `/sitemap.xml` in Search Console and Bing Webmaster.
 
-### 5.2 IndexNow on deploy (medium)
+### 5.2 IndexNow on deploy (medium) — done
 
 ChatGPT search, Copilot and DuckDuckGo read Bing's index. [IndexNow](https://www.indexnow.org/) pushes changed URLs to Bing (and Yandex, Seznam, Naver) in seconds instead of waiting for a recrawl. Google does not use it.
 
-- Key file: `apps/web/public/<key>.txt` holding the key (public by design).
-- After a successful static deploy, POST the changed URLs to `https://api.indexnow.org/indexnow`. The deploy flow (Studio Deploy tab → worker → CF build hook) has no post-deploy step; simplest is a step at the end of the Workers Build command, sending the full sitemap URL list (fine at this size, limit is 10,000 per call).
-- Pairs with Bing Webmaster Tools (seo-audit Phase 6), which also shows AI-crawler-relevant reports.
+- Key: `KEY` in `scripts/submitIndexNow.js`, served as `apps/web/public/<key>.txt` (public by design). The script fails if the built file is missing or holds another key. Rotating means changing both.
+- `deploy:static` runs `scripts/submitIndexNow.js ./dist/static` after `wrangler deploy`: every `<loc>` of the built `sitemap.xml` in one POST to `https://api.indexnow.org/indexnow` (limit 10,000). Covers both triggers, push to `main` and the Studio Deploy tab, with no extra hook.
+- A localhost sitemap is skipped. A rejected ping logs a warning and exits 0: the site is already live.
+- Until the nameservers switch, `musiquiz.co/<key>.txt` is not served, so the ping is accepted but the key fails verification. Nothing to do; it works from the first deploy after migration.
+
+**After migration**
+
+- [ ] `curl -s https://musiquiz.co/cdbe55213bc1abb790180b15288ffcba.txt` returns the key.
+- [ ] Workers Build log of the next deploy shows `✓ N urls submitted to IndexNow`.
+- [ ] Bing Webmaster Tools → IndexNow: submitted URLs appear (seo-audit Phase 6).
 
 ### 5.3 Reviews visible without JS (medium)
 
@@ -310,7 +317,7 @@ Render them as text in the `reviews` component's static HTML, next to the widget
 | 8  | ~~`llms.txt` endpoint (§3)~~ done; summary drafted, unpublished | S      | Low–Med | `siteSettings.llmsSummary` |
 | 9  | J5 events as `Service`                                          | S      | Medium | optional (audience ages)    |
 | 10 | Reviews rating as visible text (§5.3)                           | S      | Medium | —                           |
-| 11 | IndexNow on deploy (§5.2)                                       | S      | Medium | —                           |
+| 11 | ~~IndexNow on deploy (§5.2)~~ done; key verifies after migration | S     | Medium | —                           |
 | 12 | J7 blog, J8 where-to-find-us                                    | S      | Low    | —                           |
 | 13 | J9 builder tests, schema validation in pre-launch crawl         | S      | —      | —                           |
 
