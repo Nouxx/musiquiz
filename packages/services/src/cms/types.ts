@@ -471,3 +471,28 @@ export type VenuePopup = {
   cta: Cta;
   logo: CmsImage | undefined;
 };
+
+export type LlmsTxtLink = {
+  name: string;
+  description: string | undefined;
+  fr: string;
+  /** missing on the blog, French only: docs/adr/0013 */
+  en?: string;
+};
+
+export type LlmsTxtPageRoute =
+  | "book"
+  | "whereToFindUs"
+  | "joinTheNetwork"
+  | "contact"
+  | "termsAndConditions"
+  | "legalNotice";
+
+export type LlmsTxt = {
+  summary: string | undefined;
+  venues: LlmsTxtLink[];
+  games: LlmsTxtLink[];
+  events: LlmsTxtLink[];
+  articles: LlmsTxtLink[];
+  pages: { route: LlmsTxtPageRoute; fr: string; en: string }[];
+};

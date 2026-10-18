@@ -57,6 +57,15 @@ export const siteSettingsType = defineType({
       ],
     }),
     defineField({
+      name: "llmsSummary",
+      title: "Summary for AI assistants",
+      description:
+        "One or two sentences in French on what Musi'Quiz is, opening the /llms.txt file read by ChatGPT, Claude and other AI assistants.",
+      group: "branding",
+      type: "text",
+      rows: 3,
+    }),
+    defineField({
       name: "facebookUrl",
       title: "Facebook link",
       type: "url",

@@ -14,6 +14,7 @@ import { ShareIcon } from "@sanity/icons/Share";
 import { CalendarIcon } from "@sanity/icons/Calendar";
 import { TrendUpwardIcon } from "@sanity/icons/TrendUpward";
 import { gtmIdValidation } from "./shared/gtmId";
+import { llmsDescriptionField } from "./shared/llmsDescription";
 
 // todo: i18n, "Fermé" is french
 function openingTimeValidation(rule: StringRule) {
@@ -107,6 +108,12 @@ export const venueType = defineType({
       options: {
         source: "title",
       },
+    }),
+    llmsDescriptionField({
+      subject: "this venue",
+      hint: "Say where the games are played, e.g. in a partner venue.",
+      fallback: "the venue home page's meta description",
+      group: "general",
     }),
     defineField({
       name: "forEscapeSettings",

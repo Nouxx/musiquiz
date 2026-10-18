@@ -407,4 +407,13 @@ export const fr = {
     home: "Retour à l'accueil",
     whereToFindUs: "Trouver un centre",
   },
+  llmsTxt: {
+    venues: "Salles",
+    games: "Jeux",
+    events: "Événements",
+    practical: "Pratique",
+    blog: "Blog",
+    english: "English",
+    venueName: "Musi'Quiz {{city}}",
+  },
 };

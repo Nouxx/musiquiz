@@ -385,4 +385,13 @@ export const en: EnglishKeys = {
     home: "Back to the homepage",
     whereToFindUs: "Find a venue",
   },
+  llmsTxt: {
+    venues: "Venues",
+    games: "Games",
+    events: "Events",
+    practical: "Practical",
+    blog: "Blog",
+    english: "English",
+    venueName: "Musi'Quiz {{city}}",
+  },
 };
