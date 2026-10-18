@@ -24,9 +24,23 @@ The client asked for GA4 ecommerce events on the funnel, assuming 4escape pushes
 
 - forwards each `analytics:*` event as `{ ecommerce: null }` then `{ event, ecommerce }`;
 - calls the Widget's own `triggerEvent("begin_checkout", order)` when the router enters `/checkout`, so the payload has the Widget's shape;
-- stashes the order payload in `sessionStorage` on `begin_checkout` and `add_payment_info`, then on the thank-you route pushes `purchase` with `transaction_id = orderUid`, the stashed value and items, and `payment_option` (`total` or `deposit`). Uids already sent sit in `localStorage`, so a reload does not count twice. Without a matching stash, `purchase` goes out with `transaction_id` only.
+- stashes the order payload on `begin_checkout` and `add_payment_info`, then on the thank-you route pushes `purchase` with `transaction_id = orderUid`, the stashed value and items, and `payment_option` (`total` or `deposit`). Uids already sent are kept, so a reload does not count twice. Without a matching stash, `purchase` goes out with `transaction_id` only.
+- does nothing on a page without a container.
 
 `value` is the full order, not the deposit: Ads optimise on booking value.
+
+## Storage waits for consent
+
+Consent Mode gates Google's tags, not our own Web Storage calls, and both keys serve analytics only, so neither is strictly necessary (CNIL, art. 82).
+
+- The stash and the sent uids live in memory. `sessionStorage` (`musiquizCheckout`) and `localStorage` (`musiquizPurchases`) mirror them only while `analytics_storage` is `granted`.
+- A grant mid-funnel copies memory to storage. A denial, on any page, removes both keys.
+- On the thank-you route with nothing in memory (3-D Secure redirect, reload), `purchase` waits up to 3 seconds for the CMP's first update, then reads storage if granted.
+- Without consent, a redirected payment sends `purchase` with `transaction_id` only, and a reload can send it twice. GA4 and Ads drop repeats of one `transaction_id`.
+
+`scripts/consent.ts` reads the decision from the `consent update` commands on `dataLayer`, since the CMP is not picked yet. Once it is, check that its updates reach `dataLayer` (GTM templates push them through `updateConsentState`), or swap the module for the CMP's own API.
+
+Rejected: reading `google_tag_data.ics`, a GTM internal.
 
 ## Leads
 

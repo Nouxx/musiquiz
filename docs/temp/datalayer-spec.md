@@ -70,7 +70,9 @@ Pour `purchase` en plus :
 
 - `transaction_id` : identifiant unique de la commande 4escape. Envoyé une seule fois par commande et par navigateur.
 - `payment_option` : `total` ou `deposit` (acompte). `value` reste le montant total de la commande.
-- Rare : si les données du panier sont perdues (autre appareil, stockage bloqué), `purchase` part avec `transaction_id` seul.
+- Si les données du panier sont perdues (autre appareil, stockage bloqué, ou paiement 3-D Secure sans consentement `analytics_storage`), `purchase` part avec `transaction_id` seul.
+- Le site ne stocke rien dans le navigateur sans consentement `analytics_storage`. Sans lui, l'anti-doublon ne tient pas au rechargement : configurez vos conversions avec `transaction_id`.
+- Après une redirection de paiement, `purchase` attend jusqu'à 3 secondes la réponse du bandeau avant de partir.
 
 ## Formulaires
 

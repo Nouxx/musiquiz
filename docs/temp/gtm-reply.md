@@ -26,5 +26,7 @@ Chaque page pousse aussi le centre, le type de page et la langue, pour que le GA
 
 En France, GTM, GA4 et les tags Ads ne peuvent pas déposer de cookies sans consentement (CNIL). Le site n'a pas encore de bandeau. Je l'ai préparé : tout est refusé par défaut (Consent Mode v2), donc rien n'est déposé tant qu'un bandeau ne donne pas l'accord. Il faut choisir un outil (Axeptio, Didomi, Cookiebot…), que votre agence branchera dans le GTM global. Sans ce bandeau, GA4 et Ads ne remonteront quasiment aucune donnée.
 
+Le suivi des réservations garde aussi en mémoire le panier et les commandes déjà comptées, dans le navigateur. Ça suit la même règle : rien n'est stocké sans accord, et tout est effacé si le visiteur retire son accord. Sans accord, un paiement avec validation bancaire (3-D Secure) remonte sans son montant. Une fois l'outil choisi, je vérifie qu'il communique bien avec le site.
+
 Belle journée,
 Clément

@@ -45,3 +45,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <script is:inline set:html={consentScript} />
 {gtmIds.map((id) => <script is:inline set:html={toGtmScript(id)} />)}
+
+<script>
+  import { forgetOnWithdrawal } from "../4espace/analyticsBridge";
+
+  forgetOnWithdrawal();
+</script>

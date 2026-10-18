@@ -1,3 +1,7 @@
+import {
+  hasAnalyticsConsent,
+  onAnalyticsConsent,
+} from "../../../scripts/consent";
 import { pushToDataLayer } from "../../../scripts/dataLayer";
 
 // every name below is a widget internal, read off its bundle: see ADR 0028
@@ -53,6 +57,7 @@ const widgetEvents = [
 const stashKey = "musiquizCheckout";
 const sentKey = "musiquizPurchases";
 const routerTimeout = 30_000;
+const consentTimeout = 3000;
 
 function push(event: string, ecommerce: Ecommerce) {
   // GA4 merges ecommerce objects across pushes unless it is cleared first
@@ -62,6 +67,16 @@ function push(event: string, ecommerce: Ecommerce) {
 }
 
 type StorageKind = "localStorage" | "sessionStorage";
+
+const storageKinds = {
+  [stashKey]: "sessionStorage",
+  [sentKey]: "localStorage",
+} satisfies Record<string, StorageKind>;
+
+type Key = keyof typeof storageKinds;
+
+// Web Storage only mirrors it, and only while analytics consent is granted
+const memory = new Map<Key, unknown>();
 
 // the storage getter itself throws when site data is blocked
 function readJson<T>(kind: StorageKind, key: string) {
@@ -83,6 +98,42 @@ function writeJson(kind: StorageKind, key: string, value: unknown) {
   }
 }
 
+function removeStored(key: Key) {
+  try {
+    globalThis[storageKinds[key]].removeItem(key);
+  } catch {
+    // blocked: nothing was stored
+  }
+}
+
+function load<T>(key: Key) {
+  if (memory.has(key)) return memory.get(key) as T;
+  if (hasAnalyticsConsent()) return readJson<T>(storageKinds[key], key);
+
+  return;
+}
+
+function save(key: Key, value: unknown) {
+  memory.set(key, value);
+  if (hasAnalyticsConsent()) writeJson(storageKinds[key], key, value);
+}
+
+function forget(key: Key) {
+  memory.delete(key);
+  removeStored(key);
+}
+
+function persist() {
+  const stash = memory.get(stashKey);
+  if (stash) save(stashKey, stash);
+
+  const sent = memory.get(sentKey) as string[] | undefined;
+  if (sent) {
+    const stored = readJson<string[]>(storageKinds[sentKey], sentKey) ?? [];
+    save(sentKey, [...new Set([...stored, ...sent])]);
+  }
+}
+
 function readPaymentOption() {
   return (
     globalThis.forescapeStoreOrder?._p?._s.get("forescapePay")?.paymentChoice ??
@@ -91,7 +142,7 @@ function readPaymentOption() {
 }
 
 function stashCheckout(ecommerce: Ecommerce) {
-  writeJson("sessionStorage", stashKey, {
+  save(stashKey, {
     uid: globalThis.forescapeStoreOrder?.uid ?? undefined,
     ecommerce,
     paymentOption: readPaymentOption(),
@@ -129,11 +180,11 @@ function beginCheckout() {
   }
 }
 
-function purchase(orderUid: string) {
-  const sent = readJson<string[]>("localStorage", sentKey) ?? [];
+function sendPurchase(orderUid: string) {
+  const sent = load<string[]>(sentKey) ?? [];
   if (sent.includes(orderUid)) return;
 
-  const stash = readJson<Stash>("sessionStorage", stashKey);
+  const stash = load<Stash>(stashKey);
   const matches = stash && (!stash.uid || stash.uid === orderUid);
 
   push(
@@ -147,11 +198,28 @@ function purchase(orderUid: string) {
       : { transaction_id: orderUid },
   );
 
-  writeJson("localStorage", sentKey, [...sent, orderUid]);
-  try {
-    sessionStorage.removeItem(stashKey);
-  } catch {
-    // blocked: there was no stash to clear
+  save(sentKey, [...sent, orderUid]);
+  forget(stashKey);
+}
+
+// after a 3-D Secure redirect or a reload the stash and the sent uids are in
+// storage only, unreadable until the CMP's first update lands
+function purchase(orderUid: string) {
+  if (hasAnalyticsConsent() || memory.has(stashKey)) {
+    sendPurchase(orderUid);
+    return;
+  }
+
+  let isDone = false;
+  const stop = onAnalyticsConsent(finish);
+  const timer = setTimeout(finish, consentTimeout);
+
+  function finish() {
+    if (isDone) return;
+    isDone = true;
+    stop();
+    clearTimeout(timer);
+    sendPurchase(orderUid);
   }
 }
 
@@ -187,6 +255,22 @@ function watchRouter(waited = 0) {
 }
 
 export function bridgeWidgetAnalytics() {
+  // TrackingHead creates it, and only when a container loads
+  if (!globalThis.dataLayer) return;
+
+  onAnalyticsConsent((isGranted) => {
+    if (isGranted) persist();
+  });
   listenToWidgetEvents();
   watchRouter();
+}
+
+// runs on every page: a withdrawal can happen away from the Widget
+export function forgetOnWithdrawal() {
+  onAnalyticsConsent((isGranted) => {
+    if (isGranted) return;
+
+    removeStored(stashKey);
+    removeStored(sentKey);
+  });
 }
