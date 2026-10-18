@@ -1,0 +1,233 @@
+---
+import Button from "./primitives/Button.astro";
+import Icon from "./primitives/Icon.astro";
+import RemoteImage from "./primitives/RemoteImage.astro";
+import Text from "./primitives/Text.astro";
+import { linkTarget } from "./lib/linkTarget";
+import type { CtaLink, ImageSource } from "./types";
+
+interface Props {
+  dismissKey: string;
+  background: { type: "glass" } | { type: "image"; image: ImageSource };
+  title: string;
+  text: string;
+  cta: CtaLink;
+  logo?: ImageSource;
+  closeLabel: string;
+}
+
+const { dismissKey, background, title, text, cta, logo, closeLabel } =
+  Astro.props;
+
+const TITLE_ID = "popup-title";
+---
+
+<aside
+  class:list={["popup", background.type]}
+  data-popup
+  data-dismiss-key={dismissKey}
+  aria-labelledby={TITLE_ID}
+  hidden
+>
+  {
+    background.type === "image" && (
+      <div class="backdrop">
+        <RemoteImage image={background.image} variant="popup-background" />
+      </div>
+    )
+  }
+
+  <div class="content">
+    <div class="copy">
+      <div class="heading">
+        <Text as="p" variant="title-h4">
+          <span id={TITLE_ID}>{title}</span>
+        </Text>
+        <Text as="p" variant="paragraph-base-sm">{text}</Text>
+      </div>
+
+      <Button
+        as="a"
+        href={cta.url}
+        {...linkTarget(cta.external)}
+        tone="light"
+        icon="arrow-right"
+      >
+        {cta.label}
+      </Button>
+    </div>
+
+    {
+      logo && (
+        <div class="logo">
+          <RemoteImage image={logo} variant="popup-logo" />
+        </div>
+      )
+    }
+  </div>
+
+  <button type="button" class="close" aria-label={closeLabel} data-popup-close>
+    <Icon name="cross" size="xl" />
+  </button>
+</aside>
+
+<script>
+  const DELAY_MS = 2500;
+
+  // sessionStorage throws when the browser blocks site data
+  function isDismissed(key: string) {
+    try {
+      return sessionStorage.getItem(key) !== null;
+    } catch {
+      return false;
+    }
+  }
+
+  function dismiss(key: string) {
+    try {
+      sessionStorage.setItem(key, "1");
+    } catch {
+      // the pop-up shows again on the next page, nothing else to do
+    }
+  }
+
+  const popup = document.querySelector<HTMLElement>("[data-popup]");
+  const key = popup?.dataset.dismissKey;
+
+  if (popup && key && !isDismissed(key)) {
+    setTimeout(() => {
+      popup.hidden = false;
+    }, DELAY_MS);
+
+    popup.querySelector("[data-popup-close]")?.addEventListener("click", () => {
+      popup.hidden = true;
+      dismiss(key);
+    });
+  }
+</script>
+
+<style>
+  .popup {
+    position: fixed;
+    inset-block-end: var(--space-6);
+    inset-inline-end: var(--space-6);
+    z-index: 10;
+    display: flex;
+    gap: var(--space-6);
+    inline-size: min(664px, 100% - 2 * var(--space-6));
+    padding-block: var(--space-2) var(--space-6);
+    padding-inline: var(--space-6) var(--space-2);
+    overflow: hidden;
+    color: var(--color-text-on-media);
+    border-radius: var(--radius-m);
+    isolation: isolate;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .popup:not([hidden]) {
+      animation: popup-in 400ms ease-out;
+    }
+  }
+
+  @keyframes popup-in {
+    from {
+      opacity: 0;
+      transform: translateY(var(--space-4));
+    }
+  }
+
+  .glass {
+    background-color: var(--color-surface-glass);
+    border: solid var(--color-border-translucent);
+    border-width: 1px 3px 3px 1px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .backdrop :global(picture),
+  .backdrop :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .content {
+    display: flex;
+    flex: 1;
+    gap: var(--space-10);
+    align-items: center;
+    padding-block-start: var(--space-4);
+  }
+
+  .copy {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .copy :global(.button) {
+    max-width: none;
+  }
+
+  .logo {
+    flex: none;
+    inline-size: 200px;
+  }
+
+  .close {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    align-self: flex-start;
+    justify-content: center;
+    inline-size: 1.875rem;
+    block-size: 1.875rem;
+    color: var(--color-text-on-media);
+    border-radius: 6px;
+  }
+
+  .close:hover {
+    background-color: var(--color-surface-on-media);
+  }
+
+  .image .close {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .glass .close:hover {
+    background-color: var(--white-10);
+  }
+
+  .close:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  /* popup logo dropped (see styles/breakpoints.css) */
+  @media (width < 45rem) {
+    .popup {
+      inset-block-end: var(--space-4);
+      inset-inline: var(--space-4);
+      inline-size: auto;
+    }
+
+    .logo {
+      display: none;
+    }
+  }
+</style>

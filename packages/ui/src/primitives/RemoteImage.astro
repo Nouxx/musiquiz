@@ -90,6 +90,16 @@ const variants = {
   "logo-strip": { widths: [120, 240, 360], sizes: "120px" },
   "logo-strip-large": { widths: [160, 320, 480], sizes: "160px" },
   cover: { widths: [640, 960, 1280, 1920, 2560], sizes: "100vw" },
+  // 45rem is where the pop-up spans the viewport (styles/breakpoints.css)
+  "popup-background": {
+    widths: [400, 664, 1000, 1328],
+    sizes: "(width < 45rem) 100vw, 664px",
+  },
+  // hidden below 45rem (styles/breakpoints.css)
+  "popup-logo": {
+    widths: [200, 400, 600],
+    sizes: "(width < 45rem) 1px, 200px",
+  },
 };
 
 const SVG_MIME_TYPE = "image/svg+xml";
@@ -280,6 +290,11 @@ const srcSetWidths =
   }
 
   .cover {
+    width: 100%;
+    height: auto;
+  }
+
+  .popup-logo {
     width: 100%;
     height: auto;
   }

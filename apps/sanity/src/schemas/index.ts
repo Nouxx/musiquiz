@@ -20,6 +20,7 @@ import { siteSettingsType } from "./siteSettings";
 import { teamMemberType } from "./teamMember";
 import { blogArticleType, blogFaqType } from "./blogArticle";
 import { blogFindUsType, venueBlogType } from "./venueBlog";
+import { venuePopupType } from "./venuePopup";
 import { articleBodyType } from "./shared/articleBody";
 import { quotationServiceType, termsArticleType, venueType } from "./venue";
 import { priceType, venueGameType } from "./venueGame";
@@ -77,6 +78,7 @@ export const schemaTypes = [
   blogArticleType,
   articleBodyType,
   venueBlogType,
+  venuePopupType,
   blogFaqType,
   blogFindUsType,
   venueType,

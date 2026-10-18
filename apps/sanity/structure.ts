@@ -17,12 +17,14 @@ import { UsersIcon } from "@sanity/icons/Users";
 import { HeartIcon } from "@sanity/icons/Heart";
 import { CalendarIcon } from "@sanity/icons/Calendar";
 import { DocumentsIcon } from "@sanity/icons/Documents";
+import { BellIcon } from "@sanity/icons/Bell";
 import type { ComponentType } from "react";
 import {
   globalEventTemplateId,
   globalGameTemplateId,
   singletonIds,
   venueBlogTemplateId,
+  venuePopupTemplateId,
   venueCustomPageTemplateId,
   venueEventTemplateId,
   venueGameTemplateId,
@@ -37,6 +39,7 @@ const nestedTypeIds = [
   "venueCustomPage",
   "blogArticle",
   "venueBlog",
+  "venuePopup",
   "teamMember",
   "gameFormat",
   "eventFormat",
@@ -101,6 +104,31 @@ function venueBlogItem({
     .schemaType("venueBlog")
     .documentId(`venueBlog-${publishedVenueId}`)
     .initialValueTemplate(venueBlogTemplateId, { venueId: publishedVenueId });
+}
+
+function venuePopupItem({
+  S,
+  venueId,
+}: {
+  S: StructureBuilder;
+  venueId: string;
+}) {
+  const publishedVenueId = venueId.replace(/^drafts\./, "");
+
+  return S.listItem()
+    .title("Pop-up")
+    .id("popup")
+    .icon(BellIcon)
+    .child(
+      S.document()
+        .schemaType("venuePopup")
+        // a hyphen, never a dot: see venuePageId
+        .documentId(`venuePopup-${publishedVenueId}`)
+        .title("Pop-up")
+        .initialValueTemplate(venuePopupTemplateId, {
+          venueId: publishedVenueId,
+        }),
+    );
 }
 
 function formatChild({
@@ -248,6 +276,8 @@ function venueChild({ S, venueId }: { S: StructureBuilder; venueId: string }) {
         title: "Booking page",
         icon: CalendarIcon,
       }),
+
+      venuePopupItem({ S, venueId }),
     ]);
 }
 

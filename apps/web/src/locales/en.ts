@@ -40,6 +40,9 @@ export const en: EnglishKeys = {
     changeVenue: "Switch venue",
     closeLabel: "Close",
   },
+  popup: {
+    closeLabel: "Close",
+  },
   footer: {
     whereToFindUs: "Where to find us",
     contact: "Contact",
