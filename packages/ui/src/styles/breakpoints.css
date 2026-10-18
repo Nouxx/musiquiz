@@ -171,6 +171,16 @@
    sheet.
 
    ------------------------------------------------------------
+   45rem — popup logo dropped
+   ------------------------------------------------------------
+   Used by Popup.astro, and quoted by RemoteImage.astro in the
+   `popup-logo` `sizes` string, which is TS.
+   Derived: the card is drawn at 664px with `--space-6` on each side,
+   664 + 48 = 712px, rounded up to 720px. Below it the card spans the
+   viewport between `--space-4` gutters and the logo is hidden, since the
+   design has no mobile pop-up and the text column needs the width.
+
+   ------------------------------------------------------------
    280px — Logos heading column ceiling
    ------------------------------------------------------------
    Not a media query, but it decides one: `Logos.astro` emits the width at

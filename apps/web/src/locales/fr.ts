@@ -33,6 +33,9 @@ export const fr = {
     changeVenue: "Changez de ville",
     closeLabel: "Fermer",
   },
+  popup: {
+    closeLabel: "Fermer",
+  },
   footer: {
     whereToFindUs: "Où nous trouver",
     contact: "Contact",

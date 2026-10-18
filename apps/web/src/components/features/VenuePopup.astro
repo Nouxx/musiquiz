@@ -1,0 +1,23 @@
+---
+import Popup from "@repo/ui/Popup";
+import { getVenuePopupData } from "@repo/services/cms/getVenuePopupData";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getLang } from "../../libs/getLang";
+import { getT } from "../../libs/i18n";
+
+interface Props {
+  venueSlug: string;
+}
+
+const { venueSlug } = Astro.props;
+
+const lang = getLang(Astro);
+
+const popup = await getVenuePopupData({
+  config: getSanityConfigFromEnvironment(),
+  lang,
+  venueSlug,
+});
+---
+
+{popup && <Popup {...popup} closeLabel={getT(lang)("popup.closeLabel")} />}

@@ -1,6 +1,7 @@
 import type { Currency } from "@repo/utils/currency";
 
 import type {
+  Cta,
   FaqQuestion,
   FindUsContent,
   PageComponent,
@@ -459,4 +460,14 @@ export type VenueFooter = {
 
 export type Tracking = {
   gtmIds: string[];
+};
+
+export type VenuePopup = {
+  /** changes on every publish, so a new version shows again to those who closed the last one */
+  dismissKey: string;
+  background: "glass" | "vivid";
+  title: string;
+  text: string;
+  cta: Cta;
+  logo: CmsImage | undefined;
 };

@@ -1,5 +1,6 @@
 ---
 import VenueHeader from "../components/features/VenueHeader.astro";
+import VenuePopup from "../components/features/VenuePopup.astro";
 import type { Props as SeoProps } from "../components/features/SeoHead.astro";
 import type { PageType } from "../components/features/tracking/TrackingHead.astro";
 import Layout from "./Layout.astro";
@@ -7,9 +8,11 @@ import Layout from "./Layout.astro";
 interface Props extends SeoProps {
   venueSlug: string;
   pageType?: PageType;
+  /** for the booking and gift pages: the visitor is already buying */
+  hidePopup?: boolean;
 }
 
-const { venueSlug, pageType, ...seo } = Astro.props;
+const { venueSlug, pageType, hidePopup = false, ...seo } = Astro.props;
 ---
 
 <Layout {venueSlug} {pageType} {...seo}>
@@ -17,4 +20,6 @@ const { venueSlug, pageType, ...seo } = Astro.props;
   <VenueHeader {venueSlug} />
 
   <slot />
+
+  {!hidePopup && <VenuePopup {venueSlug} />}
 </Layout>

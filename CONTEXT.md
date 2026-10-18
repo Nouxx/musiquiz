@@ -101,6 +101,10 @@ _Avoid_: content, post body, rich text (that is the paragraph-only one)
 One document per Venue closing every Blog Article about it with a Find Us block, French only. The Venue supplies the address, the map and the booking link; the Venue Blog supplies the words around them. The FAQ is not here: each article writes its own. An article whose Venue has none fails the build. [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md), [ADR 0016](./docs/adr/0016-blog-faq-belongs-to-the-article.md).
 _Avoid_: blog settings, venue FAQ, blog footer
 
+**Venue Pop-up**:
+One document per Venue holding a promotion shown as a card in the bottom-right corner of that Venue's pages, a few seconds after load. Not on the booking and gift pages, and never on Global Pages: there is no national pop-up. Off until an editor turns it on; once on, every field but the logo is required in both languages, and a missing one fails the build. Closing it hides it for the rest of the browser session, until the next publish. Its background is glass or vivid, the same gradient as vivid sections; editors pick one, never upload their own.
+_Avoid_: modal, banner, announcement, popup settings
+
 **Team Member**:
 A person of the company, a document of its own. The contact page lists them in the order Site Settings references them; a Blog Article references one as its author, whose French bio is then required. [ADR 0014](./docs/adr/0014-blog-article-page-closes-on-its-venue.md).
 _Avoid_: author, staff, employee
