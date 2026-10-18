@@ -8,6 +8,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { VenuePin, WhereToFindUsPage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
+import { sortVenuePins } from "./utils/sortVenuePins";
 import { toPageCover } from "./utils/toPageCover";
 import { toSeo } from "./utils/toSeo";
 
@@ -49,7 +50,10 @@ function adaptWhereToFindUsPage({
       page.componentsBeforeMap?.map((component) =>
         adaptPageComponent({ data: component, lang }),
       ) ?? [],
-    venues: venues.map((venue) => adaptVenue({ data: venue, lang })),
+    venues: sortVenuePins({
+      venues: venues.map((venue) => adaptVenue({ data: venue, lang })),
+      lang,
+    }),
     venuesCta: page.venuesCta ?? undefined,
     componentsAfterMap:
       page.componentsAfterMap?.map((component) =>

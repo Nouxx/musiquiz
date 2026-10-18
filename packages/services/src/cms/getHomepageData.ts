@@ -5,6 +5,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { Homepage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
+import { sortVenuePins } from "./utils/sortVenuePins";
 import { toCmsImage } from "./utils/toCmsImage";
 import { toPageCover } from "./utils/toPageCover";
 import { toSeo } from "./utils/toSeo";
@@ -59,7 +60,10 @@ function adaptHomepage({
 
   return {
     pageCover,
-    venues: data.venues.map((venue) => adaptVenue({ data: venue, lang })),
+    venues: sortVenuePins({
+      venues: data.venues.map((venue) => adaptVenue({ data: venue, lang })),
+      lang,
+    }),
     venuesCta: venuesCta ?? undefined,
     components:
       data.homepage.pageComponents?.map((component) =>
