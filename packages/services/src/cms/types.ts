@@ -465,7 +465,7 @@ export type Tracking = {
 export type VenuePopup = {
   /** changes on every publish, so a new version shows again to those who closed the last one */
   dismissKey: string;
-  background: { type: "glass" } | { type: "image"; image: CmsImage };
+  background: "glass" | "vivid";
   title: string;
   text: string;
   cta: Cta;

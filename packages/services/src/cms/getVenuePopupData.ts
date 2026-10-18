@@ -13,10 +13,7 @@ function adaptVenuePopup(
 ): VenuePopup {
   return {
     dismissKey: `popup:${popup._id}:${popup._rev}`,
-    background:
-      popup.background === "image"
-        ? { type: "image", image: toCmsImage(popup.backgroundImage) }
-        : { type: "glass" },
+    background: popup.background,
     title: popup.title,
     text: popup.text,
     cta: popup.cta,

@@ -4,7 +4,7 @@ import type { LocalizedEntry } from "./shared/frenchValue";
 
 const LANGUAGES = ["fr", "en"];
 
-type PopupDocument = { enabled?: boolean; background?: string };
+type PopupDocument = { enabled?: boolean };
 
 function isEnabled(document?: unknown) {
   return (document as PopupDocument | undefined)?.enabled === true;
@@ -56,30 +56,13 @@ export const venuePopupType = defineType({
       options: {
         list: [
           { title: "Glass", value: "glass" },
-          { title: "Image", value: "image" },
+          { title: "Vivid", value: "vivid" },
         ],
         layout: "radio",
         direction: "horizontal",
       },
       initialValue: "glass",
       validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "backgroundImage",
-      title: "Background image",
-      description:
-        "Fills the whole card behind light text. Pick an image that stays dark on the left, where the text sits.",
-      type: "image",
-      hidden: ({ document }) =>
-        (document as PopupDocument | undefined)?.background !== "image",
-      validation: (rule) =>
-        rule.custom((value, { document }) =>
-          isEnabled(document) &&
-          (document as PopupDocument).background === "image" &&
-          !value?.asset
-            ? "Required while the pop-up is on with an image background"
-            : true,
-        ),
     }),
     defineField({
       name: "title",

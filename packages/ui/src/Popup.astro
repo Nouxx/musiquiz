@@ -1,14 +1,16 @@
 ---
 import Button from "./primitives/Button.astro";
 import Icon from "./primitives/Icon.astro";
+import { Picture } from "astro:assets";
 import RemoteImage from "./primitives/RemoteImage.astro";
 import Text from "./primitives/Text.astro";
 import { linkTarget } from "./lib/linkTarget";
+import vividBackground from "./popup/vivid-background.png";
 import type { CtaLink, ImageSource } from "./types";
 
 interface Props {
   dismissKey: string;
-  background: { type: "glass" } | { type: "image"; image: ImageSource };
+  background: "glass" | "vivid";
   title: string;
   text: string;
   cta: CtaLink;
@@ -23,16 +25,23 @@ const TITLE_ID = "popup-title";
 ---
 
 <aside
-  class:list={["popup", background.type]}
+  class:list={["popup", background]}
   data-popup
   data-dismiss-key={dismissKey}
   aria-labelledby={TITLE_ID}
   hidden
 >
   {
-    background.type === "image" && (
+    background === "vivid" && (
       <div class="backdrop">
-        <RemoteImage image={background.image} variant="popup-background" />
+        {/* 45rem is where the pop-up spans the viewport (styles/breakpoints.css) */}
+        <Picture
+          src={vividBackground}
+          alt=""
+          widths={[400, 664, 1000, 1328]}
+          sizes="(width < 45rem) 100vw, 664px"
+          formats={["avif", "webp"]}
+        />
       </div>
     )
   }
@@ -204,7 +213,7 @@ const TITLE_ID = "popup-title";
     background-color: var(--color-surface-on-media);
   }
 
-  .image .close {
+  .vivid .close {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
   }

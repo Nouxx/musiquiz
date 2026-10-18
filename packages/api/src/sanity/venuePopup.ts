@@ -5,11 +5,7 @@ import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
 import { sanityCtaSchema } from "./shared/cta";
-import {
-  imageProjection,
-  optionalImageProjection,
-  sanityImageSchema,
-} from "./shared/image";
+import { optionalImageProjection, sanityImageSchema } from "./shared/image";
 
 function venuePopupQuery({
   lang,
@@ -27,9 +23,6 @@ function venuePopupQuery({
       _id,
       _rev,
       background,
-      background == "image" => {
-        "backgroundImage": backgroundImage ${imageProjection({ lang })}
-      },
       "title": title[language == "${lang}"][0].value,
       "text": text[language == "${lang}"][0].value,
       "cta": cta{
@@ -41,25 +34,17 @@ function venuePopupQuery({
   }`);
 }
 
-const popupContentSchema = {
-  _id: z.string().min(1),
-  _rev: z.string().min(1),
-  title: z.string().min(1),
-  text: z.string().min(1),
-  cta: sanityCtaSchema,
-  logo: sanityImageSchema.nullable(),
-};
-
 const sanityVenuePopupSchema = z.strictObject({
   popup: z
-    .discriminatedUnion("background", [
-      z.strictObject({ ...popupContentSchema, background: z.literal("glass") }),
-      z.strictObject({
-        ...popupContentSchema,
-        background: z.literal("image"),
-        backgroundImage: sanityImageSchema,
-      }),
-    ])
+    .strictObject({
+      _id: z.string().min(1),
+      _rev: z.string().min(1),
+      background: z.enum(["glass", "vivid"]),
+      title: z.string().min(1),
+      text: z.string().min(1),
+      cta: sanityCtaSchema,
+      logo: sanityImageSchema.nullable(),
+    })
     .nullable(),
 });
 
