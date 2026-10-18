@@ -6,7 +6,6 @@ import Icon from "./primitives/Icon.astro";
 import RichText from "./primitives/RichText.astro";
 import Section from "./Section.astro";
 import { linkTarget } from "./lib/linkTarget";
-import googleMapsLogo from "./logos/google-maps.svg?raw";
 import type { CtaLink, RichTextNode } from "./types";
 
 interface Props {
@@ -46,14 +45,6 @@ const { summaryBadge, summary, rating, cta } = Astro.props;
                 ))}
               </span>
               {rating.label}
-              {/* Places API terms: the official logo, unmodified, labelled "Google Maps" in every language */}
-              <span
-                class="google-maps"
-                role="img"
-                aria-label="Google Maps"
-                translate="no"
-                set:html={googleMapsLogo}
-              />
             </span>
           </Badge>
         </div>
@@ -100,13 +91,6 @@ const { summaryBadge, summary, rating, cta } = Astro.props;
     display: inline-flex;
     gap: 2px;
     color: var(--yellow-600);
-  }
-
-  /* the terms bound the logo to 16–19px tall */
-  .google-maps :global(svg) {
-    display: block;
-    block-size: 16px;
-    inline-size: auto;
   }
 
   .muted {

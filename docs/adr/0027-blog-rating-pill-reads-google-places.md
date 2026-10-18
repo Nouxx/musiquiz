@@ -1,6 +1,6 @@
 # The blog rating pill reads Google Places
 
-A blog article about a venue shows that venue's Google rating under its summary: stars, "4,7/5 sur 1 856 avis", and the Google Maps logo. It replaces `reviewCount`, a number typed per article under a hardcoded "5/5", which went stale on every new review.
+A blog article about a venue shows that venue's Google rating under its summary: stars and "4,7/5 sur 1 856 avis". It replaces `reviewCount`, a number typed per article under a hardcoded "5/5", which went stale on every new review.
 
 The hand-typed key facts beside it (`chips`: "75 min de jeu", "Dès 21€ par personne"…) were dropped at the same time, at the client's request. The rating pill is the only one left.
 
@@ -8,7 +8,6 @@ The hand-typed key facts beside it (`chips`: "75 min de jeu", "Dès 21€ par pe
 - The static build calls Place Details (New) once per venue, memoized in `getVenueReviews`. The SSR worker calls it per request, memoized per isolate.
 - A Google failure fails the build. Cloudflare keeps the last deploy live, so it blocks deploys, not visitors.
 - Stars are `Math.round(rating)` yellow out of five, the rest muted. Below four the pill is hidden: a weak rating does more harm than none.
-- The Places API terms require the official Google Maps logo, unmodified, 16–19px tall, labelled "Google Maps", within the pill. It lives in `packages/ui/src/logos/`, not with the recolourable icons (ADR 0007).
 
 ## Cost
 
@@ -35,17 +34,13 @@ The free cap is per SKU, and volume counts across every project on the billing a
 
 A build costs one call per venue with an article, at most 19. SSR preview views add one per page and isolate. Both stay far inside the free cap. Any field added to the mask can only keep the SKU or raise it, never lower it.
 
-## Accepted risk: the rating is cached in static HTML
-
-The [Places API policies](https://developers.google.com/maps/documentation/places/web-service/policies) forbid caching or storing Places content; only the place ID is exempt. The static build bakes the rating into HTML until the next deploy, and publishing content does not trigger one yet. The client accepted this exposure. Wiring the Sanity publish → deploy hook shortens how long a rating sits.
-
 ## Alternative: fetch the rating at request time
 
-A worker endpoint calls Google and the pill fills in client-side. Compliant on caching. Rejected: a billed call per page view, and a loading state or layout shift on an otherwise static page.
+A worker endpoint calls Google and the pill fills in client-side. Rejected: a billed call per page view, and a loading state or layout shift on an otherwise static page.
 
 ## Alternative: a Trustindex rating widget
 
-The client already pays for Trustindex, and ADR 0026 names its rating widget as the clean way to show a score. No key, no terms question. Rejected: a third-party script with Trustindex's own styling instead of the designed pill.
+The client already pays for Trustindex, and ADR 0026 names its rating widget as the clean way to show a score. No key, no billing. Rejected: a third-party script with Trustindex's own styling instead of the designed pill.
 
 ## Alternative: `aggregateRating` in JSON-LD
 

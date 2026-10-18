@@ -1,6 +1,7 @@
 # P0 (top priorities)
 
-- generate article pills from reviews (count of reviews + average)
+- setup GOOGLE_PLACES_API_KEY (with lionel)
+- setup carto api key for production (restrict to domain)
 - Sanity deploy widget: generate a new site with all published content
 - GTM Analytics
 - Order venues by alphabetical order on the venuesMap
