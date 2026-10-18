@@ -1,7 +1,6 @@
 # P0 (top priorities)
 
 - setup carto api key for production (restrict to domain)
-- Sanity deploy widget: generate a new site with all published content
 - GTM Analytics
 - Order venues by alphabetical order on the venuesMap
 
@@ -11,7 +10,6 @@
 - Sanity UI should require localized strings
 - Proper style on 404 page
 - Blog: add code block (youtube, instagram...)
-- Revoir game prices logic. support exact count: ex: 2 joueurs
 - Form security: prevent attacks
   - honey pot
   - rate limiting by IP
