@@ -123,15 +123,21 @@ function forget(key: Key) {
   removeStored(key);
 }
 
+// read storage every time: another tab may have added uids since
+function loadSent() {
+  const inMemory = (memory.get(sentKey) as string[] | undefined) ?? [];
+  const stored = hasAnalyticsConsent()
+    ? (readJson<string[]>(storageKinds[sentKey], sentKey) ?? [])
+    : [];
+
+  return [...new Set([...stored, ...inMemory])];
+}
+
 function persist() {
   const stash = memory.get(stashKey);
   if (stash) save(stashKey, stash);
 
-  const sent = memory.get(sentKey) as string[] | undefined;
-  if (sent) {
-    const stored = readJson<string[]>(storageKinds[sentKey], sentKey) ?? [];
-    save(sentKey, [...new Set([...stored, ...sent])]);
-  }
+  if (memory.has(sentKey)) save(sentKey, loadSent());
 }
 
 function readPaymentOption() {
@@ -181,7 +187,7 @@ function beginCheckout() {
 }
 
 function sendPurchase(orderUid: string) {
-  const sent = load<string[]>(sentKey) ?? [];
+  const sent = loadSent();
   if (sent.includes(orderUid)) return;
 
   const stash = load<Stash>(stashKey);
