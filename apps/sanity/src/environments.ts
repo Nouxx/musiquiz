@@ -21,4 +21,9 @@ export const dataset = required(
   process.env.SANITY_STUDIO_DATASET,
 );
 
+export const workerUrl = required(
+  "SANITY_STUDIO_WORKER_URL",
+  process.env.SANITY_STUDIO_WORKER_URL,
+);
+
 export const appId = process.env.SANITY_STUDIO_APP_ID;

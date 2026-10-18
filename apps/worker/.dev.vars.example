@@ -1,3 +1,7 @@
 # Zoho API key, used to forward the client contact form
 # prod value lives as a Cloudflare Secret on musiquiz-worker
 ZOHO_API_KEY=
+
+# Workers Builds deploy hook of musiquiz-static, called by the Studio "Deploy" tool
+# prod value lives as a Cloudflare Secret on musiquiz-worker
+STATIC_DEPLOY_HOOK_URL=

@@ -5,6 +5,8 @@ const ALLOWED_ORIGINS = new Set([
 	"http://localhost:4322",
 	"https://musiquiz-static.clement-vnnq.workers.dev",
 	"https://musiquiz-ssr.clement-vnnq.workers.dev",
+	"http://localhost:3333",
+	"https://musiquiz.sanity.studio",
 ]);
 
 function corsHeaders(request: Request): Record<string, string> {
@@ -19,7 +21,7 @@ function corsHeaders(request: Request): Record<string, string> {
 	return {
 		"Access-Control-Allow-Origin": origin,
 		"Access-Control-Allow-Methods": "POST, OPTIONS",
-		"Access-Control-Allow-Headers": "Content-Type",
+		"Access-Control-Allow-Headers": "Content-Type, Authorization",
 		"Access-Control-Max-Age": "86400",
 		Vary: "Origin",
 	};

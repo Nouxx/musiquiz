@@ -89,7 +89,8 @@ export default defineConfig({
         optional: true,
       }),
       // the worker needs to be called from the client
-      WORKER_URL: envField.string({
+      // this needs to be SANITY_STUDIO_ prefixed to be accessible by apps/sanity
+      SANITY_STUDIO_WORKER_URL: envField.string({
         context: "client",
         access: "public",
         optional: false,

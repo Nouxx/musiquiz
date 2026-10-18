@@ -27,7 +27,7 @@ import { toOffers } from "../../libs/toOffers";
 import { getVideoSources } from "../../libs/getVideoSources";
 import ClientContactForm from "./ClientContactForm.astro";
 import QuotationForm from "./QuotationForm.astro";
-import { WORKER_URL } from "astro:env/client";
+import { SANITY_STUDIO_WORKER_URL } from "astro:env/client";
 import { CARTO_API_KEY } from "astro:env/client";
 
 interface Props {
@@ -163,7 +163,7 @@ const t = getT(lang);
             messageLabel={t("contactForm.message")}
             messagePlaceholder={t("contactForm.messagePlaceholder")}
             submitLabel={t("contactForm.submit")}
-            workerUrl={WORKER_URL}
+            workerUrl={SANITY_STUDIO_WORKER_URL}
             venueSlug={component.venueSlug}
           />
         );
@@ -199,7 +199,7 @@ const t = getT(lang);
             messageLabel={t(`${copy}.message`)}
             messagePlaceholder={t(`${copy}.messagePlaceholder`)}
             submitLabel={t(`${copy}.submit`)}
-            workerUrl={WORKER_URL}
+            workerUrl={SANITY_STUDIO_WORKER_URL}
             venueSlug={component.venueSlug}
             audience={component.audience}
           />
