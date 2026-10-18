@@ -8,16 +8,11 @@ export type VenueReviews = {
   reviewsCount: number;
 };
 
-function toVenueReviews(input: GooglePlaceInfo): VenueReviews {
-  const { rating, userRatingCount, id } = input;
+function toVenueReviews(input: GooglePlaceInfo): VenueReviews | undefined {
+  const { rating, userRatingCount } = input;
 
-  if (!rating) {
-    throw new Error(`Missing rating for place id ${id}`);
-  }
-
-  if (!userRatingCount) {
-    throw new Error(`Missing userRatingCount for place id ${id}`);
-  }
+  // a place id can have no review
+  if (!rating || !userRatingCount) return;
 
   return {
     averageRating: rating,
@@ -25,8 +20,8 @@ function toVenueReviews(input: GooglePlaceInfo): VenueReviews {
   };
 }
 
-// every article about a venue asks for the same place, and each call is billed
-const cache = new Map<string, Promise<VenueReviews>>();
+// each call is billed; holding the promise lets concurrent renders share one in-flight request
+const cache = new Map<string, Promise<VenueReviews | undefined>>();
 
 async function fetchVenueReviews({
   venueGooglePlaceId,
