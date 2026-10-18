@@ -1,11 +1,9 @@
 ---
 import Button from "./primitives/Button.astro";
 import Icon from "./primitives/Icon.astro";
-import { Picture } from "astro:assets";
 import RemoteImage from "./primitives/RemoteImage.astro";
 import Text from "./primitives/Text.astro";
 import { linkTarget } from "./lib/linkTarget";
-import vividBackground from "./popup/vivid-background.png";
 import type { CtaLink, ImageSource } from "./types";
 
 interface Props {
@@ -31,21 +29,6 @@ const TITLE_ID = "popup-title";
   aria-labelledby={TITLE_ID}
   hidden
 >
-  {
-    background === "vivid" && (
-      <div class="backdrop">
-        {/* 45rem is where the pop-up spans the viewport (styles/breakpoints.css) */}
-        <Picture
-          src={vividBackground}
-          alt=""
-          widths={[400, 664, 1000, 1328]}
-          sizes="(width < 45rem) 100vw, 664px"
-          formats={["avif", "webp"]}
-        />
-      </div>
-    )
-  }
-
   <div class="content">
     <div class="copy">
       <div class="heading">
@@ -129,7 +112,6 @@ const TITLE_ID = "popup-title";
     overflow: hidden;
     color: var(--color-text-on-media);
     border-radius: var(--radius-m);
-    isolation: isolate;
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -153,18 +135,8 @@ const TITLE_ID = "popup-title";
     -webkit-backdrop-filter: blur(16px);
   }
 
-  .backdrop {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-  }
-
-  .backdrop :global(picture),
-  .backdrop :global(img) {
-    display: block;
-    inline-size: 100%;
-    block-size: 100%;
-    object-fit: cover;
+  .vivid {
+    background-image: var(--color-surface-vivid);
   }
 
   .content {

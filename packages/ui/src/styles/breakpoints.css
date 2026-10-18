@@ -173,8 +173,8 @@
    ------------------------------------------------------------
    45rem — popup logo dropped
    ------------------------------------------------------------
-   Used by Popup.astro, also in its vivid background `sizes` string, and
-   quoted by RemoteImage.astro in the `popup-logo` `sizes` string.
+   Used by Popup.astro, and quoted by RemoteImage.astro in the
+   `popup-logo` `sizes` string, which is TS.
    Derived: the card is drawn at 664px with `--space-6` on each side,
    664 + 48 = 712px, rounded up to 720px. Below it the card spans the
    viewport between `--space-4` gutters and the logo is hidden, since the

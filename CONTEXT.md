@@ -102,7 +102,7 @@ One document per Venue closing every Blog Article about it with a Find Us block,
 _Avoid_: blog settings, venue FAQ, blog footer
 
 **Venue Pop-up**:
-One document per Venue holding a promotion shown as a card in the bottom-right corner of that Venue's pages, a few seconds after load. Not on the booking and gift pages, and never on Global Pages: there is no national pop-up. Off until an editor turns it on; once on, every field but the logo is required in both languages, and a missing one fails the build. Closing it hides it for the rest of the browser session, until the next publish. Its background is glass or vivid, a fixed gradient image; editors pick one, never upload their own.
+One document per Venue holding a promotion shown as a card in the bottom-right corner of that Venue's pages, a few seconds after load. Not on the booking and gift pages, and never on Global Pages: there is no national pop-up. Off until an editor turns it on; once on, every field but the logo is required in both languages, and a missing one fails the build. Closing it hides it for the rest of the browser session, until the next publish. Its background is glass or vivid, the same gradient as vivid sections; editors pick one, never upload their own.
 _Avoid_: modal, banner, announcement, popup settings
 
 **Team Member**:
