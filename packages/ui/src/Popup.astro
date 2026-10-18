@@ -88,12 +88,17 @@ const TITLE_ID = "popup-title";
 
   if (popup && key && !isDismissed(key)) {
     setTimeout(() => {
-      popup.hidden = false;
+      if (!isDismissed(key)) popup.hidden = false;
     }, DELAY_MS);
 
     popup.querySelector("[data-popup-close]")?.addEventListener("click", () => {
       popup.hidden = true;
       dismiss(key);
+    });
+
+    // bfcache restores this page as it was left, without rerunning the script
+    window.addEventListener("pageshow", () => {
+      if (isDismissed(key)) popup.hidden = true;
     });
   }
 </script>

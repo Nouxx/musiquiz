@@ -4,6 +4,9 @@ import type { LocalizedEntry } from "./shared/frenchValue";
 
 const LANGUAGES = ["fr", "en"];
 
+const TITLE_MAX_LENGTH = 40;
+const TEXT_MAX_LENGTH = 120;
+
 type PopupDocument = { enabled?: boolean };
 
 function isEnabled(document?: unknown) {
@@ -25,6 +28,21 @@ function requiredInEveryLanguage(
   return missing.length
     ? `Required while the pop-up is on. Missing: ${missing.join(", ")}`
     : true;
+}
+
+// the value is an array of one entry per language, so `max` would count languages
+function maxLengthInEveryLanguage(maxLength: number) {
+  return (entries?: LocalizedEntry[]) => {
+    const messages = (entries ?? []).flatMap((entry) =>
+      entry.value && entry.value.length > maxLength
+        ? [
+            `${entry.language?.toUpperCase()}: ${entry.value.length} characters, keep it to ${maxLength}.`,
+          ]
+        : [],
+    );
+
+    return messages.length ? messages.join(" ") : true;
+  };
 }
 
 export const venuePopupType = defineType({
@@ -66,13 +84,21 @@ export const venuePopupType = defineType({
     }),
     defineField({
       name: "title",
+      description: `${TITLE_MAX_LENGTH} characters at most.`,
       type: "internationalizedArrayString",
-      validation: (rule) => rule.custom(requiredInEveryLanguage),
+      validation: (rule) =>
+        rule
+          .custom(requiredInEveryLanguage)
+          .custom(maxLengthInEveryLanguage(TITLE_MAX_LENGTH)),
     }),
     defineField({
       name: "text",
+      description: `${TEXT_MAX_LENGTH} characters at most.`,
       type: "internationalizedArrayText",
-      validation: (rule) => rule.custom(requiredInEveryLanguage),
+      validation: (rule) =>
+        rule
+          .custom(requiredInEveryLanguage)
+          .custom(maxLengthInEveryLanguage(TEXT_MAX_LENGTH)),
     }),
     defineField({
       name: "cta",
