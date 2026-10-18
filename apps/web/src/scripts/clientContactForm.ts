@@ -2,6 +2,7 @@ import { defineFormElement } from "./formRuntime";
 
 defineFormElement({
   tag: "musiquiz-contact-form",
+  formName: "contact",
   formSelector: "[data-contact-form]",
   buildPayload({ form, element }) {
     const data = new FormData(form);
