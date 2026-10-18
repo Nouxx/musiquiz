@@ -18,19 +18,26 @@ import "@repo/ui/styles/base.css";
 interface Props extends SeoProps {
   venueSlug?: string;
   pageType?: PageType;
+  hasTracking?: boolean;
 }
 
-const { venueSlug, pageType = "content", ...seo } = Astro.props;
+const {
+  venueSlug,
+  pageType = "content",
+  hasTracking = true,
+  ...seo
+} = Astro.props;
 
 const lang = getLang(Astro);
 
 // dev traffic would land in the agencies' reports
-const { gtmIds } = import.meta.env.DEV
-  ? { gtmIds: [] }
-  : await getTrackingData({
-      config: getSanityConfigFromEnvironment(),
-      venueSlug,
-    });
+const { gtmIds } =
+  import.meta.env.DEV || !hasTracking
+    ? { gtmIds: [] }
+    : await getTrackingData({
+        config: getSanityConfigFromEnvironment(),
+        venueSlug,
+      });
 ---
 
 <!doctype html>

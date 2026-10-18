@@ -15,9 +15,16 @@ const { error } = Astro.props;
 const queryError = error instanceof SanityQueryError ? error : undefined;
 
 if (queryError?.kind === "empty") Astro.response.status = 404;
+
+// no tracking: Sanity is often what failed, asking it again would hide the error
 ---
 
-<Layout title="Erreur d'aperçu" alternates={undefined} noindex>
+<Layout
+  title="Erreur d'aperçu"
+  alternates={undefined}
+  noindex
+  hasTracking={false}
+>
   <main>
     {
       queryError?.kind === "empty" && (
