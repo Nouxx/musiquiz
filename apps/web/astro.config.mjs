@@ -95,6 +95,12 @@ export default defineConfig({
         optional: false,
         url: true,
       }),
+      // reads venue ratings from the Places API at build, and per request in ssr
+      GOOGLE_PLACES_API_KEY: envField.string({
+        context: "server",
+        access: "secret",
+        optional: false,
+      }),
       // the map widget api key (safe to share)
       CARTO_API_KEY: envField.string({
         context: "client",

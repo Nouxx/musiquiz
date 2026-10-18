@@ -107,6 +107,25 @@ To create or rotate the key, fill in the form at: https://carto.com/basemaps/api
 
 Accept the terms and submit. The key arrives by email.
 
+`GOOGLE_PLACES_API_KEY` reads each venue's Google rating and review count, shown under the summary of a blog article about that venue. It is a secret: the server reads it from `astro:env/server`, and every call is billed. `musiquiz-static` calls Google at build time and `musiquiz-ssr` per request, so it lives in:
+
+- `.env.local` for local dev
+- a Cloudflare **build variable** on `musiquiz-static`
+- a Cloudflare **Secret** on `musiquiz-ssr`
+- the `GOOGLE_PLACES_API_KEY_CI` GitHub repository secret, read by `ci.yaml` for the build check
+
+Each place gets its own key, so one can be revoked without touching the others. To create one, in the Google Cloud console of the Musiquiz project (billing must be enabled):
+
+1. _APIs & Services → Library_: enable **Places API (New)**. The legacy "Places API" is a different product and its keys are refused.
+2. _APIs & Services → Credentials → Create credentials → API key_.
+3. Edit the key:
+   - Name: `musiquiz-places-<local|ci|static|ssr>`
+   - Application restrictions: **None**. Builds and workers call from no fixed IP or referrer.
+   - API restrictions: **Restrict key**, Places API (New) only.
+4. Save, and copy the key into its store.
+
+Each venue's Place ID is the `googlePlaceId` field in the Studio. Look it up with the [Place ID Finder](https://developers.google.com/maps/documentation/places/web-service/place-id).
+
 ### The `SESSION` KV namespace is pinned on purpose
 
 `env.ssr` in `wrangler.jsonc` declares `SESSION` with an explicit namespace id. `@astrojs/cloudflare` would otherwise inject the binding without one, which forces `wrangler deploy` to provision a namespace at deploy time — something the non-interactive Workers Builds runner cannot be relied on to do.

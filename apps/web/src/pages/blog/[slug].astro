@@ -1,5 +1,6 @@
 ---
 import { getBlogArticlePageData } from "@repo/services/cms/getBlogArticlePageData";
+import { getVenueReviews } from "@repo/services/reviews/getVenueReviews";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import type { BreadcrumbItem } from "@repo/ui/types";
 
@@ -10,6 +11,7 @@ import { getBlogArticleParameters } from "../../libs/getBlogArticleParameters";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getSite } from "../../libs/getSite";
 import { getT } from "../../libs/i18n";
+import { GOOGLE_PLACES_API_KEY } from "astro:env/server";
 
 export async function getStaticPaths() {
   return getBlogArticleParameters();
@@ -23,6 +25,14 @@ const data = await getBlogArticlePageData({
   config: getSanityConfigFromEnvironment(),
   slug,
 });
+
+const reviews =
+  data.closesOn.kind === "venue"
+    ? await getVenueReviews({
+        venueGooglePlaceId: data.closesOn.googlePlaceId,
+        googleApiKey: GOOGLE_PLACES_API_KEY,
+      })
+    : undefined;
 
 const routes = getRoutesForLang("fr");
 
@@ -49,5 +59,5 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 <Layout {...data.seo} {alternates}>
   <BlogArticleHead slot="head" {data} {breadcrumbs} />
-  <BlogArticlePage {data} {breadcrumbs} {alternates} />
+  <BlogArticlePage {data} {reviews} {breadcrumbs} {alternates} />
 </Layout>

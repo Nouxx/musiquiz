@@ -172,11 +172,6 @@ export type BreadcrumbItem = {
   url?: string;
 };
 
-export type ArticleChip = {
-  icon: IconName;
-  label: string;
-};
-
 export type DetailCard = {
   mark?: MarkName;
   title: string;

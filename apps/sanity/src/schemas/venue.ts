@@ -293,6 +293,15 @@ export const venueType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "googlePlaceId",
+      title: "Google Place ID",
+      type: "string",
+      description:
+        "Where the rating and review count shown on blog articles come from. Search the venue in Google's Place ID Finder (https://developers.google.com/maps/documentation/places/web-service/place-id) and copy the ID. Example: ChIJ-4dw_QPVwkcRZ2wlWBaW-0k",
+      group: "location",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
       name: "location",
       title: "Location",
       type: "geopoint",
