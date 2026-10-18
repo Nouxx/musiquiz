@@ -3,7 +3,9 @@ import { CreditCardIcon } from "@sanity/icons/CreditCard";
 import { EnvelopeIcon } from "@sanity/icons/Envelope";
 import { ImageIcon } from "@sanity/icons/Image";
 import { ShareIcon } from "@sanity/icons/Share";
+import { TrendUpwardIcon } from "@sanity/icons/TrendUpward";
 import { UsersIcon } from "@sanity/icons/Users";
+import { gtmIdValidation } from "./shared/gtmId";
 import { ogImageDescription, ogImageWarning } from "./shared/seo";
 
 export const siteSettingsType = defineType({
@@ -16,6 +18,7 @@ export const siteSettingsType = defineType({
     { name: "contact", title: "Contact", icon: EnvelopeIcon },
     { name: "payment", title: "Payment", icon: CreditCardIcon }, // todo: find a better name later
     { name: "team", title: "Team", icon: UsersIcon },
+    { name: "tracking", title: "Tracking", icon: TrendUpwardIcon },
   ],
   fields: [
     defineField({
@@ -115,6 +118,15 @@ export const siteSettingsType = defineType({
       ],
       group: "team",
       validation: (rule) => rule.required().min(1),
+    }),
+    defineField({
+      name: "globalGtmId",
+      title: "Global Google Tag Manager ID",
+      description:
+        "Loaded on every page of the site, for the tools shared by all venues. Example: GTM-XXXXXX",
+      type: "string",
+      group: "tracking",
+      validation: gtmIdValidation,
     }),
   ],
   preview: {
