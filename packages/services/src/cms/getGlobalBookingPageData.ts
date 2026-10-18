@@ -6,6 +6,7 @@ import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { GlobalBookingPage, VenuePin } from "./types";
+import { sortVenuePins } from "./utils/sortVenuePins";
 import { toPageCover } from "./utils/toPageCover";
 import { toSeo } from "./utils/toSeo";
 import { toBookingLink } from "./utils/toVenueLinks";
@@ -47,7 +48,10 @@ function adaptGlobalBookingPage({
         description: page.pageCover.subHeading,
       },
     }),
-    venues: venues.map((venue) => adaptVenue({ data: venue, lang })),
+    venues: sortVenuePins({
+      venues: venues.map((venue) => adaptVenue({ data: venue, lang })),
+      lang,
+    }),
   };
 }
 
