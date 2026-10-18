@@ -6,6 +6,7 @@ import { myStructure } from "./structure";
 import { internationalizedArray } from "sanity-plugin-internationalized-array";
 import { dataset, projectId } from "./src/environments";
 import { richTextFieldType } from "./src/schemas/shared/richText";
+import { deploySiteTool } from "./src/tools/deploySite";
 import { siteUrlsTool } from "./src/tools/siteUrls";
 
 const singletonActions = new Set(["publish", "discardChanges", "restore"]);
@@ -69,6 +70,10 @@ export default defineConfig({
   title: "MusiQuiz",
   projectId: projectId,
   dataset: dataset,
+  // the default "dual" may sign in with a cookie
+  // and users must have a token for the Deploy tool
+  // https://reference.sanity.io/sanity/index/AuthConfig/#loginmethod
+  auth: { loginMethod: "token" },
   plugins: [
     structureTool({ structure: myStructure }),
     visionTool(),
@@ -81,7 +86,7 @@ export default defineConfig({
       fieldTypes: ["string", "text", richTextFieldType],
     }),
   ],
-  tools: (tools) => [...tools, siteUrlsTool],
+  tools: (tools) => [...tools, siteUrlsTool, deploySiteTool],
   schema: {
     types: schemaTypes,
     templates: (templates) => [

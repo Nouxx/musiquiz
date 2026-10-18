@@ -175,6 +175,9 @@ importers:
       '@repo/services':
         specifier: workspace:*
         version: link:../../packages/services
+      '@repo/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       zod:
         specifier: 'catalog:'
         version: 4.4.3

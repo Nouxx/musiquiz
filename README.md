@@ -44,7 +44,43 @@ Both workers use **Cloudflare Workers Builds**, connected to this repo's `main` 
 
 Those commands are deliberately bare script names. Every decision they expand to — env flags, adapter, worker name, bindings, output directory — lives in `apps/web/package.json` and `apps/web/wrangler.jsonc`, so changing any of it is a commit, not a dashboard visit. Only renaming a script requires touching Cloudflare.
 
-`.github/workflows/ci.yaml` deploys nothing — it is a pre-merge gate (format, lint, typecheck, build) that runs on pull requests and holds no secrets. Workers Builds is used for the web deploy instead of an Actions deploy because it exposes a **deploy hook URL** that Sanity can call on publish, with no GitHub token to mint, store or rotate.
+`.github/workflows/ci.yaml` deploys nothing — it is a pre-merge gate (format, lint, typecheck, build) that runs on pull requests and holds no secrets. Workers Builds is used for the web deploy instead of an Actions deploy because it exposes a **deploy hook URL** that can be called to rebuild, with no GitHub token to mint, store or rotate.
+
+### Publishing content: the Studio "Deploy" tool
+
+`musiquiz-static` bakes content in at build time, so a publish in Sanity reaches it only after a rebuild. Editors trigger that rebuild by hand from the **Deploy** tab in the Studio, once their batch of edits is published. There is no publish webhook on purpose: one build per publish would burn the Workers Builds quota, which is shared by every worker on the account. `musiquiz-ssr` needs no rebuild, it fetches at request time.
+
+The button calls `POST /deploy/site` on `musiquiz-worker`, which:
+
+1. checks the editor's Sanity token against `/users/me` and requires the `administrator`, `editor` or `developer` role,
+2. calls the `musiquiz-static` deploy hook, held as the `STATIC_DEPLOY_HOOK_URL` secret.
+
+Build minutes used this month show on the [Workers & Pages overview](https://dash.cloudflare.com/4902ffc906976b879e21dc844b6832e0/workers-and-pages); the Deploy tab links there. Cloudflare has no API for them.
+
+The hook URL never reaches the Studio: anything in a `SANITY_STUDIO_*` var ships in its public bundle. The Studio uses `loginMethod: "token"`, because a cookie session leaves the client with no token to forward.
+
+#### Creating the deploy hook
+
+The hook belongs to `musiquiz-static`, which must already have its Builds trigger connected to the repo (see the table above).
+
+1. In the Cloudflare dashboard, open **Workers & Pages** → `musiquiz-static` → **Settings** → **Builds** → **Deploy Hooks**.
+2. Name it `sanity-studio-deploy` and pick the `main` branch. A hook always builds the branch it was created with.
+3. Select **Create** and copy the URL. Store it straight away as the worker secret:
+
+   ```sh
+   cd apps/worker && npx wrangler secret put STATIC_DEPLOY_HOOK_URL
+   ```
+
+   For local dev, paste it into `apps/worker/.dev.vars` as well.
+
+The URL is the only credential: anyone holding it can start builds, with no other check. Keep it out of `.env`, the Studio and chat. Cloudflare offers no rotation. If it leaks, delete the hook, create a new one and run `wrangler secret put` again; the old URL stops working on deletion.
+
+There is no cooldown, because Cloudflare already bounds repeated clicks:
+
+- A trigger landing while a build is queued or initializing is merged into it, and the hook answers `already_exists: true`. This part is documented.
+- A trigger landing while a build is running queues one new build. It does not cancel the running one. Every later trigger merges into that queued build. Tested on 2026-10-18; Cloudflare does not document it.
+
+So a burst of clicks costs at most one extra build. That build is wanted: content is fetched when a build starts, so it picks up whatever was published after the running build fetched. A cooldown would drop exactly those changes. Cancelling the running build instead is possible through the Builds API, but needs a user-scoped Cloudflare token able to edit build settings, which is a far stronger secret than the hook URL.
 
 ### Videos are encoded in the static build
 
@@ -77,6 +113,8 @@ Public config (`SANITY_STUDIO_PROJECT_ID`, `SANITY_STUDIO_DATASET`) lives in the
 ```sh
 cd apps/worker && npx wrangler secret put ZOHO_API_KEY
 ```
+
+`STATIC_DEPLOY_HOOK_URL` follows the same rule, see [Creating the deploy hook](#creating-the-deploy-hook).
 
 Adding a key means rerunning `pnpm --filter worker typegen`, which writes it into `Env` in `worker-configuration.d.ts`.
 
@@ -131,7 +169,5 @@ Each venue's Place ID is the `googlePlaceId` field in the Studio. Look it up wit
 `env.ssr` in `wrangler.jsonc` declares `SESSION` with an explicit namespace id. `@astrojs/cloudflare` would otherwise inject the binding without one, which forces `wrangler deploy` to provision a namespace at deploy time — something the non-interactive Workers Builds runner cannot be relied on to do.
 
 ### TO DO:
-
-- **Publishing content does not reach the live site.** The intended path is Sanity publish → Cloudflare deploy hook → `musiquiz-static` rebuild. It is not wired: there are no webhooks on the Sanity project, and there is no deploy hook URL to point one at until `musiquiz-static` has a Builds trigger. `musiquiz-ssr` is unaffected — it fetches at request time.
 
 - **`musiquiz-ssr` serves Sanity drafts to anyone who has the URL.** It needs a Cloudflare Access policy in front of it. See `docs/temp/todo.md`.
