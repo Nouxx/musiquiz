@@ -1,0 +1,53 @@
+---
+import type { Lang } from "@repo/utils/lang";
+import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
+
+export type PageType = "book" | "gift" | "content";
+
+interface Props {
+  gtmIds: string[];
+  venueSlug: string | undefined;
+  pageType: PageType;
+  lang: Lang;
+}
+
+const { gtmIds, venueSlug, pageType, lang } = Astro.props;
+
+const context = toInlineScriptJson({
+  venue: venueSlug,
+  page_type: pageType,
+  language: lang,
+});
+
+// keep `arguments`: GTM does not read a pushed array as a consent command
+const consentScript = `
+window.dataLayer = window.dataLayer || [];
+function gtag() { dataLayer.push(arguments); }
+gtag("consent", "default", {
+  ad_storage: "denied",
+  ad_user_data: "denied",
+  ad_personalization: "denied",
+  analytics_storage: "denied",
+  wait_for_update: 500
+});
+dataLayer.push(${context});
+`;
+
+// Google's snippet, rejected by eslint, inlined as raw JS, don't touch
+function toGtmScript(id: string) {
+  return `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer',${toInlineScriptJson(id)});`;
+}
+---
+
+<script is:inline set:html={consentScript} />
+{gtmIds.map((id) => <script is:inline set:html={toGtmScript(id)} />)}
+
+<script>
+  import { forgetOnWithdrawal } from "../4espace/analyticsBridge";
+
+  forgetOnWithdrawal();
+</script>

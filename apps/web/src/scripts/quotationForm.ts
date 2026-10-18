@@ -2,6 +2,7 @@ import { defineFormElement } from "./formRuntime";
 
 defineFormElement({
   tag: "musiquiz-quotation-form",
+  formName: "quotation",
   formSelector: "[data-quotation-form]",
   buildPayload({ form, element }) {
     const data = new FormData(form);

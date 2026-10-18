@@ -125,6 +125,24 @@ _Avoid_: block, section, module, widget
 The booking or gifting interface 4escape hosts, mounted at runtime into a container `apps/web` renders and themes. It is not content and not a Page Component — an editor cannot add one, remove one, or move one, and each of the two pages that has one has exactly one. The **Booking Widget** sells sessions and anchors at `#booking`; the **Gifting Widget** sells vouchers and anchors at `#gifting`. Each Venue whose Booking or Gifting Provider is 4escape carries that side's `bookingWidgetId` or `giftingWidgetId`; 4escape tells venues apart by widget id alone. Editors write around it, in the Page Component arrays named for the sides of it. [ADR 0011](./docs/adr/0011-widget-pages-bracket-their-widget.md).
 _Avoid_: embed, iframe, booking form, 4escape (the vendor, not the thing)
 
+## Tracking
+
+**Global Container**:
+The GTM container Musi'Quiz owns, set in Site Settings and loaded on every page. GA4 lives in it. [ADR 0028](./docs/adr/0028-tracking-bridges-the-widget-events.md).
+_Avoid_: global GTM, main tag
+
+**Venue Container**:
+The GTM container of the agency that tracks one Venue, set on the Venue and loaded on its pages only, beside the Global Container. Optional.
+_Avoid_: centre GTM, agency tag
+
+**Page Context**:
+The first `dataLayer` entry of every page: `venue`, `page_type`, `language`. It lets one GA4 property split by Venue without reading URLs.
+_Avoid_: page data, page variables
+
+**Analytics Bridge**:
+Page code that turns the Widget's `analytics:*` DOM events into GA4 `dataLayer` pushes, and adds the `begin_checkout` and `purchase` the Widget never sends.
+_Avoid_: tracking script, 4escape tracking
+
 ## Components
 
 **UI Component**:

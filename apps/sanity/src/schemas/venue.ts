@@ -12,6 +12,8 @@ import { HomeIcon } from "@sanity/icons/Home";
 import { BookIcon } from "@sanity/icons/Book";
 import { ShareIcon } from "@sanity/icons/Share";
 import { CalendarIcon } from "@sanity/icons/Calendar";
+import { TrendUpwardIcon } from "@sanity/icons/TrendUpward";
+import { gtmIdValidation } from "./shared/gtmId";
 
 // todo: i18n, "Fermé" is french
 function openingTimeValidation(rule: StringRule) {
@@ -74,6 +76,7 @@ export const venueType = defineType({
     { name: "social", title: "Social", icon: ShareIcon },
     { name: "quotation", title: "Quotation", icon: TagIcon },
     { name: "legal", title: "Legal", icon: BookIcon },
+    { name: "tracking", title: "Tracking", icon: TrendUpwardIcon },
   ],
   fieldsets: [
     { name: "booking", title: "Booking" },
@@ -464,6 +467,15 @@ export const venueType = defineType({
       type: "array",
       of: [defineArrayMember({ type: "termsArticle" })],
       group: "legal",
+    }),
+    defineField({
+      name: "gtmId",
+      title: "Google Tag Manager ID",
+      description:
+        "The container of the agency tracking this venue. Loaded on this venue's pages only, next to the global one. Leave empty when the venue is not tracked. Example: GTM-XXXXXX",
+      type: "string",
+      group: "tracking",
+      validation: gtmIdValidation,
     }),
   ],
 });

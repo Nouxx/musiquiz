@@ -4,6 +4,7 @@ import {
   refreshValidity,
   reveal,
   setPending,
+  trackLead,
   type ValidatableField,
   type ValidationMessages,
 } from "./formRuntime";
@@ -225,6 +226,7 @@ class MusiquizVenueOpeningForm extends HTMLElement {
         previous.disabled = true;
         submit.disabled = true;
         reveal(success);
+        trackLead({ formName: "franchise", venue: undefined });
       } else {
         reveal(failure);
       }

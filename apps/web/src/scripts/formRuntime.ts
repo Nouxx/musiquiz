@@ -1,3 +1,5 @@
+import { pushToDataLayer } from "./dataLayer";
+
 export type ValidationMessages = {
   required: string;
   invalidMail: string;
@@ -6,6 +8,8 @@ export type ValidationMessages = {
 type Messages = ValidationMessages & {
   counter: string;
 };
+
+export type FormName = "quotation" | "contact" | "franchise";
 
 type Field = HTMLInputElement | HTMLTextAreaElement;
 
@@ -77,6 +81,20 @@ export function setPending({
   pendingLabel.hidden = !pending;
 }
 
+export function trackLead({
+  formName,
+  venue,
+}: {
+  formName: FormName;
+  venue: string | undefined;
+}) {
+  pushToDataLayer({
+    event: "generate_lead",
+    form_name: formName,
+    venue,
+  });
+}
+
 export function reveal(node: HTMLElement) {
   node.hidden = false;
   node.focus();
@@ -112,10 +130,12 @@ export async function postPayload({
 
 export function defineFormElement({
   tag,
+  formName,
   formSelector,
   buildPayload,
 }: {
   tag: string;
+  formName: FormName;
   formSelector: string;
   buildPayload: BuildPayload;
 }) {
@@ -204,6 +224,7 @@ export function defineFormElement({
           fields.disabled = true;
           submit.disabled = true;
           reveal(success);
+          trackLead({ formName, venue: this.dataset.venueSlug });
         } else {
           reveal(failure);
         }

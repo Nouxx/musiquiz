@@ -1,18 +1,43 @@
 ---
 import { Font } from "astro:assets";
+import { getTrackingData } from "@repo/services/cms/getTrackingData";
 
 import SeoHead, {
   type Props as SeoProps,
 } from "../components/features/SeoHead.astro";
+import TrackingHead, {
+  type PageType,
+} from "../components/features/tracking/TrackingHead.astro";
 import { getLang } from "../libs/getLang";
+import { getSanityConfigFromEnvironment } from "../libs/getSanityConfigFromEnvironment";
 // order matters: reset, then the values, then the defaults that use them
 import "@repo/ui/styles/reset.css";
 import "@repo/ui/styles/tokens.css";
 import "@repo/ui/styles/base.css";
 
-type Props = SeoProps;
+interface Props extends SeoProps {
+  venueSlug?: string;
+  pageType?: PageType;
+  hasTracking?: boolean;
+}
+
+const {
+  venueSlug,
+  pageType = "content",
+  hasTracking = true,
+  ...seo
+} = Astro.props;
 
 const lang = getLang(Astro);
+
+// dev traffic would land in the agencies' reports
+const { gtmIds } =
+  import.meta.env.DEV || !hasTracking
+    ? { gtmIds: [] }
+    : await getTrackingData({
+        config: getSanityConfigFromEnvironment(),
+        venueSlug,
+      });
 ---
 
 <!doctype html>
@@ -20,13 +45,18 @@ const lang = getLang(Astro);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    {
+      gtmIds.length > 0 && (
+        <TrackingHead {gtmIds} {venueSlug} {pageType} {lang} />
+      )
+    }
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <Font cssVariable="--font-momo-trust-display" preload />
     <Font cssVariable="--font-funnel-display" preload />
-    <SeoHead {...Astro.props} />
+    <SeoHead {...seo} />
     <slot name="head" />
   </head>
   <body>

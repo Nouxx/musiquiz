@@ -456,3 +456,7 @@ export type VenueFooter = {
   games: GameFormatLinks[];
   paymentMethods: CmsImage[];
 };
+
+export type Tracking = {
+  gtmIds: string[];
+};

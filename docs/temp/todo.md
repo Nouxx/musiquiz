@@ -1,8 +1,7 @@
 # P0 (top priorities)
 
 - setup carto api key for production (restrict to domain)
-- GTM Analytics
-- Order venues by alphabetical order on the venuesMap
+- Sticky popup
 
 # P1 (important)
 

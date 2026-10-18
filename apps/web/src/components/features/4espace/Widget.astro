@@ -23,6 +23,10 @@ const { widgetId, settings, anchor } = Astro.props;
 <div class="forescape-cart" data-settings={settings}></div>
 
 <script>
+  import { bridgeWidgetAnalytics } from "./analyticsBridge";
+
+  bridgeWidgetAnalytics();
+
   /* 4escape widget: injected at runtime, per vendor instructions */
   const stylesheet = document.createElement("link");
   stylesheet.href = "https://widgets.4escape.app/main.css";
