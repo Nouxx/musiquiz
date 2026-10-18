@@ -28,5 +28,7 @@ En France, GTM, GA4 et les tags Ads ne peuvent pas déposer de cookies sans cons
 
 Le suivi des réservations garde aussi en mémoire le panier et les commandes déjà comptées, dans le navigateur. Ça suit la même règle : rien n'est stocké sans accord, et tout est effacé si le visiteur retire son accord. Sans accord, un paiement avec validation bancaire (3-D Secure) remonte sans son montant. Une fois l'outil choisi, je vérifie qu'il communique bien avec le site.
 
+Pour la même raison, je n'ai pas mis la partie `<noscript>` du code GTM (l'iframe dans le body) : sans JavaScript, le bandeau ne s'affiche pas, et cette iframe déclencherait des tags sans consentement. Elle ne concerne que les rares visiteurs qui ont désactivé JavaScript, donc la perte est négligeable.
+
 Belle journée,
 Clément

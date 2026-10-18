@@ -42,6 +42,10 @@ Consent Mode gates Google's tags, not our own Web Storage calls, and both keys s
 
 Rejected: reading `google_tag_data.ics`, a GTM internal.
 
+## Alternative: GTM's `<noscript>` iframe
+
+Google's snippet ships one, and the client's spec asked for it. Rejected: without JavaScript neither the `denied` defaults nor the CMP run, so its tags would fire without consent. A static site cannot gate it on server-verified consent.
+
 ## Leads
 
 On a 2xx from the worker, the quotation, contact and franchise forms push `generate_lead` with `form_name` and `venue`. No personal data. The newsletter is not a lead.

@@ -8,7 +8,6 @@ import SeoHead, {
 import TrackingHead, {
   type PageType,
 } from "../components/features/tracking/TrackingHead.astro";
-import TrackingNoscript from "../components/features/tracking/TrackingNoscript.astro";
 import { getLang } from "../libs/getLang";
 import { getSanityConfigFromEnvironment } from "../libs/getSanityConfigFromEnvironment";
 // order matters: reset, then the values, then the defaults that use them
@@ -54,7 +53,6 @@ const { gtmIds } = import.meta.env.DEV
     <slot name="head" />
   </head>
   <body>
-    <TrackingNoscript {gtmIds} />
     <slot />
   </body>
 </html>
