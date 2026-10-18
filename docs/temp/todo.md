@@ -1,6 +1,5 @@
 # P0 (top priorities)
 
-- setup GOOGLE_PLACES_API_KEY (with lionel)
 - setup carto api key for production (restrict to domain)
 - Sanity deploy widget: generate a new site with all published content
 - GTM Analytics
