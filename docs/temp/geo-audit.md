@@ -14,7 +14,7 @@ Builds on [`seo-audit.md`](./seo-audit.md). Classic SEO foundations (canonical, 
 | `llms.txt`                    | Missing.                                                                                                | ✗       |
 | JSON-LD                       | Homepage, venue home, breadcrumbs, blog article. Games, events, FAQ components, listings: nothing.      | partial |
 | Entity graph                  | `Organization` + `WebSite` on every page (J1). Venue sub-pages still unlinked to their venue (J3).     | partial |
-| Freshness signals             | Sitemap `lastmod` from `_updatedAt`; no `dateModified` outside blog articles.                           | partial |
+| Freshness signals             | Sitemap `lastmod` and `WebPage.dateModified` from `_updatedAt` (J2).                                    | ✓       |
 | Reviews                       | TrustIndex widget, JS-only. Invisible to AI crawlers.                                                   | ✗       |
 | Bing indexing                 | ChatGPT search and Copilot lean on Bing. IndexNow on deploy; Bing Webmaster planned (seo-audit Phase 6).  | partial |
 
@@ -149,8 +149,8 @@ Venue × game and venue × event pages are left out: the venue home already link
 | --------------------------------------- | ------------------------------------------------------------- | -------------------------- |
 | Home (fr, en)                           | `Organization` (`#organization`), `WebSite`                   | `HomepageHead.astro`       |
 | Venue home                              | `EntertainmentBusiness` (`/<venue>/#business`)                | `VenueHead.astro`          |
-| Venue sub-pages, global game/event      | `BreadcrumbList`                                              | `BreadcrumbHead.astro`     |
-| Blog article                            | `BlogPosting`, `BreadcrumbList`, `FAQPage` (article FAQ)      | `BlogArticleHead.astro`    |
+| Every page with a canonical             | `WebPage` (`#webpage`), `BreadcrumbList` (`#breadcrumb`)    | `SeoHead.astro`            |
+| Blog article                            | `BlogPosting`, `FAQPage` (article FAQ)                        | `BlogArticleHead.astro`    |
 | Blog index, where-to-find-us, contact, book, legal | nothing                                            | —                          |
 
 Solid base: stable `@id`s, `</script>` escaping in `JsonLd.astro`, absolute URLs, opening hours parsed from Sanity.
@@ -167,7 +167,7 @@ Emit both on every page from `Layout.astro` (a `SiteGraphHead` beside `SeoHead`)
 
 Needs the organization data on every page. Today only the homepage fetches it; fetch it once per build (module-level promise, like the `getVenueReviews` cache) rather than once per page.
 
-#### J2 — `WebPage` per page (high)
+#### J2 — `WebPage` per page (high) — done
 
 No page says what it *is*. Add one node per page, built in the same `SiteGraphHead`:
 
@@ -191,6 +191,8 @@ No page says what it *is*. Add one node per page, built in the same `SiteGraphHe
 - `dateModified`: add `_updatedAt` to each page's query module and to `Seo` in `types.ts`. Same value feeds the sitemap (§5.1). AI answer engines weigh freshness.
 - Give `toBreadcrumbList` an `@id` (`#breadcrumb`) so the page can point to it.
 - Page types: `/contact/` → `ContactPage`; `/blog/` and `/ou-nous-trouver/` → `CollectionPage`; booking/gift → `WebPage` (`CheckoutPage` implies payment on-site, and it runs in a partner widget).
+
+Shipped: `SeoHead` emits `WebPage` (`libs/toWebPage.ts`) and the `BreadcrumbList` from a `breadcrumbs` prop on `Layout`; `BreadcrumbHead` is gone. `updatedAt` comes from `seoProjection` (`_updatedAt`); the venue home takes the newer of page and venue, like the sitemap. A page without a canonical (404, 500) emits neither.
 
 #### J3 — Venue business on every venue page (high)
 
@@ -313,7 +315,7 @@ Render them as text in the `reviews` component's static HTML, next to the widget
 | 4  | J3 venue node on every venue page + `subOrganization`           | S      | High   | —                           |
 | 5  | J4 games as `Service` + `Offer`s                                | M      | High   | optional (player counts)    |
 | 6  | J6 `FAQPage` from `faq` components                              | S      | Medium | —                           |
-| 7  | `_updatedAt` in query modules → J2 `WebPage` (sitemap `lastmod` done, §5.1) | M | High | —                     |
+| 7  | ~~J2 `WebPage` + `dateModified`~~ done (`toWebPage` in `SeoHead`) | M | High | —                                   |
 | 8  | ~~`llms.txt` endpoint (§3)~~ done; summary drafted, unpublished | S      | Low–Med | `siteSettings.llmsSummary` |
 | 9  | J5 events as `Service`                                          | S      | Medium | optional (audience ages)    |
 | 10 | Reviews rating as visible text (§5.3)                           | S      | Medium | —                           |

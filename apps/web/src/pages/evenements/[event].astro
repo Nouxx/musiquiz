@@ -2,7 +2,6 @@
 import { getGlobalEventPageData } from "@repo/services/cms/getGlobalEventPageData";
 import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
 
-import BreadcrumbHead from "../../components/features/BreadcrumbHead.astro";
 import PageComponentsHead from "../../components/features/PageComponentsHead.astro";
 import GlobalEventPage from "../../components/pages/GlobalEventPage.astro";
 import Layout from "../../layouts/Layout.astro";
@@ -33,8 +32,7 @@ const alternates = getAlternatesUrl(getSite(Astro), (routes) =>
 const breadcrumbs = getGlobalBreadcrumbs(lang, data.eventName);
 ---
 
-<Layout {...data.seo} {alternates}>
-  <BreadcrumbHead slot="head" items={breadcrumbs} />
+<Layout {...data.seo} {breadcrumbs} {alternates}>
   <PageComponentsHead slot="head" components={data.components} />
   <GlobalEventPage {data} {alternates} />
 </Layout>

@@ -20,7 +20,7 @@ const alternates = getAlternatesUrl(
 );
 ---
 
-<Layout {...data.seo} {alternates}>
+<Layout {...data.seo} {alternates} webPageType="CollectionPage">
   <PageComponentsHead
     slot="head"
     components={[...data.componentsBeforeMap, ...data.componentsAfterMap]}

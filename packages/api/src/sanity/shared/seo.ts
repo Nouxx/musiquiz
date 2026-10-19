@@ -17,6 +17,7 @@ export function seoProjection({ lang }: { lang: Lang }) {
       ${siteOgImage}
     ) ${imageProjection({ lang })},
     "noindex": coalesce(seo.noindex, false),
+    "updatedAt": _updatedAt,
   }`;
 }
 
@@ -31,6 +32,7 @@ export function blogSeoProjection() {
       ${siteOgImage}
     ) ${imageProjection({ lang: "fr" })},
     "noindex": coalesce(seo.noindex, false),
+    "updatedAt": _updatedAt,
   }`;
 }
 
@@ -39,6 +41,7 @@ export const sanitySeoSchema = z.strictObject({
   description: z.string().min(1).nullable(),
   ogImage: sanityImageSchema,
   noindex: z.boolean(),
+  updatedAt: z.string().min(1),
 });
 
 export type SanitySeo = z.infer<typeof sanitySeoSchema>;

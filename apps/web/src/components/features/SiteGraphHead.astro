@@ -5,6 +5,7 @@ import { getOrganizationId } from "../../libs/getOrganizationId";
 import { getOrganizationLogoUrl } from "../../libs/getOrganizationLogoUrl";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getSite } from "../../libs/getSite";
+import { getWebsiteId } from "../../libs/getWebsiteId";
 import JsonLd from "./JsonLd.astro";
 
 const site = getSite(Astro);
@@ -27,7 +28,7 @@ const organizationData = {
 
 const webSite = {
   "@type": "WebSite",
-  "@id": new URL("#website", site).href,
+  "@id": getWebsiteId(site),
   name: "Musi'Quiz",
   url: site.href,
   inLanguage: ["fr", "en"],

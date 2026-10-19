@@ -1,19 +1,16 @@
 ---
 import { getImage } from "astro:assets";
 import type { BlogArticlePage } from "@repo/services/cms/types";
-import type { BreadcrumbItem } from "@repo/ui/types";
 
 import { getOrganizationId } from "../../libs/getOrganizationId";
 import { getSite } from "../../libs/getSite";
-import { toBreadcrumbList } from "../../libs/toBreadcrumbList";
 import JsonLd from "./JsonLd.astro";
 
 interface Props {
   data: BlogArticlePage;
-  breadcrumbs: BreadcrumbItem[];
 }
 
-const { data, breadcrumbs } = Astro.props;
+const { data } = Astro.props;
 
 const site = getSite(Astro);
 
@@ -61,10 +58,4 @@ const faqPage = data.faq && {
 };
 ---
 
-<JsonLd
-  graph={[
-    blogPosting,
-    toBreadcrumbList(site, breadcrumbs),
-    ...(faqPage ? [faqPage] : []),
-  ]}
-/>
+<JsonLd graph={[blogPosting, ...(faqPage ? [faqPage] : [])]} />

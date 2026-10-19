@@ -2,7 +2,6 @@
 import { getVenueWidgetPageData } from "@repo/services/cms/getVenueWidgetPageData";
 import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
 
-import BreadcrumbHead from "../../../components/features/BreadcrumbHead.astro";
 import PageComponentsHead from "../../../components/features/PageComponentsHead.astro";
 import VenueGiftingPage from "../../../components/pages/VenueGiftingPage.astro";
 import VenueLayout from "../../../layouts/VenueLayout.astro";
@@ -46,9 +45,9 @@ const breadcrumbs = getVenueBreadcrumbs(
   hidePopup
   city={data.venueTitle}
   {...data.seo}
+  {breadcrumbs}
   {alternates}
 >
-  <BreadcrumbHead slot="head" items={breadcrumbs} />
   <PageComponentsHead
     slot="head"
     components={[...data.componentsBeforeWidget, ...data.componentsAfterWidget]}

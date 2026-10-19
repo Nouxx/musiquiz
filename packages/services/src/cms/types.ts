@@ -156,6 +156,8 @@ export type Seo = {
   description: string | undefined;
   ogImage: CmsImage;
   noindex: boolean;
+  /** @example "2026-10-18T21:04:12Z" */
+  updatedAt: string;
 };
 
 export type VenuePageType = "home" | "gift" | "book";

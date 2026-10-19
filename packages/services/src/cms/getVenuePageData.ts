@@ -62,13 +62,20 @@ function adaptVenuePage({
     venueTitle: data.venuePage.venueTitle,
     business: adaptBusiness(data.venuePage.venue),
     pageCover: toPageCover({ data: data.venuePage.pageCover }),
-    seo: toSeo({
-      data: data.venuePage.seo,
-      fallback: {
-        title: data.venuePage.pageCover.heading,
-        description: data.venuePage.pageCover.subHeading,
-      },
-    }),
+    seo: {
+      ...toSeo({
+        data: data.venuePage.seo,
+        fallback: {
+          title: data.venuePage.pageCover.heading,
+          description: data.venuePage.pageCover.subHeading,
+        },
+      }),
+      // same rule as the sitemap: the page renders the venue's own fields
+      updatedAt:
+        data.venuePage.venue.updatedAt > data.venuePage.seo.updatedAt
+          ? data.venuePage.venue.updatedAt
+          : data.venuePage.seo.updatedAt,
+    },
     components:
       data.venuePage.pageComponents?.map((component) =>
         adaptPageComponent({ data: component, lang }),

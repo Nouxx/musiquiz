@@ -2,9 +2,13 @@
 import { getImage } from "astro:assets";
 import type { CmsImage } from "@repo/services/cms/types";
 import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
+import type { BreadcrumbItem } from "@repo/ui/types";
 
 import { getLang } from "../../libs/getLang";
 import { getSite } from "../../libs/getSite";
+import { toBreadcrumbList } from "../../libs/toBreadcrumbList";
+import { toWebPage, type WebPageType } from "../../libs/toWebPage";
+import JsonLd from "./JsonLd.astro";
 
 export interface Props {
   /** @example "Pixel Games", rendered "Pixel Games · Musi'Quiz Paris" */
@@ -15,6 +19,10 @@ export interface Props {
   alternates: Alternates | undefined;
   ogImage?: CmsImage;
   noindex?: boolean;
+  updatedAt?: string;
+  breadcrumbs?: BreadcrumbItem[];
+  webPageType?: WebPageType;
+  venueSlug?: string;
 }
 
 const {
@@ -24,8 +32,13 @@ const {
   alternates,
   ogImage,
   noindex = false,
+  updatedAt,
+  breadcrumbs,
+  webPageType = "WebPage",
+  venueSlug,
 } = Astro.props;
 
+const site = getSite(Astro);
 const lang = getLang(Astro);
 
 const canonical = alternates ? alternates[lang] : undefined;
@@ -54,7 +67,29 @@ const og =
     fit: "cover",
     format: "jpeg",
   }));
-const ogImageUrl = og && new URL(og.src, getSite(Astro)).href;
+const ogImageUrl = og && new URL(og.src, site).href;
+
+const graph = canonical
+  ? [
+      toWebPage({
+        site,
+        type: webPageType,
+        url: canonical,
+        name: fullTitle,
+        description,
+        lang,
+        venueSlug,
+        image: ogImageUrl
+          ? { url: ogImageUrl, width: OG_WIDTH, height: OG_HEIGHT }
+          : undefined,
+        hasBreadcrumb: breadcrumbs !== undefined,
+        updatedAt,
+      }),
+      ...(breadcrumbs
+        ? [toBreadcrumbList({ site, pageUrl: canonical, items: breadcrumbs })]
+        : []),
+    ]
+  : [];
 ---
 
 <title>{fullTitle}</title>
@@ -99,3 +134,5 @@ const ogImageUrl = og && new URL(og.src, getSite(Astro)).href;
   name="twitter:card"
   content={ogImageUrl ? "summary_large_image" : "summary"}
 />
+
+{graph.length > 0 && <JsonLd {graph} />}

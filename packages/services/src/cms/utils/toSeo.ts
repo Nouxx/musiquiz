@@ -15,5 +15,6 @@ export function toSeo({
     description: data.description ?? fallback.description ?? undefined,
     ogImage: toCmsImage(data.ogImage),
     noindex: data.noindex,
+    updatedAt: data.updatedAt,
   };
 }
