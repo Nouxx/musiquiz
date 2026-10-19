@@ -6,17 +6,17 @@ Builds on [`seo-audit.md`](./seo-audit.md). Classic SEO foundations (canonical, 
 
 ## 1. Where we stand
 
-| Area                          | State                                                                                                   | Verdict |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------- | ------- |
-| HTML served without JS        | Static Astro build, all CMS content in the HTML. AI crawlers do not run JS, so this is the biggest win. | ✓       |
-| `robots.txt`                  | `User-agent: * / Allow: /` + sitemap (`src/pages/robots.txt.ts`). Every AI bot allowed, training included (client decision). | ✓       |
-| Cloudflare bot settings       | Zone created, set to allow. Re-check on migration day (§2.2).                                           | ⚠ check |
-| `llms.txt`                    | Prerendered from the same services as the sitemap (§3). Summary drafted, unpublished.                   | ✓       |
-| JSON-LD                       | Every template: site graph, pages, venues, venue list, games, events, FAQs, blog.                        | ✓       |
-| Entity graph                  | `Organization` + `WebSite` on every page (J1), linked both ways to every venue (J3).                   | ✓       |
-| Freshness signals             | Sitemap `lastmod` and `WebPage.dateModified` from `_updatedAt` (J2).                                    | ✓       |
-| Reviews                       | TrustIndex widget, JS-only. Invisible to AI crawlers.                                                   | ✗       |
-| Bing indexing                 | ChatGPT search and Copilot lean on Bing. IndexNow on deploy; Bing Webmaster planned (seo-audit Phase 6).  | partial |
+| Area                    | State                                                                                                                        | Verdict |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------- |
+| HTML served without JS  | Static Astro build, all CMS content in the HTML. AI crawlers do not run JS, so this is the biggest win.                      | ✓       |
+| `robots.txt`            | `User-agent: * / Allow: /` + sitemap (`src/pages/robots.txt.ts`). Every AI bot allowed, training included (client decision). | ✓       |
+| Cloudflare bot settings | Zone created, set to allow. Re-check on migration day (§2.2).                                                                | ⚠ check |
+| `llms.txt`              | Prerendered from the same services as the sitemap (§3). Summary drafted, unpublished.                                        | ✓       |
+| JSON-LD                 | Every template: site graph, pages, venues, venue list, games, events, FAQs, blog.                                            | ✓       |
+| Entity graph            | `Organization` + `WebSite` on every page (J1), linked both ways to every venue (J3).                                         | ✓       |
+| Freshness signals       | Sitemap `lastmod` and `WebPage.dateModified` from `_updatedAt` (J2).                                                         | ✓       |
+| Reviews                 | TrustIndex widget, JS-only. Invisible to AI crawlers.                                                                        | ✗       |
+| Bing indexing           | ChatGPT search and Copilot lean on Bing. IndexNow on deploy; Bing Webmaster planned (seo-audit Phase 6).                     | partial |
 
 ## 2. AI crawler access
 
@@ -28,10 +28,10 @@ Client decision: training allowed. Nothing to add: named `Allow` groups would ch
 
 Two families of bots, for reference:
 
-| Purpose                                 | User agents                                                                                                                                                        |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Purpose                                 | User agents                                                                                                                                                       |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Search / answer** (cites, links back) | `OAI-SearchBot`, `ChatGPT-User`, `Claude-SearchBot`, `Claude-User`, `PerplexityBot`, `Perplexity-User`, `DuckAssistBot`, `MistralAI-User`, `Bingbot`, `Googlebot` |
-| **Training** (no direct traffic)        | `GPTBot`, `ClaudeBot`, `Google-Extended`, `Applebot-Extended`, `CCBot`, `meta-externalagent`, `Amazonbot`, `Bytespider`                                             |
+| **Training** (no direct traffic)        | `GPTBot`, `ClaudeBot`, `Google-Extended`, `Applebot-Extended`, `CCBot`, `meta-externalagent`, `Amazonbot`, `Bytespider`                                           |
 
 `Google-Extended` and `Applebot-Extended` are robots tokens, not crawlers: blocking them does **not** remove the site from AI Overviews (that runs on `Googlebot`). Never block `Googlebot` or `Bingbot`.
 
@@ -145,22 +145,22 @@ Venue × game and venue × event pages are left out: the venue home already link
 
 ### 4.1 What exists
 
-| Page                                    | Nodes                                                         | Source                     |
-| --------------------------------------- | ------------------------------------------------------------- | -------------------------- |
-| Every page                              | `Organization` (`#organization`), `WebSite` (`#website`), short `EntertainmentBusiness` per venue | `SiteGraphHead.astro` (in `Layout`) |
-| Venue home                              | `EntertainmentBusiness` (`/<venue>/#business`), `OfferCatalog` | `VenueHead.astro`          |
-| Game pages (venue, global)              | `Service` (`#service`), `Offer`s on venue pages               | `VenueGameHead.astro`, `GlobalGameHead.astro` |
-| Event pages (venue, global)             | `Service` (`#service`), `Offer`s from priced `offers` cards   | `VenueEventHead.astro`, `GlobalEventHead.astro` |
-| Every page with a `faq` component       | `FAQPage` (`#faq`)                                            | `PageComponentsHead.astro` |
-| Every page with a canonical             | `WebPage` (`#webpage`), `BreadcrumbList` (`#breadcrumb`)    | `SeoHead.astro`            |
-| Blog article                            | `BlogPosting` (`#article`), short `Blog`, `FAQPage`          | `BlogArticleHead.astro`    |
-| Blog index and pages                    | `Blog` (`/blog/#blog`), `ItemList` (`#articles`)             | `BlogHead.astro`           |
-| Where-to-find-us                        | `ItemList` of venues (`#venues`) with addresses               | `WhereToFindUsHead.astro`  |
-| Contact, book, legal                    | `WebPage` only                                                | `SeoHead.astro`            |
+| Page                              | Nodes                                                                                             | Source                                          |
+| --------------------------------- | ------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| Every page                        | `Organization` (`#organization`), `WebSite` (`#website`), short `EntertainmentBusiness` per venue | `SiteGraphHead.astro` (in `Layout`)             |
+| Venue home                        | `EntertainmentBusiness` (`/<venue>/#business`), `OfferCatalog`                                    | `VenueHead.astro`                               |
+| Game pages (venue, global)        | `Service` (`#service`), `Offer`s on venue pages                                                   | `VenueGameHead.astro`, `GlobalGameHead.astro`   |
+| Event pages (venue, global)       | `Service` (`#service`), `Offer`s from priced `offers` cards                                       | `VenueEventHead.astro`, `GlobalEventHead.astro` |
+| Every page with a `faq` component | `FAQPage` (`#faq`)                                                                                | `PageComponentsHead.astro`                      |
+| Every page with a canonical       | `WebPage` (`#webpage`), `BreadcrumbList` (`#breadcrumb`)                                          | `SeoHead.astro`                                 |
+| Blog article                      | `BlogPosting` (`#article`), short `Blog`, `FAQPage`                                               | `BlogArticleHead.astro`                         |
+| Blog index and pages              | `Blog` (`/blog/#blog`), `ItemList` (`#articles`)                                                  | `BlogHead.astro`                                |
+| Where-to-find-us                  | `ItemList` of venues (`#venues`) with addresses                                                   | `WhereToFindUsHead.astro`                       |
+| Contact, book, legal              | `WebPage` only                                                                                    | `SeoHead.astro`                                 |
 
 Solid base: stable `@id`s, `</script>` escaping in `JsonLd.astro`, absolute URLs, opening hours parsed from Sanity.
 
-Gaps, by GEO value. AI engines use structured data to resolve *entities* (who is Musi'Quiz, where, how much, for whom) and to check facts against the visible text. The aim is one connected graph per page, every fact the page shows also stated as data.
+Gaps, by GEO value. AI engines use structured data to resolve _entities_ (who is Musi'Quiz, where, how much, for whom) and to check facts against the visible text. The aim is one connected graph per page, every fact the page shows also stated as data.
 
 ### 4.2 Recommendations
 
@@ -174,7 +174,7 @@ Needs the organization data on every page. Today only the homepage fetches it; f
 
 #### J2 — `WebPage` per page (high) — done
 
-No page says what it *is*. Add one node per page, built in the same `SiteGraphHead`:
+No page says what it _is_. Add one node per page, built in the same `SiteGraphHead`:
 
 ```ts
 {
@@ -206,7 +206,7 @@ Shipped: `SeoHead` emits `WebPage` (`libs/toWebPage.ts`) and the `BreadcrumbList
 - Venue home: keep the full node. Add `image` (page cover / OG image), `logo` (venue logo, in `VenueHeader` data), `description` (`seo.description`), `currenciesAccepted`, `knowsLanguage: ["fr", "en"]` where true.
 - ~~Every other venue page: a short node~~ done with J2: the site graph (`toSiteGraph`) emits `{ "@type": "EntertainmentBusiness", "@id", name, url, parentOrganization }` for every venue on every page, so `about`, `subOrganization` and the where-to-find-us list resolve. The venue home merges it with the full node.
 - Organization side: `subOrganization: venues.map(({ slug }) => ({ "@id": getVenueBusinessId(site, slug) }))` in J1, so the brand and its venues link both ways.
-Shipped: the venue home adds `description`, `image` (the OG image), `logo` (`venueLogoDark`), `currenciesAccepted` and `hasOfferCatalog` (J4). `knowsLanguage` left out: an English page is no proof the staff speak English; add it per venue if the client confirms. `Organization.subOrganization` lists every published `venue`, the same set `getVenueSlugs` builds.
+  Shipped: the venue home adds `description`, `image` (the OG image), `logo` (`venueLogoDark`), `currenciesAccepted` and `hasOfferCatalog` (J4). `knowsLanguage` left out: an English page is no proof the staff speak English; add it per venue if the client confirms. `Organization.subOrganization` lists every published `venue`, the same set `getVenueSlugs` builds.
 
 - Do **not** add `aggregateRating` from the Google Places rating. Google's policy forbids review markup aggregated from another site and ignores self-served stars on `LocalBusiness`; a mismatch with Google's own data is a trust signal against the site. Show the rating as visible text instead (§5.3).
 
@@ -230,10 +230,11 @@ Game pages carry the facts people ask assistants: what it is, how many players, 
   ```
 
   The price component renders the same data on screen, so the markup cannot drift from what users see.
+
 - Global game page (`/jeux/[game]/`): `Service` with `provider: { "@id": organizationId }`, no offers (prices are per venue), and `areaServed` listing the venues' cities.
 - Venue home: `hasOfferCatalog` from the `venuePrices` component, one `OfferCatalog` item per game pointing to the venue game `Service` `@id`.
 - Tier labels like "De 4 à 6 joueurs" hold the group size as text. If the client wants assistants to answer "how many players", a structured `minPlayers`/`maxPlayers` on the game document would allow `eligibleQuantity` on each `Offer`. Schema change; only if the client agrees to fill it.
-Shipped: `libs/toGameService.ts`, tested. Service `@id`s use the French URL (`libs/getServiceId.ts`), like the venue business, so the fr and en pages describe one entity. The venue home's catalog lists the full `Service` per game, with the same `@id` as its game page. Player counts not done (needs the client).
+  Shipped: `libs/toGameService.ts`, tested. Service `@id`s use the French URL (`libs/getServiceId.ts`), like the venue business, so the fr and en pages describe one entity. The venue home's catalog lists the full `Service` per game, with the same `@id` as its game page. Player counts not done (needs the client).
 
 - Not `Product`: Google's merchant rules for `Product` (shipping, returns) do not fit a booked activity. Not `Game` / `VideoGame`: those describe a game as a work, not an experience sold at a venue.
 
@@ -260,7 +261,7 @@ Shipped: `libs/toFaqPage.ts`, tested; the blog article uses it too. `isPartOf` p
 #### J7 — Blog listing and article (medium) — done
 
 - `/blog/` and `/blog/page/N/`: `Blog` node (`@id` `/blog/#blog`, `publisher` `#organization`, `inLanguage: "fr"`) + `ItemList` of the listed articles' URLs.
-- `BlogPosting`: add `@id` (`#article`), `isPartOf: { "@id": blogId }`, `timeRequired: \`PT${data.readingMinutes}M\``, `about` → the closing venue's `#business` when `closesOn.kind === "venue"`, `author.sameAs` if the author schema gets social links.
+- `BlogPosting`: add `@id` (`#article`), `isPartOf: { "@id": blogId }`, `timeRequired: \`PT${data.readingMinutes}M\``, `about`→ the closing venue's`#business`when`closesOn.kind === "venue"`, `author.sameAs` if the author schema gets social links.
 - Author entity: a `Person` with a stable `@id` (`/blog/#author-<slug>`) once there is an author page; until then, keep inline.
 
 Shipped: `libs/toBlog.ts` (`toBlog`, `toBlogItemList`), tested. The listing's `ItemList` holds the page's articles (`blogPageArticles`, shared with `BlogListing`), left out when there are none. The article page emits a short `Blog` so `isPartOf` resolves. The author's `profileUrl` moved from `url` to `sameAs`: it is a LinkedIn profile, not the author's page.
@@ -326,20 +327,20 @@ Render them as text in the `reviews` component's static HTML, next to the widget
 
 ## 6. Plan
 
-| #  | Item                                                            | Effort | Value  | Needs CMS change            |
-| -- | --------------------------------------------------------------- | ------ | ------ | --------------------------- |
-| 1  | Cloudflare bot settings, migration-day checklist (§2.2)         | XS     | High   | —                           |
-| 2  | ~~`robots.txt`~~ done: training allowed, `*` covers every bot (§2.1) | —  | —      | —                           |
-| 3  | ~~J1 site-wide `Organization` + `WebSite`~~ done (`SiteGraphHead` in `Layout`) | S | High | —                |
-| 4  | ~~J3 venue node on every venue page + `subOrganization`~~ done  | S      | High   | —                           |
-| 5  | ~~J4 games as `Service` + `Offer`s~~ done                       | M      | High   | optional (player counts)    |
-| 6  | ~~J6 `FAQPage` from `faq` components~~ done                     | S      | Medium | —                           |
-| 7  | ~~J2 `WebPage` + `dateModified`~~ done (`toWebPage` in `SeoHead`) | M | High | —                                   |
-| 8  | ~~`llms.txt` endpoint (§3)~~ done; summary drafted, unpublished | S      | Low–Med | `siteSettings.llmsSummary` |
-| 9  | ~~J5 events as `Service`~~ done                                 | S      | Medium | optional (audience ages)    |
-| 10 | Reviews rating as visible text (§5.3)                           | S      | Medium | —                           |
-| 11 | ~~IndexNow on deploy (§5.2)~~ done; key verifies after migration | S     | Medium | —                           |
-| 12 | ~~J7 blog, J8 where-to-find-us~~ done                           | S      | Low    | —                           |
-| 13 | ~~J9 builder tests~~ done; schema validation in pre-launch crawl | S     | —      | —                           |
+| #   | Item                                                                           | Effort | Value   | Needs CMS change           |
+| --- | ------------------------------------------------------------------------------ | ------ | ------- | -------------------------- |
+| 1   | Cloudflare bot settings, migration-day checklist (§2.2)                        | XS     | High    | —                          |
+| 2   | ~~`robots.txt`~~ done: training allowed, `*` covers every bot (§2.1)           | —      | —       | —                          |
+| 3   | ~~J1 site-wide `Organization` + `WebSite`~~ done (`SiteGraphHead` in `Layout`) | S      | High    | —                          |
+| 4   | ~~J3 venue node on every venue page + `subOrganization`~~ done                 | S      | High    | —                          |
+| 5   | ~~J4 games as `Service` + `Offer`s~~ done                                      | M      | High    | optional (player counts)   |
+| 6   | ~~J6 `FAQPage` from `faq` components~~ done                                    | S      | Medium  | —                          |
+| 7   | ~~J2 `WebPage` + `dateModified`~~ done (`toWebPage` in `SeoHead`)              | M      | High    | —                          |
+| 8   | ~~`llms.txt` endpoint (§3)~~ done; summary drafted, unpublished                | S      | Low–Med | `siteSettings.llmsSummary` |
+| 9   | ~~J5 events as `Service`~~ done                                                | S      | Medium  | optional (audience ages)   |
+| 10  | Reviews rating as visible text (§5.3)                                          | S      | Medium  | —                          |
+| 11  | ~~IndexNow on deploy (§5.2)~~ done; key verifies after migration               | S      | Medium  | —                          |
+| 12  | ~~J7 blog, J8 where-to-find-us~~ done                                          | S      | Low     | —                          |
+| 13  | ~~J9 builder tests~~ done; schema validation in pre-launch crawl               | S      | —       | —                          |
 
 Order: 1 is configuration, on migration day. 3–4 fix the entity graph everything else hangs from. 7 unlocks freshness in three places at once.

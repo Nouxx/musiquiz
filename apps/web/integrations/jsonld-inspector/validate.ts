@@ -495,7 +495,14 @@ function validateBlock(
 
   const data = parsed.data;
   const types = new Set<string>();
-  const context: WalkContext = { add, environment, defined, references, blockIndex, types };
+  const context: WalkContext = {
+    add,
+    environment,
+    defined,
+    references,
+    blockIndex,
+    types,
+  };
 
   if (!Array.isArray(data) && !isObject(data))
     add("error", "$", "Top level must be an object or an array of objects.");
