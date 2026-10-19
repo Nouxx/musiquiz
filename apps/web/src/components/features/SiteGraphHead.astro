@@ -1,19 +1,18 @@
 ---
-import type { Organization } from "@repo/services/cms/types";
+import { getOrganizationData } from "@repo/services/cms/getOrganizationData";
 
 import { getOrganizationId } from "../../libs/getOrganizationId";
 import { getOrganizationLogoUrl } from "../../libs/getOrganizationLogoUrl";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getSite } from "../../libs/getSite";
 import JsonLd from "./JsonLd.astro";
 
-interface Props {
-  organization: Organization;
-}
-
-const { organization } = Astro.props;
-
 const site = getSite(Astro);
 const organizationId = getOrganizationId(site);
+
+const organization = await getOrganizationData({
+  config: getSanityConfigFromEnvironment(),
+});
 
 const organizationData = {
   "@type": "Organization",
@@ -28,8 +27,10 @@ const organizationData = {
 
 const webSite = {
   "@type": "WebSite",
+  "@id": new URL("#website", site).href,
   name: "Musi'Quiz",
   url: site.href,
+  inLanguage: ["fr", "en"],
   publisher: { "@id": organizationId },
 };
 ---

@@ -5,7 +5,6 @@ import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
 import { optionalCtaProjection, sanityCtaSchema } from "./shared/cta";
-import { imageProjection, sanityImageSchema } from "./shared/image";
 import {
   pageComponentsProjection,
   sanityPageComponentSchema,
@@ -27,16 +26,6 @@ function homepageQuery({ lang }: { lang: Lang }) {
       regionCode,
       "mapPosition": mapPosition{ x, y }
     },
-    "siteSettings": *[_type == "siteSettings"][0]{
-      footerLogo ${imageProjection({ lang })},
-      facebookUrl,
-      instagramUrl,
-      linkedinUrl,
-      tiktokUrl,
-      youtubeUrl,
-      mainPhone,
-      mainEmail,
-    },
   }`);
 }
 
@@ -55,16 +44,6 @@ const sanityHomepageSchema = z.strictObject({
       mapPosition: z.strictObject({ x: z.number(), y: z.number() }),
     }),
   ),
-  siteSettings: z.strictObject({
-    footerLogo: sanityImageSchema,
-    facebookUrl: z.url(),
-    instagramUrl: z.url(),
-    linkedinUrl: z.url(),
-    tiktokUrl: z.url(),
-    youtubeUrl: z.url(),
-    mainPhone: z.string().min(1),
-    mainEmail: z.email(),
-  }),
 });
 
 export type SanityHomepage = z.infer<typeof sanityHomepageSchema>;

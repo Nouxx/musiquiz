@@ -86,7 +86,6 @@ function blogArticlePageQuery({ slug }: { slug: string }) {
         excerpt,
       },
     },
-    "publisherLogo": *[_type == "siteSettings"][0].footerLogo ${imageProjection({ lang })},
   }`);
 }
 
@@ -160,7 +159,6 @@ const sanityBlogArticlePageSchema = z.strictObject({
       }),
     ),
   }),
-  publisherLogo: sanityImageSchema,
 });
 
 export type SanityBlogArticlePage = z.infer<typeof sanityBlogArticlePageSchema>;

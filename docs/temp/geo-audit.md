@@ -13,7 +13,7 @@ Builds on [`seo-audit.md`](./seo-audit.md). Classic SEO foundations (canonical, 
 | Cloudflare bot settings       | Zone created, set to allow. Re-check on migration day (§2.2).                                           | ⚠ check |
 | `llms.txt`                    | Missing.                                                                                                | ✗       |
 | JSON-LD                       | Homepage, venue home, breadcrumbs, blog article. Games, events, FAQ components, listings: nothing.      | partial |
-| Entity graph                  | `Organization` only on the homepage; other pages point to an `@id` that is not on the page.             | partial |
+| Entity graph                  | `Organization` + `WebSite` on every page (J1). Venue sub-pages still unlinked to their venue (J3).     | partial |
 | Freshness signals             | Sitemap `lastmod` from `_updatedAt`; no `dateModified` outside blog articles.                           | partial |
 | Reviews                       | TrustIndex widget, JS-only. Invisible to AI crawlers.                                                   | ✗       |
 | Bing indexing                 | ChatGPT search and Copilot lean on Bing. IndexNow on deploy; Bing Webmaster planned (seo-audit Phase 6).  | partial |
@@ -159,7 +159,7 @@ Gaps, by GEO value. AI engines use structured data to resolve *entities* (who is
 
 ### 4.2 Recommendations
 
-#### J1 — Site-wide entity anchor (high)
+#### J1 — Site-wide entity anchor (high) — done
 
 `Organization` and `WebSite` render on the homepage only. Venue and article nodes reference `#organization`, which then resolves to nothing on that page; `BlogArticleHead` already works around it by inlining the full publisher.
 
@@ -309,7 +309,7 @@ Render them as text in the `reviews` component's static HTML, next to the widget
 | -- | --------------------------------------------------------------- | ------ | ------ | --------------------------- |
 | 1  | Cloudflare bot settings, migration-day checklist (§2.2)         | XS     | High   | —                           |
 | 2  | ~~`robots.txt`~~ done: training allowed, `*` covers every bot (§2.1) | —  | —      | —                           |
-| 3  | J1 site-wide `Organization` + `WebSite`                         | S      | High   | —                           |
+| 3  | ~~J1 site-wide `Organization` + `WebSite`~~ done (`SiteGraphHead` in `Layout`) | S | High | —                |
 | 4  | J3 venue node on every venue page + `subOrganization`           | S      | High   | —                           |
 | 5  | J4 games as `Service` + `Offer`s                                | M      | High   | optional (player counts)    |
 | 6  | J6 `FAQPage` from `faq` components                              | S      | Medium | —                           |

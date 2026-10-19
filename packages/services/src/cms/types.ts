@@ -60,7 +60,6 @@ export type Homepage = {
   venuesCta: { label: string; url: string } | undefined;
   components: PageComponent[];
   seo: Seo;
-  organization: Organization;
 };
 
 export type Organization = {
@@ -279,8 +278,6 @@ export type BlogArticlePage = {
     profileUrl: string | undefined;
   };
   faq: { title: string; questions: FaqQuestion[] } | undefined;
-  /** the brand logo, same as `Organization.logo` */
-  publisherLogo: CmsImage;
   /** same venue, else same event, else any; newest first, at most three */
   readMore: BlogArticleSummary[];
   seo: Seo;
