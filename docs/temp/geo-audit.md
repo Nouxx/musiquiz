@@ -11,7 +11,7 @@ Builds on [`seo-audit.md`](./seo-audit.md). Classic SEO foundations (canonical, 
 | HTML served without JS        | Static Astro build, all CMS content in the HTML. AI crawlers do not run JS, so this is the biggest win. | ✓       |
 | `robots.txt`                  | `User-agent: * / Allow: /` + sitemap (`src/pages/robots.txt.ts`). Every AI bot allowed, training included (client decision). | ✓       |
 | Cloudflare bot settings       | Zone created, set to allow. Re-check on migration day (§2.2).                                           | ⚠ check |
-| `llms.txt`                    | Missing.                                                                                                | ✗       |
+| `llms.txt`                    | Prerendered from the same services as the sitemap (§3). Summary drafted, unpublished.                   | ✓       |
 | JSON-LD                       | Every template: site graph, pages, venues, venue list, games, events, FAQs, blog.                        | ✓       |
 | Entity graph                  | `Organization` + `WebSite` on every page (J1), linked both ways to every venue (J3).                   | ✓       |
 | Freshness signals             | Sitemap `lastmod` and `WebPage.dateModified` from `_updatedAt` (J2).                                    | ✓       |
@@ -43,7 +43,7 @@ The SSR preview worker keeps `Allow` + `X-Robots-Tag: noindex` (middleware). Cor
 
 Checked 2026-10-18:
 
-- [x] Static build `robots.txt`: `User-agent: *`, `Allow: /`, `Sitemap: https://musiquiz.co/sitemap-index.xml` (`musiquiz-static` worker).
+- [x] Static build `robots.txt`: `User-agent: *`, `Allow: /`, `Sitemap: https://musiquiz.co/sitemap.xml` (`musiquiz-static` worker).
 - [x] Preview `robots.txt`: same rules, no sitemap, `X-Robots-Tag: noindex, nofollow` on every response (`musiquiz-ssr` worker).
 
 ### 2.2 Cloudflare — migration day ⚠
@@ -147,9 +147,8 @@ Venue × game and venue × event pages are left out: the venue home already link
 
 | Page                                    | Nodes                                                         | Source                     |
 | --------------------------------------- | ------------------------------------------------------------- | -------------------------- |
-| Home (fr, en)                           | `Organization` (`#organization`), `WebSite`                   | `HomepageHead.astro`       |
+| Every page                              | `Organization` (`#organization`), `WebSite` (`#website`), short `EntertainmentBusiness` per venue | `SiteGraphHead.astro` (in `Layout`) |
 | Venue home                              | `EntertainmentBusiness` (`/<venue>/#business`), `OfferCatalog` | `VenueHead.astro`          |
-| Every venue page                        | short `EntertainmentBusiness`                                 | `VenueLayout.astro`        |
 | Game pages (venue, global)              | `Service` (`#service`), `Offer`s on venue pages               | `VenueGameHead.astro`, `GlobalGameHead.astro` |
 | Event pages (venue, global)             | `Service` (`#service`), `Offer`s from priced `offers` cards   | `VenueEventHead.astro`, `GlobalEventHead.astro` |
 | Every page with a `faq` component       | `FAQPage` (`#faq`)                                            | `PageComponentsHead.astro` |
@@ -157,7 +156,7 @@ Venue × game and venue × event pages are left out: the venue home already link
 | Blog article                            | `BlogPosting` (`#article`), short `Blog`, `FAQPage`          | `BlogArticleHead.astro`    |
 | Blog index and pages                    | `Blog` (`/blog/#blog`), `ItemList` (`#articles`)             | `BlogHead.astro`           |
 | Where-to-find-us                        | `ItemList` of venues (`#venues`) with addresses               | `WhereToFindUsHead.astro`  |
-| Contact, book, legal                    | `WebPage` only                                                | —                          |
+| Contact, book, legal                    | `WebPage` only                                                | `SeoHead.astro`            |
 
 Solid base: stable `@id`s, `</script>` escaping in `JsonLd.astro`, absolute URLs, opening hours parsed from Sanity.
 
@@ -205,7 +204,7 @@ Shipped: `SeoHead` emits `WebPage` (`libs/toWebPage.ts`) and the `BreadcrumbList
 `EntertainmentBusiness` is on the venue home only. Venue game, event, custom, booking and gift pages do not say which venue they belong to.
 
 - Venue home: keep the full node. Add `image` (page cover / OG image), `logo` (venue logo, in `VenueHeader` data), `description` (`seo.description`), `currenciesAccepted`, `knowsLanguage: ["fr", "en"]` where true.
-- ~~Every other venue page: a short node~~ done with J2: `VenueLayout` emits `{ "@type": "EntertainmentBusiness", "@id", name, url, parentOrganization }` on every venue page, so the `WebPage`'s `about` resolves. The venue home merges it with the full node.
+- ~~Every other venue page: a short node~~ done with J2: the site graph (`toSiteGraph`) emits `{ "@type": "EntertainmentBusiness", "@id", name, url, parentOrganization }` for every venue on every page, so `about`, `subOrganization` and the where-to-find-us list resolve. The venue home merges it with the full node.
 - Organization side: `subOrganization: venues.map(({ slug }) => ({ "@id": getVenueBusinessId(site, slug) }))` in J1, so the brand and its venues link both ways.
 Shipped: the venue home adds `description`, `image` (the OG image), `logo` (`venueLogoDark`), `currenciesAccepted` and `hasOfferCatalog` (J4). `knowsLanguage` left out: an English page is no proof the staff speak English; add it per venue if the client confirms. `Organization.subOrganization` lists every published `venue`, the same set `getVenueSlugs` builds.
 

@@ -3,7 +3,7 @@ import cloudflare from "@astrojs/cloudflare";
 import { PRODUCTION_SITE_URL } from "@repo/utils/productionSiteUrl";
 import { defineConfig, envField, fontProviders } from "astro/config";
 
-import jsonLdInspector from "./integrations/jsonld-inspector/index.mjs";
+import jsonLdInspector from "./integrations/jsonld-inspector/index.ts";
 
 // WARNING: process.env reads variables set by the CLI
 // https://docs.astro.build/en/guides/environment-variables/#in-the-astro-config-file

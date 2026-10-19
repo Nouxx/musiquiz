@@ -19,6 +19,6 @@ It checks common Schema.org types and Google's rich-result rules offline. It doe
 
 ## Files
 
-- `index.mjs`: the integration (registers the toolbar app in dev only)
-- `app.mjs`: the toolbar UI
-- `validate.mjs`: the validator (pure JS, also runs in Node, reusable for a build/CI check)
+- `index.ts`: the integration (registers the toolbar app in dev only)
+- `app.ts`: the toolbar UI
+- `validate.ts`: the validator (no dependencies, also runs in Node, reusable for a build/CI check)
