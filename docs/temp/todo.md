@@ -1,7 +1,6 @@
 # P0 (top priorities)
 
 - setup carto api key for production (restrict to domain)
-- Sticky popup
 
 # P1 (important)
 
