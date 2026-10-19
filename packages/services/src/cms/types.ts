@@ -69,9 +69,12 @@ export type Organization = {
   sameAs: string[];
   telephone: string;
   email: string;
+  /** @example [{ slug: "paris", city: "Paris" }] */
+  venues: { slug: string; city: string }[];
 };
 
 export type LocalBusiness = {
+  logo: CmsImage;
   address: PostalAddress;
   geo: { latitude: number; longitude: number };
   telephone: string;
@@ -81,9 +84,8 @@ export type LocalBusiness = {
   sameAs: string[];
   openingHours: OpeningHours[];
   /** across every game the venue prices, undefined when none is priced */
-  priceRange:
-    | { lowest: number; highest: number; currency: Currency }
-    | undefined;
+  priceRange: { lowest: number; highest: number } | undefined;
+  currency: Currency;
 };
 
 export type PostalAddress = {
@@ -348,6 +350,8 @@ export type VenueCustomPage = {
 
 export type GlobalGamePage = {
   gameName: string;
+  /** @example ["Lille", "Paris"], the venues that run this game */
+  venueCities: string[];
   pageCover: PageCover;
   components: PageComponent[];
   seo: Seo;

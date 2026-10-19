@@ -31,6 +31,7 @@ function reviewsProjection({ lang }: { lang: Lang }) {
 
 function pricedGameProjection({ lang }: { lang: Lang }) {
   return `{
+    "slug": game->slug.current,
     "name": game->name,
     "image": game->image ${imageProjection({ lang })},
     prices[]{
@@ -487,6 +488,7 @@ const sanityPriceSchema = z.strictObject({
 });
 
 const sanityPricedGameSchema = z.strictObject({
+  slug: z.string().min(1),
   name: z.string().min(1),
   image: sanityImageSchema,
   prices: z.array(sanityPriceSchema).min(1),

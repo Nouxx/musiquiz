@@ -19,6 +19,7 @@ function adaptGlobalGamePage({
 }): GlobalGamePage {
   return {
     gameName: data.globalGame.gameName,
+    venueCities: data.globalGame.venueCities,
     pageCover: toPageCover({ data: data.globalGame.pageCover }),
     seo: toSeo({
       data: data.globalGame.seo,

@@ -8,6 +8,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { LocalBusiness, VenuePage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
+import { toCmsImage } from "./utils/toCmsImage";
 import { toOpeningHours } from "./utils/toOpeningHours";
 import { toPageCover } from "./utils/toPageCover";
 import { toSeo } from "./utils/toSeo";
@@ -18,6 +19,7 @@ function adaptBusiness(
   const amounts = venue.priceAmounts;
 
   return {
+    logo: toCmsImage(venue.logo),
     address: venue.address,
     geo: { latitude: venue.location.lat, longitude: venue.location.lng },
     telephone: venue.phone,
@@ -42,12 +44,9 @@ function adaptBusiness(
     }),
     priceRange:
       amounts.length > 0
-        ? {
-            lowest: Math.min(...amounts),
-            highest: Math.max(...amounts),
-            currency: currencyOf(venue.address.addressCountry),
-          }
+        ? { lowest: Math.min(...amounts), highest: Math.max(...amounts) }
         : undefined,
+    currency: currencyOf(venue.address.addressCountry),
   };
 }
 

@@ -1,10 +1,13 @@
 ---
 import { getOrganizationData } from "@repo/services/cms/getOrganizationData";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 
+import { getLang } from "../../libs/getLang";
 import { getOrganizationId } from "../../libs/getOrganizationId";
-import { getOrganizationLogoUrl } from "../../libs/getOrganizationLogoUrl";
+import { getLogoUrl } from "../../libs/getLogoUrl";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getSite } from "../../libs/getSite";
+import { getVenueBusinessId } from "../../libs/getVenueBusinessId";
 import { getWebsiteId } from "../../libs/getWebsiteId";
 import JsonLd from "./JsonLd.astro";
 
@@ -20,11 +23,23 @@ const organizationData = {
   "@id": organizationId,
   name: "Musi'Quiz",
   url: site.href,
-  logo: await getOrganizationLogoUrl(site, organization.logo),
+  logo: await getLogoUrl(site, organization.logo),
   sameAs: organization.sameAs,
   telephone: organization.telephone,
   email: organization.email,
+  subOrganization: organization.venues.map(({ slug }) => ({
+    "@id": getVenueBusinessId(site, slug),
+  })),
 };
+
+// a reference must resolve on the page; the venue home adds the full facts
+const venueBusinesses = organization.venues.map(({ slug, city }) => ({
+  "@type": "EntertainmentBusiness",
+  "@id": getVenueBusinessId(site, slug),
+  name: `Musi'Quiz ${city}`,
+  url: new URL(getRoutesForLang(getLang(Astro)).venueHome(slug), site).href,
+  parentOrganization: { "@id": organizationId },
+}));
 
 const webSite = {
   "@type": "WebSite",
@@ -36,4 +51,4 @@ const webSite = {
 };
 ---
 
-<JsonLd graph={[organizationData, webSite]} />
+<JsonLd graph={[organizationData, webSite, ...venueBusinesses]} />

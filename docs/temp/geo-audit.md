@@ -13,7 +13,7 @@ Builds on [`seo-audit.md`](./seo-audit.md). Classic SEO foundations (canonical, 
 | Cloudflare bot settings       | Zone created, set to allow. Re-check on migration day (§2.2).                                           | ⚠ check |
 | `llms.txt`                    | Missing.                                                                                                | ✗       |
 | JSON-LD                       | Homepage, venue home, breadcrumbs, blog article. Games, events, FAQ components, listings: nothing.      | partial |
-| Entity graph                  | `Organization` + `WebSite` on every page (J1). Venue sub-pages still unlinked to their venue (J3).     | partial |
+| Entity graph                  | `Organization` + `WebSite` on every page (J1), linked both ways to every venue (J3).                   | ✓       |
 | Freshness signals             | Sitemap `lastmod` and `WebPage.dateModified` from `_updatedAt` (J2).                                    | ✓       |
 | Reviews                       | TrustIndex widget, JS-only. Invisible to AI crawlers.                                                   | ✗       |
 | Bing indexing                 | ChatGPT search and Copilot lean on Bing. IndexNow on deploy; Bing Webmaster planned (seo-audit Phase 6).  | partial |
@@ -148,7 +148,9 @@ Venue × game and venue × event pages are left out: the venue home already link
 | Page                                    | Nodes                                                         | Source                     |
 | --------------------------------------- | ------------------------------------------------------------- | -------------------------- |
 | Home (fr, en)                           | `Organization` (`#organization`), `WebSite`                   | `HomepageHead.astro`       |
-| Venue home                              | `EntertainmentBusiness` (`/<venue>/#business`)                | `VenueHead.astro`          |
+| Venue home                              | `EntertainmentBusiness` (`/<venue>/#business`), `OfferCatalog` | `VenueHead.astro`          |
+| Every page                              | short `EntertainmentBusiness` per venue                       | `SiteGraphHead.astro`      |
+| Game pages (venue, global)              | `Service` (`#service`), `Offer`s on venue pages               | `VenueGameHead.astro`, `GlobalGameHead.astro` |
 | Every page with a canonical             | `WebPage` (`#webpage`), `BreadcrumbList` (`#breadcrumb`)    | `SeoHead.astro`            |
 | Blog article                            | `BlogPosting`, `FAQPage` (article FAQ)                        | `BlogArticleHead.astro`    |
 | Blog index, where-to-find-us, contact, book, legal | nothing                                            | —                          |
@@ -194,16 +196,18 @@ No page says what it *is*. Add one node per page, built in the same `SiteGraphHe
 
 Shipped: `SeoHead` emits `WebPage` (`libs/toWebPage.ts`) and the `BreadcrumbList` from a `breadcrumbs` prop on `Layout`; `BreadcrumbHead` is gone. `updatedAt` comes from `seoProjection` (`_updatedAt`); the venue home takes the newer of page and venue, like the sitemap. A page without a canonical (404, 500) emits neither.
 
-#### J3 — Venue business on every venue page (high)
+#### J3 — Venue business on every venue page (high) — done
 
 `EntertainmentBusiness` is on the venue home only. Venue game, event, custom, booking and gift pages do not say which venue they belong to.
 
 - Venue home: keep the full node. Add `image` (page cover / OG image), `logo` (venue logo, in `VenueHeader` data), `description` (`seo.description`), `currenciesAccepted`, `knowsLanguage: ["fr", "en"]` where true.
-- Every other venue page: a short node `{ "@type": "EntertainmentBusiness", "@id": venueBusinessId, name, url: venueHomeUrl }`, plus `about` on its `WebPage` (J2). Move this into `VenueLayout` so no page can forget it.
+- ~~Every other venue page: a short node~~ done: `SiteGraphHead` emits `{ "@type": "EntertainmentBusiness", "@id", name, url, parentOrganization }` for every venue on every page, so `subOrganization` and the `WebPage`'s `about` resolve wherever they appear. The venue home merges its own with the full node.
 - Organization side: `subOrganization: venues.map(({ slug }) => ({ "@id": getVenueBusinessId(site, slug) }))` in J1, so the brand and its venues link both ways.
+Shipped: the venue home adds `description`, `image` (the OG image), `logo` (`venueLogoDark`), `currenciesAccepted` and `hasOfferCatalog` (J4). `knowsLanguage` left out: an English page is no proof the staff speak English; add it per venue if the client confirms. `Organization.subOrganization` lists every published `venue`, the same set `getVenueSlugs` builds.
+
 - Do **not** add `aggregateRating` from the Google Places rating. Google's policy forbids review markup aggregated from another site and ignores self-served stars on `LocalBusiness`; a mismatch with Google's own data is a trust signal against the site. Show the rating as visible text instead (§5.3).
 
-#### J4 — Games as `Service` with `Offer`s (high)
+#### J4 — Games as `Service` with `Offer`s (high) — done
 
 Game pages carry the facts people ask assistants: what it is, how many players, how much. Today, none of it is in data.
 
@@ -226,6 +230,8 @@ Game pages carry the facts people ask assistants: what it is, how many players, 
 - Global game page (`/jeux/[game]/`): `Service` with `provider: { "@id": organizationId }`, no offers (prices are per venue), and `areaServed` listing the venues' cities.
 - Venue home: `hasOfferCatalog` from the `venuePrices` component, one `OfferCatalog` item per game pointing to the venue game `Service` `@id`.
 - Tier labels like "De 4 à 6 joueurs" hold the group size as text. If the client wants assistants to answer "how many players", a structured `minPlayers`/`maxPlayers` on the game document would allow `eligibleQuantity` on each `Offer`. Schema change; only if the client agrees to fill it.
+Shipped: `libs/toGameService.ts`, tested. Service `@id`s use the French URL (`libs/getServiceId.ts`), like the venue business, so the fr and en pages describe one entity. The venue home's catalog lists the full `Service` per game, with the same `@id` as its game page. Player counts not done (needs the client).
+
 - Not `Product`: Google's merchant rules for `Product` (shipping, returns) do not fit a booked activity. Not `Game` / `VideoGame`: those describe a game as a work, not an experience sold at a venue.
 
 #### J5 — Events as `Service`, not `Event` (medium)
@@ -312,8 +318,8 @@ Render them as text in the `reviews` component's static HTML, next to the widget
 | 1  | Cloudflare bot settings, migration-day checklist (§2.2)         | XS     | High   | —                           |
 | 2  | ~~`robots.txt`~~ done: training allowed, `*` covers every bot (§2.1) | —  | —      | —                           |
 | 3  | ~~J1 site-wide `Organization` + `WebSite`~~ done (`SiteGraphHead` in `Layout`) | S | High | —                |
-| 4  | J3 venue node on every venue page + `subOrganization`           | S      | High   | —                           |
-| 5  | J4 games as `Service` + `Offer`s                                | M      | High   | optional (player counts)    |
+| 4  | ~~J3 venue node on every venue page + `subOrganization`~~ done  | S      | High   | —                           |
+| 5  | ~~J4 games as `Service` + `Offer`s~~ done                       | M      | High   | optional (player counts)    |
 | 6  | J6 `FAQPage` from `faq` components                              | S      | Medium | —                           |
 | 7  | ~~J2 `WebPage` + `dateModified`~~ done (`toWebPage` in `SeoHead`) | M | High | —                                   |
 | 8  | ~~`llms.txt` endpoint (§3)~~ done; summary drafted, unpublished | S      | Low–Med | `siteSettings.llmsSummary` |

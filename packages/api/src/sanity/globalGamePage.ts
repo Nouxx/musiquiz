@@ -22,6 +22,8 @@ function globalGamePageQuery({
     "globalGame": *[_type == "globalGame"
       && game->slug.current == "${gameSlug}"][0]{
       "gameName": game->name,
+      "venueCities": *[_type == "venueGame" && game._ref == ^.game._ref]
+        | order(venue->title asc).venue->title,
       pageCover ${pageCoverProjection({ lang })},
       "seo": ${seoProjection({ lang })},
       "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
@@ -32,6 +34,7 @@ function globalGamePageQuery({
 const sanityGlobalGamePageSchema = z.strictObject({
   globalGame: z.strictObject({
     gameName: z.string().min(1),
+    venueCities: z.array(z.string().min(1)),
     pageCover: sanityPageCoverSchema({ hasCta: false }),
     seo: sanitySeoSchema,
     pageComponents: z.array(sanityPageComponentSchema).nullable(),

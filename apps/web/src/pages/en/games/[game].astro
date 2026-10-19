@@ -2,6 +2,7 @@
 import { getGlobalGamePageData } from "@repo/services/cms/getGlobalGamePageData";
 import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
 
+import GlobalGameHead from "../../../components/features/GlobalGameHead.astro";
 import PageComponentsHead from "../../../components/features/PageComponentsHead.astro";
 import GlobalGamePage from "../../../components/pages/GlobalGamePage.astro";
 import Layout from "../../../layouts/Layout.astro";
@@ -33,6 +34,7 @@ const breadcrumbs = getGlobalBreadcrumbs(lang, data.gameName);
 ---
 
 <Layout {...data.seo} {breadcrumbs} {alternates}>
+  <GlobalGameHead slot="head" gameSlug={game} {data} />
   <PageComponentsHead slot="head" components={data.components} />
   <GlobalGamePage {data} {alternates} />
 </Layout>

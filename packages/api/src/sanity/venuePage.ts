@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
 import { addressProjection, sanityAddressSchema } from "./shared/address";
+import { imageProjection, sanityImageSchema } from "./shared/image";
 import {
   pageComponentsProjection,
   sanityPageComponentSchema,
@@ -26,6 +27,7 @@ function venuePageQuery({
       "venueTitle": venue->title,
       "venue": venue->{
         "address": ${addressProjection},
+        "logo": venueLogoDark ${imageProjection({ lang })},
         "location": location{ lat, lng },
         phone,
         mail,
@@ -57,6 +59,7 @@ const sanityVenuePageSchema = z.strictObject({
     venueTitle: z.string().min(1),
     venue: z.strictObject({
       address: sanityAddressSchema,
+      logo: sanityImageSchema,
       location: z.strictObject({ lat: z.number(), lng: z.number() }),
       phone: z.string().min(1),
       mail: z.email(),

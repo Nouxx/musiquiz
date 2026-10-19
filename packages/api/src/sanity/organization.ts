@@ -17,6 +17,10 @@ function organizationQuery() {
     youtubeUrl,
     mainPhone,
     mainEmail,
+    "venues": *[_type == "venue"] | order(title asc){
+      "slug": slug.current,
+      title,
+    },
   }`);
 }
 
@@ -29,6 +33,9 @@ const sanityOrganizationSchema = z.strictObject({
   youtubeUrl: z.url(),
   mainPhone: z.string().min(1),
   mainEmail: z.email(),
+  venues: z.array(
+    z.strictObject({ slug: z.string().min(1), title: z.string().min(1) }),
+  ),
 });
 
 export type SanityOrganization = z.infer<typeof sanityOrganizationSchema>;

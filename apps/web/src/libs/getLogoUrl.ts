@@ -1,7 +1,7 @@
 import type { CmsImage } from "@repo/services/cms/types";
 import { getImage } from "astro:assets";
 
-export async function getOrganizationLogoUrl(site: URL, logo: CmsImage) {
+export async function getLogoUrl(site: URL, logo: CmsImage) {
   const image = await getImage({
     src: logo.url,
     width: logo.width,

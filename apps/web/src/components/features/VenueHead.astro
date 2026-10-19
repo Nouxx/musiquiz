@@ -1,11 +1,17 @@
 ---
-import type { LocalBusiness } from "@repo/services/cms/types";
+import type { PageComponent } from "@repo/services/cms/pageComponent.types";
+import type { LocalBusiness, Seo } from "@repo/services/cms/types";
+import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import { formatPrice } from "@repo/utils/formatPrice";
 
 import { getLang } from "../../libs/getLang";
+import { getLogoUrl } from "../../libs/getLogoUrl";
+import { getOgImage } from "../../libs/getOgImage";
 import { getOrganizationId } from "../../libs/getOrganizationId";
+import { getVenueGameServiceId } from "../../libs/getServiceId";
 import { getSite } from "../../libs/getSite";
 import { getVenueBusinessId } from "../../libs/getVenueBusinessId";
+import { toGameService } from "../../libs/toGameService";
 import JsonLd from "./JsonLd.astro";
 
 interface Props {
@@ -13,19 +19,21 @@ interface Props {
   /** @example "Paris" */
   city: string;
   business: LocalBusiness;
+  seo: Seo;
+  components: PageComponent[];
 }
 
-const { venueSlug, city, business } = Astro.props;
+const { venueSlug, city, business, seo, components } = Astro.props;
 
 const site = getSite(Astro);
+const lang = getLang(Astro);
 const url = new URL(Astro.url.pathname, site).href;
+const businessId = getVenueBusinessId(site, venueSlug);
 
-function toPriceRange({
-  lowest,
-  highest,
-  currency,
-}: NonNullable<LocalBusiness["priceRange"]>) {
-  const lang = getLang(Astro);
+function toPriceRange(
+  { lowest, highest }: NonNullable<LocalBusiness["priceRange"]>,
+  currency: LocalBusiness["currency"],
+) {
   const low = formatPrice({ amount: lowest, lang, currency });
 
   return lowest === highest
@@ -33,13 +41,41 @@ function toPriceRange({
     : `${low}–${formatPrice({ amount: highest, lang, currency })}`;
 }
 
-const priceRange = business.priceRange && toPriceRange(business.priceRange);
+const priceRange =
+  business.priceRange && toPriceRange(business.priceRange, business.currency);
+
+const prices = components.find((component) => component.type === "venuePrices");
+
+const offerCatalog = prices && {
+  "@type": "OfferCatalog",
+  name: prices.title,
+  itemListElement: prices.games.map((game) => {
+    const gameUrl = new URL(
+      getRoutesForLang(lang).venueGame(venueSlug, game.slug),
+      site,
+    ).href;
+
+    return toGameService({
+      id: getVenueGameServiceId(site, venueSlug, game.slug),
+      url: gameUrl,
+      name: game.name,
+      description: undefined,
+      image: undefined,
+      providerId: businessId,
+      cities: [city],
+      pricedGame: game,
+    });
+  }),
+};
 
 const entertainmentBusiness = {
   "@type": "EntertainmentBusiness",
-  "@id": getVenueBusinessId(site, venueSlug),
+  "@id": businessId,
   name: `Musi'Quiz ${city}`,
   url,
+  ...(seo.description && { description: seo.description }),
+  image: (await getOgImage(site, seo.ogImage)).url,
+  logo: await getLogoUrl(site, business.logo),
   address: { "@type": "PostalAddress", ...business.address },
   geo: { "@type": "GeoCoordinates", ...business.geo },
   telephone: business.telephone,
@@ -53,6 +89,8 @@ const entertainmentBusiness = {
     closes: hours.closes,
   })),
   priceRange,
+  currenciesAccepted: business.currency,
+  ...(offerCatalog && { hasOfferCatalog: offerCatalog }),
   parentOrganization: { "@id": getOrganizationId(site) },
 };
 ---

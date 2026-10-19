@@ -20,6 +20,10 @@ function adaptOrganization(data: SanityOrganization): Organization {
     ],
     telephone: data.mainPhone,
     email: data.mainEmail,
+    venues: data.venues.map((venue) => ({
+      slug: venue.slug,
+      city: venue.title,
+    })),
   };
 }
 

@@ -1,0 +1,37 @@
+---
+import type { VenueGamePage } from "@repo/services/cms/types";
+
+import { getOgImage } from "../../libs/getOgImage";
+import { getVenueGameServiceId } from "../../libs/getServiceId";
+import { getSite } from "../../libs/getSite";
+import { getVenueBusinessId } from "../../libs/getVenueBusinessId";
+import { toGameService } from "../../libs/toGameService";
+import JsonLd from "./JsonLd.astro";
+
+interface Props {
+  venueSlug: string;
+  gameSlug: string;
+  data: VenueGamePage;
+}
+
+const { venueSlug, gameSlug, data } = Astro.props;
+
+const site = getSite(Astro);
+
+const prices = data.components.find(
+  (component) => component.type === "gamePrices",
+);
+
+const service = toGameService({
+  id: getVenueGameServiceId(site, venueSlug, gameSlug),
+  url: new URL(Astro.url.pathname, site).href,
+  name: data.gameName,
+  description: data.seo.description,
+  image: (await getOgImage(site, data.seo.ogImage)).url,
+  providerId: getVenueBusinessId(site, venueSlug),
+  cities: [data.venueTitle],
+  pricedGame: prices?.game,
+});
+---
+
+<JsonLd graph={[service]} />
