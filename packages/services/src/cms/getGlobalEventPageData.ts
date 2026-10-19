@@ -19,6 +19,7 @@ function adaptGlobalEventPage({
 }): GlobalEventPage {
   return {
     eventName: data.globalEvent.eventName,
+    venueCities: data.globalEvent.venueCities,
     pageCover: toPageCover({ data: data.globalEvent.pageCover }),
     seo: toSeo({
       data: data.globalEvent.seo,

@@ -5,6 +5,10 @@ import { getVenueBusinessId } from "./getVenueBusinessId";
 import { getWebsiteId } from "./getWebsiteId";
 import { getBreadcrumbId } from "./toBreadcrumbList";
 
+export function getWebPageId(pageUrl: string) {
+  return `${pageUrl}#webpage`;
+}
+
 // CheckoutPage implies payment on the page; the booking widget is a partner's
 export type WebPageType = "WebPage" | "ContactPage" | "CollectionPage";
 
@@ -33,7 +37,7 @@ export function toWebPage({
 }) {
   return {
     "@type": type,
-    "@id": `${url}#webpage`,
+    "@id": getWebPageId(url),
     url,
     name,
     ...(description && { description }),

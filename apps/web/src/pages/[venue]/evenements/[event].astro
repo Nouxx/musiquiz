@@ -3,6 +3,7 @@ import { getVenueEventPageData } from "@repo/services/cms/getVenueEventPageData"
 import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
 
 import PageComponentsHead from "../../../components/features/PageComponentsHead.astro";
+import VenueEventHead from "../../../components/features/VenueEventHead.astro";
 import VenueEventPage from "../../../components/pages/VenueEventPage.astro";
 import VenueLayout from "../../../layouts/VenueLayout.astro";
 import { getLang } from "../../../libs/getLang";
@@ -45,6 +46,7 @@ const breadcrumbs = getVenueBreadcrumbs(
   {breadcrumbs}
   {alternates}
 >
+  <VenueEventHead slot="head" venueSlug={venue} eventSlug={event} {data} />
   <PageComponentsHead slot="head" components={data.components} />
   <VenueEventPage venueSlug={venue} {data} {alternates} />
 </VenueLayout>

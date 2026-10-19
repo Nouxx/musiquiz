@@ -16,3 +16,21 @@ export function getVenueGameServiceId(
     site,
   ).href;
 }
+
+/** one id per event, whichever language the page is in */
+export function getEventServiceId(site: URL, eventSlug: string) {
+  return new URL(`${getRoutesForLang("fr").event(eventSlug)}#service`, site)
+    .href;
+}
+
+/** one id per venue and event, whichever language the page is in */
+export function getVenueEventServiceId(
+  site: URL,
+  venueSlug: string,
+  eventSlug: string,
+) {
+  return new URL(
+    `${getRoutesForLang("fr").venueEvent(venueSlug, eventSlug)}#service`,
+    site,
+  ).href;
+}

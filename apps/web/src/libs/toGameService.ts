@@ -3,6 +3,8 @@ import type {
   PricesGame,
 } from "@repo/services/cms/pageComponent.types";
 
+import { toService } from "./toService";
+
 function toOffer(price: GamePrice, url: string) {
   return {
     "@type": "Offer",
@@ -14,7 +16,6 @@ function toOffer(price: GamePrice, url: string) {
   };
 }
 
-// a booked activity: not Product (merchant rules), not Game (a work, not an experience)
 export function toGameService({
   id,
   url,
@@ -35,19 +36,15 @@ export function toGameService({
   /** the prices the page shows, none on a global game page */
   pricedGame: PricesGame | undefined;
 }) {
-  return {
-    "@type": "Service",
-    "@id": id,
+  return toService({
+    id,
     url,
     name,
-    ...(description && { description }),
-    ...(image && { image }),
-    provider: { "@id": providerId },
-    ...(cities.length > 0 && {
-      areaServed: cities.map((city) => ({ "@type": "City", name: city })),
-    }),
-    ...(pricedGame && {
-      offers: pricedGame.prices.map((price) => toOffer(price, url)),
-    }),
-  };
+    serviceType: undefined,
+    description,
+    image,
+    providerId,
+    cities,
+    offers: pricedGame?.prices.map((price) => toOffer(price, url)) ?? [],
+  });
 }

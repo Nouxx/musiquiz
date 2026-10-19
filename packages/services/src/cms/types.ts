@@ -359,6 +359,8 @@ export type GlobalGamePage = {
 
 export type GlobalEventPage = {
   eventName: string;
+  /** @example ["Lille", "Paris"], the venues that run this event */
+  venueCities: string[];
   pageCover: PageCover;
   components: PageComponent[];
   seo: Seo;

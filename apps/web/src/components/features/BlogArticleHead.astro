@@ -2,8 +2,13 @@
 import { getImage } from "astro:assets";
 import type { BlogArticlePage } from "@repo/services/cms/types";
 
+import { getBlogId } from "../../libs/getBlogId";
 import { getOrganizationId } from "../../libs/getOrganizationId";
 import { getSite } from "../../libs/getSite";
+import { getVenueBusinessId } from "../../libs/getVenueBusinessId";
+import { getT } from "../../libs/i18n";
+import { toBlog } from "../../libs/toBlog";
+import { toFaqPage } from "../../libs/toFaqPage";
 import JsonLd from "./JsonLd.astro";
 
 interface Props {
@@ -13,10 +18,7 @@ interface Props {
 const { data } = Astro.props;
 
 const site = getSite(Astro);
-
-function plainText(spans: { text: string }[]) {
-  return spans.map((span) => span.text).join("");
-}
+const url = new URL(Astro.url.pathname, site).href;
 
 const cover = await getImage({
   src: data.cover.url,
@@ -29,33 +31,37 @@ const cover = await getImage({
 
 const blogPosting = {
   "@type": "BlogPosting",
+  "@id": `${url}#article`,
   headline: data.title,
   description: data.excerpt,
   image: new URL(cover.src, site).href,
   datePublished: data.publishedAt,
   dateModified: data.updatedAt ?? data.publishedAt,
   inLanguage: "fr",
-  mainEntityOfPage: new URL(Astro.url.pathname, site).href,
+  timeRequired: `PT${data.readingMinutes}M`,
+  mainEntityOfPage: url,
+  isPartOf: { "@id": getBlogId(site) },
+  ...(data.closesOn.kind === "venue" && {
+    about: { "@id": getVenueBusinessId(site, data.closesOn.slug) },
+  }),
   author: {
     "@type": "Person",
     name: data.author.name,
     jobTitle: data.author.jobTitle,
-    url: data.author.profileUrl,
+    ...(data.author.profileUrl && { sameAs: [data.author.profileUrl] }),
   },
   publisher: { "@id": getOrganizationId(site) },
 };
 
-const faqPage = data.faq && {
-  "@type": "FAQPage",
-  mainEntity: data.faq.questions.map((entry) => ({
-    "@type": "Question",
-    name: entry.question,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: entry.answer.map((node) => plainText(node.spans)).join("\n"),
-    },
-  })),
-};
+// isPartOf must resolve on the page
+const blog = toBlog({
+  site,
+  name: getT("fr")("footer.blog"),
+  description: undefined,
+});
+
+const faqPage =
+  data.faq && toFaqPage({ pageUrl: url, questions: data.faq.questions });
 ---
 
-<JsonLd graph={[blogPosting, ...(faqPage ? [faqPage] : [])]} />
+<JsonLd graph={[blogPosting, blog, ...(faqPage ? [faqPage] : [])]} />

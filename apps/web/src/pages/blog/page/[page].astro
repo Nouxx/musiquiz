@@ -42,6 +42,6 @@ const alternates = {
   {alternates}
   webPageType="CollectionPage"
 >
-  <BlogHead slot="head" articleCount={data.articles.length} {page} />
+  <BlogHead slot="head" {data} {page} />
   <BlogPage {data} {page} {alternates} />
 </Layout>

@@ -12,7 +12,7 @@ Builds on [`seo-audit.md`](./seo-audit.md). Classic SEO foundations (canonical, 
 | `robots.txt`                  | `User-agent: * / Allow: /` + sitemap (`src/pages/robots.txt.ts`). Every AI bot allowed, training included (client decision). | ✓       |
 | Cloudflare bot settings       | Zone created, set to allow. Re-check on migration day (§2.2).                                           | ⚠ check |
 | `llms.txt`                    | Missing.                                                                                                | ✗       |
-| JSON-LD                       | Homepage, venue home, breadcrumbs, blog article. Games, events, FAQ components, listings: nothing.      | partial |
+| JSON-LD                       | Every template but where-to-find-us (J8): site graph, pages, venues, games, events, FAQs, blog.         | ✓       |
 | Entity graph                  | `Organization` + `WebSite` on every page (J1), linked both ways to every venue (J3).                   | ✓       |
 | Freshness signals             | Sitemap `lastmod` and `WebPage.dateModified` from `_updatedAt` (J2).                                    | ✓       |
 | Reviews                       | TrustIndex widget, JS-only. Invisible to AI crawlers.                                                   | ✗       |
@@ -149,11 +149,14 @@ Venue × game and venue × event pages are left out: the venue home already link
 | --------------------------------------- | ------------------------------------------------------------- | -------------------------- |
 | Home (fr, en)                           | `Organization` (`#organization`), `WebSite`                   | `HomepageHead.astro`       |
 | Venue home                              | `EntertainmentBusiness` (`/<venue>/#business`), `OfferCatalog` | `VenueHead.astro`          |
-| Every page                              | short `EntertainmentBusiness` per venue                       | `SiteGraphHead.astro`      |
+| Every venue page                        | short `EntertainmentBusiness`                                 | `VenueLayout.astro`        |
 | Game pages (venue, global)              | `Service` (`#service`), `Offer`s on venue pages               | `VenueGameHead.astro`, `GlobalGameHead.astro` |
+| Event pages (venue, global)             | `Service` (`#service`), `Offer`s from priced `offers` cards   | `VenueEventHead.astro`, `GlobalEventHead.astro` |
+| Every page with a `faq` component       | `FAQPage` (`#faq`)                                            | `PageComponentsHead.astro` |
 | Every page with a canonical             | `WebPage` (`#webpage`), `BreadcrumbList` (`#breadcrumb`)    | `SeoHead.astro`            |
-| Blog article                            | `BlogPosting`, `FAQPage` (article FAQ)                        | `BlogArticleHead.astro`    |
-| Blog index, where-to-find-us, contact, book, legal | nothing                                            | —                          |
+| Blog article                            | `BlogPosting` (`#article`), short `Blog`, `FAQPage`          | `BlogArticleHead.astro`    |
+| Blog index and pages                    | `Blog` (`/blog/#blog`), `ItemList` (`#articles`)             | `BlogHead.astro`           |
+| Where-to-find-us, contact, book, legal  | `WebPage` only                                                | —                          |
 
 Solid base: stable `@id`s, `</script>` escaping in `JsonLd.astro`, absolute URLs, opening hours parsed from Sanity.
 
@@ -201,7 +204,7 @@ Shipped: `SeoHead` emits `WebPage` (`libs/toWebPage.ts`) and the `BreadcrumbList
 `EntertainmentBusiness` is on the venue home only. Venue game, event, custom, booking and gift pages do not say which venue they belong to.
 
 - Venue home: keep the full node. Add `image` (page cover / OG image), `logo` (venue logo, in `VenueHeader` data), `description` (`seo.description`), `currenciesAccepted`, `knowsLanguage: ["fr", "en"]` where true.
-- ~~Every other venue page: a short node~~ done: `SiteGraphHead` emits `{ "@type": "EntertainmentBusiness", "@id", name, url, parentOrganization }` for every venue on every page, so `subOrganization` and the `WebPage`'s `about` resolve wherever they appear. The venue home merges its own with the full node.
+- ~~Every other venue page: a short node~~ done with J2: `VenueLayout` emits `{ "@type": "EntertainmentBusiness", "@id", name, url, parentOrganization }` on every venue page, so the `WebPage`'s `about` resolves. The venue home merges it with the full node.
 - Organization side: `subOrganization: venues.map(({ slug }) => ({ "@id": getVenueBusinessId(site, slug) }))` in J1, so the brand and its venues link both ways.
 Shipped: the venue home adds `description`, `image` (the OG image), `logo` (`venueLogoDark`), `currenciesAccepted` and `hasOfferCatalog` (J4). `knowsLanguage` left out: an English page is no proof the staff speak English; add it per venue if the client confirms. `Organization.subOrganization` lists every published `venue`, the same set `getVenueSlugs` builds.
 
@@ -234,13 +237,15 @@ Shipped: `libs/toGameService.ts`, tested. Service `@id`s use the French URL (`li
 
 - Not `Product`: Google's merchant rules for `Product` (shipping, returns) do not fit a booked activity. Not `Game` / `VideoGame`: those describe a game as a work, not an experience sold at a venue.
 
-#### J5 — Events as `Service`, not `Event` (medium)
+#### J5 — Events as `Service`, not `Event` (medium) — done
 
 EVG/EVJF, team building and Musi'Teens are formats, not dated happenings. `Event` requires `startDate`; using it without real dates is misuse and gets the markup ignored.
 
 Same shape as J4: `Service`, `serviceType: eventName`, `audience` (`{ "@type": "Audience", audienceType: "Entreprises" }` for team building, `PeopleAudience` with `suggestedMinAge`/`suggestedMaxAge` for Musi'Teens: needs data, else skip), `provider` venue or organization, `offers` when the page has an `offers` component with priced cards (skip `quotation` prices).
 
-#### J6 — `FAQPage` from every `faq` component (medium)
+Shipped: `libs/toEventService.ts`, tested, on the shell `libs/toService.ts` it shares with `toGameService`. `@id`s on the French URL (`getEventServiceId`, `getVenueEventServiceId`). The card's price label ("HT/joueur", "/4 heures") becomes a `UnitPriceSpecification.unitText`. The global event page lists the venues' cities in `areaServed` (`venueCities`, as on the global game page). `audience` left out: no data for it; team building's "Entreprises" would hang on a slug.
+
+#### J6 — `FAQPage` from every `faq` component (medium) — done
 
 The `faq` page component renders Q&As on venue, game and event pages with no markup. Only the blog article's own FAQ is marked up.
 
@@ -250,11 +255,15 @@ seo-audit D5 said "do not add more": right for Google rich results (restricted t
 - Call it from `PageComponentsHead.astro`, which already receives every page's components (and already handles the `reviews` preconnect). One page, one `FAQPage`: if a page holds two `faq` components, merge their questions.
 - Give it `@id` `${url}#faq` and reference it from the `WebPage` via `mainEntity` only on pages whose purpose is the FAQ (none today); otherwise just `isPartOf`.
 
-#### J7 — Blog listing and article (medium)
+Shipped: `libs/toFaqPage.ts`, tested; the blog article uses it too. `isPartOf` points to the page's `#webpage` (`getWebPageId`).
+
+#### J7 — Blog listing and article (medium) — done
 
 - `/blog/` and `/blog/page/N/`: `Blog` node (`@id` `/blog/#blog`, `publisher` `#organization`, `inLanguage: "fr"`) + `ItemList` of the listed articles' URLs.
 - `BlogPosting`: add `@id` (`#article`), `isPartOf: { "@id": blogId }`, `timeRequired: \`PT${data.readingMinutes}M\``, `about` → the closing venue's `#business` when `closesOn.kind === "venue"`, `author.sameAs` if the author schema gets social links.
 - Author entity: a `Person` with a stable `@id` (`/blog/#author-<slug>`) once there is an author page; until then, keep inline.
+
+Shipped: `libs/toBlog.ts` (`toBlog`, `toBlogItemList`), tested. The listing's `ItemList` holds the page's articles (`blogPageArticles`, shared with `BlogListing`), left out when there are none. The article page emits a short `Blog` so `isPartOf` resolves. The author's `profileUrl` moved from `url` to `sameAs`: it is a LinkedIn profile, not the author's page.
 
 #### J8 — Where to find us (low)
 
@@ -320,13 +329,13 @@ Render them as text in the `reviews` component's static HTML, next to the widget
 | 3  | ~~J1 site-wide `Organization` + `WebSite`~~ done (`SiteGraphHead` in `Layout`) | S | High | —                |
 | 4  | ~~J3 venue node on every venue page + `subOrganization`~~ done  | S      | High   | —                           |
 | 5  | ~~J4 games as `Service` + `Offer`s~~ done                       | M      | High   | optional (player counts)    |
-| 6  | J6 `FAQPage` from `faq` components                              | S      | Medium | —                           |
+| 6  | ~~J6 `FAQPage` from `faq` components~~ done                     | S      | Medium | —                           |
 | 7  | ~~J2 `WebPage` + `dateModified`~~ done (`toWebPage` in `SeoHead`) | M | High | —                                   |
 | 8  | ~~`llms.txt` endpoint (§3)~~ done; summary drafted, unpublished | S      | Low–Med | `siteSettings.llmsSummary` |
-| 9  | J5 events as `Service`                                          | S      | Medium | optional (audience ages)    |
+| 9  | ~~J5 events as `Service`~~ done                                 | S      | Medium | optional (audience ages)    |
 | 10 | Reviews rating as visible text (§5.3)                           | S      | Medium | —                           |
 | 11 | ~~IndexNow on deploy (§5.2)~~ done; key verifies after migration | S     | Medium | —                           |
-| 12 | J7 blog, J8 where-to-find-us                                    | S      | Low    | —                           |
+| 12 | ~~J7 blog~~ done, J8 where-to-find-us                           | S      | Low    | —                           |
 | 13 | J9 builder tests, schema validation in pre-launch crawl         | S      | —      | —                           |
 
 Order: 1 is configuration, on migration day. 3–4 fix the entity graph everything else hangs from. 7 unlocks freshness in three places at once.
