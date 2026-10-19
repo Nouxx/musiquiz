@@ -3,6 +3,8 @@ import cloudflare from "@astrojs/cloudflare";
 import { PRODUCTION_SITE_URL } from "@repo/utils/productionSiteUrl";
 import { defineConfig, envField, fontProviders } from "astro/config";
 
+import jsonLdInspector from "./integrations/jsonld-inspector/index.mjs";
+
 // WARNING: process.env reads variables set by the CLI
 // https://docs.astro.build/en/guides/environment-variables/#in-the-astro-config-file
 const isSsrBuild = process.env.SSR_BUILD === "true";
@@ -114,4 +116,5 @@ export default defineConfig({
       prefixDefaultLocale: false,
     },
   },
+  integrations: [jsonLdInspector()],
 });
