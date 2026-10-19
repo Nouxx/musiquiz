@@ -71,6 +71,7 @@ function adaptVenuePage({
       }),
       // same rule as the sitemap: the page renders the venue's own fields
       updatedAt:
+        // eslint-disable-next-line unicorn/prefer-math-min-max, unicorn/prefer-minimal-ternary -- ISO strings, Math.max returns NaN
         data.venuePage.venue.updatedAt > data.venuePage.seo.updatedAt
           ? data.venuePage.venue.updatedAt
           : data.venuePage.seo.updatedAt,
