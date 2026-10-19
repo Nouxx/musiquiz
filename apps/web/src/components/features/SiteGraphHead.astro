@@ -1,54 +1,25 @@
 ---
 import { getOrganizationData } from "@repo/services/cms/getOrganizationData";
-import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 
 import { getLang } from "../../libs/getLang";
-import { getOrganizationId } from "../../libs/getOrganizationId";
 import { getLogoUrl } from "../../libs/getLogoUrl";
 import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
 import { getSite } from "../../libs/getSite";
-import { getVenueBusinessId } from "../../libs/getVenueBusinessId";
-import { getWebsiteId } from "../../libs/getWebsiteId";
+import { toSiteGraph } from "../../libs/toSiteGraph";
 import JsonLd from "./JsonLd.astro";
 
 const site = getSite(Astro);
-const organizationId = getOrganizationId(site);
 
 const organization = await getOrganizationData({
   config: getSanityConfigFromEnvironment(),
 });
 
-const organizationData = {
-  "@type": "Organization",
-  "@id": organizationId,
-  name: "Musi'Quiz",
-  url: site.href,
-  logo: await getLogoUrl(site, organization.logo),
-  sameAs: organization.sameAs,
-  telephone: organization.telephone,
-  email: organization.email,
-  subOrganization: organization.venues.map(({ slug }) => ({
-    "@id": getVenueBusinessId(site, slug),
-  })),
-};
-
-// a reference must resolve on the page; the venue home adds the full facts
-const venueBusinesses = organization.venues.map(({ slug, city }) => ({
-  "@type": "EntertainmentBusiness",
-  "@id": getVenueBusinessId(site, slug),
-  name: `Musi'Quiz ${city}`,
-  url: new URL(getRoutesForLang(getLang(Astro)).venueHome(slug), site).href,
-  parentOrganization: { "@id": organizationId },
-}));
-
-const webSite = {
-  "@type": "WebSite",
-  "@id": getWebsiteId(site),
-  name: "Musi'Quiz",
-  url: site.href,
-  inLanguage: ["fr", "en"],
-  publisher: { "@id": organizationId },
-};
+const graph = toSiteGraph({
+  site,
+  lang: getLang(Astro),
+  logoUrl: await getLogoUrl(site, organization.logo),
+  organization,
+});
 ---
 
-<JsonLd graph={[organizationData, webSite, ...venueBusinesses]} />
+<JsonLd {graph} />

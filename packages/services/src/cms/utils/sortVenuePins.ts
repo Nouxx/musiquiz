@@ -2,12 +2,12 @@ import type { Lang } from "@repo/utils/lang";
 
 import type { VenuePin } from "../types";
 
-export function sortVenuePins({
+export function sortVenuePins<T extends VenuePin>({
   venues,
   lang,
 }: {
-  venues: VenuePin[];
+  venues: T[];
   lang: Lang;
-}): VenuePin[] {
+}): T[] {
   return venues.toSorted((a, b) => a.title.localeCompare(b.title, lang));
 }

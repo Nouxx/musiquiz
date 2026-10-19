@@ -3,6 +3,7 @@ import { getWhereToFindUsPageData } from "@repo/services/cms/getWhereToFindUsPag
 import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
 
 import PageComponentsHead from "../components/features/PageComponentsHead.astro";
+import WhereToFindUsHead from "../components/features/WhereToFindUsHead.astro";
 import WhereToFindUsPage from "../components/pages/WhereToFindUsPage.astro";
 import Layout from "../layouts/Layout.astro";
 import { getLang } from "../libs/getLang";
@@ -25,5 +26,6 @@ const alternates = getAlternatesUrl(
     slot="head"
     components={[...data.componentsBeforeMap, ...data.componentsAfterMap]}
   />
+  <WhereToFindUsHead slot="head" venues={data.venues} />
   <WhereToFindUsPage {data} {alternates} />
 </Layout>

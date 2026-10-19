@@ -54,6 +54,8 @@ export type VenuePin = {
   position: { x: number; y: number };
 };
 
+export type LocatedVenuePin = VenuePin & { address: PostalAddress };
+
 export type Homepage = {
   pageCover: PageCover;
   venues: VenuePin[];
@@ -198,7 +200,7 @@ export type TermsAndConditionsPage = {
 export type WhereToFindUsPage = {
   pageCover: PageCover;
   componentsBeforeMap: PageComponent[];
-  venues: VenuePin[];
+  venues: LocatedVenuePin[];
   venuesCta: { label: string; url: string } | undefined;
   componentsAfterMap: PageComponent[];
   seo: Seo;

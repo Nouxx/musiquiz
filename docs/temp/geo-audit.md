@@ -12,7 +12,7 @@ Builds on [`seo-audit.md`](./seo-audit.md). Classic SEO foundations (canonical, 
 | `robots.txt`                  | `User-agent: * / Allow: /` + sitemap (`src/pages/robots.txt.ts`). Every AI bot allowed, training included (client decision). | ✓       |
 | Cloudflare bot settings       | Zone created, set to allow. Re-check on migration day (§2.2).                                           | ⚠ check |
 | `llms.txt`                    | Missing.                                                                                                | ✗       |
-| JSON-LD                       | Every template but where-to-find-us (J8): site graph, pages, venues, games, events, FAQs, blog.         | ✓       |
+| JSON-LD                       | Every template: site graph, pages, venues, venue list, games, events, FAQs, blog.                        | ✓       |
 | Entity graph                  | `Organization` + `WebSite` on every page (J1), linked both ways to every venue (J3).                   | ✓       |
 | Freshness signals             | Sitemap `lastmod` and `WebPage.dateModified` from `_updatedAt` (J2).                                    | ✓       |
 | Reviews                       | TrustIndex widget, JS-only. Invisible to AI crawlers.                                                   | ✗       |
@@ -156,7 +156,8 @@ Venue × game and venue × event pages are left out: the venue home already link
 | Every page with a canonical             | `WebPage` (`#webpage`), `BreadcrumbList` (`#breadcrumb`)    | `SeoHead.astro`            |
 | Blog article                            | `BlogPosting` (`#article`), short `Blog`, `FAQPage`          | `BlogArticleHead.astro`    |
 | Blog index and pages                    | `Blog` (`/blog/#blog`), `ItemList` (`#articles`)             | `BlogHead.astro`           |
-| Where-to-find-us, contact, book, legal  | `WebPage` only                                                | —                          |
+| Where-to-find-us                        | `ItemList` of venues (`#venues`) with addresses               | `WhereToFindUsHead.astro`  |
+| Contact, book, legal                    | `WebPage` only                                                | —                          |
 
 Solid base: stable `@id`s, `</script>` escaping in `JsonLd.astro`, absolute URLs, opening hours parsed from Sanity.
 
@@ -265,16 +266,20 @@ Shipped: `libs/toFaqPage.ts`, tested; the blog article uses it too. `isPartOf` p
 
 Shipped: `libs/toBlog.ts` (`toBlog`, `toBlogItemList`), tested. The listing's `ItemList` holds the page's articles (`blogPageArticles`, shared with `BlogListing`), left out when there are none. The article page emits a short `Blog` so `isPartOf` resolves. The author's `profileUrl` moved from `url` to `sameAs`: it is a LinkedIn profile, not the author's page.
 
-#### J8 — Where to find us (low)
+#### J8 — Where to find us (low) — done
 
 `ItemList` of venues, each item `{ "@id": venueBusinessId }` with `url`, `name`, `address`. Gives assistants the full venue list in one fetch, answering "where can I play Musi'Quiz".
 
-#### J9 — Structure and tests (low)
+Shipped: `libs/toVenueItemList.ts`, tested. Items carry `@id` and `address` only: the site graph already states each venue's `name` and `url` on the page. The where-to-find-us query now projects each venue's address; the list follows the page's order.
+
+#### J9 — Structure and tests (low) — done, but validation
 
 - Keep `JsonLd.astro` as the single emitter. A page renders several `<script type="application/ld+json">` blocks (site graph, venue, breadcrumb, FAQ); valid, and `@id`s link across blocks. No need to merge them.
 - Builders return plain objects from `libs/to*.ts` and get unit tests, as `toBreadcrumbList` does. The tests check `@id` wiring, absolute URLs and omitted-when-empty fields.
 - Optional type safety: [`schema-dts`](https://www.npmjs.com/package/schema-dts) (Google's types) on builder return types. Dev dependency only, catches misspelled properties.
 - Validate a sample of each template in [validator.schema.org](https://validator.schema.org/) (all types) and the [Rich Results Test](https://search.google.com/test/rich-results) (Google-eligible types) before launch. Add to the pre-launch Screaming Frog crawl: it extracts and validates JSON-LD per page.
+
+Shipped: every JSON-LD node is built in `libs/to*.ts` and tested; the last inline ones moved out (`toSiteGraph`, `toVenueBusiness`, `toBlogPosting`). `schema-dts` not added: the tests pin every builder's output already. Validation stays a pre-launch step.
 
 ## 5. Other code and configuration
 
@@ -335,7 +340,7 @@ Render them as text in the `reviews` component's static HTML, next to the widget
 | 9  | ~~J5 events as `Service`~~ done                                 | S      | Medium | optional (audience ages)    |
 | 10 | Reviews rating as visible text (§5.3)                           | S      | Medium | —                           |
 | 11 | ~~IndexNow on deploy (§5.2)~~ done; key verifies after migration | S     | Medium | —                           |
-| 12 | ~~J7 blog~~ done, J8 where-to-find-us                           | S      | Low    | —                           |
-| 13 | J9 builder tests, schema validation in pre-launch crawl         | S      | —      | —                           |
+| 12 | ~~J7 blog, J8 where-to-find-us~~ done                           | S      | Low    | —                           |
+| 13 | ~~J9 builder tests~~ done; schema validation in pre-launch crawl | S     | —      | —                           |
 
 Order: 1 is configuration, on migration day. 3–4 fix the entity graph everything else hangs from. 7 unlocks freshness in three places at once.

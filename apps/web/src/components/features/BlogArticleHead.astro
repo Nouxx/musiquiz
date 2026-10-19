@@ -2,12 +2,10 @@
 import { getImage } from "astro:assets";
 import type { BlogArticlePage } from "@repo/services/cms/types";
 
-import { getBlogId } from "../../libs/getBlogId";
-import { getOrganizationId } from "../../libs/getOrganizationId";
 import { getSite } from "../../libs/getSite";
-import { getVenueBusinessId } from "../../libs/getVenueBusinessId";
 import { getT } from "../../libs/i18n";
 import { toBlog } from "../../libs/toBlog";
+import { toBlogPosting } from "../../libs/toBlogPosting";
 import { toFaqPage } from "../../libs/toFaqPage";
 import JsonLd from "./JsonLd.astro";
 
@@ -29,29 +27,12 @@ const cover = await getImage({
   format: "jpeg",
 });
 
-const blogPosting = {
-  "@type": "BlogPosting",
-  "@id": `${url}#article`,
-  headline: data.title,
-  description: data.excerpt,
-  image: new URL(cover.src, site).href,
-  datePublished: data.publishedAt,
-  dateModified: data.updatedAt ?? data.publishedAt,
-  inLanguage: "fr",
-  timeRequired: `PT${data.readingMinutes}M`,
-  mainEntityOfPage: url,
-  isPartOf: { "@id": getBlogId(site) },
-  ...(data.closesOn.kind === "venue" && {
-    about: { "@id": getVenueBusinessId(site, data.closesOn.slug) },
-  }),
-  author: {
-    "@type": "Person",
-    name: data.author.name,
-    jobTitle: data.author.jobTitle,
-    ...(data.author.profileUrl && { sameAs: [data.author.profileUrl] }),
-  },
-  publisher: { "@id": getOrganizationId(site) },
-};
+const blogPosting = toBlogPosting({
+  site,
+  url,
+  imageUrl: new URL(cover.src, site).href,
+  article: data,
+});
 
 // isPartOf must resolve on the page
 const blog = toBlog({
