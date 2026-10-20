@@ -1,5 +1,9 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  requiredInEveryLanguage,
+} from "../localized";
 
 export const faqQuestionType = defineType({
   name: "faqQuestion",
@@ -10,7 +14,7 @@ export const faqQuestionType = defineType({
       name: "question",
       title: "Question",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "answer",
@@ -18,7 +22,7 @@ export const faqQuestionType = defineType({
       description:
         "Paragraphs, bold and links. The first question of the section is open when the page loads; the others open one at a time.",
       type: "internationalizedArrayRichText",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
   ],
   preview: {
@@ -42,7 +46,7 @@ export const faqType = defineType({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "questions",

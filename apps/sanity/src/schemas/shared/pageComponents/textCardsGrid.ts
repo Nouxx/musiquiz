@@ -1,5 +1,9 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  requiredInEveryLanguage,
+} from "../localized";
 import { contentIcons } from "./contentIcons";
 
 export const keywordCardType = defineType({
@@ -12,7 +16,7 @@ export const keywordCardType = defineType({
       title: "Badge",
       description: "The small tilted pill, beside the icon.",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "icon",
@@ -28,7 +32,7 @@ export const keywordCardType = defineType({
       description:
         "One short sentence. Cards on the same row are as tall as the longest one.",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
   ],
   preview: {
@@ -60,13 +64,13 @@ export const textCardsGridType = defineType({
       name: "heading",
       title: "Heading",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "body",
       title: "Body",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "cta",

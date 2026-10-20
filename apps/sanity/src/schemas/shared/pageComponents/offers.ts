@@ -1,5 +1,10 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  noMissingLanguage,
+  requiredInEveryLanguage,
+} from "../localized";
 import { contentIcons } from "./contentIcons";
 
 type OfferCardParent = {
@@ -20,7 +25,7 @@ export const offerListItemType = defineType({
       name: "text",
       title: "Text",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
   ],
   preview: {
@@ -52,7 +57,7 @@ export const offerCardType = defineType({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "subTitle",
@@ -60,6 +65,7 @@ export const offerCardType = defineType({
       description:
         "Optional. One short line under the title, for who or how many the offer is for.",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(noMissingLanguage),
     }),
     defineField({
       name: "quotation",
@@ -95,6 +101,7 @@ export const offerCardType = defineType({
       description:
         "Optional. Drawn smaller beside the amount. Starts with “/” to sit tight against it — “HT/joueur” reads “28€ HT/joueur”, “/enfant” reads “36€/enfant”.",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(noMissingLanguage),
       fieldset: "price",
       hidden: ({ parent }) =>
         Boolean((parent as OfferCardParent | undefined)?.quotation),
@@ -120,6 +127,7 @@ export const offerCardType = defineType({
       description:
         "Optional. The coloured line above the bullets — “Une formule complète comprenant :”.",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(noMissingLanguage),
       fieldset: "content",
       hidden: ({ parent }) =>
         (parent as OfferCardParent | undefined)?.contentType === "text",
@@ -149,13 +157,12 @@ export const offerCardType = defineType({
       hidden: ({ parent }) =>
         (parent as OfferCardParent | undefined)?.contentType !== "text",
       validation: (rule) =>
-        rule.custom((value: unknown[] | undefined, context) => {
-          const parent = context.parent as OfferCardParent | undefined;
-
-          if (parent?.contentType !== "text") return true;
-
-          return value?.length ? true : "Required.";
-        }),
+        rule.custom(
+          requiredInEveryLanguage(
+            ({ parent }) =>
+              (parent as OfferCardParent | undefined)?.contentType === "text",
+          ),
+        ),
     }),
   ],
   preview: {
@@ -187,13 +194,13 @@ export const offerGroupType = defineType({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "body",
       title: "Body",
       type: "internationalizedArrayRichText",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "tone",
@@ -243,13 +250,14 @@ export const offersType = defineType({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "subTitle",
       title: "Subtitle",
       description: "Optional. One line under the title, drawn lighter.",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(noMissingLanguage),
     }),
     defineField({
       name: "background",

@@ -10,6 +10,7 @@
     "dev": "dotenvx run -f ../../.env.local -f ../../.env -- sanity dev",
     "start": "sanity start",
     "validate": "sanity documents validate -y",
+    "test": "vitest run",
     "migration:new": "sanity migration create",
     "migration:list": "sanity migration list",
     "migration:run": "sanity migration run",
@@ -34,6 +35,7 @@
     "@types/react": "^19.2.14",
     "eslint": "^9.28",
     "prettier": "^3.5",
-    "typescript": "^5.8"
+    "typescript": "^5.8",
+    "vitest": "catalog:"
   }
 }

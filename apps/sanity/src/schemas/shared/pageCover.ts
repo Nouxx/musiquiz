@@ -1,6 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 import { hasWidget } from "../venuePage";
+import { noMissingLanguage, requiredInEveryLanguage } from "./localized";
 
 type PageCoverParent = {
   background?: string;
@@ -154,17 +155,19 @@ export const pageCoverType = defineType({
       name: "heading",
       title: "Heading",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "subHeading",
       title: "Sub heading",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(noMissingLanguage),
     }),
     defineField({
       name: "badge",
       title: "Badge",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(noMissingLanguage),
     }),
     defineField({
       name: "cta",

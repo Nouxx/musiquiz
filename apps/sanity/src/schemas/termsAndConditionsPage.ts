@@ -1,6 +1,7 @@
 import { defineField, defineType } from "sanity";
 import { BookIcon } from "@sanity/icons/Book";
 import { pageGroups } from "./shared/seo";
+import { requiredInEveryLanguage } from "./shared/localized";
 
 export const termsAndConditionsPageType = defineType({
   name: "termsAndConditionsPage",
@@ -23,7 +24,7 @@ export const termsAndConditionsPageType = defineType({
       description:
         "Shown between the list of venues and the first venue's terms: what a visitor should do when their venue is not listed. Paragraphs, bold and links, nothing else.",
       type: "internationalizedArrayRichText",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "seo",

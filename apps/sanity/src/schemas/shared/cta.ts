@@ -1,5 +1,9 @@
 import { defineField, defineType } from "sanity";
-import { frenchValue, type LocalizedEntry } from "./frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  requiredInEveryLanguage,
+} from "./localized";
 
 // `/` a page of this site, `#` a heading further down the page the button sits
 // on, `https://` somewhere else entirely. anything else — a bare `www.`, a
@@ -16,7 +20,7 @@ export const ctaType = defineType({
       title: "Label",
       description: "The text on the button.",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "url",
@@ -25,17 +29,19 @@ export const ctaType = defineType({
         "Where the button leads, once per language. Start with / for a page of this site — including its language prefix, so /en/… for English — with # for a section of the page this button sits on, or with https:// for another site. Every page of this site is listed in the Site URLs tab.",
       type: "internationalizedArrayString", // the url is localized because fr and en are different paths
       validation: (rule) =>
-        rule.required().custom((entries?: LocalizedEntry[]) => {
-          const invalid = entries?.filter(
-            (entry) =>
-              entry.value &&
-              !URL_PREFIXES.some((prefix) => entry.value?.startsWith(prefix)),
-          );
+        rule
+          .custom(requiredInEveryLanguage())
+          .custom((entries?: LocalizedEntry[]) => {
+            const invalid = entries?.filter(
+              (entry) =>
+                entry.value &&
+                !URL_PREFIXES.some((prefix) => entry.value?.startsWith(prefix)),
+            );
 
-          return invalid?.length
-            ? "Start with / for a page of this site, # for a section of this page, or https:// for another site"
-            : true;
-        }),
+            return invalid?.length
+              ? "Start with / for a page of this site, # for a section of this page, or https:// for another site"
+              : true;
+          }),
     }),
   ],
   preview: {

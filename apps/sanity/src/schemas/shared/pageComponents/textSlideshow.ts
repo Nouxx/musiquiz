@@ -1,5 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import { frenchValue, type LocalizedEntry } from "../localized";
 
 export const textSlideshowType = defineType({
   name: "textSlideshow",

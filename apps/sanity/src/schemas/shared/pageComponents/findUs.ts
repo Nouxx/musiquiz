@@ -1,5 +1,9 @@
 import { defineField, defineType, type PreviewValue } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  requiredInEveryLanguage,
+} from "../localized";
 
 export const findUsType = defineType({
   name: "findUs",
@@ -24,13 +28,13 @@ export const findUsType = defineType({
       title: "Badge",
       description: "The small tilted pill above the title.",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "venue",
@@ -48,35 +52,35 @@ export const findUsType = defineType({
         "The small line under the address. The address itself comes from the venue.",
       type: "internationalizedArrayText",
       fieldset: "address",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "openingTitle",
       title: "Title",
       type: "internationalizedArrayString",
       fieldset: "hours",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "openingNote",
       title: "Note",
       type: "internationalizedArrayText",
       fieldset: "hours",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "contactTitle",
       title: "Title",
       type: "internationalizedArrayString",
       fieldset: "contact",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "contactNote",
       title: "Note",
       type: "internationalizedArrayText",
       fieldset: "contact",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
   ],
   preview: {

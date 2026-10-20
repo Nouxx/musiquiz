@@ -9,6 +9,7 @@ import { DocumentsIcon } from "@sanity/icons/Documents";
 import { getReservedCustomPageSlugs } from "@repo/services/routing/getReservedCustomPageSlugs";
 import { SANITY_API_VERSION } from "@repo/utils/sanityConfig";
 import { pageGroups } from "./shared/seo";
+import { requiredInEveryLanguage } from "./shared/localized";
 
 const reservedSlugs = getReservedCustomPageSlugs();
 
@@ -74,7 +75,7 @@ export const venueCustomPageType = defineType({
       description:
         "A short name for the page, shown in the breadcrumb and used as the search title when the SEO title is empty.",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "slug",
