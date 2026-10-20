@@ -9,19 +9,46 @@ import type { LlmsTxt, LlmsTxtLink, LlmsTxtPageRoute } from "./types";
 
 type SanityLlmsTxtEntry = SanityLlmsTxt["venues"][number];
 
-const pageRoutes: LlmsTxtPageRoute[] = [
-  "book",
-  "whereToFindUs",
-  "joinTheNetwork",
-  "contact",
-  "termsAndConditions",
-  "legalNotice",
-];
+const pageRoutes = {
+  globalBookingPage: "book",
+  whereToFindUsPage: "whereToFindUs",
+  joinTheNetworkPage: "joinTheNetwork",
+  contactPage: "contact",
+  termsAndConditionsPage: "termsAndConditions",
+  legalNoticePage: "legalNotice",
+} as const satisfies Record<
+  SanityLlmsTxt["pages"][number]["type"],
+  LlmsTxtPageRoute
+>;
 
 function isPageUrl(
   url: SiteUrl,
 ): url is SiteUrl & { route: LlmsTxtPageRoute; en: string } {
-  return (pageRoutes as string[]).includes(url.route) && url.en !== undefined;
+  return (
+    (Object.values(pageRoutes) as string[]).includes(url.route) &&
+    url.en !== undefined
+  );
+}
+
+function toPages({
+  urls,
+  pages,
+}: {
+  urls: SiteUrl[];
+  pages: SanityLlmsTxt["pages"];
+}): LlmsTxt["pages"] {
+  return urls.filter(isPageUrl).flatMap(({ route, fr, en }) => {
+    const page = pages.find(({ type }) => pageRoutes[type] === route);
+
+    if (!page) {
+      throw new Error(`llms.txt: no page document for ${fr}`);
+    }
+
+    // a noindex page should not be mentioned in llms.txt
+    if (page.noindex) return [];
+
+    return [{ route, fr, en }];
+  });
 }
 
 // the site urls decide which pages exist, the entries only describe them
@@ -90,8 +117,6 @@ export async function getLlmsTxtData({
       urls: withSlug(blogUrls, "blogArticle"),
       entries: data.articles,
     }),
-    pages: globalUrls
-      .filter(isPageUrl)
-      .map(({ route, fr, en }) => ({ route, fr, en })),
+    pages: toPages({ urls: globalUrls, pages: data.pages }),
   };
 }

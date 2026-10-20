@@ -6,6 +6,15 @@ import { fetchSanityData } from "./fetchData";
 
 const lang = "fr";
 
+const llmsTxtPageTypes = [
+  "globalBookingPage",
+  "whereToFindUsPage",
+  "joinTheNetworkPage",
+  "contactPage",
+  "termsAndConditionsPage",
+  "legalNoticePage",
+] as const;
+
 const seoDescription = `seo.description[language == "${lang}"][0].value`;
 
 // the fallback is the one the page's meta description falls back to
@@ -60,6 +69,10 @@ function llmsTxtQuery() {
       "description": seo.description,
       "fallbackDescription": excerpt,
       "noindex": coalesce(seo.noindex, false),
+    },
+    "pages": *[_type in ${JSON.stringify(llmsTxtPageTypes)}]{
+      "type": _type,
+      "noindex": coalesce(seo.noindex, false),
     }
   }`);
 }
@@ -78,6 +91,12 @@ const sanityLlmsTxtSchema = z.strictObject({
   games: z.array(sanityLlmsTxtEntrySchema),
   events: z.array(sanityLlmsTxtEntrySchema),
   articles: z.array(sanityLlmsTxtEntrySchema),
+  pages: z.array(
+    z.strictObject({
+      type: z.enum(llmsTxtPageTypes),
+      noindex: z.boolean(),
+    }),
+  ),
 });
 
 export type SanityLlmsTxt = z.infer<typeof sanityLlmsTxtSchema>;

@@ -91,7 +91,9 @@ try {
 } catch (error) {
   // fetch rejects with a bare "fetch failed", the reason is in cause
   const reason =
-    error instanceof Error && error.cause instanceof Error ? error.cause : error;
+    error instanceof Error && error.cause instanceof Error
+      ? error.cause
+      : error;
   console.warn(
     `⚠ IndexNow submission failed for ${urlList.length} urls: ${reason instanceof Error ? reason.message : String(reason)}`,
   );
