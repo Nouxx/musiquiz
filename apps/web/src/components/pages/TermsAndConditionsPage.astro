@@ -1,4 +1,5 @@
 ---
+import { venueTermsAnchor } from "@repo/services/routing/anchors";
 import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import type { TermsAndConditionsPage as TermsAndConditionsPageData } from "@repo/services/cms/types";
 import VenueTerms from "@repo/ui/VenueTerms";
@@ -26,7 +27,7 @@ const { pageCover, intro, venues } = data;
   indexLabel={t("termsAndConditionsPage.indexLabel")}
   {intro}
   venues={venues.map((venue) => ({
-    id: venue.slug,
+    id: venueTermsAnchor(venue.slug),
     title: t("termsAndConditionsPage.venueTitle", { venue: venue.title }),
     articles: venue.articles.map((article, index) => ({
       title: t("termsAndConditionsPage.articleTitle", {

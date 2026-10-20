@@ -4,7 +4,7 @@ import type {
   GlobalBookingPage as GlobalBookingPageData,
   PageCover as PageCoverData,
 } from "@repo/services/cms/types";
-import { venuesMapAnchorId } from "@repo/ui/types";
+import { anchors } from "@repo/services/routing/anchors";
 
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
@@ -27,7 +27,7 @@ const pageCoverData: PageCoverData = {
   ...data.pageCover,
   cta: {
     label: t("globalBookingPage.ctaLabel"),
-    url: `#${venuesMapAnchorId}`,
+    url: `#${anchors.venuesMap}`,
   },
 };
 ---

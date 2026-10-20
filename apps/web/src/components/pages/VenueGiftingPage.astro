@@ -10,7 +10,7 @@ import type {
   VenueWidgetPage,
 } from "@repo/services/cms/types";
 import Widget from "../features/4espace/Widget.astro";
-import { giftingAnchor } from "../features/4espace/config";
+import { anchors } from "@repo/services/routing/anchors";
 
 interface Props {
   venueSlug: string;
@@ -27,7 +27,7 @@ const pageCoverData: PageCoverData = {
   ...data.pageCover,
   cta: {
     label: t("venueGiftingPage.ctaLabel"),
-    url: `#${giftingAnchor}`,
+    url: `#${anchors.gifting}`,
   },
 };
 ---
@@ -37,7 +37,7 @@ const pageCoverData: PageCoverData = {
 <PageComponents components={data.componentsBeforeWidget} />
 
 <Widget
-  anchor={giftingAnchor}
+  anchor={anchors.gifting}
   widgetId={data.widgetId}
   settings={data.forEscapeSettings}
 />

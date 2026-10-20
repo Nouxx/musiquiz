@@ -1,3 +1,4 @@
+import { anchors, venueTermsAnchor } from "./anchors";
 import { getRoutesForLang } from "./getRoutesForLang";
 
 const frenchRoutes = getRoutesForLang("fr");
@@ -8,12 +9,19 @@ type UnlistedRoute = "faq" | "press" | "blogPage";
 
 export type SiteUrlRoute = Exclude<keyof typeof frenchRoutes, UnlistedRoute>;
 
+// the article anchor only skips the cover: not worth a link
+export type SiteUrlAnchor =
+  | Exclude<keyof typeof anchors, "article">
+  | "venueTerms";
+
 export type SiteUrl = {
   route: SiteUrlRoute;
   /** the dynamic part, set on a game, event or article url */
   slug?: string;
   /** set on a custom page, whose slug is not a name */
   title?: string;
+  /** set on a url that jumps to a section of its page */
+  anchor?: SiteUrlAnchor;
   fr: string;
   /** missing on the blog, French only: docs/adr/0013 */
   en?: string;
@@ -39,6 +47,13 @@ export type VenueUrlInput = {
     | { provider: "none" };
 };
 
+/** a page that renders a venue prices component */
+export type PricesPage = {
+  route: SiteUrlRoute;
+  venueSlug?: string;
+  slug?: string;
+};
+
 function staticUrl(
   route: Exclude<SiteUrlRoute, "blog" | "blogArticle">,
 ): SiteUrl {
@@ -52,34 +67,78 @@ function staticUrl(
   return { route, fr, en };
 }
 
+function anchoredUrl(url: SiteUrl, anchor: SiteUrlAnchor, id: string) {
+  const anchored: SiteUrl = { ...url, anchor, fr: `${url.fr}#${id}` };
+  if (url.en) anchored.en = `${url.en}#${id}`;
+
+  return anchored;
+}
+
+function withAnchors({
+  url,
+  venueSlug,
+  sectionAnchors = [],
+  pricesPages,
+}: {
+  url: SiteUrl;
+  venueSlug?: string;
+  sectionAnchors?: Exclude<SiteUrlAnchor, "prices" | "venueTerms">[];
+  pricesPages: PricesPage[];
+}): SiteUrl[] {
+  const hasPrices = pricesPages.some(
+    (page) =>
+      page.route === url.route &&
+      page.venueSlug === venueSlug &&
+      page.slug === url.slug,
+  );
+
+  return [
+    url,
+    ...sectionAnchors.map((anchor) => anchoredUrl(url, anchor, anchors[anchor])),
+    ...(hasPrices ? [anchoredUrl(url, "prices", anchors.prices)] : []),
+  ];
+}
+
 export function toGlobalUrls({
   gameSlugs,
   eventSlugs,
+  pricesPages,
 }: {
   gameSlugs: string[];
   eventSlugs: string[];
+  pricesPages: PricesPage[];
 }): SiteUrl[] {
   return [
-    staticUrl("home"),
-    staticUrl("book"),
+    { url: staticUrl("home"), sectionAnchors: ["venuesMap" as const] },
+    { url: staticUrl("book"), sectionAnchors: ["venuesMap" as const] },
     ...gameSlugs.map((slug) => ({
-      route: "game" as const,
-      slug,
-      fr: frenchRoutes.game(slug),
-      en: englishRoutes.game(slug),
+      url: {
+        route: "game" as const,
+        slug,
+        fr: frenchRoutes.game(slug),
+        en: englishRoutes.game(slug),
+      },
     })),
     ...eventSlugs.map((slug) => ({
-      route: "event" as const,
-      slug,
-      fr: frenchRoutes.event(slug),
-      en: englishRoutes.event(slug),
+      url: {
+        route: "event" as const,
+        slug,
+        fr: frenchRoutes.event(slug),
+        en: englishRoutes.event(slug),
+      },
     })),
-    staticUrl("whereToFindUs"),
-    staticUrl("joinTheNetwork"),
-    staticUrl("contact"),
-    staticUrl("termsAndConditions"),
-    staticUrl("legalNotice"),
-  ];
+    {
+      url: staticUrl("whereToFindUs"),
+      sectionAnchors: ["venuesMap" as const],
+    },
+    {
+      url: staticUrl("joinTheNetwork"),
+      sectionAnchors: ["venueOpeningForm" as const],
+    },
+    { url: staticUrl("contact"), sectionAnchors: ["venuesContact" as const] },
+    { url: staticUrl("termsAndConditions") },
+    { url: staticUrl("legalNotice") },
+  ].flatMap((page) => withAnchors({ ...page, pricesPages }));
 }
 
 function toPartnerLinks(venue: VenueUrlInput): PartnerLink[] {
@@ -103,6 +162,8 @@ export function toVenueUrls({
   venueGames,
   venueEvents,
   venueCustomPages,
+  pricesPages,
+  termsVenueSlugs,
 }: {
   venues: VenueUrlInput[];
   venueSlugs: string[];
@@ -111,61 +172,94 @@ export function toVenueUrls({
   venueGames: { venueSlug: string; gameSlug: string }[];
   venueEvents: { venueSlug: string; eventSlug: string }[];
   venueCustomPages: { venueSlug: string; pageSlug: string; title: string }[];
+  pricesPages: PricesPage[];
+  termsVenueSlugs: string[];
 }): VenueUrls[] {
   return venues
     .filter((venue) => venueSlugs.includes(venue.slug))
     .map((venue) => {
       const { slug } = venue;
-      const urls: SiteUrl[] = [
+      const pages: {
+        url: SiteUrl;
+        sectionAnchors?: ("booking" | "gifting")[];
+      }[] = [
         {
-          route: "venueHome",
-          fr: frenchRoutes.venueHome(slug),
-          en: englishRoutes.venueHome(slug),
+          url: {
+            route: "venueHome",
+            fr: frenchRoutes.venueHome(slug),
+            en: englishRoutes.venueHome(slug),
+          },
         },
       ];
 
       if (bookingVenueSlugs.includes(slug)) {
-        urls.push({
-          route: "venueBook",
-          fr: frenchRoutes.venueBook(slug),
-          en: englishRoutes.venueBook(slug),
+        pages.push({
+          url: {
+            route: "venueBook",
+            fr: frenchRoutes.venueBook(slug),
+            en: englishRoutes.venueBook(slug),
+          },
+          sectionAnchors: ["booking"],
         });
       }
       if (giftingVenueSlugs.includes(slug)) {
-        urls.push({
-          route: "venueGifting",
-          fr: frenchRoutes.venueGifting(slug),
-          en: englishRoutes.venueGifting(slug),
+        pages.push({
+          url: {
+            route: "venueGifting",
+            fr: frenchRoutes.venueGifting(slug),
+            en: englishRoutes.venueGifting(slug),
+          },
+          sectionAnchors: ["gifting"],
         });
       }
 
-      urls.push(
+      pages.push(
         ...venueGames
           .filter((pair) => pair.venueSlug === slug)
           .map(({ gameSlug }) => ({
-            route: "venueGame" as const,
-            slug: gameSlug,
-            fr: frenchRoutes.venueGame(slug, gameSlug),
-            en: englishRoutes.venueGame(slug, gameSlug),
+            url: {
+              route: "venueGame" as const,
+              slug: gameSlug,
+              fr: frenchRoutes.venueGame(slug, gameSlug),
+              en: englishRoutes.venueGame(slug, gameSlug),
+            },
           })),
         ...venueEvents
           .filter((pair) => pair.venueSlug === slug)
           .map(({ eventSlug }) => ({
-            route: "venueEvent" as const,
-            slug: eventSlug,
-            fr: frenchRoutes.venueEvent(slug, eventSlug),
-            en: englishRoutes.venueEvent(slug, eventSlug),
+            url: {
+              route: "venueEvent" as const,
+              slug: eventSlug,
+              fr: frenchRoutes.venueEvent(slug, eventSlug),
+              en: englishRoutes.venueEvent(slug, eventSlug),
+            },
           })),
         ...venueCustomPages
           .filter((page) => page.venueSlug === slug)
           .map(({ pageSlug, title }) => ({
-            route: "venueCustomPage" as const,
-            slug: pageSlug,
-            title,
-            fr: frenchRoutes.venueCustomPage(slug, pageSlug),
-            en: englishRoutes.venueCustomPage(slug, pageSlug),
+            url: {
+              route: "venueCustomPage" as const,
+              slug: pageSlug,
+              title,
+              fr: frenchRoutes.venueCustomPage(slug, pageSlug),
+              en: englishRoutes.venueCustomPage(slug, pageSlug),
+            },
           })),
       );
+
+      const urls = pages.flatMap((page) =>
+        withAnchors({ ...page, venueSlug: slug, pricesPages }),
+      );
+
+      if (termsVenueSlugs.includes(slug)) {
+        urls.push(
+          anchoredUrl(
+            staticUrl("termsAndConditions"),
+            "venueTerms",
+            venueTermsAnchor(slug),
+          ),
+        );
+      }
 
       return {
         name: venue.name,

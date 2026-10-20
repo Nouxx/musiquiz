@@ -1,6 +1,3 @@
-export const bookingAnchor = "booking";
-export const giftingAnchor = "gifting";
-
 // data-settings only carries the tenant API base: the widget picks `instance`
 // and `domain` out of the decoded JSON and drops everything else. Each venue is
 // its own tenant, so the value comes from the venue in Sanity.

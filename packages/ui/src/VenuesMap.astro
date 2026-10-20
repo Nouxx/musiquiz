@@ -6,17 +6,18 @@ import Flex from "./primitives/Flex.astro";
 import Grid from "./primitives/Grid.astro";
 import Text from "./primitives/Text.astro";
 import { linkTarget } from "./lib/linkTarget";
-import { venuesMapAnchorId, type CtaLink, type VenuePin } from "./types";
+import type { CtaLink, VenuePin } from "./types";
 import { venuesMap } from "./lib/maps";
 
 interface Props {
+  anchor: string;
   badge: string;
   heading: string;
   venues: VenuePin[];
   cta?: CtaLink;
 }
 
-const { badge, heading, venues, cta } = Astro.props;
+const { anchor, badge, heading, venues, cta } = Astro.props;
 
 const id = `venues-${crypto.randomUUID().slice(0, 8)}`;
 
@@ -28,7 +29,7 @@ const pairingCss = venues
   .join("\n");
 ---
 
-<Section surface="vivid" id={venuesMapAnchorId}>
+<Section surface="vivid" id={anchor}>
   <Flex direction="column" gap="8">
     <div class="venues" {id}>
       <Flex direction="column" gap="10" class="list">

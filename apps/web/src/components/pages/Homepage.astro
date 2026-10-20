@@ -4,7 +4,7 @@ import type {
   Homepage as HomepageData,
   PageCover as PageCoverData,
 } from "@repo/services/cms/types";
-import { venuesMapAnchorId } from "@repo/ui/types";
+import { anchors } from "@repo/services/routing/anchors";
 
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
@@ -25,7 +25,7 @@ const { data, alternates } = Astro.props;
 
 const pageCoverData: PageCoverData = {
   ...data.pageCover,
-  cta: { label: t("cover.chooseVenue"), url: `#${venuesMapAnchorId}` },
+  cta: { label: t("cover.chooseVenue"), url: `#${anchors.venuesMap}` },
 };
 ---
 

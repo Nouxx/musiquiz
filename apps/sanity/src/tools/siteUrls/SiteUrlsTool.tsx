@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import { useClient } from "sanity";
 
 import { dataset, projectId } from "../../environments";
-import { routeLabels } from "./routeLabels";
+import { anchorLabels, routeLabels } from "./routeLabels";
 
 // published only, like the build: a draft has no page yet
 const config = { projectId, dataset, draft: false };
@@ -94,11 +94,13 @@ function loadBlog() {
 }
 
 function toRow(url: SiteUrl): Row {
-  const label = routeLabels[url.route];
+  const parts = [routeLabels[url.route]];
+  if (url.slug) parts.push(url.title ?? url.slug);
+  if (url.anchor) parts.push(`${anchorLabels[url.anchor]} anchor`);
 
   return {
     id: url.fr,
-    label: url.slug ? `${label} · ${url.title ?? url.slug}` : label,
+    label: parts.join(" · "),
     fr: url.fr,
     en: url.en,
   };
@@ -291,6 +293,9 @@ function Rules() {
           listed here leads to a “page not found”.
         </Text>
         <Text size={1}>• Always end a path with /.</Text>
+        <Text size={1}>
+          • An anchor (#…) goes after the final /: /lille/reserver/#booking.
+        </Text>
         <Text size={1}>
           • English paths start with /en/ and use the English words:
           /en/paris/book/, never /en/paris/reserver/.

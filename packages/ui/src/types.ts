@@ -314,5 +314,3 @@ export type VenueOpeningLimits = {
   message: number;
 };
 
-// todo: move this to a better place
-export const venuesMapAnchorId = "venuesMap";

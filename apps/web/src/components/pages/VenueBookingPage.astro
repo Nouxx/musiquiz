@@ -10,7 +10,7 @@ import type {
   VenueWidgetPage,
 } from "@repo/services/cms/types";
 import Widget from "../features/4espace/Widget.astro";
-import { bookingAnchor } from "../features/4espace/config";
+import { anchors } from "@repo/services/routing/anchors";
 
 interface Props {
   venueSlug: string;
@@ -27,7 +27,7 @@ const pageCoverData: PageCoverData = {
   ...data.pageCover,
   cta: {
     label: t("venueBookingPage.ctaLabel"),
-    url: `#${bookingAnchor}`,
+    url: `#${anchors.booking}`,
   },
   secondaryCta: {
     label: t("venueBookingPage.secondaryCtaLabel"),
@@ -41,7 +41,7 @@ const pageCoverData: PageCoverData = {
 <PageComponents components={data.componentsBeforeWidget} />
 
 <Widget
-  anchor={bookingAnchor}
+  anchor={anchors.booking}
   widgetId={data.widgetId}
   settings={data.forEscapeSettings}
 />

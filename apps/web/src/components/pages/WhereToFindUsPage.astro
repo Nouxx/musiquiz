@@ -12,7 +12,7 @@ import PageComponents from "../features/PageComponents.astro";
 import CmsPageCover from "../features/CmsPageCover.astro";
 import VenuesList from "../features/VenuesList.astro";
 import { getT } from "../../libs/i18n";
-import { venuesMapAnchorId } from "@repo/ui/types";
+import { anchors } from "@repo/services/routing/anchors";
 
 interface Props {
   data: WhereToFindUsPageData;
@@ -26,7 +26,7 @@ const { data, alternates } = Astro.props;
 
 const pageCoverDataWithCta: PageCoverData = {
   ...data.pageCover,
-  cta: { label: t("whereToFindUsPage.ctaLabel"), url: `#${venuesMapAnchorId}` },
+  cta: { label: t("whereToFindUsPage.ctaLabel"), url: `#${anchors.venuesMap}` },
 };
 ---
 
