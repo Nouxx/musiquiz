@@ -2,6 +2,7 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 import { JoystickIcon } from "@sanity/icons/Joystick";
 import { currencyOf, type Currency } from "@repo/utils/currency";
 import { formatPrice } from "@repo/utils/formatPrice";
+import { iconMedia } from "../components/IconInput";
 import { PriceRowPreview } from "../components/PriceRowPreview";
 import {
   frenchValue,
@@ -10,7 +11,7 @@ import {
   noMissingLanguage,
   requiredInEveryLanguage,
 } from "./shared/localized";
-import { contentIcons } from "./shared/pageComponents/contentIcons";
+import { iconField } from "./shared/iconField";
 import { findDuplicate, takenFormatIds } from "./shared/venueFormatUniqueness";
 import { pageGroups } from "./shared/seo";
 
@@ -55,14 +56,7 @@ export const priceType = defineType({
           .custom(requiredInEveryLanguage())
           .custom(maxLengthInEveryLanguage(LABEL_MAX_LENGTH, NARROW_CARD)),
     }),
-    defineField({
-      name: "icon",
-      title: "Label icon",
-      type: "string",
-      options: { list: contentIcons },
-      initialValue: "users-2",
-      validation: (rule) => rule.required(),
-    }),
+    iconField({ title: "Label icon", initialValue: "users-2" }),
     defineField({
       name: "amount",
       title: "Amount",
@@ -110,6 +104,7 @@ export const priceType = defineType({
       amount: "amount",
       caption: "caption",
       note: "note",
+      icon: "icon",
     },
     // the amount belongs in the subtitle: two rows sharing a label are
     // otherwise the same row twice once collapsed. PriceRowPreview writes it
@@ -118,14 +113,17 @@ export const priceType = defineType({
       amount,
       caption,
       note,
+      icon,
     }: {
       label?: LocalizedEntry[];
       amount?: number;
       caption?: LocalizedEntry[];
       note?: LocalizedEntry[];
+      icon?: string;
     }) {
       return {
         title: frenchValue(label),
+        media: iconMedia(icon),
         amount,
         caption: frenchValue(caption),
         note: frenchValue(note),

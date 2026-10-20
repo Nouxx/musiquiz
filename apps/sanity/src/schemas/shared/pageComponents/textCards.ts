@@ -9,20 +9,15 @@ import {
   type LocalizedEntry,
   requiredInEveryLanguage,
 } from "../localized";
-import { contentIcons } from "./contentIcons";
+import { iconField } from "../iconField";
 
 export const textCardType = defineType({
   name: "textCard",
   title: "Text card",
   type: "object",
   fields: [
-    defineField({
-      name: "icon",
-      title: "Icon",
+    iconField({
       description: "Sits in the round white chip at the top of the card.",
-      type: "string",
-      options: { list: contentIcons },
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "body",

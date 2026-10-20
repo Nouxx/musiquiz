@@ -5,7 +5,8 @@ import {
   noMissingLanguage,
   requiredInEveryLanguage,
 } from "../localized";
-import { contentIcons } from "./contentIcons";
+import { iconMedia } from "../../../components/IconInput";
+import { iconField } from "../iconField";
 
 type OfferCardParent = {
   quotation?: boolean;
@@ -45,13 +46,8 @@ export const offerCardType = defineType({
     { name: "content", title: "Contenu", options: { collapsible: false } },
   ],
   fields: [
-    defineField({
-      name: "icon",
-      title: "Icon",
+    iconField({
       description: "Sits in the round chip at the top of the card.",
-      type: "string",
-      options: { list: contentIcons },
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "title",
@@ -169,17 +165,21 @@ export const offerCardType = defineType({
     select: {
       title: "title",
       subTitle: "subTitle",
+      icon: "icon",
     },
     prepare({
       title,
       subTitle,
+      icon,
     }: {
       title?: LocalizedEntry[];
       subTitle?: LocalizedEntry[];
+      icon?: string;
     }) {
       return {
         title: frenchValue(title) ?? "Offer card",
         subtitle: frenchValue(subTitle),
+        media: iconMedia(icon),
       };
     },
   },

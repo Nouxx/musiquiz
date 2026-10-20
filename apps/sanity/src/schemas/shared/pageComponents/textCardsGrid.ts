@@ -4,7 +4,8 @@ import {
   type LocalizedEntry,
   requiredInEveryLanguage,
 } from "../localized";
-import { contentIcons } from "./contentIcons";
+import { iconMedia } from "../../../components/IconInput";
+import { iconField } from "../iconField";
 
 export const keywordCardType = defineType({
   name: "keywordCard",
@@ -18,13 +19,8 @@ export const keywordCardType = defineType({
       type: "internationalizedArrayString",
       validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
-    defineField({
-      name: "icon",
-      title: "Icon",
+    iconField({
       description: "Sits in the round chip at the top right of the card.",
-      type: "string",
-      options: { list: contentIcons },
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "body",
@@ -39,17 +35,21 @@ export const keywordCardType = defineType({
     select: {
       body: "body",
       badge: "badge",
+      icon: "icon",
     },
     prepare({
       body,
       badge,
+      icon,
     }: {
       body?: LocalizedEntry[];
       badge?: LocalizedEntry[];
+      icon?: string;
     }) {
       return {
         title: frenchValue(body) ?? "Keyword card",
         subtitle: frenchValue(badge),
+        media: iconMedia(icon),
       };
     },
   },

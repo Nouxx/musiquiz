@@ -4,3 +4,10 @@ declare module "*.svg?raw" {
   const contents: string;
   export default contents;
 }
+
+interface ImportMeta {
+  glob<T>(
+    pattern: string,
+    options: { query: string; import: string; eager: true },
+  ): Record<string, T>;
+}
