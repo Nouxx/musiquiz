@@ -65,8 +65,18 @@ function isFilled(row: number, column: number) {
     margin-block: var(--space-6);
   }
 
+  /* the card clips the scroller's own outline */
+  .frame:has(.scroller:focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
   .scroller {
     overflow-x: auto;
+  }
+
+  .scroller:focus-visible {
+    outline: none;
   }
 
   table {
