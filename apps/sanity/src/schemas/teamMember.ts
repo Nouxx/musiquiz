@@ -1,6 +1,10 @@
 import { defineField, defineType, type PreviewValue } from "sanity";
 import { UserIcon } from "@sanity/icons/User";
-import { frenchValue, type LocalizedEntry } from "./shared/frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  requiredInEveryLanguage,
+} from "./shared/localized";
 
 export const teamMemberType = defineType({
   name: "teamMember",
@@ -25,14 +29,14 @@ export const teamMemberType = defineType({
       title: "Role",
       description: 'The badge. Example: "C.E.O"',
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "jobTitle",
       title: "Job title",
       description: 'Example: "Fondateur de Musi\'Quiz"',
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "tone",

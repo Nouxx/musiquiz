@@ -1,6 +1,7 @@
 import { defineField, defineType } from "sanity";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { pageGroups } from "./shared/seo";
+import { requiredInEveryLanguage } from "./shared/localized";
 
 export const legalNoticePageType = defineType({
   name: "legalNoticePage",
@@ -23,7 +24,7 @@ export const legalNoticePageType = defineType({
       description:
         "Paragraphs, bold and links, nothing else — no title, no button. An empty line between two paragraphs is drawn as a real gap, so break the copy up rather than writing one block.",
       type: "internationalizedArrayRichText",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "seo",

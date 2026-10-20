@@ -1,8 +1,10 @@
 import { defineField, defineType } from "sanity";
 import { BellIcon } from "@sanity/icons/Bell";
-import type { LocalizedEntry } from "./shared/frenchValue";
-
-const LANGUAGES = ["fr", "en"];
+import { isCtaFilled } from "./shared/cta";
+import {
+  maxLengthInEveryLanguage,
+  requiredInEveryLanguage,
+} from "./shared/localized";
 
 const TITLE_MAX_LENGTH = 40;
 const TEXT_MAX_LENGTH = 120;
@@ -13,37 +15,11 @@ function isEnabled(document?: unknown) {
   return (document as PopupDocument | undefined)?.enabled === true;
 }
 
-// every language: the pop-up shows on /en pages too, and an empty one fails the build
-function requiredInEveryLanguage(
-  entries: LocalizedEntry[] | undefined,
-  { document }: { document?: unknown },
-) {
-  if (!isEnabled(document)) return true;
-
-  const missing = LANGUAGES.filter(
-    (language) =>
-      !entries?.some((entry) => entry.language === language && entry.value),
-  );
-
-  return missing.length
-    ? `Required while the pop-up is on. Missing: ${missing.join(", ")}`
-    : true;
-}
-
-// the value is an array of one entry per language, so `max` would count languages
-function maxLengthInEveryLanguage(maxLength: number) {
-  return (entries?: LocalizedEntry[]) => {
-    const messages = (entries ?? []).flatMap((entry) =>
-      entry.value && entry.value.length > maxLength
-        ? [
-            `${entry.language?.toUpperCase()}: ${entry.value.length} characters, keep it to ${maxLength}.`,
-          ]
-        : [],
-    );
-
-    return messages.length ? messages.join(" ") : true;
-  };
-}
+// the pop-up shows on /en pages too, and an empty one fails the build
+const requiredWhileOn = requiredInEveryLanguage(
+  ({ document }) => isEnabled(document),
+  "Required while the pop-up is on",
+);
 
 export const venuePopupType = defineType({
   name: "venuePopup",
@@ -88,7 +64,7 @@ export const venuePopupType = defineType({
       type: "internationalizedArrayString",
       validation: (rule) =>
         rule
-          .custom(requiredInEveryLanguage)
+          .custom(requiredWhileOn)
           .custom(maxLengthInEveryLanguage(TITLE_MAX_LENGTH)),
     }),
     defineField({
@@ -97,7 +73,7 @@ export const venuePopupType = defineType({
       type: "internationalizedArrayText",
       validation: (rule) =>
         rule
-          .custom(requiredInEveryLanguage)
+          .custom(requiredWhileOn)
           .custom(maxLengthInEveryLanguage(TEXT_MAX_LENGTH)),
     }),
     defineField({
@@ -106,7 +82,7 @@ export const venuePopupType = defineType({
       type: "cta",
       validation: (rule) =>
         rule.custom((value, { document }) =>
-          isEnabled(document) && !value
+          isEnabled(document) && !isCtaFilled(value)
             ? "Required while the pop-up is on"
             : true,
         ),

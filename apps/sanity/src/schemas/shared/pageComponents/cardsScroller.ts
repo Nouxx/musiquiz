@@ -4,7 +4,11 @@ import {
   defineType,
   type PreviewValue,
 } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  requiredInEveryLanguage,
+} from "../localized";
 
 export const deckCardType = defineType({
   name: "deckCard",
@@ -21,7 +25,7 @@ export const deckCardType = defineType({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "body",
@@ -29,7 +33,7 @@ export const deckCardType = defineType({
       description:
         "Paragraphs, bold and links. An empty line between two paragraphs is drawn as a real gap, so break the copy up rather than writing one block.",
       type: "internationalizedArrayRichText",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
   ],
   preview: {

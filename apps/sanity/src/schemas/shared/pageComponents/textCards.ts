@@ -4,7 +4,11 @@ import {
   defineType,
   type PreviewValue,
 } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  requiredInEveryLanguage,
+} from "../localized";
 import { contentIcons } from "./contentIcons";
 
 export const textCardType = defineType({
@@ -26,7 +30,7 @@ export const textCardType = defineType({
       description:
         "One sentence. The card is as tall as this text, so keep the three or four of them roughly the same length.",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "media",

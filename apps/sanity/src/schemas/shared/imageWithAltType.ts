@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { noMissingLanguage } from "./localized";
 
 // crop and hotspot are deliberately left off: they only ever apply if the front
 // end asks the image pipeline for them, and it does not. enabling the tool here
@@ -14,6 +15,7 @@ export const imageWithAltType = defineType({
       description:
         "Describes the image for screen readers and when the image fails to load. Leave empty when the image is purely decorative, or when nearby text already says the same thing.",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(noMissingLanguage),
     }),
   ],
 });

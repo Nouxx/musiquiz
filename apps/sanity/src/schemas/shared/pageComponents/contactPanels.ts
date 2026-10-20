@@ -1,5 +1,9 @@
 import { defineField, defineType, type PreviewValue } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  requiredInEveryLanguage,
+} from "../localized";
 
 // the internationalized-array plugin filters on `language`, not on `_key`
 function seed({
@@ -54,7 +58,7 @@ export const contactPanelsType = defineType({
         fr: "Plus d'informations",
         en: "More information",
       }),
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "quoteTitle",
@@ -62,7 +66,7 @@ export const contactPanelsType = defineType({
       type: "internationalizedArrayString",
       fieldset: "quote",
       initialValue: seed({ fr: "Demander un devis", en: "Request a quote" }),
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "quoteBody",
@@ -74,7 +78,7 @@ export const contactPanelsType = defineType({
         en: "Fill in the form below and you'll receive a quote tailored to your needs as soon as possible.",
         type: "Text",
       }),
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "quoteCta",
@@ -90,7 +94,7 @@ export const contactPanelsType = defineType({
       type: "internationalizedArrayString",
       fieldset: "booking",
       initialValue: seed({ fr: "Réservation", en: "Booking" }),
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "bookingTitle",
@@ -101,7 +105,7 @@ export const contactPanelsType = defineType({
         fr: "Réservation immédiate jusqu'à 18 joueurs",
         en: "Instant booking for up to 18 players",
       }),
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "bookingBody",
@@ -113,7 +117,7 @@ export const contactPanelsType = defineType({
         en: "Choose the Team Building option when you book. If you need catering, request a quote instead.",
         type: "Text",
       }),
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
   ],
   preview: {

@@ -5,7 +5,11 @@ import PinIcon from "@sanity/icons/Pin";
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { MapPositionInput } from "../components/MapPositionInput";
 import type { StringRule, UrlRule } from "sanity";
-import { frenchValue, type LocalizedEntry } from "./shared/frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  requiredInEveryLanguage,
+} from "./shared/localized";
 import { ogImageDescription, ogImageWarning } from "./shared/seo";
 import TagIcon from "@sanity/icons/Tag";
 import { HomeIcon } from "@sanity/icons/Home";
@@ -497,7 +501,7 @@ export const termsArticleType = defineType({
       title: "Title",
       description: 'Example: "Objet", "Prix des services"',
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "body",
@@ -505,7 +509,7 @@ export const termsArticleType = defineType({
       description:
         "Paragraphs, bold and links, nothing else. An empty line between two paragraphs is drawn as a real gap, so break the copy up rather than writing one block.",
       type: "internationalizedArrayRichText",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
   ],
   preview: {
@@ -525,7 +529,7 @@ export const quotationServiceType = defineType({
       name: "label",
       title: "Label",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "audiences",

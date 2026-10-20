@@ -1,5 +1,10 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  noMissingLanguage,
+  requiredInEveryLanguage,
+} from "../localized";
 
 type CarouselParent = {
   cta?: { label?: LocalizedEntry[] };
@@ -15,18 +20,19 @@ export const carouselType = defineType({
       title: "Badge",
       description: "The small tilted pill above the title.",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(noMissingLanguage),
     }),
     defineField({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "body",
       title: "Body",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "cta",

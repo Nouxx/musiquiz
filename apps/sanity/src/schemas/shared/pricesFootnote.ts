@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { requiredInEveryLanguage } from "./localized";
 
 export const pricesFootnoteType = defineType({
   name: "pricesFootnote",
@@ -9,13 +10,13 @@ export const pricesFootnoteType = defineType({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "body",
       title: "Body",
       type: "internationalizedArrayText",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
   ],
 });

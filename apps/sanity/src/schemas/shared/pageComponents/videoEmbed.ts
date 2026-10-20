@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { requiredInEveryLanguage } from "../localized";
 
 const videoIdPattern = /^[A-Za-z0-9_-]{11}$/;
 
@@ -28,7 +29,7 @@ export const videoEmbedType = defineType({
       description:
         "Never shown on the page — YouTube draws its own title inside the player. This one names the video for screen readers, so write what the video shows.",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "surface",

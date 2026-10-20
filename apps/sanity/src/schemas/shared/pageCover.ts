@@ -1,6 +1,8 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 import { hasWidget } from "../venuePage";
+import { isCtaFilled } from "./cta";
+import { noMissingLanguage, requiredInEveryLanguage } from "./localized";
 
 type PageCoverParent = {
   background?: string;
@@ -154,17 +156,19 @@ export const pageCoverType = defineType({
       name: "heading",
       title: "Heading",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "subHeading",
       title: "Sub heading",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(noMissingLanguage),
     }),
     defineField({
       name: "badge",
       title: "Badge",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(noMissingLanguage),
     }),
     defineField({
       name: "cta",
@@ -174,7 +178,9 @@ export const pageCoverType = defineType({
       hidden: ({ document }) => !hasAuthorableCta(document),
       validation: (rule) =>
         rule.custom((value, context) =>
-          hasAuthorableCta(context.document) && !value ? "Required" : true,
+          hasAuthorableCta(context.document) && !isCtaFilled(value)
+            ? "Required"
+            : true,
         ),
     }),
     defineField({

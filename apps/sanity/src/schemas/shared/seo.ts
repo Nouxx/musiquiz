@@ -2,6 +2,7 @@ import { DocumentIcon } from "@sanity/icons/Document";
 import { SearchIcon } from "@sanity/icons/Search";
 import { defineField, defineType } from "sanity";
 import type { ImageValue } from "sanity";
+import { eachLanguage, noMissingLanguage } from "./localized";
 
 /**
  * Google cuts titles to the device width and publishes no limit. 60 in total is
@@ -51,23 +52,6 @@ function descriptionWarning(value: string) {
     : undefined;
 }
 
-type LocalizedEntry = { _key?: string; language?: string; value?: string };
-
-// the value is an array of one entry per language, so `min`/`max` would count languages
-function eachLanguage(warning: (value: string) => string | undefined) {
-  return (entries?: LocalizedEntry[]) => {
-    const messages = (entries ?? []).flatMap((entry) => {
-      const message = entry.value ? warning(entry.value) : undefined;
-
-      return message
-        ? [`${(entry.language ?? entry._key)?.toUpperCase()}: ${message}`]
-        : [];
-    });
-
-    return messages.length ? messages.join(" ") : true;
-  };
-}
-
 function plain(warning: (value: string) => string | undefined) {
   return (value?: string) => (value && warning(value)) || true;
 }
@@ -100,15 +84,20 @@ export const seoType = defineType({
       title: "Title",
       description: titleDescription("the page cover heading"),
       type: "internationalizedArrayString",
-      validation: (rule) => rule.custom(eachLanguage(titleWarning)).warning(),
+      validation: (rule) => [
+        rule.custom(noMissingLanguage),
+        rule.custom(eachLanguage(titleWarning)).warning(),
+      ],
     }),
     defineField({
       name: "description",
       title: "Description",
       description: descriptionDescription("the page cover sub heading"),
       type: "internationalizedArrayText",
-      validation: (rule) =>
+      validation: (rule) => [
+        rule.custom(noMissingLanguage),
         rule.custom(eachLanguage(descriptionWarning)).warning(),
+      ],
     }),
     defineField({
       name: "ogImage",

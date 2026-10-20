@@ -3,7 +3,13 @@ import { JoystickIcon } from "@sanity/icons/Joystick";
 import { currencyOf, type Currency } from "@repo/utils/currency";
 import { formatPrice } from "@repo/utils/formatPrice";
 import { PriceRowPreview } from "../components/PriceRowPreview";
-import { frenchValue, type LocalizedEntry } from "./shared/frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  maxLengthInEveryLanguage,
+  noMissingLanguage,
+  requiredInEveryLanguage,
+} from "./shared/localized";
 import { contentIcons } from "./shared/pageComponents/contentIcons";
 import { findDuplicate, takenFormatIds } from "./shared/venueFormatUniqueness";
 import { pageGroups } from "./shared/seo";
@@ -12,6 +18,7 @@ import { pageGroups } from "./shared/seo";
 const LABEL_MAX_LENGTH = 30;
 const CAPTION_MAX_LENGTH = 20;
 const NOTE_MAX_LENGTH = 30;
+const NARROW_CARD = "It sits in a narrow card.";
 
 type PriceValue = {
   amount?: number;
@@ -33,18 +40,6 @@ function formatSpan(amounts: number[], currency: Currency) {
   return lowest === highest ? lowest : `${lowest} – ${highest}`;
 }
 
-// the value is an array of one entry per language, so `max` would count
-// languages rather than characters
-function maxLength(max: number) {
-  return function validate(entries?: LocalizedEntry[]) {
-    const tooLong = entries?.some((entry) => (entry.value?.length ?? 0) > max);
-
-    return tooLong
-      ? `Keep it to ${max} characters — it sits in a narrow card.`
-      : true;
-  };
-}
-
 export const priceType = defineType({
   name: "price",
   title: "Price",
@@ -55,7 +50,10 @@ export const priceType = defineType({
       title: "Label",
       description: `Who this price is for, in the badge at the top of the card. Example: "De 4 à 6 joueurs", "Tarif unique". ${LABEL_MAX_LENGTH} characters at most.`,
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required().custom(maxLength(LABEL_MAX_LENGTH)),
+      validation: (rule) =>
+        rule
+          .custom(requiredInEveryLanguage())
+          .custom(maxLengthInEveryLanguage(LABEL_MAX_LENGTH, NARROW_CARD)),
     }),
     defineField({
       name: "icon",
@@ -91,14 +89,19 @@ export const priceType = defineType({
         },
       ],
       validation: (rule) =>
-        rule.required().custom(maxLength(CAPTION_MAX_LENGTH)),
+        rule
+          .custom(requiredInEveryLanguage())
+          .custom(maxLengthInEveryLanguage(CAPTION_MAX_LENGTH, NARROW_CARD)),
     }),
     defineField({
       name: "note",
       title: "Note",
       description: `A condition attached to this price, shown under the amount. Example: "Si combiné avec Musi'Quiz". ${NOTE_MAX_LENGTH} characters at most.`,
       type: "internationalizedArrayString",
-      validation: (rule) => rule.custom(maxLength(NOTE_MAX_LENGTH)),
+      validation: (rule) =>
+        rule
+          .custom(noMissingLanguage)
+          .custom(maxLengthInEveryLanguage(NOTE_MAX_LENGTH, NARROW_CARD)),
     }),
   ],
   preview: {

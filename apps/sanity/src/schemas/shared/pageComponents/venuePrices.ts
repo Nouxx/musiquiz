@@ -1,5 +1,9 @@
 import { defineField, defineType } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  requiredInEveryLanguage,
+} from "../localized";
 
 export const venuePricesType = defineType({
   name: "venuePrices",
@@ -10,7 +14,7 @@ export const venuePricesType = defineType({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "surface",

@@ -1,5 +1,10 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  noMissingLanguage,
+  requiredInEveryLanguage,
+} from "../localized";
 
 const DETAIL_MARKS = [
   { title: "Le 50/50", value: "50-50" },
@@ -25,7 +30,7 @@ export const detailCardType = defineType({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "intro",
@@ -33,6 +38,7 @@ export const detailCardType = defineType({
       description:
         "Optional. One sentence setting the card up, drawn lighter above the closing one.",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(noMissingLanguage),
     }),
     defineField({
       name: "highlight",
@@ -40,7 +46,7 @@ export const detailCardType = defineType({
       description:
         "Drawn heavier on every card, so this is where the sentence goes rather than where the emphasis goes. Write the point the card lands on, not the part you want to stand out.",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
   ],
   preview: {
@@ -68,7 +74,7 @@ export const detailGroupType = defineType({
       description:
         "The label on the tab. Two or three words: four tabs share the width of two cards.",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "cards",
@@ -104,7 +110,7 @@ export const detailTabsType = defineType({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "groups",

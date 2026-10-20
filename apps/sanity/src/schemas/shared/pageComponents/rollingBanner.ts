@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { noMissingLanguage } from "../localized";
 
 export const rollingBannerType = defineType({
   name: "rollingBanner",
@@ -12,6 +13,7 @@ export const rollingBannerType = defineType({
         "One short line, repeated and scrolled across the red strip. Every copy says the same thing.",
       type: "internationalizedArrayString",
       validation: (rule) => [
+        rule.custom(noMissingLanguage),
         rule.custom((entries?: { value?: string }[]) => {
           const tooLong = entries?.filter((e) => (e.value?.length ?? 0) > 70);
           const tooShort = entries?.filter(

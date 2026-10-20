@@ -5,6 +5,7 @@ import { myStructure } from "./structure";
 import { internationalizedArray } from "sanity-plugin-internationalized-array";
 import { dataset, projectId } from "./src/environments";
 import { richTextFieldType } from "./src/schemas/shared/richText";
+import { languages } from "./src/schemas/shared/localized";
 import { deploySiteTool } from "./src/tools/deploySite";
 import { siteUrlsTool } from "./src/tools/siteUrls";
 
@@ -80,11 +81,8 @@ export default defineConfig({
   plugins: [
     structureTool({ structure: myStructure }),
     internationalizedArray({
-      languages: [
-        { id: "en", title: "English" },
-        { id: "fr", title: "French" },
-      ],
-      defaultLanguages: ["fr"],
+      languages,
+      defaultLanguages: ["fr", "en"],
       fieldTypes: ["string", "text", richTextFieldType],
     }),
   ],

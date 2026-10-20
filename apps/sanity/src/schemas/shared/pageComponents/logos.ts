@@ -1,5 +1,9 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  requiredInEveryLanguage,
+} from "../localized";
 
 type LogoMember = { alt?: LocalizedEntry[] };
 
@@ -47,13 +51,13 @@ export const logosType = defineType({
       title: "Badge",
       description: "The small tilted pill above the title.",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "logos",

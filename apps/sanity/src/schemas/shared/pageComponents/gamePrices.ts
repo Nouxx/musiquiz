@@ -1,6 +1,10 @@
 import { defineField, defineType } from "sanity";
 import type { Reference, ValidationContext } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  requiredInEveryLanguage,
+} from "../localized";
 import { SANITY_API_VERSION } from "@repo/utils/sanityConfig";
 
 type GetClient = ValidationContext["getClient"];
@@ -44,7 +48,7 @@ export const gamePricesType = defineType({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "surface",

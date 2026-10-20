@@ -4,7 +4,12 @@ import {
   defineType,
   type PreviewValue,
 } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  noMissingLanguage,
+  requiredInEveryLanguage,
+} from "../localized";
 
 export const cardType = defineType({
   name: "card",
@@ -23,16 +28,19 @@ export const cardType = defineType({
       description:
         "The small tilted pill above the title. Leave empty for none.",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(noMissingLanguage),
     }),
     defineField({
       name: "title",
       title: "Title",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(noMissingLanguage),
     }),
     defineField({
       name: "body",
       title: "Body",
       type: "internationalizedArrayString",
+      validation: (rule) => rule.custom(noMissingLanguage),
     }),
     defineField({
       name: "cta",
@@ -73,14 +81,14 @@ export const cardsGridType = defineType({
       name: "heading",
       title: "Heading",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "body",
       title: "Body",
       description: "A blank line starts a new paragraph.",
       type: "internationalizedArrayText",
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "align",

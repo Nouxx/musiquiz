@@ -1,5 +1,9 @@
 import { defineField, defineType } from "sanity";
-import { frenchValue, type LocalizedEntry } from "../frenchValue";
+import {
+  frenchValue,
+  type LocalizedEntry,
+  requiredInEveryLanguage,
+} from "../localized";
 
 export const reviewsType = defineType({
   name: "reviews",
@@ -31,7 +35,7 @@ export const reviewsType = defineType({
           value: "Testimonials",
         },
       ],
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "title",
@@ -49,7 +53,7 @@ export const reviewsType = defineType({
           value: "They tried it... and loved it!",
         },
       ],
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
     defineField({
       name: "surface",
