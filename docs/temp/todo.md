@@ -1,10 +1,8 @@
 # P0 (top priorities)
 
 - setup carto api key for production (restrict to domain)
-- Site URLs tool fixes:
-  - visual glitch when links are too long
-  - add available anchors
 - Dans les articles de blog, il faudrait qu’on puisse ajouter un avis (qu’on rédige à la main) et un composant tableau comparatif. C’est hyper important pour le référencement SEO/GEO des articles
+- 4escape todo
 
 # P1 (important)
 
@@ -20,6 +18,21 @@
 - Header on mobile: booking button should always be there
 - Tight page cover + badge = collapse
 - preview icon in Sanity
+- Duplicate `#prices` anchor
+  - Cause: `venuePrices` is in the shared `pageComponents` array, so any page
+    can hold several. `apps/web/src/components/features/PageComponents.astro`
+    renders each one with the hardcoded `id={anchors.prices}`.
+  - Symptom: two `venuePrices` on a page (or one before and one after a widget
+    or the map) render two `id="prices"`. The HTML is invalid, `#prices` jumps
+    to the first one, and the Site URLs tool lists one `#prices` row that cannot
+    reach the second.
+  - Today: no published page has two (checked 2026-10-20); Paris home, Lille
+    home and Lille booking have one each.
+  - Fix, pick one:
+    - schema validation: at most one `venuePrices` per page, across all its
+      component arrays. Keeps `#prices` stable for editors' links.
+    - a unique id per instance (`prices-<_key>`). Every one is reachable, but
+      ids are unreadable and the tool would have to list each.
 
 ![](./bug_header.png)
 

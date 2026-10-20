@@ -1,4 +1,5 @@
 ---
+import { anchors } from "@repo/services/routing/anchors";
 import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
 import type { BlogArticlePage as BlogArticlePageData } from "@repo/services/cms/types";
@@ -55,7 +56,6 @@ function toRating() {
   };
 }
 
-const articleAnchor = "article";
 const { closesOn } = data;
 
 function toClosingCta() {
@@ -86,7 +86,7 @@ const date = data.updatedAt
   breadcrumbsLabel={t("blogArticlePage.breadcrumbs")}
   media={data.cover}
   title={data.title}
-  cta={{ label: t("blogPage.readArticle"), url: `#${articleAnchor}` }}
+  cta={{ label: t("blogPage.readArticle"), url: `#${anchors.article}` }}
   photo={data.author.photo}
   name={data.author.name}
   date={{
@@ -103,7 +103,7 @@ const date = data.updatedAt
   cta={toClosingCta()}
 />
 
-<ArticleBody id={articleAnchor} nodes={data.body} />
+<ArticleBody id={anchors.article} nodes={data.body} />
 
 {
   closesOn.kind === "venue" && (

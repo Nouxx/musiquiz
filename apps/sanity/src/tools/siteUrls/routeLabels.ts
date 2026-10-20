@@ -1,4 +1,7 @@
-import type { SiteUrlRoute } from "@repo/services/routing/siteUrls";
+import type {
+  SiteUrlAnchor,
+  SiteUrlRoute,
+} from "@repo/services/routing/siteUrls";
 
 export const routeLabels: Record<SiteUrlRoute, string> = {
   home: "Home",
@@ -18,4 +21,14 @@ export const routeLabels: Record<SiteUrlRoute, string> = {
   venueCustomPage: "Custom page",
   blog: "Blog home",
   blogArticle: "Article",
+};
+
+export const anchorLabels: Record<SiteUrlAnchor, string> = {
+  venuesMap: "venues map",
+  booking: "booking widget",
+  gifting: "gifting widget",
+  prices: "prices",
+  venuesContact: "venue contacts",
+  venueOpeningForm: "opening form",
+  venueTerms: "this venue's terms",
 };

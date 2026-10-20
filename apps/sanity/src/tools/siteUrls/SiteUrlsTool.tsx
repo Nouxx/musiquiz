@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import { useClient } from "sanity";
 
 import { dataset, projectId } from "../../environments";
-import { routeLabels } from "./routeLabels";
+import { anchorLabels, routeLabels } from "./routeLabels";
 
 // published only, like the build: a draft has no page yet
 const config = { projectId, dataset, draft: false };
@@ -35,7 +35,14 @@ const LISTEN_QUERY = `*[_type in [
   "venueEvent",
   "gameFormat",
   "eventFormat",
-  "blogArticle"
+  "blogArticle",
+  "homepage",
+  "whereToFindUsPage",
+  "joinTheNetworkPage",
+  "globalGame",
+  "globalEvent",
+  "venuePage",
+  "venueCustomPage"
 ]]`;
 
 type Load<T> =
@@ -94,11 +101,13 @@ function loadBlog() {
 }
 
 function toRow(url: SiteUrl): Row {
-  const label = routeLabels[url.route];
+  const parts = [routeLabels[url.route]];
+  if (url.slug) parts.push(url.title ?? url.slug);
+  if (url.anchor) parts.push(`${anchorLabels[url.anchor]} anchor`);
 
   return {
     id: url.fr,
-    label: url.slug ? `${label} · ${url.title ?? url.slug}` : label,
+    label: parts.join(" · "),
     fr: url.fr,
     en: url.en,
   };
@@ -156,8 +165,14 @@ function CopyablePath({ path }: { path: string }) {
 
   return (
     <Flex align="center" gap={1}>
-      <Box flex={1} style={{ minWidth: 0, overflowWrap: "anywhere" }}>
-        <Code size={1}>{path}</Code>
+      <Box flex={1} style={{ minWidth: 0 }}>
+        {/* Code renders a <pre>, which never wraps on its own */}
+        <Code
+          size={1}
+          style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}
+        >
+          {path}
+        </Code>
       </Box>
       <Button
         icon={CopyIcon}
@@ -286,6 +301,9 @@ function Rules() {
         </Text>
         <Text size={1}>• Always end a path with /.</Text>
         <Text size={1}>
+          • An anchor (#…) goes after the final /: /lille/reserver/#booking.
+        </Text>
+        <Text size={1}>
           • English paths start with /en/ and use the English words:
           /en/paris/book/, never /en/paris/reserver/.
         </Text>
@@ -300,6 +318,9 @@ function Rules() {
         <Text size={1}>
           • In rich text, a link needs the full address: put https://{domain} in
           front of the path.
+        </Text>
+        <Text size={1}>
+          • This list only shows the URLs of published pages, not drafts.
         </Text>
         <Text size={1}>
           • A page you just published goes live at the next site deploy.

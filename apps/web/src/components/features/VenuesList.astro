@@ -1,6 +1,7 @@
 ---
 import type { CtaLink } from "@repo/ui/types";
 import type { VenuePin } from "@repo/services/cms/types";
+import { anchors } from "@repo/services/routing/anchors";
 import VenuesMap from "@repo/ui/VenuesMap";
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
@@ -24,4 +25,4 @@ const {
 } = Astro.props;
 ---
 
-<VenuesMap {badge} {heading} {venues} {cta} />
+<VenuesMap anchor={anchors.venuesMap} {badge} {heading} {venues} {cta} />

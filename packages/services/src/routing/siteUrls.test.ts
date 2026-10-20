@@ -36,12 +36,20 @@ function venueUrls(venues: VenueUrlInput[] = [paris, lyon]) {
     venueCustomPages: [
       { venueSlug: "paris", pageSlug: "noel", title: "Noël au quiz" },
     ],
+    pricesPages: [
+      { route: "venueGame", venueSlug: "paris", slug: "blind-test" },
+    ],
+    termsVenueSlugs: ["paris"],
   });
 }
 
 function allUrls() {
   return [
-    ...toGlobalUrls({ gameSlugs: ["blind-test"], eventSlugs: ["seminaire"] }),
+    ...toGlobalUrls({
+      gameSlugs: ["blind-test"],
+      eventSlugs: ["seminaire"],
+      pricesPages: [],
+    }),
     ...venueUrls().flatMap((venue) => venue.urls),
     ...toBlogUrls({ articleSlugs: ["premier-article"] }),
   ];
@@ -58,10 +66,17 @@ it("lists every route that has a page", () => {
   expect(listed).toEqual(new Set(expected));
 });
 
-it("ends every path with a slash", () => {
+it("ends every path with a slash, before any anchor", () => {
   for (const url of allUrls()) {
-    expect(url.fr).toMatch(/\/$/);
-    if (url.en) expect(url.en).toMatch(/^\/en\/(.*\/)?$/);
+    expect(url.fr).toMatch(/\/(#[\w-]+)?$/);
+    if (url.en) expect(url.en).toMatch(/^\/en\/(.*\/)?(#[\w-]+)?$/);
+  }
+});
+
+it("anchors French and English paths alike", () => {
+  for (const url of allUrls()) {
+    if (!url.anchor || !url.en) continue;
+    expect(url.fr.split("#", 2)[1]).toBe(url.en.split("#", 2)[1]);
   }
 });
 
@@ -72,10 +87,14 @@ describe("toVenueUrls", () => {
     expect(parisUrls?.urls.map((url) => url.fr)).toEqual([
       "/paris/",
       "/paris/reserver/",
+      "/paris/reserver/#booking",
       "/paris/offrir/",
+      "/paris/offrir/#gifting",
       "/paris/jeux/blind-test/",
+      "/paris/jeux/blind-test/#prices",
       "/paris/evenements/anniversaire/",
       "/paris/noel/",
+      "/cgv/#paris",
     ]);
     expect(parisUrls?.partnerLinks).toEqual([]);
   });
@@ -111,9 +130,35 @@ describe("toVenueUrls", () => {
       venueGames: [],
       venueEvents: [],
       venueCustomPages: [],
+      pricesPages: [],
+      termsVenueSlugs: [],
     });
 
     expect(urls).toEqual([]);
+  });
+});
+
+describe("toGlobalUrls", () => {
+  it("anchors the prices of a page that has some, and only that page", () => {
+    const urls = toGlobalUrls({
+      gameSlugs: ["blind-test", "karaoke"],
+      eventSlugs: [],
+      pricesPages: [{ route: "game", slug: "karaoke" }],
+    });
+
+    expect(
+      urls.filter((url) => url.anchor === "prices").map((url) => url.fr),
+    ).toEqual(["/jeux/karaoke/#prices"]);
+  });
+
+  it("does not take a venue page's prices for a global page's", () => {
+    const urls = toGlobalUrls({
+      gameSlugs: ["blind-test"],
+      eventSlugs: [],
+      pricesPages: [{ route: "game", venueSlug: "paris", slug: "blind-test" }],
+    });
+
+    expect(urls.some((url) => url.anchor === "prices")).toBe(false);
   });
 });
 

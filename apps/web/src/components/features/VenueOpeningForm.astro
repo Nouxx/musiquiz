@@ -2,7 +2,6 @@
 import {
   venueOpeningContributionValues,
   venueOpeningExperienceValues,
-  venueOpeningFormId,
   venueOpeningFormLimits,
   venueOpeningHorizonValues,
   venueOpeningIntentValues,
@@ -12,6 +11,7 @@ import {
   venueOpeningProfileValues,
   venueOpeningSourceValues,
 } from "@repo/services/contactForm/venueOpening";
+import { anchors } from "@repo/services/routing/anchors";
 import type { VenueOpeningCopy, VenueOpeningOption } from "@repo/ui/types";
 import VenueOpeningForm from "@repo/ui/VenueOpeningForm";
 import { SANITY_STUDIO_WORKER_URL } from "astro:env/client";
@@ -233,7 +233,7 @@ const serializedMessages = toInlineScriptJson(messages);
   <VenueOpeningForm
     {copy}
     limits={venueOpeningFormLimits}
-    id={venueOpeningFormId}
+    id={anchors.venueOpeningForm}
   />
 
   <script

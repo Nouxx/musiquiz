@@ -79,6 +79,10 @@ function toLinks({
   });
 }
 
+function isWholePage(url: SiteUrl) {
+  return url.anchor === undefined;
+}
+
 function withSlug(urls: SiteUrl[], route: SiteUrl["route"]) {
   return urls.flatMap((url) =>
     url.route === route && url.slug !== undefined
@@ -92,16 +96,19 @@ export async function getLlmsTxtData({
 }: {
   config: SanityConfig;
 }): Promise<LlmsTxt> {
-  const [data, globalUrls, venueUrls, blogUrls] = await Promise.all([
+  const [data, allGlobalUrls, venueUrls, allBlogUrls] = await Promise.all([
     fetchLlmsTxt({ config }),
     getGlobalSiteUrls({ config }),
     getVenueSiteUrls({ config }),
     getBlogSiteUrls({ config }),
   ]);
 
+  // an anchored url is its page again: listing it would duplicate the link
+  const globalUrls = allGlobalUrls.filter((url) => isWholePage(url));
+  const blogUrls = allBlogUrls.filter((url) => isWholePage(url));
   const venueHomeUrls = venueUrls.flatMap(({ slug, urls }) =>
     urls
-      .filter((url) => url.route === "venueHome")
+      .filter((url) => isWholePage(url) && url.route === "venueHome")
       .map((url) => ({ slug, fr: url.fr, en: url.en })),
   );
 
