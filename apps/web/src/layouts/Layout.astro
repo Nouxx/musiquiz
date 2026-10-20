@@ -58,7 +58,7 @@ const { gtmIds } =
     <Font cssVariable="--font-momo-trust-display" preload />
     <Font cssVariable="--font-funnel-display" preload />
     <SeoHead {venueSlug} {...seo} />
-    <SiteGraphHead />
+    {seo.alternates && <SiteGraphHead />}
     <slot name="head" />
   </head>
   <body>

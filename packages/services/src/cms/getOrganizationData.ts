@@ -45,6 +45,11 @@ export async function getOrganizationData({
 }: {
   config: SanityConfig;
 }) {
+  // skip cache when fetching draft
+  if (config.draft) {
+    return adaptOrganization(await fetchOrganization({ config }));
+  }
+
   const cached = cache.get(config.dataset);
   if (cached) return cached;
 
