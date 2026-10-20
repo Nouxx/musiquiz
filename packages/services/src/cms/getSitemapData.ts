@@ -105,7 +105,10 @@ export async function getSitemapData({
     ...blogUrls.map((url) => ({ url })),
   ];
 
+  // an anchored url is its page again, with a fragment crawlers ignore
   return urls.flatMap(({ url, venueSlug }) => {
+    if (url.anchor) return [];
+
     const document = documents.get(
       toKey({ route: url.route, venueSlug, slug: url.slug }),
     );
