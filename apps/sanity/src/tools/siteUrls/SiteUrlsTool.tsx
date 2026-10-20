@@ -313,6 +313,9 @@ function Rules() {
           front of the path.
         </Text>
         <Text size={1}>
+          • This list only shows the URLs of published pages, not drafts.
+        </Text>
+        <Text size={1}>
           • A page you just published goes live at the next site deploy.
         </Text>
       </Stack>
