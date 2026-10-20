@@ -92,6 +92,7 @@ export const fr = {
     summary: "Le résumé en 30 secondes",
     rating: "{{rating}}/5 sur {{reviews}} avis",
     ratingStars: "Noté {{rating}} sur 5",
+    reviewSource: "Lire l’avis de {{name}} sur Google",
     book: "Réserver à {{venue}}",
     seeEvent: "Voir l’offre {{event}}",
     findVenue: "Trouver un centre",

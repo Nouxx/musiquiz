@@ -7,6 +7,7 @@ import type { VenueReviews } from "@repo/services/reviews/getVenueReviews";
 import ArticleAuthor from "@repo/ui/ArticleAuthor";
 import ArticleBody from "@repo/ui/ArticleBody";
 import ArticleIntro from "@repo/ui/ArticleIntro";
+import ArticleReview from "@repo/ui/ArticleReview";
 import Faq from "@repo/ui/Faq";
 import FindUs from "@repo/ui/FindUs";
 import RelatedArticles from "@repo/ui/RelatedArticles";
@@ -104,6 +105,24 @@ const date = data.updatedAt
 />
 
 <ArticleBody id={anchors.article} nodes={data.body} />
+
+{
+  data.review && (
+    <ArticleReview
+      authorName={data.review.authorName}
+      text={data.review.text}
+      rating={data.review.rating}
+      avatar={data.review.avatar}
+      sourceUrl={data.review.sourceUrl}
+      sourceLabel={t("blogArticlePage.reviewSource", {
+        name: data.review.authorName,
+      })}
+      ratingLabel={t("blogArticlePage.ratingStars", {
+        rating: data.review.rating,
+      })}
+    />
+  )
+}
 
 {
   closesOn.kind === "venue" && (

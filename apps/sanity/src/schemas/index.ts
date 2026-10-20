@@ -18,10 +18,10 @@ import { homepageType } from "./homepage";
 import { blogPageType } from "./blogPage";
 import { siteSettingsType } from "./siteSettings";
 import { teamMemberType } from "./teamMember";
-import { blogArticleType, blogFaqType } from "./blogArticle";
+import { blogArticleType, blogFaqType, blogReviewType } from "./blogArticle";
 import { blogFindUsType, venueBlogType } from "./venueBlog";
 import { venuePopupType } from "./venuePopup";
-import { articleBodyType } from "./shared/articleBody";
+import { articleBodyType, articleTableType } from "./shared/articleBody";
 import { quotationServiceType, termsArticleType, venueType } from "./venue";
 import { priceType, venueGameType } from "./venueGame";
 import { venueEventType } from "./venueEvent";
@@ -77,9 +77,11 @@ export const schemaTypes = [
   blogPageType,
   blogArticleType,
   articleBodyType,
+  articleTableType,
   venueBlogType,
   venuePopupType,
   blogFaqType,
+  blogReviewType,
   blogFindUsType,
   venueType,
   quotationServiceType,

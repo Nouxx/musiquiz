@@ -164,7 +164,12 @@ export type ArticleNode =
   | RichTextNode
   | { type: "heading"; level: 2 | 3; spans: RichTextSpan[] }
   | { type: "list"; items: RichTextSpan[][] }
-  | { type: "image"; image: ImageSource };
+  | { type: "image"; image: ImageSource }
+  | {
+      type: "table";
+      headers: RichTextNode[][];
+      rows: RichTextNode[][][];
+    };
 
 export type BreadcrumbItem = {
   label: string;

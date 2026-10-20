@@ -50,6 +50,48 @@ it("reads h2 and h3 as heading levels", () => {
   ]);
 });
 
+function cell(text: string) {
+  return {
+    value: [
+      {
+        _type: "block" as const,
+        style: "normal" as const,
+        children: [{ _type: "span" as const, text, marks: [] }],
+        markDefs: [],
+      },
+    ],
+  };
+}
+
+it("splits a table into its header row and the rows under it", () => {
+  const nodes = toArticleBody([
+    {
+      _type: "table",
+      headerRows: 1,
+      rows: [
+        { cells: [cell("Activité"), cell("Format")] },
+        { cells: [cell("Musi'Quiz"), cell("Quiz musical")] },
+      ],
+    },
+  ]);
+
+  expect(nodes).toMatchObject([
+    {
+      type: "table",
+      headers: [
+        [{ spans: [{ text: "Activité" }] }],
+        [{ spans: [{ text: "Format" }] }],
+      ],
+      rows: [
+        [
+          [{ spans: [{ text: "Musi'Quiz" }] }],
+          [{ spans: [{ text: "Quiz musical" }] }],
+        ],
+      ],
+    },
+  ]);
+});
+
 function words(count: number) {
   return toArticleBody([block("mot ".repeat(count).trim())]);
 }

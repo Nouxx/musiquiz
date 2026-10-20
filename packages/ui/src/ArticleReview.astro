@@ -1,0 +1,143 @@
+---
+import Card from "./primitives/Card.astro";
+import Icon from "./primitives/Icon.astro";
+import RemoteImage from "./primitives/RemoteImage.astro";
+import Text from "./primitives/Text.astro";
+import Section from "./Section.astro";
+import type { ImageSource } from "./types";
+
+interface Props {
+  authorName: string;
+  text: string;
+  /** out of 5, whole */
+  rating: number;
+  avatar?: ImageSource;
+  sourceUrl: string;
+  /** @example "Lire l'avis sur Google" */
+  sourceLabel: string;
+  /** @example "5 étoiles sur 5" */
+  ratingLabel: string;
+}
+
+const {
+  authorName,
+  text,
+  rating,
+  avatar,
+  sourceUrl,
+  sourceLabel,
+  ratingLabel,
+} = Astro.props;
+---
+
+<Section spacing="m">
+  <Card as="article" border="custom" class="review">
+    <div class="top">
+      <div class="avatar">
+        {
+          avatar ? (
+            <RemoteImage image={avatar} variant="review-avatar" />
+          ) : (
+            <span aria-hidden="true">{authorName.charAt(0)}</span>
+          )
+        }
+      </div>
+
+      <a
+        class="source"
+        href={sourceUrl}
+        target="_blank"
+        rel="noopener"
+        aria-label={sourceLabel}
+      >
+        <Icon name="google" size="xxl" />
+      </a>
+    </div>
+
+    <figure class="content">
+      <figcaption>
+        <Text variant="title-xl">{authorName}</Text>
+      </figcaption>
+
+      <blockquote cite={sourceUrl}>
+        <Text as="p" variant="paragraph-s">{text}</Text>
+      </blockquote>
+
+      <span class="stars" role="img" aria-label={ratingLabel}>
+        {
+          [1, 2, 3, 4, 5].map((star) => (
+            <span class:list={{ muted: star > rating }}>
+              <Icon name="star" size="s" />
+            </span>
+          ))
+        }
+      </span>
+    </figure>
+  </Card>
+</Section>
+
+<style>
+  .review {
+    --card-ring-inset: 1px 3px 3px 1px;
+    --card-ring-color: var(--color-border);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    max-inline-size: 31.625rem;
+    margin-inline: auto;
+    padding: var(--space-6);
+    background-color: var(--color-surface-muted);
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .avatar {
+    display: grid;
+    place-items: center;
+    inline-size: 40px;
+    block-size: 40px;
+    font: var(--title-xl);
+    color: var(--color-text);
+    background-color: var(--color-border);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+
+  .avatar :global(picture) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .source {
+    border-radius: var(--radius-pill);
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  blockquote {
+    margin: 0;
+    color: var(--grey-600);
+  }
+
+  .stars {
+    display: inline-flex;
+    gap: var(--space-1);
+    color: var(--yellow-600);
+  }
+
+  .muted {
+    color: var(--grey-400);
+  }
+</style>
