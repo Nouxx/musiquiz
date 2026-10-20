@@ -2,7 +2,7 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { richTextFieldType } from "./shared/richText";
 import { pageGroups } from "./shared/seo";
-import { type BodyMember, validateHeaderRows } from "./shared/articleBody";
+import { type BodyMember, validateTables } from "./shared/articleBody";
 
 // french only, plain strings on purpose: docs/adr/0013
 export const blogFaqType = defineType({
@@ -205,7 +205,7 @@ export const blogArticleType = defineType({
       type: "articleBody",
       validation: (rule) => [
         rule.required(),
-        rule.custom<BodyMember[]>(validateHeaderRows),
+        rule.custom<BodyMember[]>(validateTables),
       ],
     }),
     defineField({

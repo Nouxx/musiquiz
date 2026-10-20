@@ -25,16 +25,23 @@ const linkAnnotation = defineArrayMember({
   ],
 });
 
-export type BodyMember = { _type: string; headerRows?: number };
+export type BodyMember = {
+  _type: string;
+  headerRows?: number;
+  rows?: unknown[];
+};
 
 // on the table type itself, the rule never runs under the Studio's table editing,
 // and an error pathed to the table only shows in the validation panel
-export function validateHeaderRows(body: BodyMember[] | undefined) {
-  const missing = body?.some(
-    (member) => member._type === "table" && member.headerRows !== 1,
-  );
-  if (!missing) return true;
-  return "A table has no header row. Turn it on: the first row names the columns.";
+export function validateTables(body: BodyMember[] | undefined) {
+  const tables = body?.filter((member) => member._type === "table") ?? [];
+  if (tables.some((table) => table.headerRows !== 1)) {
+    return "A table has no header row. Turn it on: the first row names the columns.";
+  }
+  if (tables.some((table) => (table.rows?.length ?? 0) < 2)) {
+    return "A table has only its header row. Add at least one row below it.";
+  }
+  return true;
 }
 
 // the field names are the ones the Studio's table editing binds to: https://www.sanity.io/docs/studio/portable-text-editor-configuration#table-editing

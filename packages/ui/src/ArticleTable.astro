@@ -18,7 +18,8 @@ function isFilled(row: number, column: number) {
 ---
 
 <Card border="soft" class="frame">
-  <div class="scroller">
+  <!-- a text-only table has nothing focusable, so keyboard users could not scroll it -->
+  <div class="scroller" tabindex="0">
     <table style={{ "--columns": headers.length }}>
       <thead>
         <tr>
