@@ -1,4 +1,5 @@
 import { Card, Grid, Stack, Text } from "@sanity/ui";
+import { useRef, type FocusEvent, type KeyboardEvent } from "react";
 import { set, type StringInputProps } from "sanity";
 import { contentIcons } from "../schemas/shared/pageComponents/contentIcons";
 
@@ -23,6 +24,13 @@ for (const { value } of contentIcons) {
   }
 }
 
+const arrowSteps: Record<string, number> = {
+  ArrowRight: 1,
+  ArrowDown: 1,
+  ArrowLeft: -1,
+  ArrowUp: -1,
+};
+
 function ContentIcon({ name, size }: { name: string; size: string }) {
   return (
     <span
@@ -38,24 +46,72 @@ export function iconMedia(name?: string) {
 }
 
 export function IconInput(props: StringInputProps) {
-  const { value, onChange, readOnly } = props;
+  const { value, onChange, readOnly, elementProps } = props;
+  const buttons = useRef<(HTMLButtonElement | null)[]>([]);
+  const focusIndex = Math.max(
+    contentIcons.findIndex((icon) => icon.value === value),
+    0,
+  );
+
+  function select(index: number) {
+    const icon = contentIcons[index];
+    if (icon.value !== value) onChange(set(icon.value));
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLElement>, index: number) {
+    const step = arrowSteps[event.key];
+    if (!step || readOnly) return;
+    event.preventDefault();
+    const next = (index + step + contentIcons.length) % contentIcons.length;
+    select(next);
+    buttons.current[next]?.focus();
+  }
+
+  // moving between icons stays inside the field, so it is not a focus change for Studio
+  function handleFocus(event: FocusEvent<HTMLElement>) {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      elementProps.onFocus(event);
+    }
+  }
+
+  function handleBlur(event: FocusEvent<HTMLElement>) {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      elementProps.onBlur(event);
+    }
+  }
 
   return (
-    <Grid columns={[3, 4, 6]} gap={2}>
-      {contentIcons.map((icon) => (
+    <Grid
+      columns={[3, 4, 6]}
+      gap={2}
+      role="radiogroup"
+      aria-describedby={elementProps["aria-describedby"]}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+    >
+      {contentIcons.map((icon, index) => (
         <Card
           key={icon.value}
+          ref={(node: HTMLButtonElement | null) => {
+            buttons.current[index] = node;
+            if (index === focusIndex) elementProps.ref.current = node;
+          }}
+          id={index === focusIndex ? elementProps.id : undefined}
           as="button"
           type="button"
+          role="radio"
+          aria-checked={icon.value === value}
+          tabIndex={index === focusIndex ? 0 : -1}
           padding={3}
           radius={2}
           border
           tone={icon.value === value ? "primary" : "default"}
           selected={icon.value === value}
           disabled={readOnly}
-          onClick={() => {
-            if (icon.value !== value) onChange(set(icon.value));
-          }}
+          onClick={() => select(index)}
+          onKeyDown={(event: KeyboardEvent<HTMLElement>) =>
+            handleKeyDown(event, index)
+          }
         >
           <Stack space={2} style={{ justifyItems: "center" }}>
             <ContentIcon name={icon.value} size="1.75rem" />
