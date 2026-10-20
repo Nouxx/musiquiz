@@ -12,7 +12,6 @@
   - honey pot
   - rate limiting by IP
   - Origin/Referrer check
-- UI bug: cards scroller z-index conflicts with header
 - Header on mobile: booking button should always be there
 - Tight page cover + badge = collapse
 - preview icon in Sanity
