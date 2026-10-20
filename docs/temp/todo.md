@@ -5,6 +5,7 @@
   - visual glitch when links are too long
   - add available anchors
 - Dans les articles de blog, il faudrait qu’on puisse ajouter un avis (qu’on rédige à la main) et un composant tableau comparatif. C’est hyper important pour le référencement SEO/GEO des articles
+- 4escape todo
 
 # P1 (important)
 
