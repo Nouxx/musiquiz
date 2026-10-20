@@ -73,10 +73,13 @@ function frenchOnly(type: string) {
   ];
 }
 
-// conditional validators (pop-up on, offer card in text mode) must apply
+// conditional validators (pop-up on, offer card in text mode, cta in use) must apply
 const context = {
   document: { enabled: true },
-  parent: { contentType: "text" },
+  parent: {
+    contentType: "text",
+    label: frenchOnly("internationalizedArrayString"),
+  },
 };
 
 const fields = schemaTypes.flatMap((type) =>

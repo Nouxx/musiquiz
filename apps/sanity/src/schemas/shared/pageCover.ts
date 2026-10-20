@@ -1,6 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 import { hasWidget } from "../venuePage";
+import { isCtaFilled } from "./cta";
 import { noMissingLanguage, requiredInEveryLanguage } from "./localized";
 
 type PageCoverParent = {
@@ -177,7 +178,9 @@ export const pageCoverType = defineType({
       hidden: ({ document }) => !hasAuthorableCta(document),
       validation: (rule) =>
         rule.custom((value, context) =>
-          hasAuthorableCta(context.document) && !value ? "Required" : true,
+          hasAuthorableCta(context.document) && !isCtaFilled(value)
+            ? "Required"
+            : true,
         ),
     }),
     defineField({

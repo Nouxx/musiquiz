@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { BellIcon } from "@sanity/icons/Bell";
+import { isCtaFilled } from "./shared/cta";
 import {
   maxLengthInEveryLanguage,
   requiredInEveryLanguage,
@@ -81,7 +82,7 @@ export const venuePopupType = defineType({
       type: "cta",
       validation: (rule) =>
         rule.custom((value, { document }) =>
-          isEnabled(document) && !value
+          isEnabled(document) && !isCtaFilled(value)
             ? "Required while the pop-up is on"
             : true,
         ),

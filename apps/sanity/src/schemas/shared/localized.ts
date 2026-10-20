@@ -43,6 +43,10 @@ function missingLanguages(entries?: LocalizedEntry<unknown>[]) {
     .map(({ id }) => id.toUpperCase());
 }
 
+export function isAnyLanguageFilled(entries?: LocalizedEntry<unknown>[]) {
+  return missingLanguages(entries).length < languages.length;
+}
+
 // `rule.required()` passes as soon as the array has an entry, even an empty one.
 // docs/adr/0029-localized-fields-require-every-language.md
 export function requiredInEveryLanguage(

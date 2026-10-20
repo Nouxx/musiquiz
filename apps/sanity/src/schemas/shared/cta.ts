@@ -1,6 +1,7 @@
 import { defineField, defineType } from "sanity";
 import {
   frenchValue,
+  isAnyLanguageFilled,
   type LocalizedEntry,
   requiredInEveryLanguage,
 } from "./localized";
@@ -9,6 +10,22 @@ import {
 // on, `https://` somewhere else entirely. anything else — a bare `www.`, a
 // `mailto:`, a path with no leading slash — is a typo, not a destination
 const URL_PREFIXES = ["/", "#", "https://"];
+
+type CtaValue = {
+  label?: LocalizedEntry<unknown>[];
+  url?: LocalizedEntry<unknown>[];
+};
+
+// the Studio keeps a touched cta as an empty shell, and the build reads it as no button
+export function isCtaFilled(cta: unknown) {
+  const { label, url } = (cta ?? {}) as CtaValue;
+
+  return isAnyLanguageFilled(label) || isAnyLanguageFilled(url);
+}
+
+const requiredWhileFilled = requiredInEveryLanguage(({ parent }) =>
+  isCtaFilled(parent),
+);
 
 export const ctaType = defineType({
   name: "cta",
@@ -20,7 +37,7 @@ export const ctaType = defineType({
       title: "Label",
       description: "The text on the button.",
       type: "internationalizedArrayString",
-      validation: (rule) => rule.custom(requiredInEveryLanguage()),
+      validation: (rule) => rule.custom(requiredWhileFilled),
     }),
     defineField({
       name: "url",
@@ -30,7 +47,7 @@ export const ctaType = defineType({
       type: "internationalizedArrayString", // the url is localized because fr and en are different paths
       validation: (rule) =>
         rule
-          .custom(requiredInEveryLanguage())
+          .custom(requiredWhileFilled)
           .custom((entries?: LocalizedEntry[]) => {
             const invalid = entries?.filter(
               (entry) =>
