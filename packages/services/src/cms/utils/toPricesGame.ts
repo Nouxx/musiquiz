@@ -12,6 +12,7 @@ export function toPricesGame({
   currency: Currency;
 }): PricesGame {
   return {
+    slug: game.slug,
     name: game.name,
     image: toCmsImage(game.image),
     prices: game.prices.map((price) => ({

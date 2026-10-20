@@ -42,6 +42,8 @@ Both workers use **Cloudflare Workers Builds**, connected to this repo's `main` 
 | Build command  | `pnpm build:web:ssr`  | `pnpm build:web:static`  |
 | Deploy command | `pnpm deploy:web:ssr` | `pnpm deploy:web:static` |
 
+`deploy:static` also pings [IndexNow](https://www.indexnow.org/) with every sitemap URL once `wrangler deploy` succeeds (`apps/web/scripts/submitIndexNow.js`). A failed ping only warns.
+
 Those commands are deliberately bare script names. Every decision they expand to — env flags, adapter, worker name, bindings, output directory — lives in `apps/web/package.json` and `apps/web/wrangler.jsonc`, so changing any of it is a commit, not a dashboard visit. Only renaming a script requires touching Cloudflare.
 
 `.github/workflows/ci.yaml` deploys nothing — it is a pre-merge gate (format, lint, typecheck, build) that runs on pull requests and holds no secrets. Workers Builds is used for the web deploy instead of an Actions deploy because it exposes a **deploy hook URL** that can be called to rebuild, with no GitHub token to mint, store or rotate.

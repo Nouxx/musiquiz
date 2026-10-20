@@ -4,6 +4,7 @@ import { defineQuery } from "groq";
 import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
+import { addressProjection, sanityAddressSchema } from "./shared/address";
 import { optionalCtaProjection, sanityCtaSchema } from "./shared/cta";
 import {
   pageComponentsProjection,
@@ -25,7 +26,8 @@ function whereToFindUsPageQuery({ lang }: { lang: Lang }) {
       "title": title,
       "slug": slug.current,
       regionCode,
-      "mapPosition": mapPosition{ x, y }
+      "mapPosition": mapPosition{ x, y },
+      "address": ${addressProjection}
     },
   }`);
 }
@@ -44,6 +46,7 @@ const sanityWhereToFindUsPageSchema = z.strictObject({
       slug: z.string(),
       regionCode: z.string(),
       mapPosition: z.strictObject({ x: z.number(), y: z.number() }),
+      address: sanityAddressSchema,
     }),
   ),
 });

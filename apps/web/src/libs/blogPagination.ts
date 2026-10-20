@@ -6,6 +6,11 @@ export function blogPageCount(articleCount: number) {
   return Math.max(1, Math.ceil(articleCount / BLOG_PAGE_SIZE));
 }
 
+export function blogPageArticles<Article>(articles: Article[], page: number) {
+  const start = (page - 1) * BLOG_PAGE_SIZE;
+  return articles.slice(start, start + BLOG_PAGE_SIZE);
+}
+
 export function blogPageLinks(articleCount: number) {
   const routes = getRoutesForLang("fr");
 

@@ -1,0 +1,23 @@
+---
+import type { LocatedVenuePin } from "@repo/services/cms/types";
+
+import { getSite } from "../../libs/getSite";
+import { toVenueItemList } from "../../libs/toVenueItemList";
+import JsonLd from "./JsonLd.astro";
+
+interface Props {
+  venues: LocatedVenuePin[];
+}
+
+const { venues } = Astro.props;
+
+const site = getSite(Astro);
+
+const venueItemList = toVenueItemList({
+  site,
+  pageUrl: new URL(Astro.url.pathname, site).href,
+  venues: venues.map(({ id, address }) => ({ slug: id, address })),
+});
+---
+
+<JsonLd graph={[venueItemList]} />

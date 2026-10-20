@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { ConfettiIcon } from "@sanity/icons/Confetti";
+import { llmsDescriptionField } from "./shared/llmsDescription";
 
 export const eventFormatType = defineType({
   name: "eventFormat",
@@ -36,6 +37,10 @@ export const eventFormatType = defineType({
       options: {
         source: "name",
       },
+    }),
+    llmsDescriptionField({
+      subject: "this event",
+      fallback: "the event page's meta description",
     }),
   ],
   preview: {

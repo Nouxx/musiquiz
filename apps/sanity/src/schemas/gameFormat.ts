@@ -1,6 +1,7 @@
 import { defineField, defineType } from "sanity";
 import { JoystickIcon } from "@sanity/icons/Joystick";
 import { SANITY_API_VERSION } from "@repo/utils/sanityConfig";
+import { llmsDescriptionField } from "./shared/llmsDescription";
 
 const MAX_SIGNATURE_GAMES = 4;
 
@@ -78,6 +79,10 @@ export const gameFormatType = defineType({
       options: {
         source: "name",
       },
+    }),
+    llmsDescriptionField({
+      subject: "this game",
+      fallback: "the game page's meta description",
     }),
   ],
   preview: {

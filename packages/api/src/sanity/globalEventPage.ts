@@ -22,6 +22,8 @@ function globalEventPageQuery({
     "globalEvent": *[_type == "globalEvent"
       && event->slug.current == "${eventSlug}"][0]{
       "eventName": event->name,
+      "venueCities": *[_type == "venueEvent" && event._ref == ^.event._ref]
+        | order(venue->title asc).venue->title,
       pageCover ${pageCoverProjection({ lang })},
       "seo": ${seoProjection({ lang })},
       "pageComponents": ${pageComponentsProjection({ field: "pageComponents", lang })},
@@ -32,6 +34,7 @@ function globalEventPageQuery({
 const sanityGlobalEventPageSchema = z.strictObject({
   globalEvent: z.strictObject({
     eventName: z.string().min(1),
+    venueCities: z.array(z.string().min(1)),
     pageCover: sanityPageCoverSchema({ hasCta: false }),
     seo: sanitySeoSchema,
     pageComponents: z.array(sanityPageComponentSchema).nullable(),

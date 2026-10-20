@@ -8,6 +8,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import type { LocalBusiness, VenuePage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
+import { toCmsImage } from "./utils/toCmsImage";
 import { toOpeningHours } from "./utils/toOpeningHours";
 import { toPageCover } from "./utils/toPageCover";
 import { toSeo } from "./utils/toSeo";
@@ -18,6 +19,7 @@ function adaptBusiness(
   const amounts = venue.priceAmounts;
 
   return {
+    logo: toCmsImage(venue.logo),
     address: venue.address,
     geo: { latitude: venue.location.lat, longitude: venue.location.lng },
     telephone: venue.phone,
@@ -42,12 +44,9 @@ function adaptBusiness(
     }),
     priceRange:
       amounts.length > 0
-        ? {
-            lowest: Math.min(...amounts),
-            highest: Math.max(...amounts),
-            currency: currencyOf(venue.address.addressCountry),
-          }
+        ? { lowest: Math.min(...amounts), highest: Math.max(...amounts) }
         : undefined,
+    currency: currencyOf(venue.address.addressCountry),
   };
 }
 
@@ -62,13 +61,21 @@ function adaptVenuePage({
     venueTitle: data.venuePage.venueTitle,
     business: adaptBusiness(data.venuePage.venue),
     pageCover: toPageCover({ data: data.venuePage.pageCover }),
-    seo: toSeo({
-      data: data.venuePage.seo,
-      fallback: {
-        title: data.venuePage.pageCover.heading,
-        description: data.venuePage.pageCover.subHeading,
-      },
-    }),
+    seo: {
+      ...toSeo({
+        data: data.venuePage.seo,
+        fallback: {
+          title: data.venuePage.pageCover.heading,
+          description: data.venuePage.pageCover.subHeading,
+        },
+      }),
+      // same rule as the sitemap: the page renders the venue's own fields
+      updatedAt:
+        // eslint-disable-next-line unicorn/prefer-math-min-max, unicorn/prefer-minimal-ternary -- ISO strings, Math.max returns NaN
+        data.venuePage.venue.updatedAt > data.venuePage.seo.updatedAt
+          ? data.venuePage.venue.updatedAt
+          : data.venuePage.seo.updatedAt,
+    },
     components:
       data.venuePage.pageComponents?.map((component) =>
         adaptPageComponent({ data: component, lang }),

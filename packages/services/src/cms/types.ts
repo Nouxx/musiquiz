@@ -54,13 +54,14 @@ export type VenuePin = {
   position: { x: number; y: number };
 };
 
+export type LocatedVenuePin = VenuePin & { address: PostalAddress };
+
 export type Homepage = {
   pageCover: PageCover;
   venues: VenuePin[];
   venuesCta: { label: string; url: string } | undefined;
   components: PageComponent[];
   seo: Seo;
-  organization: Organization;
 };
 
 export type Organization = {
@@ -70,9 +71,12 @@ export type Organization = {
   sameAs: string[];
   telephone: string;
   email: string;
+  /** @example [{ slug: "paris", city: "Paris" }] */
+  venues: { slug: string; city: string }[];
 };
 
 export type LocalBusiness = {
+  logo: CmsImage;
   address: PostalAddress;
   geo: { latitude: number; longitude: number };
   telephone: string;
@@ -82,9 +86,8 @@ export type LocalBusiness = {
   sameAs: string[];
   openingHours: OpeningHours[];
   /** across every game the venue prices, undefined when none is priced */
-  priceRange:
-    | { lowest: number; highest: number; currency: Currency }
-    | undefined;
+  priceRange: { lowest: number; highest: number } | undefined;
+  currency: Currency;
 };
 
 export type PostalAddress = {
@@ -157,6 +160,8 @@ export type Seo = {
   description: string | undefined;
   ogImage: CmsImage;
   noindex: boolean;
+  /** @example "2026-10-18T21:04:12Z" */
+  updatedAt: string;
 };
 
 export type VenuePageType = "home" | "gift" | "book";
@@ -195,7 +200,7 @@ export type TermsAndConditionsPage = {
 export type WhereToFindUsPage = {
   pageCover: PageCover;
   componentsBeforeMap: PageComponent[];
-  venues: VenuePin[];
+  venues: LocatedVenuePin[];
   venuesCta: { label: string; url: string } | undefined;
   componentsAfterMap: PageComponent[];
   seo: Seo;
@@ -279,8 +284,6 @@ export type BlogArticlePage = {
     profileUrl: string | undefined;
   };
   faq: { title: string; questions: FaqQuestion[] } | undefined;
-  /** the brand logo, same as `Organization.logo` */
-  publisherLogo: CmsImage;
   /** same venue, else same event, else any; newest first, at most three */
   readMore: BlogArticleSummary[];
   seo: Seo;
@@ -349,6 +352,8 @@ export type VenueCustomPage = {
 
 export type GlobalGamePage = {
   gameName: string;
+  /** @example ["Lille", "Paris"], the venues that run this game */
+  venueCities: string[];
   pageCover: PageCover;
   components: PageComponent[];
   seo: Seo;
@@ -356,6 +361,8 @@ export type GlobalGamePage = {
 
 export type GlobalEventPage = {
   eventName: string;
+  /** @example ["Lille", "Paris"], the venues that run this event */
+  venueCities: string[];
   pageCover: PageCover;
   components: PageComponent[];
   seo: Seo;
@@ -470,4 +477,37 @@ export type VenuePopup = {
   text: string;
   cta: Cta;
   logo: CmsImage | undefined;
+};
+
+export type LlmsTxtLink = {
+  name: string;
+  description: string | undefined;
+  fr: string;
+  /** missing on the blog, French only: docs/adr/0013 */
+  en?: string;
+};
+
+export type LlmsTxtPageRoute =
+  | "book"
+  | "whereToFindUs"
+  | "joinTheNetwork"
+  | "contact"
+  | "termsAndConditions"
+  | "legalNotice";
+
+export type LlmsTxt = {
+  summary: string | undefined;
+  venues: LlmsTxtLink[];
+  games: LlmsTxtLink[];
+  events: LlmsTxtLink[];
+  articles: LlmsTxtLink[];
+  pages: { route: LlmsTxtPageRoute; fr: string; en: string }[];
+};
+
+export type SitemapEntry = {
+  fr: string;
+  /** missing on the blog, French only: docs/adr/0013 */
+  en?: string;
+  /** @example "2026-10-18T20:45:31Z" */
+  lastmod: string;
 };

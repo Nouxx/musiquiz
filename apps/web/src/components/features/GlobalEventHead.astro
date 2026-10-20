@@ -1,0 +1,33 @@
+---
+import type { GlobalEventPage } from "@repo/services/cms/types";
+
+import { getOgImage } from "../../libs/getOgImage";
+import { getOrganizationId } from "../../libs/getOrganizationId";
+import { getEventServiceId } from "../../libs/getServiceId";
+import { getSite } from "../../libs/getSite";
+import { toEventService } from "../../libs/toEventService";
+import JsonLd from "./JsonLd.astro";
+
+interface Props {
+  eventSlug: string;
+  data: GlobalEventPage;
+}
+
+const { eventSlug, data } = Astro.props;
+
+const site = getSite(Astro);
+
+const service = toEventService({
+  id: getEventServiceId(site, eventSlug),
+  url: new URL(Astro.url.pathname, site).href,
+  name: data.eventName,
+  description: data.seo.description,
+  image: (await getOgImage(site, data.seo.ogImage)).url,
+  providerId: getOrganizationId(site),
+  cities: data.venueCities,
+  // prices are per venue
+  offers: undefined,
+});
+---
+
+<JsonLd graph={[service]} />

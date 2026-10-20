@@ -1,11 +1,12 @@
 ---
-import type { LocalBusiness } from "@repo/services/cms/types";
-import { formatPrice } from "@repo/utils/formatPrice";
+import type { PageComponent } from "@repo/services/cms/pageComponent.types";
+import type { LocalBusiness, Seo } from "@repo/services/cms/types";
 
 import { getLang } from "../../libs/getLang";
-import { getOrganizationId } from "../../libs/getOrganizationId";
+import { getLogoUrl } from "../../libs/getLogoUrl";
+import { getOgImage } from "../../libs/getOgImage";
 import { getSite } from "../../libs/getSite";
-import { getVenueBusinessId } from "../../libs/getVenueBusinessId";
+import { toVenueBusiness } from "../../libs/toVenueBusiness";
 import JsonLd from "./JsonLd.astro";
 
 interface Props {
@@ -13,48 +14,26 @@ interface Props {
   /** @example "Paris" */
   city: string;
   business: LocalBusiness;
+  seo: Seo;
+  components: PageComponent[];
 }
 
-const { venueSlug, city, business } = Astro.props;
+const { venueSlug, city, business, seo, components } = Astro.props;
 
 const site = getSite(Astro);
-const url = new URL(Astro.url.pathname, site).href;
 
-function toPriceRange({
-  lowest,
-  highest,
-  currency,
-}: NonNullable<LocalBusiness["priceRange"]>) {
-  const lang = getLang(Astro);
-  const low = formatPrice({ amount: lowest, lang, currency });
-
-  return lowest === highest
-    ? low
-    : `${low}–${formatPrice({ amount: highest, lang, currency })}`;
-}
-
-const priceRange = business.priceRange && toPriceRange(business.priceRange);
-
-const entertainmentBusiness = {
-  "@type": "EntertainmentBusiness",
-  "@id": getVenueBusinessId(site, venueSlug),
-  name: `Musi'Quiz ${city}`,
-  url,
-  address: { "@type": "PostalAddress", ...business.address },
-  geo: { "@type": "GeoCoordinates", ...business.geo },
-  telephone: business.telephone,
-  email: business.email,
-  hasMap: business.mapUrl,
-  sameAs: business.sameAs,
-  openingHoursSpecification: business.openingHours.map((hours) => ({
-    "@type": "OpeningHoursSpecification",
-    dayOfWeek: hours.days,
-    opens: hours.opens,
-    closes: hours.closes,
-  })),
-  priceRange,
-  parentOrganization: { "@id": getOrganizationId(site) },
-};
+const entertainmentBusiness = toVenueBusiness({
+  site,
+  lang: getLang(Astro),
+  url: new URL(Astro.url.pathname, site).href,
+  venueSlug,
+  city,
+  description: seo.description,
+  imageUrl: (await getOgImage(site, seo.ogImage)).url,
+  logoUrl: await getLogoUrl(site, business.logo),
+  business,
+  prices: components.find((component) => component.type === "venuePrices"),
+});
 ---
 
 <JsonLd graph={[entertainmentBusiness]} />

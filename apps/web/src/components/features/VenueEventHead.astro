@@ -1,0 +1,33 @@
+---
+import type { VenueEventPage } from "@repo/services/cms/types";
+
+import { getOgImage } from "../../libs/getOgImage";
+import { getVenueEventServiceId } from "../../libs/getServiceId";
+import { getSite } from "../../libs/getSite";
+import { getVenueBusinessId } from "../../libs/getVenueBusinessId";
+import { toEventService } from "../../libs/toEventService";
+import JsonLd from "./JsonLd.astro";
+
+interface Props {
+  venueSlug: string;
+  eventSlug: string;
+  data: VenueEventPage;
+}
+
+const { venueSlug, eventSlug, data } = Astro.props;
+
+const site = getSite(Astro);
+
+const service = toEventService({
+  id: getVenueEventServiceId(site, venueSlug, eventSlug),
+  url: new URL(Astro.url.pathname, site).href,
+  name: data.eventName,
+  description: data.seo.description,
+  image: (await getOgImage(site, data.seo.ogImage)).url,
+  providerId: getVenueBusinessId(site, venueSlug),
+  cities: [data.venueTitle],
+  offers: data.components.find((component) => component.type === "offers"),
+});
+---
+
+<JsonLd graph={[service]} />

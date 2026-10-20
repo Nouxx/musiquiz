@@ -1,6 +1,10 @@
 ---
 import type { PageComponent } from "@repo/services/cms/pageComponent.types";
 
+import { getSite } from "../../libs/getSite";
+import { toFaqPage } from "../../libs/toFaqPage";
+import JsonLd from "./JsonLd.astro";
+
 interface Props {
   components: PageComponent[];
 }
@@ -8,6 +12,18 @@ interface Props {
 const { components } = Astro.props;
 
 const hasReviews = components.some((component) => component.type === "reviews");
+
+// one FAQPage per page, whatever the number of faq components
+const questions = components.flatMap((component) =>
+  component.type === "faq" ? component.questions : [],
+);
+
+const faqPage =
+  questions.length > 0 &&
+  toFaqPage({
+    pageUrl: new URL(Astro.url.pathname, getSite(Astro)).href,
+    questions,
+  });
 ---
 
 {
@@ -16,3 +32,4 @@ const hasReviews = components.some((component) => component.type === "reviews");
     <link rel="preconnect" href="https://cdn.trustindex.io" />
   )
 }
+{faqPage && <JsonLd graph={[faqPage]} />}

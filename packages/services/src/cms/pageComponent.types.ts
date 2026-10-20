@@ -63,6 +63,7 @@ export type GamePrice = {
 };
 
 export type PricesGame = {
+  slug: string;
   name: string;
   image: CmsImage;
   prices: GamePrice[];

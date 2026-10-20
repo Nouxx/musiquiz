@@ -5,6 +5,7 @@ import { getTrackingData } from "@repo/services/cms/getTrackingData";
 import SeoHead, {
   type Props as SeoProps,
 } from "../components/features/SeoHead.astro";
+import SiteGraphHead from "../components/features/SiteGraphHead.astro";
 import TrackingHead, {
   type PageType,
 } from "../components/features/tracking/TrackingHead.astro";
@@ -56,7 +57,8 @@ const { gtmIds } =
     <link rel="manifest" href="/site.webmanifest" />
     <Font cssVariable="--font-momo-trust-display" preload />
     <Font cssVariable="--font-funnel-display" preload />
-    <SeoHead {...seo} />
+    <SeoHead {venueSlug} {...seo} />
+    {seo.alternates && <SiteGraphHead />}
     <slot name="head" />
   </head>
   <body>

@@ -1,0 +1,25 @@
+---
+import { getOrganizationData } from "@repo/services/cms/getOrganizationData";
+
+import { getLang } from "../../libs/getLang";
+import { getLogoUrl } from "../../libs/getLogoUrl";
+import { getSanityConfigFromEnvironment } from "../../libs/getSanityConfigFromEnvironment";
+import { getSite } from "../../libs/getSite";
+import { toSiteGraph } from "../../libs/toSiteGraph";
+import JsonLd from "./JsonLd.astro";
+
+const site = getSite(Astro);
+
+const organization = await getOrganizationData({
+  config: getSanityConfigFromEnvironment(),
+});
+
+const graph = toSiteGraph({
+  site,
+  lang: getLang(Astro),
+  logoUrl: await getLogoUrl(site, organization.logo),
+  organization,
+});
+---
+
+<JsonLd {graph} />

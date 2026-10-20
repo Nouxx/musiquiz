@@ -57,7 +57,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 ---
 
-<Layout {...data.seo} {alternates}>
-  <BlogArticleHead slot="head" {data} {breadcrumbs} />
+<Layout {...data.seo} {breadcrumbs} {alternates}>
+  <BlogArticleHead slot="head" {data} />
   <BlogArticlePage {data} {reviews} {breadcrumbs} {alternates} />
 </Layout>

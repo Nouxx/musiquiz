@@ -2,8 +2,8 @@
 import { getVenueGamePageData } from "@repo/services/cms/getVenueGamePageData";
 import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
 
-import BreadcrumbHead from "../../../components/features/BreadcrumbHead.astro";
 import PageComponentsHead from "../../../components/features/PageComponentsHead.astro";
+import VenueGameHead from "../../../components/features/VenueGameHead.astro";
 import VenueGamePage from "../../../components/pages/VenueGamePage.astro";
 import VenueLayout from "../../../layouts/VenueLayout.astro";
 import { getLang } from "../../../libs/getLang";
@@ -43,9 +43,10 @@ const breadcrumbs = getVenueBreadcrumbs(
   venueSlug={venue}
   city={data.venueTitle}
   {...data.seo}
+  {breadcrumbs}
   {alternates}
 >
-  <BreadcrumbHead slot="head" items={breadcrumbs} />
+  <VenueGameHead slot="head" venueSlug={venue} gameSlug={game} {data} />
   <PageComponentsHead slot="head" components={data.components} />
   <VenueGamePage venueSlug={venue} {data} {alternates} />
 </VenueLayout>

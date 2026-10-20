@@ -6,7 +6,7 @@ import { type Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
 import { getRoutesForLang } from "../routing/getRoutesForLang";
-import type { VenuePin, WhereToFindUsPage } from "./types";
+import type { LocatedVenuePin, WhereToFindUsPage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
 import { sortVenuePins } from "./utils/sortVenuePins";
 import { toPageCover } from "./utils/toPageCover";
@@ -18,13 +18,14 @@ function adaptVenue({
 }: {
   data: SanityWhereToFindUsPage["venues"][number];
   lang: Lang;
-}): VenuePin {
+}): LocatedVenuePin {
   return {
     id: data.slug,
     title: data.title,
     url: getRoutesForLang(lang).venueHome(data.slug),
     detail: data.regionCode,
     position: data.mapPosition,
+    address: data.address,
   };
 }
 

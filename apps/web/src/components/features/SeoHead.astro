@@ -1,10 +1,14 @@
 ---
-import { getImage } from "astro:assets";
 import type { CmsImage } from "@repo/services/cms/types";
 import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
+import type { BreadcrumbItem } from "@repo/ui/types";
 
 import { getLang } from "../../libs/getLang";
+import { getOgImage } from "../../libs/getOgImage";
 import { getSite } from "../../libs/getSite";
+import { toBreadcrumbList } from "../../libs/toBreadcrumbList";
+import { toWebPage, type WebPageType } from "../../libs/toWebPage";
+import JsonLd from "./JsonLd.astro";
 
 export interface Props {
   /** @example "Pixel Games", rendered "Pixel Games · Musi'Quiz Paris" */
@@ -15,6 +19,10 @@ export interface Props {
   alternates: Alternates | undefined;
   ogImage?: CmsImage;
   noindex?: boolean;
+  updatedAt?: string;
+  breadcrumbs?: BreadcrumbItem[];
+  webPageType?: WebPageType;
+  venueSlug?: string;
 }
 
 const {
@@ -24,8 +32,13 @@ const {
   alternates,
   ogImage,
   noindex = false,
+  updatedAt,
+  breadcrumbs,
+  webPageType = "WebPage",
+  venueSlug,
 } = Astro.props;
 
+const site = getSite(Astro);
 const lang = getLang(Astro);
 
 const canonical = alternates ? alternates[lang] : undefined;
@@ -41,20 +54,27 @@ const fullTitle = title ? `${title} · ${brandWithCity}` : brandWithCity;
 const ogLocales = { fr: "fr_FR", en: "en_GB" } as const;
 const otherLang = lang === "fr" ? "en" : "fr";
 
-// the size Facebook, LinkedIn and WhatsApp crop to
-const OG_WIDTH = 1200;
-const OG_HEIGHT = 630;
+const og = ogImage && (await getOgImage(site, ogImage));
 
-const og =
-  ogImage &&
-  (await getImage({
-    src: ogImage.url,
-    width: OG_WIDTH,
-    height: OG_HEIGHT,
-    fit: "cover",
-    format: "jpeg",
-  }));
-const ogImageUrl = og && new URL(og.src, getSite(Astro)).href;
+const graph = canonical
+  ? [
+      toWebPage({
+        site,
+        type: webPageType,
+        url: canonical,
+        name: fullTitle,
+        description,
+        lang,
+        venueSlug,
+        image: og,
+        hasBreadcrumb: breadcrumbs !== undefined,
+        updatedAt,
+      }),
+      ...(breadcrumbs
+        ? [toBreadcrumbList({ site, pageUrl: canonical, items: breadcrumbs })]
+        : []),
+    ]
+  : [];
 ---
 
 <title>{fullTitle}</title>
@@ -84,18 +104,17 @@ const ogImageUrl = og && new URL(og.src, getSite(Astro)).href;
   )
 }
 {
-  ogImageUrl && (
+  og && (
     <>
-      <meta property="og:image" content={ogImageUrl} />
+      <meta property="og:image" content={og.url} />
       <meta property="og:image:type" content="image/jpeg" />
-      <meta property="og:image:width" content={String(OG_WIDTH)} />
-      <meta property="og:image:height" content={String(OG_HEIGHT)} />
+      <meta property="og:image:width" content={String(og.width)} />
+      <meta property="og:image:height" content={String(og.height)} />
       {ogImage.alt && <meta property="og:image:alt" content={ogImage.alt} />}
     </>
   )
 }
 {/* X reads title, description and image from the og: tags */}
-<meta
-  name="twitter:card"
-  content={ogImageUrl ? "summary_large_image" : "summary"}
-/>
+<meta name="twitter:card" content={og ? "summary_large_image" : "summary"} />
+
+{graph.length > 0 && <JsonLd {graph} />}

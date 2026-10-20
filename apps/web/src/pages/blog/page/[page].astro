@@ -35,7 +35,13 @@ const alternates = {
 };
 ---
 
-<Layout {...data.seo} {title} {description} {alternates}>
-  <BlogHead slot="head" articleCount={data.articles.length} {page} />
+<Layout
+  {...data.seo}
+  {title}
+  {description}
+  {alternates}
+  webPageType="CollectionPage"
+>
+  <BlogHead slot="head" {data} {page} />
   <BlogPage {data} {page} {alternates} />
 </Layout>

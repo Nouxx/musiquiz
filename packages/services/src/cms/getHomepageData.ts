@@ -6,7 +6,6 @@ import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { Homepage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
 import { sortVenuePins } from "./utils/sortVenuePins";
-import { toCmsImage } from "./utils/toCmsImage";
 import { toPageCover } from "./utils/toPageCover";
 import { toSeo } from "./utils/toSeo";
 
@@ -23,24 +22,6 @@ function adaptVenue({
     url: getRoutesForLang(lang).venueHome(data.slug),
     detail: data.regionCode,
     position: data.mapPosition,
-  };
-}
-
-function adaptOrganization(
-  data: SanityHomepage["siteSettings"],
-): Homepage["organization"] {
-  return {
-    logo: toCmsImage(data.footerLogo),
-    // we are not including the venue's socials this they are not the "brand" ones
-    sameAs: [
-      data.facebookUrl,
-      data.instagramUrl,
-      data.linkedinUrl,
-      data.tiktokUrl,
-      data.youtubeUrl,
-    ],
-    telephone: data.mainPhone,
-    email: data.mainEmail,
   };
 }
 
@@ -70,7 +51,6 @@ function adaptHomepage({
         adaptPageComponent({ data: component, lang }),
       ) ?? [],
     seo: toSeo({ data: seo, fallback: { title: pageCover.heading } }),
-    organization: adaptOrganization(data.siteSettings),
   };
 }
 
