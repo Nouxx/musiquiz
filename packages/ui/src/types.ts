@@ -313,4 +313,3 @@ export type VenueOpeningLimits = {
   phone: number;
   message: number;
 };
-

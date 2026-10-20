@@ -94,7 +94,9 @@ function withAnchors({
 
   return [
     url,
-    ...sectionAnchors.map((anchor) => anchoredUrl(url, anchor, anchors[anchor])),
+    ...sectionAnchors.map((anchor) =>
+      anchoredUrl(url, anchor, anchors[anchor]),
+    ),
     ...(hasPrices ? [anchoredUrl(url, "prices", anchors.prices)] : []),
   ];
 }
