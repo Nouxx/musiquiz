@@ -31,6 +31,7 @@ const { cards, nextLabel } = Astro.props;
     --deck-motion: 320ms;
 
     position: relative;
+    isolation: isolate;
     padding-block-end: calc(var(--depth-step) * 3);
   }
 

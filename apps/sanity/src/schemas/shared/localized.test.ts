@@ -1,6 +1,6 @@
 import { expect, it } from "vitest";
 
-import { schemaTypes } from ".";
+import { schemaTypes } from "../";
 
 type Node = {
   name?: string;

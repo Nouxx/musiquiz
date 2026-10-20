@@ -170,6 +170,10 @@
   --size-article: 64.75rem;
   --size-content-wide: 108rem;
 
+  /* the only z-indexes in the root stacking context, see docs/adr/0030 */
+  --layer-popup: 10;
+  --layer-header: 20;
+
   /* 4.63vw is 80px at 1728px */
   --space-gutter-wide: clamp(var(--space-6), 4.63vw, var(--space-20));
 

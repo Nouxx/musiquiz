@@ -6,7 +6,6 @@
 # P1 (important)
 
 - Cloudflare Access policy on musiquiz-ssr. It serves drafts
-- Sanity UI should require localized strings
 - Proper style on 404 page
 - Blog: add code block (youtube, instagram...)
 - Form security: prevent attacks
