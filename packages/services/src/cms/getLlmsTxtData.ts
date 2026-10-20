@@ -104,8 +104,8 @@ export async function getLlmsTxtData({
   ]);
 
   // an anchored url is its page again: listing it would duplicate the link
-  const globalUrls = allGlobalUrls.filter(isWholePage);
-  const blogUrls = allBlogUrls.filter(isWholePage);
+  const globalUrls = allGlobalUrls.filter((url) => isWholePage(url));
+  const blogUrls = allBlogUrls.filter((url) => isWholePage(url));
   const venueHomeUrls = venueUrls.flatMap(({ slug, urls }) =>
     urls
       .filter((url) => isWholePage(url) && url.route === "venueHome")
