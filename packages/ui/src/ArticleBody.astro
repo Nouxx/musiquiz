@@ -1,4 +1,5 @@
 ---
+import ArticleTable from "./ArticleTable.astro";
 import RemoteImage from "./primitives/RemoteImage.astro";
 import RichTextSpans from "./primitives/RichTextSpans.astro";
 import Text from "./primitives/Text.astro";
@@ -55,6 +56,9 @@ const { id, nodes } = Astro.props;
                 <RemoteImage image={node.image} variant="article-body-media" />
               </div>
             );
+          }
+          case "table": {
+            return <ArticleTable headers={node.headers} rows={node.rows} />;
           }
         }
       })

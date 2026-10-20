@@ -1,8 +1,7 @@
 # P0 (top priorities)
 
 - setup carto api key for production (restrict to domain)
-- Dans les articles de blog, il faudrait qu’on puisse ajouter un avis (qu’on rédige à la main) et un composant tableau comparatif. C’est hyper important pour le référencement SEO/GEO des articles
-- 4escape todo
+- 4escape todo file
 
 # P1 (important)
 

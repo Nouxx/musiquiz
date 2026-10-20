@@ -1,0 +1,114 @@
+---
+import Card from "./primitives/Card.astro";
+import RichText from "./primitives/RichText.astro";
+import type { RichTextNode } from "./types";
+
+interface Props {
+  /** one per column */
+  headers: RichTextNode[][];
+  /** the first cell labels its row */
+  rows: RichTextNode[][][];
+}
+
+const { headers, rows } = Astro.props;
+
+function isFilled(row: number, column: number) {
+  return (row + column) % 2 === 0;
+}
+---
+
+<Card border="soft" class="frame">
+  <!-- a text-only table has nothing focusable, so keyboard users could not scroll it -->
+  <div class="scroller" tabindex="0">
+    <table style={{ "--columns": headers.length }}>
+      <thead>
+        <tr>
+          {
+            headers.map((header, column) => (
+              <th scope="col" class:list={{ filled: isFilled(0, column) }}>
+                <RichText value={header} variant="title-xl" />
+              </th>
+            ))
+          }
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.map((cells, row) => (
+            <tr>
+              {cells.map((cell, column) =>
+                column === 0 ? (
+                  <th
+                    scope="row"
+                    class:list={["label", { filled: isFilled(row + 1, 0) }]}
+                  >
+                    <RichText value={cell} variant="paragraph-xl" />
+                  </th>
+                ) : (
+                  <td class:list={{ filled: isFilled(row + 1, column) }}>
+                    <RichText value={cell} />
+                  </td>
+                ),
+              )}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+</Card>
+
+<style>
+  .frame {
+    --card-radius: var(--radius-m);
+
+    margin-block: var(--space-6);
+  }
+
+  /* the card clips the scroller's own outline */
+  .frame:has(.scroller:focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .scroller {
+    overflow-x: auto;
+  }
+
+  .scroller:focus-visible {
+    outline: none;
+  }
+
+  table {
+    /* below this the columns get too narrow to read, so the table scrolls */
+    min-inline-size: calc(var(--columns) * 14rem);
+    inline-size: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    padding: var(--space-6);
+    text-align: start;
+    vertical-align: middle;
+    font-weight: inherit;
+  }
+
+  thead,
+  .label {
+    color: var(--color-text);
+  }
+
+  .label :global(.paragraph-xl) {
+    font-weight: 600;
+  }
+
+  td {
+    color: var(--grey-600);
+  }
+
+  .filled {
+    background-color: var(--color-surface-muted);
+  }
+</style>

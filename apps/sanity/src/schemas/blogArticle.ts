@@ -2,6 +2,7 @@ import { defineArrayMember, defineField, defineType } from "sanity";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { richTextFieldType } from "./shared/richText";
 import { pageGroups } from "./shared/seo";
+import { type BodyMember, validateTables } from "./shared/articleBody";
 
 // french only, plain strings on purpose: docs/adr/0013
 export const blogFaqType = defineType({
@@ -41,6 +42,62 @@ export const blogFaqType = defineType({
       validation: (rule) => rule.required().min(3).max(8),
     }),
   ],
+});
+
+const REVIEW_TEXT_SOFT_MAX = 220;
+
+// real reviews only: docs/adr/0029
+export const blogReviewType = defineType({
+  name: "blogReview",
+  title: "Review",
+  type: "object",
+  fields: [
+    defineField({
+      name: "authorName",
+      title: "Reviewer name",
+      type: "string",
+      description: 'As shown on Google, like "Caroline B".',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "text",
+      type: "text",
+      rows: 4,
+      description:
+        "A real Google review, copied word for word. Never written or reworded: French law forbids passing off a review as a customer's.",
+      validation: (rule) => [
+        rule.required(),
+        rule
+          .max(REVIEW_TEXT_SOFT_MAX)
+          .warning(
+            "Long reviews push the venue block down. Pick a shorter one.",
+          ),
+      ],
+    }),
+    defineField({
+      name: "rating",
+      type: "number",
+      description: "The stars the reviewer gave, out of 5.",
+      validation: (rule) => rule.required().integer().min(1).max(5),
+    }),
+    defineField({
+      name: "avatar",
+      type: "image",
+      description:
+        "Optional. The reviewer's Google photo. Without one, their initial is shown.",
+    }),
+    defineField({
+      name: "sourceUrl",
+      title: "Review link",
+      type: "url",
+      description:
+        'The review on Google: open it in Google Maps, then "Share" → "Copy link". The Google logo links to it.',
+      validation: (rule) => rule.required().uri({ scheme: ["https"] }),
+    }),
+  ],
+  preview: {
+    select: { title: "authorName", subtitle: "text", media: "avatar" },
+  },
 });
 
 // french only, plain strings on purpose: docs/adr/0013
@@ -146,7 +203,18 @@ export const blogArticleType = defineType({
       group: "content",
       title: "Article",
       type: "articleBody",
-      validation: (rule) => rule.required(),
+      validation: (rule) => [
+        rule.required(),
+        rule.custom<BodyMember[]>(validateTables),
+      ],
+    }),
+    defineField({
+      name: "featuredReview",
+      group: "content",
+      title: "Review",
+      description:
+        "Optional. One customer review, shown after the article. Leave empty rather than use a review that is not real.",
+      type: "blogReview",
     }),
     defineField({
       name: "faq",

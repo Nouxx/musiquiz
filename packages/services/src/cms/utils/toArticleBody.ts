@@ -2,7 +2,7 @@ import type { SanityArticleBody } from "@repo/api/sanity/shared/articleBody";
 
 import type { ArticleNode } from "../types";
 import { toCmsImage } from "./toCmsImage";
-import { toRichTextSpans } from "./toRichText";
+import { toRichText, toRichTextSpans } from "./toRichText";
 
 /** Portable Text stores a list as flat blocks; consecutive items become one list */
 export function toArticleBody(blocks: SanityArticleBody): ArticleNode[] {
@@ -15,6 +15,14 @@ export function toArticleBody(blocks: SanityArticleBody): ArticleNode[] {
         type: "image",
         image: toCmsImage({ url, width, height, mimeType, alt }),
       });
+      continue;
+    }
+
+    if (block._type === "table") {
+      const [header, ...rows] = block.rows.map((row) =>
+        row.cells.map((cell) => toRichText(cell.value)),
+      );
+      nodes.push({ type: "table", headers: header ?? [], rows });
       continue;
     }
 

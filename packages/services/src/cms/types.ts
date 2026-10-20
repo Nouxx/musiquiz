@@ -33,9 +33,28 @@ export type RichText = RichTextNode[];
 
 export type ArticleNode =
   | RichTextNode
+  | ArticleTable
   | { type: "heading"; level: 2 | 3; spans: RichTextSpan[] }
   | { type: "list"; items: RichTextSpan[][] }
   | { type: "image"; image: CmsImage };
+
+export type ArticleTable = {
+  type: "table";
+  /** one per column */
+  headers: RichText[];
+  /** the first cell labels its row */
+  rows: RichText[][];
+};
+
+export type ArticleReview = {
+  authorName: string;
+  text: string;
+  /** out of 5, whole */
+  rating: number;
+  avatar: CmsImage | undefined;
+  /** the review on Google */
+  sourceUrl: string;
+};
 
 export type VenueLink = {
   url: string;
@@ -262,6 +281,7 @@ export type BlogArticlePage = {
   cover: CmsImage;
   summary: RichText;
   body: ArticleNode[];
+  review: ArticleReview | undefined;
   readingMinutes: number;
   closesOn:
     | {

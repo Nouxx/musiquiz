@@ -35,7 +35,7 @@ export const sanityRichTextLinkSchema = z.strictObject({
   href: z.string().min(1),
 });
 
-const sanityRichTextBlockSchema = z.strictObject({
+export const sanityRichTextBlockSchema = z.strictObject({
   _type: z.literal("block"),
   // pinned on purpose: the day someone enables headings the build fails here, naming the field, rather than rendering a heading as body copy
   style: z.literal("normal"),

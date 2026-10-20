@@ -43,6 +43,17 @@ function toClosesOn({
   return { kind: "whereToFindUs" };
 }
 
+function toArticleReview(
+  review: SanityBlogArticlePage["article"]["featuredReview"],
+): BlogArticlePage["review"] {
+  if (!review) return;
+
+  return {
+    ...review,
+    avatar: review.avatar ? toCmsImage(review.avatar) : undefined,
+  };
+}
+
 function adaptBlogArticlePage({
   data,
 }: {
@@ -62,6 +73,7 @@ function adaptBlogArticlePage({
     cover: toCmsImage(article.cover),
     summary,
     body,
+    review: toArticleReview(article.featuredReview),
     readingMinutes: toReadingMinutes([...summary, ...body]),
     closesOn: toClosesOn(article),
     author: {

@@ -14,6 +14,11 @@ function nodeSpans(node: ArticleNode): RichTextSpan[] {
     case "image": {
       return [];
     }
+    case "table": {
+      return [...node.headers, ...node.rows.flat()]
+        .flat()
+        .flatMap((paragraph) => paragraph.spans);
+    }
   }
 }
 
