@@ -156,8 +156,14 @@ function CopyablePath({ path }: { path: string }) {
 
   return (
     <Flex align="center" gap={1}>
-      <Box flex={1} style={{ minWidth: 0, overflowWrap: "anywhere" }}>
-        <Code size={1}>{path}</Code>
+      <Box flex={1} style={{ minWidth: 0 }}>
+        {/* Code renders a <pre>, which never wraps on its own */}
+        <Code
+          size={1}
+          style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}
+        >
+          {path}
+        </Code>
       </Box>
       <Button
         icon={CopyIcon}
