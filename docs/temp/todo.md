@@ -14,7 +14,6 @@
   - Origin/Referrer check
 - Header on mobile: booking button should always be there
 - Tight page cover + badge = collapse
-- preview icon in Sanity
 - Duplicate `#prices` anchor
   - Cause: `venuePrices` is in the shared `pageComponents` array, so any page
     can hold several. `apps/web/src/components/features/PageComponents.astro`
