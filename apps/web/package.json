@@ -3,7 +3,7 @@
   "type": "module",
   "private": true,
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=24.0.0"
   },
   "scripts": {
     "clean": "rm -rf .astro .wrangler dist node_modules",
@@ -15,7 +15,7 @@
     "build:ssr": "dotenvx run -f ../../.env.local -f ../../.env --env SSR_BUILD=true --env CLOUDFLARE_ENV=ssr -- astro build",
     "build": "pnpm build:static && pnpm build:ssr",
     "preview:static": "astro preview --outDir dist/static",
-    "deploy:static": "wrangler deploy -c ./wrangler.jsonc --env static && node ./scripts/submitIndexNow.js ./dist/static",
+    "deploy:static": "wrangler deploy -c ./wrangler.jsonc --env static && node ./scripts/submitIndexNow.ts ./dist/static",
     "deploy:ssr": "wrangler deploy -c ./dist/ssr/server/wrangler.json",
     "astro": "astro",
     "lint": "eslint . && pnpm lint:css",
