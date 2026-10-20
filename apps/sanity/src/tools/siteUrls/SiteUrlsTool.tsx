@@ -35,7 +35,14 @@ const LISTEN_QUERY = `*[_type in [
   "venueEvent",
   "gameFormat",
   "eventFormat",
-  "blogArticle"
+  "blogArticle",
+  "homepage",
+  "whereToFindUsPage",
+  "joinTheNetworkPage",
+  "globalGame",
+  "globalEvent",
+  "venuePage",
+  "venueCustomPage"
 ]]`;
 
 type Load<T> =
