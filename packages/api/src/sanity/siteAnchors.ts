@@ -28,7 +28,7 @@ function siteAnchorsQuery() {
         pageType in ["book", "gift"] =>
           coalesce(componentsBeforeWidget, []) + coalesce(componentsAfterWidget, []),
         coalesce(pageComponents, [])
-      )[_type == "venuePrices"]) > 0
+      )[_type in ["venuePrices", "gamePrices"]]) > 0
     }[hasPrices]{ _type, pageType, venueSlug, slug },
     "termsVenueSlugs": *[_type == "venue" && count(terms) > 0].slug.current
   }`);
