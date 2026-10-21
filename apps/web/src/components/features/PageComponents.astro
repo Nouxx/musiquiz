@@ -16,6 +16,7 @@ import ContactPanels from "@repo/ui/ContactPanels";
 import Offers from "@repo/ui/Offers";
 import Carousel from "@repo/ui/Carousel";
 import RollingBanner from "@repo/ui/RollingBanner";
+import { anchors } from "@repo/services/routing/anchors";
 import { getLang } from "../../libs/getLang";
 import { getT } from "../../libs/i18n";
 import Reviews from "@repo/ui/Reviews";
@@ -106,7 +107,7 @@ const t = getT(lang);
             }}
             cta={component.cta}
             footnote={component.footnote}
-            id="prices"
+            id={anchors.prices}
           />
         );
       }
@@ -321,6 +322,7 @@ const t = getT(lang);
             }}
             cta={component.cta}
             footnote={component.footnote}
+            id={anchors.prices}
           />
         );
       }

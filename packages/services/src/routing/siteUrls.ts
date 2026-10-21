@@ -47,7 +47,7 @@ export type VenueUrlInput = {
     | { provider: "none" };
 };
 
-/** a page that renders a venue prices component */
+/** a page that renders a prices component */
 export type PricesPage = {
   route: SiteUrlRoute;
   venueSlug?: string;

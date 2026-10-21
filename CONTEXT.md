@@ -126,7 +126,7 @@ The block at the top of every page — media (a photo, a looping video, or a gra
 _Avoid_: hero, banner, header, masthead
 
 **Page Component**:
-One entry in the ordered array an editor composes a page body from — a Rolling Banner or a Cards Grid today, more later. The array is the same shared dictionary on every content document, so a component written for one page works on all of them. Never a Widget: that word names the thing below, which no editor composes.
+One entry in the ordered array an editor composes a page body from — a Rolling Banner or a Cards Grid today, more later. The array is the same shared dictionary on every content document, so a component written for one page works on all of them. A page holds at most one prices block (Venue Prices or Game Prices), and the booking page exactly one Venue Prices, because the block anchors at `#prices` ([ADR 0031](./docs/adr/0031-one-prices-block-per-page.md)). Never a Widget: that word names the thing below, which no editor composes.
 _Avoid_: block, section, module, widget
 
 **Widget**:
