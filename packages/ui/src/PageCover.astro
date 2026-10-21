@@ -85,6 +85,11 @@ const style = {
 
   .sized {
     --cover-pad-block: var(--cover-spacing);
+
+    padding-block-start: max(
+      var(--cover-pad-block),
+      calc(var(--size-header) + var(--space-4))
+    );
   }
 
   /* three layers, top to bottom: the scrim (`::after`), the photo (the media
