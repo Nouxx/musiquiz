@@ -170,6 +170,9 @@
   --size-article: 64.75rem;
   --size-content-wide: 108rem;
 
+  /* Header.astro's fixed pill: top offset, padded 38px logo, gradient edge */
+  --size-header: calc(var(--space-4) + 4 * var(--space-2) + 1.375rem + 3px);
+
   /* the only z-indexes in the root stacking context, see docs/adr/0030 */
   --layer-popup: 10;
   --layer-header: 20;
