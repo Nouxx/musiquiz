@@ -44,3 +44,4 @@
 
 - is gifting widget/page required for all "hosted" venue?
 - what is the format of 4escape widget ids?
+- we trim the video to 15s, is this ok?
