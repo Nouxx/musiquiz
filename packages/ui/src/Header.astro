@@ -6,6 +6,7 @@ import IconChip from "./primitives/IconChip.astro";
 import MenuButton from "./primitives/MenuButton.astro";
 import RemoteImage from "./primitives/RemoteImage.astro";
 import { linkTarget } from "./lib/linkTarget";
+import logoMark from "./brand/logo-mark.svg?raw";
 import type { CtaLink, ImageSource, NavLink, NavMenu } from "./types";
 
 /**
@@ -57,6 +58,7 @@ const hasSocials = Astro.slots.has("socials");
   <div class="row">
     <div class="logo">
       <RemoteImage image={logo} variant="header-logo" loading="eager" />
+      <span class="mark" role="img" aria-label={logo.alt} set:html={logoMark} />
     </div>
 
     <div class="bar">
@@ -205,14 +207,21 @@ const hasSocials = Astro.slots.has("socials");
   }
 
   .logo {
-    position: relative;
     display: flex;
-    border-radius: var(--radius-pill);
   }
 
-  /* one pill drawn twice: the whole row on desktop, the logo alone when collapsed */
-  .row::before,
-  .logo::before {
+  .mark {
+    display: none;
+  }
+
+  /* the height of a size "m" Button, like the full logo */
+  .mark :global(svg) {
+    display: block;
+    width: auto;
+    height: calc(2 * var(--space-2) + 1rem * 1.375);
+  }
+
+  .row::before {
     position: absolute;
     inset: 0;
     z-index: -1;
@@ -222,8 +231,7 @@ const hasSocials = Astro.slots.has("socials");
     content: "";
   }
 
-  .row::after,
-  .logo::after {
+  .row::after {
     position: absolute;
     inset: 0 0 calc(-1 * var(--bar-edge)) 0;
 
@@ -251,6 +259,7 @@ const hasSocials = Astro.slots.has("socials");
     display: flex;
     gap: var(--space-2);
     align-items: center;
+    white-space: nowrap;
     list-style: none;
   }
 
@@ -286,14 +295,6 @@ const hasSocials = Astro.slots.has("socials");
   }
 
   /* 68rem = "header collapsed" */
-  @media (width >= 68rem) {
-    .logo::before,
-    .logo::after {
-      content: none;
-    }
-  }
-
-  /* 68rem = "header collapsed" */
   @media (width < 68rem) {
     .nav {
       display: none;
@@ -309,9 +310,12 @@ const hasSocials = Astro.slots.has("socials");
       content: none;
     }
 
-    .logo {
-      padding-block: var(--space-2);
-      padding-inline: var(--space-4);
+    .logo :global(.header-logo) {
+      display: none;
+    }
+
+    .mark {
+      display: block;
     }
 
     .bar {
@@ -320,14 +324,6 @@ const hasSocials = Astro.slots.has("socials");
 
     .burger {
       display: block;
-    }
-  }
-
-  /* 27rem = "header CTA dropped" */
-  @media (width < 27rem) {
-    /* the sheet behind the burger carries the same CTA, so nothing is lost */
-    .cta {
-      display: none;
     }
   }
 </style>

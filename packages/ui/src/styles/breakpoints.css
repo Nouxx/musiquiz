@@ -29,6 +29,9 @@
    content-driven needs JS (measure the row, compare against available
    width) — deliberately not done.
 
+   Below it the logo is the bare mark (no wordmark, no pill), so mark + CTA
+   + burger fit down to 320px: 272px of row for ~235px of content in French.
+
    ------------------------------------------------------------
    60rem — footer columns stacked / cover columns stacked
            / reviews columns stacked / venue prices columns stacked
@@ -157,18 +160,6 @@
    ------------------------------------------------------------
    Used by RemoteImage.astro for `footer-logo` (120px → 160px), in the
    stylesheet and in its `sizes` string. Figma step, no derivation recorded.
-
-   ------------------------------------------------------------
-   27rem — header CTA dropped
-   ------------------------------------------------------------
-   Used by Header.astro. Below it the collapsed header row stops fitting and
-   the row overflows the viewport, which shows as a band of page background
-   past the right edge on a phone.
-
-   Effect: every common phone width (320 to 414px) drops the CTA and keeps
-   only the logo pill + burger; 432px and up keep it. Booking stays reachable
-   below 27rem through the CTA that `MobileMenu` renders inside the burger
-   sheet.
 
    ------------------------------------------------------------
    45rem — popup logo dropped
