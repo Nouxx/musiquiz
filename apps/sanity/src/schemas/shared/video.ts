@@ -12,7 +12,7 @@ export const videoType = defineType({
       name: "file",
       title: "Video file",
       description:
-        "Plays muted and on a loop, without controls. MP4 only: convert any other format first. At most 15 seconds, under 15 MB. The site encodes its own lighter versions when it builds.",
+        "Plays muted and on a loop, without controls. MP4 only: convert any other format first. Under 15 MB. Only the first 15 seconds play on the site: a longer video is cut, so trim it yourself to choose which part plays.",
       type: "file",
       options: { accept: "video/mp4" },
       validation: (rule) =>

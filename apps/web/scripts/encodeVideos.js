@@ -15,8 +15,11 @@ import { ffmpegPath, isFfmpegAvailable } from "node-av/ffmpeg";
  */
 const run = promisify(execFile);
 
-// Workers Builds keeps Astro's cache directory between builds, nothing else of ours
-const CACHE = "./node_modules/.astro/video";
+const MAX_SECONDS = 15;
+
+// Workers Builds keeps Astro's cache directory between builds, nothing else of ours.
+// Encodes are keyed by asset only: a new encode setting needs a new directory
+const CACHE = `./node_modules/.astro/video-${MAX_SECONDS}s`;
 const OUT = "./src/generated/video";
 
 const MB = 1024 * 1024;
@@ -170,7 +173,10 @@ async function encode(video) {
   await pipeline(Readable.fromWeb(response.body), createWriteStream(source));
 
   // `V`, not `v`: skips a cover-art still, and the audio goes with every other stream
-  const input = ["-i", source, "-map", "0:V:0", "-vf", filters(profile)];
+  const input = [
+    ["-t", String(MAX_SECONDS), "-i", source],
+    ["-map", "0:V:0", "-vf", filters(profile)],
+  ].flat();
   // never heavier than the upload
   const kbps = Math.min(profile.maxKbps, await sourceKbps(source));
   await ffmpeg([...input, ...av1(kbps), ...COMMON, `${main}.tmp.mp4`]);
