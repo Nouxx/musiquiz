@@ -24,17 +24,14 @@
 - Translate UI to FR: https://www.sanity.io/docs/studio/localizing-studio-ui
 - Dev bug in sanity studio: menus disappears
 - Make Zod errors human readable in the build
-- Mobile header not looking good, to investigate
 - Carousel arrows under, not above
-- Footer mobile, weird line breaks
-- Top margin on mobile for booking page
 - Footer revamp: make a grid
   - also: the bottom line can have weird display
   - the copyright should be last in this situation
-- make the popup smaller
 
 ![](./bug_line_footer.png)
 
+- make the popup smaller
 - Titles and subTitle for some components (ex: cardsGrid) should have more horizontal space
 
 # Questions
