@@ -13,32 +13,20 @@
    siblings that must change with it.
 
    ------------------------------------------------------------
-   68rem — header collapsed
-   ------------------------------------------------------------
-   Measured, not picked: the widest row is the French one (4 links, the
-   longest being "Offrir une partie" and the "Nos expériences" menu), and
-   logo + nav + CTA + the row's padding and gaps + the `--space-6` gutters
-   stop fitting below 1059px. 68rem (1088px) adds ~30px on top, enough for
-   a classic scrollbar, which media queries count as viewport width.
-
-   The top-level labels are the locale strings in apps/web, not Sanity
-   content; the menus' entries sit in the dropdown and take no row width.
-   The menu buttons' inline padding is fluid (it grows as the viewport
-   narrows), so re-measure at the candidate width, not at a wide one.
-   Adding a link or lengthening a label moves this number. Making the flip
-   content-driven needs JS (measure the row, compare against available
-   width) — deliberately not done.
-
-   Below it the logo is the bare mark (no wordmark, no pill), so mark + CTA
-   + burger fit down to 320px: 272px of row for ~235px of content in French.
-
-   ------------------------------------------------------------
    60rem — footer columns stacked / cover columns stacked
            / reviews columns stacked / venue prices columns stacked
-           / TwoBlocks split
+           / TwoBlocks split / header collapsed
    ------------------------------------------------------------
    Used by footer/FooterColumn.astro and footer/FooterSection.astro.
    Figma step, no derivation recorded.
+
+   Header.astro collapses here too: picked in the browser, not measured.
+   The widest row is VenueHeader's in French. The labels are the locale
+   strings in apps/web and never wrap, so a row that stops fitting overflows
+   the viewport instead of growing. Adding a link or lengthening a label
+   means re-checking that row at 960px. Below 60rem the logo is the bare
+   mark (no wordmark, no pill), so mark + CTA + burger fit down to 320px:
+   272px of row for ~235px of content in French.
 
    Reviews.astro lands on the same number for its text-column / track row.
    Reused rather than derived: it is the same decision those two make, and at
