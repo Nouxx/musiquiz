@@ -195,5 +195,6 @@ export async function fetchBlogArticlePage({
     query: blogArticlePageQuery({ slug }),
     schema: sanityBlogArticlePageSchema,
     config,
+    lang,
   });
 }

@@ -69,5 +69,6 @@ export async function fetchVenueWidgetPage({
     query: venueWidgetPageQuery({ lang, venueSlug, pageType }),
     schema: sanityVenueWidgetPageSchema,
     config,
+    lang,
   });
 }

@@ -30,6 +30,130 @@ describe("parseSanityData", () => {
     );
   });
 
+  it("binds French punctuation in every nested string", () => {
+    const data = {
+      page: { title: "Lille !", sections: [{ heading: "Prêt ?" }] },
+    };
+
+    expect(
+      parseSanityData({ queryName: "testPage", schema, data, lang: "fr" }),
+    ).toEqual({
+      page: {
+        title: "Lille\u{202F}!",
+        sections: [{ heading: "Prêt\u{202F}?" }],
+      },
+    });
+  });
+
+  it("binds the label but leaves destinations untouched", () => {
+    const ctaSchema = z.strictObject({
+      cta: z.strictObject({ label: z.string(), url: z.string() }),
+      body: z.array(
+        z.strictObject({
+          text: z.string(),
+          markDefs: z.array(z.strictObject({ href: z.string() })),
+        }),
+      ),
+      mapsUrl: z.string(),
+      note: z.string(),
+    });
+    const data = {
+      cta: {
+        label: "Prêt ?",
+        url: "https://example.test/docs/Quiz !.pdf",
+      },
+      body: [
+        {
+          text: "Voir le guide !",
+          markDefs: [{ href: "https://example.test/Quiz !.pdf" }],
+        },
+      ],
+      mapsUrl: "maps.example.test/Lille !",
+      note: "/docs/Quiz !.pdf",
+    };
+
+    expect(
+      parseSanityData({
+        queryName: "testPage",
+        schema: ctaSchema,
+        data,
+        lang: "fr",
+      }),
+    ).toEqual({
+      cta: {
+        label: "Prêt\u{202F}?",
+        url: "https://example.test/docs/Quiz !.pdf",
+      },
+      body: [
+        {
+          text: "Voir le guide\u{202F}!",
+          markDefs: [{ href: "https://example.test/Quiz !.pdf" }],
+        },
+      ],
+      mapsUrl: "maps.example.test/Lille !",
+      note: "/docs/Quiz !.pdf",
+    });
+  });
+
+  it("binds punctuation split across rich-text spans", () => {
+    const blockSchema = z.strictObject({
+      body: z.array(
+        z.strictObject({
+          _type: z.literal("block"),
+          style: z.literal("normal"),
+          children: z.array(
+            z.strictObject({
+              _type: z.literal("span"),
+              text: z.string(),
+              marks: z.array(z.string()),
+            }),
+          ),
+          markDefs: z.array(
+            z.strictObject({ _key: z.string(), href: z.string() }),
+          ),
+        }),
+      ),
+    });
+    const data = {
+      body: [
+        {
+          _type: "block" as const,
+          style: "normal" as const,
+          children: [
+            { _type: "span" as const, text: "Prêt à jouer ", marks: [] },
+            { _type: "span" as const, text: "?", marks: ["strong"] },
+            { _type: "span" as const, text: " Voir le guide ", marks: ["a1"] },
+            { _type: "span" as const, text: "!", marks: [] },
+          ],
+          markDefs: [{ _key: "a1", href: "https://example.test/Quiz !.pdf" }],
+        },
+      ],
+    };
+
+    const [block] = parseSanityData({
+      queryName: "testPage",
+      schema: blockSchema,
+      data,
+      lang: "fr",
+    }).body;
+
+    expect(block?.children).toEqual([
+      { _type: "span", text: "Prêt à jouer\u{202F}", marks: [] },
+      { _type: "span", text: "?", marks: ["strong"] },
+      { _type: "span", text: " Voir le guide\u{202F}", marks: ["a1"] },
+      { _type: "span", text: "!", marks: [] },
+    ]);
+    expect(block?.markDefs).toEqual(data.body[0]?.markDefs);
+  });
+
+  it("leaves other languages untouched", () => {
+    const data = { page: { title: "Lille !", sections: [] } };
+
+    expect(
+      parseSanityData({ queryName: "testPage", schema, data, lang: "en" }),
+    ).toEqual(data);
+  });
+
   it("reports a parse error with the path of each broken field", () => {
     const error = parseError({
       page: { title: "Lille", sections: [{ heading: 1 }] },

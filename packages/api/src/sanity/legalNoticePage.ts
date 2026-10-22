@@ -40,5 +40,6 @@ export async function fetchLegalNoticePage({
     query: legalNoticePageQuery({ lang }),
     schema: sanityLegalNoticePageSchema,
     config,
+    lang,
   });
 }

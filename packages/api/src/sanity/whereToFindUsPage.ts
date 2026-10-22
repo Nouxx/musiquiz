@@ -67,5 +67,6 @@ export async function fetchWhereToFindUsPage({
     query: whereToFindUsPageQuery({ lang }),
     schema: sanityWhereToFindUsPageSchema,
     config,
+    lang,
   });
 }

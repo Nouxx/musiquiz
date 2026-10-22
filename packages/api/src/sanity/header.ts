@@ -67,5 +67,6 @@ export async function fetchHeader({
     query: headerQuery({ lang }),
     schema: sanityHeaderSchema,
     config,
+    lang,
   });
 }

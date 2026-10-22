@@ -57,5 +57,6 @@ export async function fetchGlobalEventPage({
     query: globalEventPageQuery({ lang, eventSlug }),
     schema: sanityGlobalEventPageSchema,
     config,
+    lang,
   });
 }

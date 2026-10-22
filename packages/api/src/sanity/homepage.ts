@@ -60,5 +60,6 @@ export async function fetchHomepage({
     query: homepageQuery({ lang }),
     schema: sanityHomepageSchema,
     config,
+    lang,
   });
 }

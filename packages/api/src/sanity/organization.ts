@@ -46,5 +46,6 @@ export async function fetchOrganization({ config }: { config: SanityConfig }) {
     query: organizationQuery(),
     schema: sanityOrganizationSchema,
     config,
+    lang,
   });
 }
