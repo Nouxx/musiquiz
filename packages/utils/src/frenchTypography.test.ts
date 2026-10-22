@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { frenchTypography } from "./frenchTypography";
+import { frenchTypography, frenchTypographySpans } from "./frenchTypography";
 
 const NNBSP = "\u{202F}";
 
@@ -34,5 +34,37 @@ describe("frenchTypography", () => {
 
   it("handles every occurrence", () => {
     expect(frenchTypography("Quoi ? Où !")).toBe(`Quoi${NNBSP}? Où${NNBSP}!`);
+  });
+});
+
+describe("frenchTypographySpans", () => {
+  it("binds punctuation opening the next span", () => {
+    expect(frenchTypographySpans(["Prêt à jouer ", "?"])).toEqual([
+      `Prêt à jouer${NNBSP}`,
+      "?",
+    ]);
+  });
+
+  it("binds a guillemet closing the previous span", () => {
+    expect(frenchTypographySpans(["«", " Musi'Quiz »"])).toEqual([
+      "«",
+      `${NNBSP}Musi'Quiz${NNBSP}»`,
+    ]);
+  });
+
+  it("binds across an empty span", () => {
+    expect(frenchTypographySpans(["vous ", "", "!"])).toEqual([
+      `vous${NNBSP}`,
+      "",
+      "!",
+    ]);
+  });
+
+  it("keeps every span its length", () => {
+    const spans = ["Quoi ? ", "Où", " !"];
+
+    expect(frenchTypographySpans(spans).map((span) => span.length)).toEqual(
+      spans.map((span) => span.length),
+    );
   });
 });

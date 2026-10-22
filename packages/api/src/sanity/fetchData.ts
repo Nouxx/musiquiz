@@ -1,4 +1,7 @@
-import { frenchTypography } from "@repo/utils/frenchTypography";
+import {
+  frenchTypography,
+  frenchTypographySpans,
+} from "@repo/utils/frenchTypography";
 import type { Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 import { SanityQueryError } from "@repo/utils/sanityQueryError";
@@ -34,12 +37,43 @@ function isDestination(key: string | undefined, value: string) {
   );
 }
 
+type SpanBlock = { _type: "block"; children: { text: string }[] };
+
+function isSpanBlock(value: object): value is SpanBlock {
+  return (
+    "_type" in value &&
+    value._type === "block" &&
+    "children" in value &&
+    Array.isArray(value.children) &&
+    value.children.every(
+      (child: unknown) =>
+        typeof child === "object" &&
+        child !== null &&
+        "text" in child &&
+        typeof child.text === "string",
+    )
+  );
+}
+
 function applyTypography<T>(value: T, key?: string): T {
   if (typeof value === "string") {
     return (isDestination(key, value) ? value : frenchTypography(value)) as T;
   }
   if (Array.isArray(value)) {
     return value.map((item) => applyTypography(item, key)) as T;
+  }
+  // spans render side by side, so a space ending one span binds to the `?` opening the next
+  if (value && typeof value === "object" && isSpanBlock(value)) {
+    const texts = frenchTypographySpans(
+      value.children.map((child) => child.text),
+    );
+    return {
+      ...value,
+      children: value.children.map((child, index) => ({
+        ...child,
+        text: texts[index],
+      })),
+    } as T;
   }
   if (value && typeof value === "object") {
     return Object.fromEntries(

@@ -95,6 +95,57 @@ describe("parseSanityData", () => {
     });
   });
 
+  it("binds punctuation split across rich-text spans", () => {
+    const blockSchema = z.strictObject({
+      body: z.array(
+        z.strictObject({
+          _type: z.literal("block"),
+          style: z.literal("normal"),
+          children: z.array(
+            z.strictObject({
+              _type: z.literal("span"),
+              text: z.string(),
+              marks: z.array(z.string()),
+            }),
+          ),
+          markDefs: z.array(
+            z.strictObject({ _key: z.string(), href: z.string() }),
+          ),
+        }),
+      ),
+    });
+    const data = {
+      body: [
+        {
+          _type: "block" as const,
+          style: "normal" as const,
+          children: [
+            { _type: "span" as const, text: "Prêt à jouer ", marks: [] },
+            { _type: "span" as const, text: "?", marks: ["strong"] },
+            { _type: "span" as const, text: " Voir le guide ", marks: ["a1"] },
+            { _type: "span" as const, text: "!", marks: [] },
+          ],
+          markDefs: [{ _key: "a1", href: "https://example.test/Quiz !.pdf" }],
+        },
+      ],
+    };
+
+    const [block] = parseSanityData({
+      queryName: "testPage",
+      schema: blockSchema,
+      data,
+      lang: "fr",
+    }).body;
+
+    expect(block?.children).toEqual([
+      { _type: "span", text: "Prêt à jouer\u{202F}", marks: [] },
+      { _type: "span", text: "?", marks: ["strong"] },
+      { _type: "span", text: " Voir le guide\u{202F}", marks: ["a1"] },
+      { _type: "span", text: "!", marks: [] },
+    ]);
+    expect(block?.markDefs).toEqual(data.body[0]?.markDefs);
+  });
+
   it("leaves other languages untouched", () => {
     const data = { page: { title: "Lille !", sections: [] } };
 
