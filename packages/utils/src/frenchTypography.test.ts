@@ -33,8 +33,6 @@ describe("frenchTypography", () => {
   });
 
   it("handles every occurrence", () => {
-    expect(frenchTypography("Quoi ? Où !")).toBe(
-      `Quoi${NNBSP}? Où${NNBSP}!`,
-    );
+    expect(frenchTypography("Quoi ? Où !")).toBe(`Quoi${NNBSP}? Où${NNBSP}!`);
   });
 });
