@@ -22,7 +22,7 @@ export const termsAndConditionsPageType = defineType({
       group: "content",
       title: "Intro",
       description:
-        "Shown between the list of venues and the first venue's terms: what a visitor should do when their venue is not listed. Paragraphs, bold and links, nothing else.",
+        "Shown between the list of venues and the first venue's terms: what a visitor should do when their venue is not listed. Paragraphs, text styles and links, nothing else. Shift+Enter breaks the line without starting a paragraph.",
       type: "internationalizedArrayRichText",
       validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),

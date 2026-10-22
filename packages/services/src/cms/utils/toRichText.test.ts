@@ -63,7 +63,7 @@ it("carries both marks on one span", () => {
 
 it("leaves a span alone when a mark matches no markDef", () => {
   const [paragraph] = toRichText([
-    block([{ text: "peut-être", marks: ["em"] }]),
+    block([{ text: "peut-être", marks: ["c3d4"] }]),
   ]);
 
   expect(paragraph?.spans[0]).toEqual({
@@ -71,4 +71,40 @@ it("leaves a span alone when a mark matches no markDef", () => {
     bold: undefined,
     href: undefined,
   });
+});
+
+it("reads the em, underline and strike-through decorators", () => {
+  const [paragraph] = toRichText([
+    block([
+      { text: "25€", marks: ["strike-through"] },
+      { text: " 20€", marks: ["em", "underline"] },
+    ]),
+  ]);
+
+  expect(paragraph?.spans).toMatchObject([
+    { strike: true, italic: undefined, underline: undefined },
+    { strike: undefined, italic: true, underline: true },
+  ]);
+});
+
+it("collapses a run of line breaks into one", () => {
+  const [paragraph] = toRichText([
+    block([{ text: "Le jour J.\n \n\nChaque salle", marks: [] }]),
+  ]);
+
+  expect(paragraph?.spans[0]?.text).toBe("Le jour J.\nChaque salle");
+});
+
+it("drops line breaks at the edges of a paragraph", () => {
+  const [paragraph] = toRichText([
+    block([
+      { text: "\nRéservez\n", marks: [] },
+      { text: "\nmaintenant\n", marks: ["strong"] },
+    ]),
+  ]);
+
+  expect(paragraph?.spans.map((span) => span.text)).toEqual([
+    "Réservez\n",
+    "\nmaintenant",
+  ]);
 });

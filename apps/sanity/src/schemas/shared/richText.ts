@@ -1,6 +1,13 @@
 import { defineArrayMember, defineField } from "sanity";
 import { trailingSlashWarning } from "./trailingSlashWarning";
 
+export const richTextDecorators = [
+  { title: "Bold", value: "strong" },
+  { title: "Italic", value: "em" },
+  { title: "Underline", value: "underline" },
+  { title: "Strikethrough", value: "strike-through" },
+];
+
 export const richTextFieldType = defineField({
   name: "richText",
   title: "Rich text",
@@ -11,7 +18,7 @@ export const richTextFieldType = defineField({
       styles: [{ title: "Paragraph", value: "normal" }],
       lists: [],
       marks: {
-        decorators: [{ title: "Bold", value: "strong" }],
+        decorators: richTextDecorators,
         annotations: [
           defineArrayMember({
             name: "link",

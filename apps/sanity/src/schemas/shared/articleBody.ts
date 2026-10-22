@@ -4,6 +4,7 @@ import {
   defineType,
   type PortableTextPluginsProps,
 } from "sanity";
+import { richTextDecorators } from "./richText";
 
 const linkAnnotation = defineArrayMember({
   name: "link",
@@ -78,7 +79,7 @@ export const articleTableType = defineType({
                           styles: [{ title: "Paragraph", value: "normal" }],
                           lists: [],
                           marks: {
-                            decorators: [{ title: "Bold", value: "strong" }],
+                            decorators: richTextDecorators,
                             annotations: [linkAnnotation],
                           },
                         }),
@@ -116,7 +117,7 @@ export const articleBodyType = defineType({
       ],
       lists: [{ title: "Bullets", value: "bullet" }],
       marks: {
-        decorators: [{ title: "Bold", value: "strong" }],
+        decorators: richTextDecorators,
         annotations: [linkAnnotation],
       },
     }),
