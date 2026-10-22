@@ -12,7 +12,6 @@
   - honey pot
   - rate limiting by IP
   - Origin/Referrer check
-- Pour la version mobile, est-ce qu’il est possible pour les onglets Défis / Jokers / Thèmes de les centrer quand c’est retour à la ligne et sur les tarifs activités, on peut pas trouver un Moyer de les mettre sur une ligne quand il n’y en a que 2 ?
 - TextBlock: Quand on veut un retour à la ligne, ça marche pas dans le rendu. Comme si l’équivalent de <br> ne fonctionnait pas. On peut aller à la ligne mais en ayant un grand espace (l’équivalent de <p> j’imagine).
   - On n’a pas de mise en forme dispo à part le bold. Pas d’italique, ni souligné, ni barré (on s’en sert pas tous les jours mais parfois ça peut servir)
 
@@ -43,3 +42,4 @@
 - is gifting widget/page required for all "hosted" venue?
 - what is the format of 4escape widget ids?
 - we trim the video to 15s, is this ok?
+- to explain: "- Pour la version mobile, est-ce qu’il est possible pour les onglets Défis / Jokers / Thèmes de les centrer quand c’est retour à la ligne et sur les tarifs activités, on peut pas trouver un Moyer de les mettre sur une ligne quand il n’y en a que 2 ?"
