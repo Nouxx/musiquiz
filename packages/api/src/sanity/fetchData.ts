@@ -15,15 +15,37 @@ function formatPath(path: PropertyKey[]) {
   return formatted;
 }
 
-function applyTypography<T>(value: T): T {
-  if (typeof value === "string") return frenchTypography(value) as T;
-  if (Array.isArray(value))
-    return value.map((item) => applyTypography(item)) as T;
+// a no-break space in a destination changes the request, `%20` becomes `%E2%80%AF`
+const DESTINATION_KEY = /url|href|link|slug|email|phone/i;
+const DESTINATION_PREFIXES = [
+  "/",
+  "#",
+  "http://",
+  "https://",
+  "mailto:",
+  "tel:",
+  "www.",
+];
+
+function isDestination(key: string | undefined, value: string) {
+  return (
+    (key !== undefined && DESTINATION_KEY.test(key)) ||
+    DESTINATION_PREFIXES.some((prefix) => value.startsWith(prefix))
+  );
+}
+
+function applyTypography<T>(value: T, key?: string): T {
+  if (typeof value === "string") {
+    return (isDestination(key, value) ? value : frenchTypography(value)) as T;
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => applyTypography(item, key)) as T;
+  }
   if (value && typeof value === "object") {
     return Object.fromEntries(
-      Object.entries(value).map(([key, entry]) => [
-        key,
-        applyTypography(entry),
+      Object.entries(value).map(([entryKey, entry]) => [
+        entryKey,
+        applyTypography(entry, entryKey),
       ]),
     ) as T;
   }

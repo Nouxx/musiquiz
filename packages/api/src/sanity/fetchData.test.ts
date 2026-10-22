@@ -45,6 +45,56 @@ describe("parseSanityData", () => {
     });
   });
 
+  it("binds the label but leaves destinations untouched", () => {
+    const ctaSchema = z.strictObject({
+      cta: z.strictObject({ label: z.string(), url: z.string() }),
+      body: z.array(
+        z.strictObject({
+          text: z.string(),
+          markDefs: z.array(z.strictObject({ href: z.string() })),
+        }),
+      ),
+      mapsUrl: z.string(),
+      note: z.string(),
+    });
+    const data = {
+      cta: {
+        label: "Prêt ?",
+        url: "https://example.test/docs/Quiz !.pdf",
+      },
+      body: [
+        {
+          text: "Voir le guide !",
+          markDefs: [{ href: "https://example.test/Quiz !.pdf" }],
+        },
+      ],
+      mapsUrl: "maps.example.test/Lille !",
+      note: "/docs/Quiz !.pdf",
+    };
+
+    expect(
+      parseSanityData({
+        queryName: "testPage",
+        schema: ctaSchema,
+        data,
+        lang: "fr",
+      }),
+    ).toEqual({
+      cta: {
+        label: "Prêt\u{202F}?",
+        url: "https://example.test/docs/Quiz !.pdf",
+      },
+      body: [
+        {
+          text: "Voir le guide\u{202F}!",
+          markDefs: [{ href: "https://example.test/Quiz !.pdf" }],
+        },
+      ],
+      mapsUrl: "maps.example.test/Lille !",
+      note: "/docs/Quiz !.pdf",
+    });
+  });
+
   it("leaves other languages untouched", () => {
     const data = { page: { title: "Lille !", sections: [] } };
 

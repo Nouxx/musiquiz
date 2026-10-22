@@ -58,7 +58,12 @@ export const ctaType = defineType({
             return invalid?.length
               ? "Start with / for a page of this site, # for a section of this page, or https:// for another site"
               : true;
-          }),
+          })
+          .custom((entries?: LocalizedEntry[]) =>
+            entries?.some((entry) => entry.value && /\s/.test(entry.value))
+              ? "Remove the spaces: a URL never contains one, encode it as %20 if the address really has it"
+              : true,
+          ),
     }),
   ],
   preview: {
