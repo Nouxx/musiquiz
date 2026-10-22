@@ -25,7 +25,7 @@
     "@sanity/ui": "^3.4.5",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "sanity": "^6.6.0",
+    "sanity": "^6.20.0",
     "sanity-plugin-internationalized-array": "^5.1.22",
     "styled-components": "^6.1.18"
   },
