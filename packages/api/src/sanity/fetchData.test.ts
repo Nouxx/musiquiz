@@ -30,6 +30,19 @@ describe("parseSanityData", () => {
     );
   });
 
+  it("binds French punctuation in every nested string", () => {
+    const data = {
+      page: { title: "Lille !", sections: [{ heading: "Prêt ?" }] },
+    };
+
+    expect(parseSanityData({ queryName: "testPage", schema, data })).toEqual({
+      page: {
+        title: "Lille !",
+        sections: [{ heading: "Prêt ?" }],
+      },
+    });
+  });
+
   it("reports a parse error with the path of each broken field", () => {
     const error = parseError({
       page: { title: "Lille", sections: [{ heading: 1 }] },

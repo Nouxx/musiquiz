@@ -1,3 +1,4 @@
+import { frenchTypography } from "@repo/utils/frenchTypography";
 import type { Lang } from "@repo/utils/lang";
 import i18next from "i18next";
 
@@ -15,7 +16,14 @@ const LANGUAGES: Lang[] = ["fr", "en"];
 function createI18nInstance() {
   const instance = i18next.createInstance();
 
+  instance.use({
+    type: "postProcessor",
+    name: "frenchTypography",
+    process: frenchTypography,
+  });
+
   instance.init({
+    postProcess: ["frenchTypography"],
     lng: "fr",
     fallbackLng: "fr",
     // cspell:ignore Lngs

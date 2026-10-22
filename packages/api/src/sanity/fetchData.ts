@@ -1,3 +1,4 @@
+import { frenchTypography } from "@repo/utils/frenchTypography";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 import { SanityQueryError } from "@repo/utils/sanityQueryError";
 import type { z } from "zod";
@@ -11,6 +12,21 @@ function formatPath(path: PropertyKey[]) {
     else formatted += formatted ? `.${String(segment)}` : String(segment);
   }
   return formatted;
+}
+
+function applyTypography<T>(value: T): T {
+  if (typeof value === "string") return frenchTypography(value) as T;
+  if (Array.isArray(value))
+    return value.map((item) => applyTypography(item)) as T;
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entry]) => [
+        key,
+        applyTypography(entry),
+      ]),
+    ) as T;
+  }
+  return value;
 }
 
 export function parseSanityData<TSchema extends z.ZodType>({
@@ -28,7 +44,7 @@ export function parseSanityData<TSchema extends z.ZodType>({
 
   const result = schema.safeParse(data);
 
-  if (result.success) return result.data;
+  if (result.success) return applyTypography(result.data);
 
   const issues = result.error.issues.map((issue) => ({
     path: formatPath(issue.path),

@@ -13,6 +13,13 @@ h6 {
   font: inherit;
 }
 
+h1,
+h2,
+h3 {
+  /* eslint-disable-next-line css/use-baseline -- progressive enhancement, unsupported browsers wrap as before */
+  text-wrap: balance;
+}
+
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
