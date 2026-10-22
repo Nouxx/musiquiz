@@ -45,5 +45,6 @@ export async function fetchJoinTheNetworkPage({
     query: joinTheNetworkPageQuery({ lang }),
     schema: sanityJoinTheNetworkPageSchema,
     config,
+    lang,
   });
 }

@@ -64,5 +64,6 @@ export async function fetchVenuePopup({
     query: venuePopupQuery({ lang, venueSlug }),
     schema: sanityVenuePopupSchema,
     config,
+    lang,
   });
 }

@@ -61,5 +61,6 @@ export async function fetchVenueEventPage({
     query: venueEventPageQuery({ lang, venueSlug, eventSlug }),
     schema: sanityVenueEventPageSchema,
     config,
+    lang,
   });
 }

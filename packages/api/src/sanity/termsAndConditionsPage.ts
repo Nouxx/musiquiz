@@ -66,5 +66,6 @@ export async function fetchTermsAndConditionsPage({
     query: termsAndConditionsPageQuery({ lang }),
     schema: sanityTermsAndConditionsPageSchema,
     config,
+    lang,
   });
 }

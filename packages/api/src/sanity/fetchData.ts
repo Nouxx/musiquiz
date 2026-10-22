@@ -1,4 +1,5 @@
 import { frenchTypography } from "@repo/utils/frenchTypography";
+import type { Lang } from "@repo/utils/lang";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 import { SanityQueryError } from "@repo/utils/sanityQueryError";
 import type { z } from "zod";
@@ -33,10 +34,12 @@ export function parseSanityData<TSchema extends z.ZodType>({
   queryName,
   schema,
   data,
+  lang,
 }: {
   queryName: string;
   schema: TSchema;
   data: unknown;
+  lang?: Lang;
 }): z.infer<TSchema> {
   if (!data) {
     throw new SanityQueryError({ kind: "empty", queryName, issues: [] });
@@ -44,7 +47,9 @@ export function parseSanityData<TSchema extends z.ZodType>({
 
   const result = schema.safeParse(data);
 
-  if (result.success) return applyTypography(result.data);
+  if (result.success) {
+    return lang === "fr" ? applyTypography(result.data) : result.data;
+  }
 
   const issues = result.error.issues.map((issue) => ({
     path: formatPath(issue.path),
@@ -70,15 +75,17 @@ export async function fetchSanityData<TSchema extends z.ZodType>({
   query,
   schema,
   config,
+  lang,
 }: {
   queryName: string;
   query: string;
   schema: TSchema;
   config: SanityConfig;
+  lang?: Lang;
 }): Promise<z.infer<TSchema>> {
   const sanityClient = getSanityClient({ config });
 
   const data: unknown = await sanityClient.fetch(query);
 
-  return parseSanityData({ queryName, schema, data });
+  return parseSanityData({ queryName, schema, data, lang });
 }

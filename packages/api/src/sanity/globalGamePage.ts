@@ -57,5 +57,6 @@ export async function fetchGlobalGamePage({
     query: globalGamePageQuery({ lang, gameSlug }),
     schema: sanityGlobalGamePageSchema,
     config,
+    lang,
   });
 }

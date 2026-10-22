@@ -107,5 +107,6 @@ export async function fetchLlmsTxt({ config }: { config: SanityConfig }) {
     query: llmsTxtQuery(),
     schema: sanityLlmsTxtSchema,
     config,
+    lang,
   });
 }

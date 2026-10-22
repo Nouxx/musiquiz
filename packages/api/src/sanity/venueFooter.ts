@@ -103,5 +103,6 @@ export async function fetchVenueFooter({
     query: venueFooterQuery({ lang, venueSlug }),
     schema: sanityVenueFooterSchema,
     config,
+    lang,
   });
 }

@@ -19,7 +19,9 @@ function createI18nInstance() {
   instance.use({
     type: "postProcessor",
     name: "frenchTypography",
-    process: frenchTypography,
+    process(value: string, _key: string[], options: { lng?: string }) {
+      return options.lng === "fr" ? frenchTypography(value) : value;
+    },
   });
 
   instance.init({

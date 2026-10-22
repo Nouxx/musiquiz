@@ -99,5 +99,6 @@ export async function fetchVenueHeader({
     query: venueHeaderQuery({ lang, venueSlug }),
     schema: sanityVenueHeaderSchema,
     config,
+    lang,
   });
 }

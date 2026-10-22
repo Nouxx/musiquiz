@@ -64,5 +64,6 @@ export async function fetchFooter({
     query: footerQuery({ lang }),
     schema: sanityFooterSchema,
     config,
+    lang,
   });
 }

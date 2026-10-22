@@ -57,5 +57,6 @@ export async function fetchGlobalBookingPage({
     query: globalBookingPageQuery({ lang }),
     schema: sanityGlobalBookingPageSchema,
     config,
+    lang,
   });
 }

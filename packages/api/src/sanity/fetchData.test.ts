@@ -35,12 +35,22 @@ describe("parseSanityData", () => {
       page: { title: "Lille !", sections: [{ heading: "Prêt ?" }] },
     };
 
-    expect(parseSanityData({ queryName: "testPage", schema, data })).toEqual({
+    expect(
+      parseSanityData({ queryName: "testPage", schema, data, lang: "fr" }),
+    ).toEqual({
       page: {
-        title: "Lille !",
-        sections: [{ heading: "Prêt ?" }],
+        title: "Lille\u{202F}!",
+        sections: [{ heading: "Prêt\u{202F}?" }],
       },
     });
+  });
+
+  it("leaves other languages untouched", () => {
+    const data = { page: { title: "Lille !", sections: [] } };
+
+    expect(
+      parseSanityData({ queryName: "testPage", schema, data, lang: "en" }),
+    ).toEqual(data);
   });
 
   it("reports a parse error with the path of each broken field", () => {

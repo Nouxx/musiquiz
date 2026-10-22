@@ -61,5 +61,6 @@ export async function fetchVenueGamePage({
     query: venueGamePageQuery({ lang, venueSlug, gameSlug }),
     schema: sanityVenueGamePageSchema,
     config,
+    lang,
   });
 }

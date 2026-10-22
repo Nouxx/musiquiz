@@ -85,5 +85,6 @@ export async function fetchContactPage({
     query: contactPageQuery({ lang }),
     schema: sanityContactPageSchema,
     config,
+    lang,
   });
 }

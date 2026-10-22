@@ -54,5 +54,6 @@ export async function fetchBlogPage({ config }: { config: SanityConfig }) {
     query: blogPageQuery(),
     schema: sanityBlogPageSchema,
     config,
+    lang,
   });
 }
