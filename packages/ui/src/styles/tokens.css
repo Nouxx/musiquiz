@@ -250,6 +250,11 @@
   --color-border-green: var(--green-900);
   --color-text-on-green: var(--black);
 
+  /* the colour sheet has no yellow gradient, so the fill is the flat 600 */
+  --color-fill-yellow: var(--yellow-600);
+  --color-border-yellow: var(--yellow-900);
+  --color-text-on-yellow: var(--black);
+
   --color-fill-light: var(--white);
 
   --color-fill-muted: var(--grey-200);

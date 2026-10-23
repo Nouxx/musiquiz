@@ -4,7 +4,7 @@ import Text from "./Text.astro";
 import Icon from "./Icon.astro";
 import type { IconName } from "../lib/icons";
 
-type Tone = "red" | "blue" | "green" | "light";
+type Tone = "red" | "blue" | "green" | "yellow" | "light";
 
 type Size = "l" | "m" | "s";
 
@@ -169,6 +169,12 @@ const textVariant = size === "s" ? "title-s" : "title-base";
     --button-fill: var(--color-fill-green);
     --button-border: var(--color-border-green);
     --button-text: var(--color-text-on-green);
+  }
+
+  .yellow {
+    --button-fill: var(--color-fill-yellow);
+    --button-border: var(--color-border-yellow);
+    --button-text: var(--color-text-on-yellow);
   }
 
   .light {

@@ -8,10 +8,22 @@ import {
 
 type State = "submit" | "pending" | "success" | "failure";
 
-function showState(nodes: HTMLElement[], state: State) {
+function showState({
+  submit,
+  nodes,
+  state,
+}: {
+  submit: HTMLButtonElement;
+  nodes: HTMLElement[];
+  state: State;
+}) {
   for (const node of nodes) {
     node.hidden = node.dataset.state !== state;
   }
+
+  // the tones are `Button`'s own classes; both at once and the later rule wins
+  submit.classList.toggle("red", state !== "failure");
+  submit.classList.toggle("yellow", state === "failure");
 }
 
 class MusiquizNewsletterForm extends HTMLElement {
@@ -69,7 +81,7 @@ class MusiquizNewsletterForm extends HTMLElement {
       const data = new FormData(form);
 
       submit.disabled = true;
-      showState(stateNodes, "pending");
+      showState({ submit, nodes: stateNodes, state: "pending" });
 
       const sent = await postPayload({
         workerUrl,
@@ -83,12 +95,12 @@ class MusiquizNewsletterForm extends HTMLElement {
       if (sent) {
         // a finished form should not be able to send a second copy
         fields.disabled = true;
-        showState(stateNodes, "success");
+        showState({ submit, nodes: stateNodes, state: "success" });
         trackLead({ formName: "newsletter", venue: venueSlug });
       } else {
         // the button stays live so a second click retries
         submit.disabled = false;
-        showState(stateNodes, "failure");
+        showState({ submit, nodes: stateNodes, state: "failure" });
       }
     });
   }
