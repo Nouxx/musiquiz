@@ -135,10 +135,7 @@ const { widgetId, settings, anchor } = Astro.props;
     padding: var(--f-radiogroup-option-border-width);
     background: var(--selected-ring);
     border: 0;
-    border-radius: calc(
-      var(--f-radiogroup-option-border-radius) +
-        var(--f-radiogroup-option-border-width)
-    );
+    border-radius: var(--f-radiogroup-option-border-radius);
     mask:
       linear-gradient(#000 0 0) content-box,
       linear-gradient(#000 0 0);
@@ -167,8 +164,27 @@ const { widgetId, settings, anchor } = Astro.props;
     font: var(--title-h2);
   }
 
-  /* the option label is drawn as the design system's badge */
-  .forescape.forescape.forescape .f-radiogroup-option-label {
+  /* the widget rings the focused option, which a click also focuses, so a
+     selection got two rings; keyboard focus keeps one, the site's own */
+  .forescape.forescape.forescape .f-radiogroup-option--active {
+    box-shadow: none;
+  }
+
+  .forescape.forescape.forescape .f-radiogroup-option:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  /* the ring already marks the selection */
+  .forescape.forescape.forescape .f-radiogroup-option .f-icon {
+    display: none;
+  }
+
+  /* only a priced option's label is drawn as the design system's badge; on
+     the others it is the whole content and reads as a nested field */
+  .forescape.forescape.forescape
+    .f-radiogroup-option:has(.f-radiogroup-option-price)
+    .f-radiogroup-option-label {
     position: relative;
     align-self: start;
     padding: var(--space-2) var(--space-5);
@@ -177,7 +193,9 @@ const { widgetId, settings, anchor } = Astro.props;
     border-radius: var(--radius-l);
   }
 
-  .forescape.forescape.forescape .f-radiogroup-option-label::before {
+  .forescape.forescape.forescape
+    .f-radiogroup-option:has(.f-radiogroup-option-price)
+    .f-radiogroup-option-label::before {
     position: absolute;
     inset: 0;
     padding: 2px;
