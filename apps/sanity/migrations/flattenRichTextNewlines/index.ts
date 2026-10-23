@@ -11,16 +11,25 @@ function isBlock(value: unknown): value is Block {
   );
 }
 
-function isBlankBlock(block: Block) {
-  return (block.children ?? []).every((span) => !span.text?.trim());
+// an empty paragraph without a newline is spacing someone authored, and stays
+function isNewlineOnlyBlock(block: Block) {
+  const spans = block.children ?? [];
+
+  return (
+    spans.every((span) => !span.text?.trim()) &&
+    spans.some((span) => span.text?.includes("\n"))
+  );
 }
 
 // a newline drew as a space until the renderer turned them into <br>, so flattening keeps every page as it was
 function flatten(value: unknown): unknown {
   if (Array.isArray(value)) {
-    return value
-      .filter((item) => !(isBlock(item) && isBlankBlock(item)))
-      .map(flatten);
+    const kept = value.filter(
+      (item) => !(isBlock(item) && isNewlineOnlyBlock(item)),
+    );
+
+    // rich text requires one block, so a field holding nothing else keeps its last one
+    return (kept.length > 0 ? kept : value).map(flatten);
   }
 
   if (typeof value !== "object" || value === null) return value;
