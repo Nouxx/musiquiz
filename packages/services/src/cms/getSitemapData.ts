@@ -1,7 +1,11 @@
 import { fetchSitemap, type SanitySitemap } from "@repo/api/sanity/sitemap";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
-import type { SiteUrl, SiteUrlRoute } from "../routing/siteUrls";
+import {
+  isWholePage,
+  type SiteUrl,
+  type SiteUrlRoute,
+} from "../routing/siteUrls";
 import { getBlogSiteUrls } from "./getBlogSiteUrls";
 import { getGlobalSiteUrls } from "./getGlobalSiteUrls";
 import { getVenueSiteUrls } from "./getVenueSiteUrls";
@@ -107,7 +111,7 @@ export async function getSitemapData({
 
   // an anchored url is its page again, with a fragment crawlers ignore
   return urls.flatMap(({ url, venueSlug }) => {
-    if (url.anchor) return [];
+    if (!isWholePage(url)) return [];
 
     const document = documents.get(
       toKey({ route: url.route, venueSlug, slug: url.slug }),

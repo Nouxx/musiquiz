@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { getRoutesForLang } from "./getRoutesForLang";
 import {
+  isWholePage,
   toBlogUrls,
   toGlobalUrls,
   toVenueUrls,
@@ -204,6 +205,28 @@ describe("toGlobalUrls", () => {
       },
     ]);
   });
+});
+
+it("counts only anchor-free urls as whole pages", () => {
+  const urls = toGlobalUrls({
+    gameSlugs: ["karaoke"],
+    eventSlugs: [],
+    pricesPages: [{ route: "game", slug: "karaoke" }],
+    customAnchorPages: [
+      {
+        route: "game",
+        slug: "karaoke",
+        anchors: [{ component: "faq", id: "questions" }],
+      },
+    ],
+  });
+
+  expect(
+    urls
+      .filter((url) => url.route === "game")
+      .filter((url) => isWholePage(url))
+      .map((url) => url.fr),
+  ).toEqual(["/jeux/karaoke/"]);
 });
 
 it("gives blog urls no English path", () => {

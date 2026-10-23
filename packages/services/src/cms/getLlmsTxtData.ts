@@ -1,7 +1,7 @@
 import { fetchLlmsTxt, type SanityLlmsTxt } from "@repo/api/sanity/llmsTxt";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
-import type { SiteUrl } from "../routing/siteUrls";
+import { isWholePage, type SiteUrl } from "../routing/siteUrls";
 import { getBlogSiteUrls } from "./getBlogSiteUrls";
 import { getGlobalSiteUrls } from "./getGlobalSiteUrls";
 import { getVenueSiteUrls } from "./getVenueSiteUrls";
@@ -77,10 +77,6 @@ function toLinks({
       },
     ];
   });
-}
-
-function isWholePage(url: SiteUrl) {
-  return url.anchor === undefined;
 }
 
 function withSlug(urls: SiteUrl[], route: SiteUrl["route"]) {

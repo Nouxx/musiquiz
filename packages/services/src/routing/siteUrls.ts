@@ -62,6 +62,11 @@ export type CustomAnchor = {
 
 export type CustomAnchorPage = PageKey & { anchors: CustomAnchor[] };
 
+/** false on a url that jumps to a section: its page is listed on its own */
+export function isWholePage(url: SiteUrl) {
+  return url.anchor === undefined && url.customAnchor === undefined;
+}
+
 function staticUrl(
   route: Exclude<SiteUrlRoute, "blog" | "blogArticle">,
 ): SiteUrl {
