@@ -5,7 +5,7 @@ import PinIcon from "@sanity/icons/Pin";
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { BrevoListIdField } from "../components/BrevoListIdField";
 import { MapPositionInput } from "../components/MapPositionInput";
-import type { StringRule, UrlRule } from "sanity";
+import type { SlugValue, StringRule, UrlRule } from "sanity";
 import {
   frenchValue,
   type LocalizedEntry,
@@ -21,6 +21,11 @@ import { TrendUpwardIcon } from "@sanity/icons/TrendUpward";
 import { UsersIcon } from "@sanity/icons/Users";
 import { gtmIdValidation } from "./shared/gtmId";
 import { llmsDescriptionField } from "./shared/llmsDescription";
+import {
+  isVenueSlug,
+  slugifyVenueTitle,
+  VENUE_SLUG_MAX_LENGTH,
+} from "@repo/utils/venueSlug";
 
 // todo: i18n, "Fermé" is french
 function openingTimeValidation(rule: StringRule) {
@@ -59,6 +64,13 @@ function externalUrlValidation(rule: UrlRule, providerField: ProviderField) {
     if (value && !value.startsWith("https")) return "Must use https";
     return true;
   });
+}
+
+function venueSlugRule(value?: SlugValue) {
+  const slug = value?.current;
+
+  if (!slug || isVenueSlug(slug)) return true;
+  return `Lowercase letters, digits and single hyphens, starting with a letter, at most ${VENUE_SLUG_MAX_LENGTH} characters. Use the "Generate" button.`;
 }
 
 const SOCIAL_DESCRIPTION =
@@ -105,7 +117,7 @@ export const venueType = defineType({
       group: "general",
       description:
         'How the venue name will appear in a URL. Use the "Generate" button.',
-      validation: (rule) => rule.required(),
+      validation: (rule) => [rule.required(), rule.custom(venueSlugRule)],
       hidden: ({ document }) => !document?.title,
       // once the slug is published, it cant be edited anymore
       readOnly: ({ document }) => {
@@ -114,6 +126,7 @@ export const venueType = defineType({
       },
       options: {
         source: "title",
+        slugify: slugifyVenueTitle,
       },
     }),
     llmsDescriptionField({
