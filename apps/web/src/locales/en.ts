@@ -72,8 +72,8 @@ export const en: EnglishKeys = {
     mailPlaceholder: "Your mail address",
     newsletterConsent: "I agree to receive information from Musi'Quiz",
     newsletterPending: "Subscribing…",
-    newsletterSuccess: "Thanks, you're subscribed!",
-    newsletterFailure: "Subscription failed, please try again.",
+    newsletterSuccess: "Subscribed, thanks!",
+    newsletterFailure: "Failed, try again",
   },
   contactPage: {
     ctaLabel: "Our contact details",

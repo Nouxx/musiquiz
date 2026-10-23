@@ -4,12 +4,11 @@ import Button from "../primitives/Button.astro";
 interface Props {
   submitLabel: string;
   pendingLabel: string;
-  successMessage: string;
-  failureMessage: string;
+  successLabel: string;
+  failureLabel: string;
 }
 
-const { submitLabel, pendingLabel, successMessage, failureMessage } =
-  Astro.props;
+const { submitLabel, pendingLabel, successLabel, failureLabel } = Astro.props;
 ---
 
 <form class="newsletter" data-newsletter-form>
@@ -21,17 +20,13 @@ const { submitLabel, pendingLabel, successMessage, failureMessage } =
   </fieldset>
 
   <Button type="submit" tone="red" size="m" data-submit>
-    <span data-submit-label>{submitLabel}</span>
-    <span data-pending-label hidden>{pendingLabel}</span>
+    <span aria-live="polite">
+      <span data-label="submit">{submitLabel}</span>
+      <span data-label="pending" hidden>{pendingLabel}</span>
+      <span data-label="success" hidden>{successLabel}</span>
+      <span data-label="failure" hidden>{failureLabel}</span>
+    </span>
   </Button>
-
-  <p class="status failure" role="alert" tabindex="-1" data-failure hidden>
-    {failureMessage}
-  </p>
-
-  <p class="status" role="status" tabindex="-1" data-success hidden>
-    {successMessage}
-  </p>
 </form>
 
 <style>
@@ -59,13 +54,5 @@ const { submitLabel, pendingLabel, successMessage, failureMessage } =
 
   .newsletter-consent {
     color: var(--color-text-on-brand-muted);
-  }
-
-  .status {
-    font: var(--paragraph-s);
-  }
-
-  .failure {
-    color: var(--color-text-error);
   }
 </style>

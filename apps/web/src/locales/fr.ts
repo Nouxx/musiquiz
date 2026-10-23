@@ -65,8 +65,8 @@ export const fr = {
     mailPlaceholder: "Votre adresse mail",
     newsletterConsent: "J'accepte de recevoir les informations de Musi'Quiz",
     newsletterPending: "Inscription…",
-    newsletterSuccess: "Merci, vous êtes inscrit·e !",
-    newsletterFailure: "L'inscription a échoué, réessayez.",
+    newsletterSuccess: "Inscription validée !",
+    newsletterFailure: "Échec, réessayez",
   },
   contactPage: {
     ctaLabel: "Nos coordonnées",

@@ -2,11 +2,17 @@ import {
   postPayload,
   readMessages,
   refreshValidity,
-  reveal,
-  setPending,
   trackLead,
   type ValidationMessages,
 } from "./formRuntime";
+
+type LabelName = "submit" | "pending" | "success" | "failure";
+
+function showLabel(labels: HTMLElement[], name: LabelName) {
+  for (const label of labels) {
+    label.hidden = label.dataset.label !== name;
+  }
+}
 
 class MusiquizNewsletterForm extends HTMLElement {
   connectedCallback() {
@@ -19,23 +25,10 @@ class MusiquizNewsletterForm extends HTMLElement {
     if (!workerUrl || !form || !messages) return;
 
     const submit = form.querySelector<HTMLButtonElement>("[data-submit]");
-    const submitLabel = form.querySelector<HTMLElement>("[data-submit-label]");
-    const pendingLabel = form.querySelector<HTMLElement>(
-      "[data-pending-label]",
-    );
-    const failure = form.querySelector<HTMLElement>("[data-failure]");
-    const success = form.querySelector<HTMLElement>("[data-success]");
     const fields = form.querySelector<HTMLFieldSetElement>("[data-fields]");
-    if (
-      !submit ||
-      !submitLabel ||
-      !pendingLabel ||
-      !failure ||
-      !success ||
-      !fields
-    ) {
-      return;
-    }
+    if (!submit || !fields) return;
+
+    const labels = [...submit.querySelectorAll<HTMLElement>("[data-label]")];
 
     const inputs = [...form.querySelectorAll<HTMLInputElement>("input[name]")];
 
@@ -73,8 +66,8 @@ class MusiquizNewsletterForm extends HTMLElement {
 
       const data = new FormData(form);
 
-      failure.hidden = true;
-      setPending({ submit, submitLabel, pendingLabel, pending: true });
+      submit.disabled = true;
+      showLabel(labels, "pending");
 
       const sent = await postPayload({
         workerUrl,
@@ -85,16 +78,15 @@ class MusiquizNewsletterForm extends HTMLElement {
         },
       });
 
-      setPending({ submit, submitLabel, pendingLabel, pending: false });
-
       if (sent) {
         // a finished form should not be able to send a second copy
         fields.disabled = true;
-        submit.disabled = true;
-        reveal(success);
+        showLabel(labels, "success");
         trackLead({ formName: "newsletter", venue: venueSlug });
       } else {
-        reveal(failure);
+        // the button stays live so a second click retries
+        submit.disabled = false;
+        showLabel(labels, "failure");
       }
     });
   }
