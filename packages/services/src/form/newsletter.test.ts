@@ -1,6 +1,11 @@
 import { expect, it } from "vitest";
 
-import { newsletterFormBodySchema, pickNewsletterChannel } from "./newsletter";
+import {
+  buildOptinDate,
+  buildOptinSource,
+  newsletterFormBodySchema,
+  pickNewsletterChannel,
+} from "./newsletter";
 
 function buildBody(overrides: Record<string, unknown> = {}) {
   return {
@@ -70,4 +75,15 @@ it("falls back to the owners and names the secret when the key is missing", () =
   expect("brevoError" in channel && channel.brevoError?.message).toContain(
     "BREVO_API_KEY_SAINT_ETIENNE",
   );
+});
+
+it("names the opt-in source after the venue and the footer", () => {
+  expect(buildOptinSource("lille")).toBe("site-lille-footer");
+  expect(buildOptinSource("saint-etienne")).toBe("site-saint-etienne-footer");
+});
+
+it("dates the opt-in as YYYY-MM-DD in Paris time", () => {
+  expect(buildOptinDate(new Date("2026-10-23T12:00:00Z"))).toBe("2026-10-23");
+  expect(buildOptinDate(new Date("2026-10-23T22:30:00Z"))).toBe("2026-10-24");
+  expect(buildOptinDate(new Date("2026-01-05T08:00:00Z"))).toBe("2026-01-05");
 });

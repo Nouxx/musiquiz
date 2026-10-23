@@ -2,7 +2,7 @@
 
 The footer newsletter form posts `{ venueSlug, mail, rgpd }` to `/form/newsletter` on `musiquiz-worker`. Each Venue runs its own Brevo account, or none yet. A `venue` carries one choice, `newsletterProvider`:
 
-- `brevo`: the sign-up is created as a Brevo contact in `brevoListId`, with `updateEnabled` so a repeat sign-up is not an error.
+- `brevo`: the sign-up is created as a Brevo contact in `brevoListId`, with `updateEnabled` so a repeat sign-up is not an error. It carries the client's two attributes, `SOURCE_OPTIN` (`site-<slug>-footer`) and `DATE_OPTIN` (`YYYY-MM-DD`, Paris time); a repeat sign-up overwrites both.
 - `zeptomail`: the sign-up is mailed to `ownerMails` with the `newsletter` ZeptoMail template, merge labels `{ ville, mail }`. The owners add the contact by hand. This is the temporary path until every Venue has a Brevo account.
 
 New Venues start on `zeptomail`.

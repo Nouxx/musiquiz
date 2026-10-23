@@ -24,6 +24,21 @@ type NewsletterFormBody = z.infer<typeof newsletterFormBodySchema>;
 
 type VenueNewsletter = Awaited<ReturnType<typeof getVenueNewsletter>>;
 
+/** @example "lille" → "site-lille-footer" */
+export function buildOptinSource(venueSlug: string) {
+  return `site-${venueSlug}-footer`;
+}
+
+// the venues are run from France, so a late-evening sign-up keeps its French date
+const optinDateFormat = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Europe/Paris",
+});
+
+/** @example 2026-10-23T22:30:00Z → "2026-10-24" */
+export function buildOptinDate(date: Date) {
+  return optinDateFormat.format(date);
+}
+
 export function pickNewsletterChannel({
   venue,
   venueSlug,
@@ -99,6 +114,10 @@ export async function processNewsletterForm({
       await createContact({
         apiKey: channel.apiKey,
         email: mail,
+        attributes: {
+          SOURCE_OPTIN: buildOptinSource(venueSlug),
+          DATE_OPTIN: buildOptinDate(new Date()),
+        },
         listIds: [channel.listId],
         updateEnabled: true,
       });
