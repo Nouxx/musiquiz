@@ -32,6 +32,7 @@ export function adaptPageComponent({
     case "rollingBanner": {
       return {
         type: "rollingBanner",
+        anchor: data.anchor ?? undefined,
         message: data.message,
         color: data.color,
       };
@@ -40,6 +41,7 @@ export function adaptPageComponent({
     case "cardsGrid": {
       return {
         type: "cardsGrid",
+        anchor: data.anchor ?? undefined,
         heading: data.heading,
         body: data.body,
         align: data.align,
@@ -52,6 +54,7 @@ export function adaptPageComponent({
     case "carousel": {
       return {
         type: "carousel",
+        anchor: data.anchor ?? undefined,
         badge: data.badge ?? undefined,
         title: data.title,
         body: data.body,
@@ -68,6 +71,7 @@ export function adaptPageComponent({
     case "reviews": {
       return {
         type: "reviews",
+        anchor: data.anchor ?? undefined,
         widgetId: data.widgetId,
         badge: data.badge,
         title: data.title,
@@ -92,6 +96,7 @@ export function adaptPageComponent({
     case "findUs": {
       return {
         type: "findUs",
+        anchor: data.anchor ?? undefined,
         badge: data.badge,
         title: data.title,
         media: toCmsImage(data.media),
@@ -110,6 +115,7 @@ export function adaptPageComponent({
     case "contactPanels": {
       return {
         type: "contactPanels",
+        anchor: data.anchor ?? undefined,
         media: toCmsImage(data.media),
         bookingLink: toBookingLink({ venue: data.venue, lang }),
         venueTitle: data.venueTitle,
@@ -134,6 +140,7 @@ export function adaptPageComponent({
     case "clientContactForm": {
       return {
         type: "clientContactForm",
+        anchor: data.anchor ?? undefined,
         images: data.images.map((image) => toCmsImage(image)),
         venueSlug: data.venueSlug,
       };
@@ -142,6 +149,7 @@ export function adaptPageComponent({
     case "quotationForm": {
       return {
         type: "quotationForm",
+        anchor: data.anchor ?? undefined,
         audience: data.audience,
         services: data.services.map((service) => service.label),
         venueSlug: data.venueSlug,
@@ -151,6 +159,7 @@ export function adaptPageComponent({
     case "logos": {
       return {
         type: "logos",
+        anchor: data.anchor ?? undefined,
         layout: data.layout,
         surface: data.surface,
         badge: data.badge,
@@ -162,6 +171,7 @@ export function adaptPageComponent({
     case "faq": {
       return {
         type: "faq",
+        anchor: data.anchor ?? undefined,
         title: data.title,
         questions: data.questions.map((question) => ({
           question: question.question,
@@ -174,6 +184,7 @@ export function adaptPageComponent({
     case "cardsScroller": {
       return {
         type: "cardsScroller",
+        anchor: data.anchor ?? undefined,
         textBlock: toTextBlock(data.textBlock),
         cards: data.cards.map((card) => toDeckCard(card)),
       };
@@ -182,6 +193,7 @@ export function adaptPageComponent({
     case "textSlideshow": {
       return {
         type: "textSlideshow",
+        anchor: data.anchor ?? undefined,
         textBlock: toTextBlock(data.textBlock),
         surface: data.surface,
         slideshowPosition: data.slideshowPosition,
@@ -192,6 +204,7 @@ export function adaptPageComponent({
     case "textStrip": {
       return {
         type: "textStrip",
+        anchor: data.anchor ?? undefined,
         textBlock: toTextBlock(data.textBlock),
         images: data.images.map((image) => toCmsImage(image)),
       };
@@ -200,6 +213,7 @@ export function adaptPageComponent({
     case "textBody": {
       return {
         type: "textBody",
+        anchor: data.anchor ?? undefined,
         body: toRichText(data.body),
       };
     }
@@ -207,6 +221,7 @@ export function adaptPageComponent({
     case "textCards": {
       return {
         type: "textCards",
+        anchor: data.anchor ?? undefined,
         textBlock: toTextBlock(data.textBlock),
         cards: data.cards.map((card) => toTextCard(card)),
       };
@@ -215,6 +230,7 @@ export function adaptPageComponent({
     case "textCardsGrid": {
       return {
         type: "textCardsGrid",
+        anchor: data.anchor ?? undefined,
         heading: data.heading,
         body: data.body,
         cta: toCta(data.cta),
@@ -227,6 +243,7 @@ export function adaptPageComponent({
 
       return {
         type: "offers",
+        anchor: data.anchor ?? undefined,
         title: data.title,
         subTitle: data.subTitle ?? undefined,
         background: data.background,
@@ -253,6 +270,7 @@ export function adaptPageComponent({
     case "videoEmbed": {
       return {
         type: "videoEmbed",
+        anchor: data.anchor ?? undefined,
         videoId: data.videoId,
         title: data.title,
         surface: data.surface,
@@ -262,6 +280,7 @@ export function adaptPageComponent({
     case "detailTabs": {
       return {
         type: "detailTabs",
+        anchor: data.anchor ?? undefined,
         title: data.title,
         groups: data.groups.map((group) => toDetailGroup(group)),
         images: data.images.map((image) => toCmsImage(image)),

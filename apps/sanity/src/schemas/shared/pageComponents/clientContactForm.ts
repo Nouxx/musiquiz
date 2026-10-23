@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { anchorField, withAnchor } from "../anchorField";
 
 export const clientContactFormType = defineType({
   name: "clientContactForm",
@@ -26,17 +27,22 @@ export const clientContactFormType = defineType({
       to: [{ type: "venue" }],
       validation: (rule) => rule.required(),
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       images: "images",
     },
-    prepare({ images }: { images?: unknown[] }) {
+    prepare({ anchor, images }: { anchor?: string; images?: unknown[] }) {
       const count = images?.length ?? 0;
 
       return {
         title: "Formulaire de contact",
-        subtitle: `Formulaire de contact · ${count} image${count === 1 ? "" : "s"}`,
+        subtitle: withAnchor(
+          `Formulaire de contact · ${count} image${count === 1 ? "" : "s"}`,
+          anchor,
+        ),
       };
     },
   },

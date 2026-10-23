@@ -13,9 +13,10 @@ interface Props {
   title: string;
   questions: FaqQuestion[];
   images?: ImageSource[];
+  id?: string;
 }
 
-const { badge, title, questions, images = [] } = Astro.props;
+const { badge, title, questions, images = [], id } = Astro.props;
 
 const hasImages = images.length > 0;
 
@@ -23,7 +24,7 @@ const hasImages = images.length > 0;
 const groupName = `faq-${crypto.randomUUID().slice(0, 8)}`;
 ---
 
-<Section spacing="m">
+<Section {id} spacing="m">
   <div class:list={["faq", { solo: !hasImages }]}>
     <div class="panel">
       <div class="heading">

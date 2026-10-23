@@ -9,6 +9,7 @@ import {
   type LocalizedEntry,
   requiredInEveryLanguage,
 } from "../localized";
+import { anchorField, withAnchor } from "../anchorField";
 
 export const deckCardType = defineType({
   name: "deckCard",
@@ -78,18 +79,31 @@ export const cardsScrollerType = defineType({
       of: [defineArrayMember({ type: "deckCard" })],
       validation: (rule) => rule.required().min(2).max(6),
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       title: "textBlock.title",
       cards: "cards",
     },
-    prepare({ title, cards }: { title?: LocalizedEntry[]; cards?: unknown[] }) {
+    prepare({
+      anchor,
+      title,
+      cards,
+    }: {
+      anchor?: string;
+      title?: LocalizedEntry[];
+      cards?: unknown[];
+    }) {
       const count = cards?.length ?? 0;
 
       return {
         title: frenchValue(title) ?? "Cards Scroller",
-        subtitle: `Cards Scroller · ${count} card${count === 1 ? "" : "s"}`,
+        subtitle: withAnchor(
+          `Cards Scroller · ${count} card${count === 1 ? "" : "s"}`,
+          anchor,
+        ),
       };
     },
   },

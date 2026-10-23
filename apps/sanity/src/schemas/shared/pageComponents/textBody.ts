@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { requiredInEveryLanguage } from "../localized";
+import { anchorField, withAnchor } from "../anchorField";
 
 type LocalizedRichText = {
   _key?: string;
@@ -26,15 +27,17 @@ export const textBodyType = defineType({
       type: "internationalizedArrayRichText",
       validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       body: "body",
     },
-    prepare({ body }: { body?: LocalizedRichText[] }) {
+    prepare({ anchor, body }: { anchor?: string; body?: LocalizedRichText[] }) {
       return {
         title: "Text Body",
-        subtitle: frenchExcerpt(body),
+        subtitle: withAnchor(frenchExcerpt(body), anchor),
       };
     },
   },

@@ -4,9 +4,13 @@ import {
 } from "@repo/api/sanity/siteAnchors";
 import type { SanityConfig } from "@repo/utils/sanityConfig";
 
-import type { PricesPage, SiteUrlRoute } from "../routing/siteUrls";
+import type {
+  CustomAnchorPage,
+  PageKey,
+  SiteUrlRoute,
+} from "../routing/siteUrls";
 
-type SanityPricesPage = SanitySiteAnchors["pricesPages"][number];
+type SanityPage = SanitySiteAnchors["pages"][number];
 
 const routes = {
   homepage: "home",
@@ -17,19 +21,16 @@ const routes = {
   venueGame: "venueGame",
   venueEvent: "venueEvent",
   venueCustomPage: "venueCustomPage",
-} satisfies Record<
-  Exclude<SanityPricesPage["_type"], "venuePage">,
-  SiteUrlRoute
->;
+} satisfies Record<Exclude<SanityPage["_type"], "venuePage">, SiteUrlRoute>;
 
-function toRoute(page: SanityPricesPage): SiteUrlRoute {
+function toRoute(page: SanityPage): SiteUrlRoute {
   if (page._type !== "venuePage") return routes[page._type];
   if (page.pageType === "book") return "venueBook";
   if (page.pageType === "gift") return "venueGifting";
   return "venueHome";
 }
 
-function toPricesPage(page: SanityPricesPage): PricesPage {
+function toPageKey(page: SanityPage): PageKey {
   return {
     route: toRoute(page),
     venueSlug: page.venueSlug ?? undefined,
@@ -37,11 +38,26 @@ function toPricesPage(page: SanityPricesPage): PricesPage {
   };
 }
 
+function toCustomAnchorPage(page: SanityPage): CustomAnchorPage {
+  return {
+    ...toPageKey(page),
+    anchors: page.anchors.map(({ component, anchor }) => ({
+      component,
+      id: anchor,
+    })),
+  };
+}
+
 export async function getSiteAnchors({ config }: { config: SanityConfig }) {
   const data = await fetchSiteAnchors({ config });
 
   return {
-    pricesPages: data.pricesPages.map((page) => toPricesPage(page)),
+    pricesPages: data.pages
+      .filter((page) => page.hasPrices)
+      .map((page) => toPageKey(page)),
+    customAnchorPages: data.pages
+      .filter((page) => page.anchors.length > 0)
+      .map((page) => toCustomAnchorPage(page)),
     termsVenueSlugs: data.termsVenueSlugs,
   };
 }

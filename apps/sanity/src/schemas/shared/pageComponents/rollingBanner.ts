@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { noMissingLanguage } from "../localized";
+import { anchorField, withAnchor } from "../anchorField";
 
 export const rollingBannerType = defineType({
   name: "rollingBanner",
@@ -48,11 +49,16 @@ export const rollingBannerType = defineType({
         layout: "radio",
       },
     }),
+    anchorField,
   ],
   preview: {
-    prepare() {
+    select: {
+      anchor: "anchor",
+    },
+    prepare({ anchor }: { anchor?: string }) {
       return {
         title: "Rolling Banner",
+        subtitle: withAnchor(undefined, anchor),
       };
     },
   },

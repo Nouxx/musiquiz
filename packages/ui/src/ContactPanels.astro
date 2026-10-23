@@ -20,12 +20,13 @@ interface Props {
     body: string;
     facts: ContactFact[];
   };
+  id?: string;
 }
 
-const { media, offer, questions } = Astro.props;
+const { media, offer, questions, id } = Astro.props;
 ---
 
-<Section surface="media" spacing="m" width="content">
+<Section {id} surface="media" spacing="m" width="content">
   <RemoteImage slot="media" image={media} variant="cover" />
 
   <div class="panels">

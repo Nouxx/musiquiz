@@ -21,6 +21,8 @@ export type SiteUrl = {
   title?: string;
   /** set on a url that jumps to a section of its page */
   anchor?: SiteUrlAnchor;
+  /** set on a url that jumps to a block anchored in the CMS */
+  customAnchor?: CustomAnchor;
   fr: string;
   /** missing on the blog, French only: docs/adr/0013 */
   en?: string;
@@ -46,12 +48,24 @@ export type VenueUrlInput = {
     | { provider: "none" };
 };
 
-/** a page that renders a prices component */
-export type PricesPage = {
+export type PageKey = {
   route: SiteUrlRoute;
   venueSlug?: string;
   slug?: string;
 };
+
+export type CustomAnchor = {
+  /** the page component's `_type` */
+  component: string;
+  id: string;
+};
+
+export type CustomAnchorPage = PageKey & { anchors: CustomAnchor[] };
+
+/** false on a url that jumps to a section: its page is listed on its own */
+export function isWholePage(url: SiteUrl) {
+  return url.anchor === undefined && url.customAnchor === undefined;
+}
 
 function staticUrl(
   route: Exclude<SiteUrlRoute, "blog" | "blogArticle">,
@@ -66,11 +80,19 @@ function staticUrl(
   return { route, fr, en };
 }
 
-function anchoredUrl(url: SiteUrl, anchor: SiteUrlAnchor, id: string) {
-  const anchored: SiteUrl = { ...url, anchor, fr: `${url.fr}#${id}` };
-  if (url.en) anchored.en = `${url.en}#${id}`;
+function withHash(url: SiteUrl, id: string): SiteUrl {
+  const hashed: SiteUrl = { ...url, fr: `${url.fr}#${id}` };
+  if (url.en) hashed.en = `${url.en}#${id}`;
 
-  return anchored;
+  return hashed;
+}
+
+function anchoredUrl(url: SiteUrl, anchor: SiteUrlAnchor, id: string) {
+  return { ...withHash(url, id), anchor };
+}
+
+function customAnchoredUrl(url: SiteUrl, customAnchor: CustomAnchor) {
+  return { ...withHash(url, customAnchor.id), customAnchor };
 }
 
 function withAnchors({
@@ -78,18 +100,25 @@ function withAnchors({
   venueSlug,
   sectionAnchors = [],
   pricesPages,
+  customAnchorPages,
 }: {
   url: SiteUrl;
   venueSlug?: string;
   sectionAnchors?: Exclude<SiteUrlAnchor, "prices" | "venueTerms">[];
-  pricesPages: PricesPage[];
+  pricesPages: PageKey[];
+  customAnchorPages: CustomAnchorPage[];
 }): SiteUrl[] {
-  const hasPrices = pricesPages.some(
-    (page) =>
+  function isThisPage(page: PageKey) {
+    return (
       page.route === url.route &&
       page.venueSlug === venueSlug &&
-      page.slug === url.slug,
-  );
+      page.slug === url.slug
+    );
+  }
+
+  const hasPrices = pricesPages.some((page) => isThisPage(page));
+  const customAnchors =
+    customAnchorPages.find((page) => isThisPage(page))?.anchors ?? [];
 
   return [
     url,
@@ -97,6 +126,7 @@ function withAnchors({
       anchoredUrl(url, anchor, anchors[anchor]),
     ),
     ...(hasPrices ? [anchoredUrl(url, "prices", anchors.prices)] : []),
+    ...customAnchors.map((anchor) => customAnchoredUrl(url, anchor)),
   ];
 }
 
@@ -104,10 +134,12 @@ export function toGlobalUrls({
   gameSlugs,
   eventSlugs,
   pricesPages,
+  customAnchorPages,
 }: {
   gameSlugs: string[];
   eventSlugs: string[];
-  pricesPages: PricesPage[];
+  pricesPages: PageKey[];
+  customAnchorPages: CustomAnchorPage[];
 }): SiteUrl[] {
   return [
     { url: staticUrl("home"), sectionAnchors: ["venuesMap" as const] },
@@ -139,7 +171,7 @@ export function toGlobalUrls({
     { url: staticUrl("contact"), sectionAnchors: ["venuesContact" as const] },
     { url: staticUrl("termsAndConditions") },
     { url: staticUrl("legalNotice") },
-  ].flatMap((page) => withAnchors({ ...page, pricesPages }));
+  ].flatMap((page) => withAnchors({ ...page, pricesPages, customAnchorPages }));
 }
 
 function toPartnerLinks(venue: VenueUrlInput): PartnerLink[] {
@@ -164,6 +196,7 @@ export function toVenueUrls({
   venueEvents,
   venueCustomPages,
   pricesPages,
+  customAnchorPages,
   termsVenueSlugs,
 }: {
   venues: VenueUrlInput[];
@@ -173,7 +206,8 @@ export function toVenueUrls({
   venueGames: { venueSlug: string; gameSlug: string }[];
   venueEvents: { venueSlug: string; eventSlug: string }[];
   venueCustomPages: { venueSlug: string; pageSlug: string; title: string }[];
-  pricesPages: PricesPage[];
+  pricesPages: PageKey[];
+  customAnchorPages: CustomAnchorPage[];
   termsVenueSlugs: string[];
 }): VenueUrls[] {
   return venues
@@ -249,7 +283,12 @@ export function toVenueUrls({
       );
 
       const urls = pages.flatMap((page) =>
-        withAnchors({ ...page, venueSlug: slug, pricesPages }),
+        withAnchors({
+          ...page,
+          venueSlug: slug,
+          pricesPages,
+          customAnchorPages,
+        }),
       );
 
       if (termsVenueSlugs.includes(slug)) {

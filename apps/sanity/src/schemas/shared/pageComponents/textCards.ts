@@ -10,6 +10,7 @@ import {
   requiredInEveryLanguage,
 } from "../localized";
 import { iconField } from "../iconField";
+import { anchorField, withAnchor } from "../anchorField";
 
 export const textCardType = defineType({
   name: "textCard",
@@ -82,18 +83,31 @@ export const textCardsType = defineType({
       validation: (rule) => rule.required().min(3).max(4),
       // deliberately NOT `options: { layout: "grid" }`, see textSlideshow
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       title: "textBlock.title",
       cards: "cards",
     },
-    prepare({ title, cards }: { title?: LocalizedEntry[]; cards?: unknown[] }) {
+    prepare({
+      anchor,
+      title,
+      cards,
+    }: {
+      anchor?: string;
+      title?: LocalizedEntry[];
+      cards?: unknown[];
+    }) {
       const count = cards?.length ?? 0;
 
       return {
         title: frenchValue(title) ?? "Text Cards",
-        subtitle: `Text Cards · ${count} card${count === 1 ? "" : "s"}`,
+        subtitle: withAnchor(
+          `Text Cards · ${count} card${count === 1 ? "" : "s"}`,
+          anchor,
+        ),
       };
     },
   },

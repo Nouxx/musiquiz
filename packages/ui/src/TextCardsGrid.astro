@@ -12,12 +12,13 @@ interface Props {
   body: string;
   cta?: CtaLink;
   cards: KeywordCard[];
+  id?: string;
 }
 
-const { heading, body, cta, cards } = Astro.props;
+const { heading, body, cta, cards, id } = Astro.props;
 ---
 
-<Section surface="muted" spacing="l">
+<Section {id} surface="muted" spacing="l">
   <div class="text-cards-grid">
     <div class="header">
       <div class="intro">

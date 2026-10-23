@@ -22,6 +22,7 @@ interface Props {
   previousLabel: string;
   nextLabel: string;
   goToSlideLabel: string;
+  id?: string;
 }
 
 const {
@@ -34,6 +35,7 @@ const {
   previousLabel,
   nextLabel,
   goToSlideLabel,
+  id,
 } = Astro.props;
 
 // the widest band shows five slots, so a set of five never overflows there:
@@ -44,7 +46,7 @@ const fitsWide = slides.length <= 5;
 const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
 ---
 
-<Section surface="muted" width="wide">
+<Section {id} surface="muted" width="wide">
   <div class:list={["carousel", { "fits-wide": fitsWide }]} data-carousel>
     <div class="header">
       <div class="column">

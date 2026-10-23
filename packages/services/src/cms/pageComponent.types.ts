@@ -4,6 +4,7 @@ import type { CmsImage, CmsVideo, RichText, VenueLink } from "./types";
 
 type RollingBanner = {
   type: "rollingBanner";
+  anchor: string | undefined;
   message: string;
   color: "red" | "blue";
 };
@@ -23,6 +24,7 @@ export type Card = {
 
 type CardsGrid = {
   type: "cardsGrid";
+  anchor: string | undefined;
   heading: string;
   body: string;
   align: "left" | "center";
@@ -37,6 +39,7 @@ export type CarouselSlide =
 
 type Carousel = {
   type: "carousel";
+  anchor: string | undefined;
   badge: string | undefined;
   title: string;
   body: string;
@@ -47,6 +50,7 @@ type Carousel = {
 
 type Reviews = {
   type: "reviews";
+  anchor: string | undefined;
   widgetId: string;
   badge: string;
   title: string;
@@ -109,7 +113,10 @@ export type FindUsContent = {
   contactNote: string;
 };
 
-type FindUs = { type: "findUs" } & FindUsContent;
+type FindUs = {
+  type: "findUs";
+  anchor: string | undefined;
+} & FindUsContent;
 
 type ContactPanelRow = {
   label: string;
@@ -119,6 +126,7 @@ type ContactPanelRow = {
 
 type ContactPanels = {
   type: "contactPanels";
+  anchor: string | undefined;
   media: CmsImage;
   bookingLink: VenueLink;
   venueTitle: string;
@@ -133,12 +141,14 @@ type ContactPanels = {
 
 type ClientContactForm = {
   type: "clientContactForm";
+  anchor: string | undefined;
   images: CmsImage[];
   venueSlug: string;
 };
 
 type QuotationForm = {
   type: "quotationForm";
+  anchor: string | undefined;
   audience: "teamBuilding" | "musiTeens";
   services: string[];
   venueSlug: string;
@@ -146,6 +156,7 @@ type QuotationForm = {
 
 type Logos = {
   type: "logos";
+  anchor: string | undefined;
   layout: "inline" | "stacked";
   surface: "default" | "muted";
   badge: string;
@@ -175,12 +186,14 @@ export type DeckCard = {
 
 type CardsScroller = {
   type: "cardsScroller";
+  anchor: string | undefined;
   textBlock: TextBlock;
   cards: DeckCard[];
 };
 
 type Faq = {
   type: "faq";
+  anchor: string | undefined;
   title: string;
   questions: FaqQuestion[];
   images: CmsImage[];
@@ -202,6 +215,7 @@ export type DetailGroup = {
 
 type DetailTabs = {
   type: "detailTabs";
+  anchor: string | undefined;
   title: string;
   groups: DetailGroup[];
   images: CmsImage[];
@@ -209,6 +223,7 @@ type DetailTabs = {
 
 type TextSlideshow = {
   type: "textSlideshow";
+  anchor: string | undefined;
   textBlock: TextBlock;
   surface: "default" | "muted";
   slideshowPosition: "left" | "right";
@@ -217,12 +232,14 @@ type TextSlideshow = {
 
 type TextStrip = {
   type: "textStrip";
+  anchor: string | undefined;
   textBlock: TextBlock;
   images: CmsImage[];
 };
 
 type TextBody = {
   type: "textBody";
+  anchor: string | undefined;
   body: RichText;
 };
 
@@ -262,6 +279,7 @@ export type TextCard = {
 
 type TextCards = {
   type: "textCards";
+  anchor: string | undefined;
   textBlock: TextBlock;
   cards: TextCard[];
 };
@@ -274,6 +292,7 @@ export type KeywordCard = {
 
 type TextCardsGrid = {
   type: "textCardsGrid";
+  anchor: string | undefined;
   heading: string;
   body: string;
   cta: Cta | undefined;
@@ -310,6 +329,7 @@ export type OfferGroup = {
 
 type Offers = {
   type: "offers";
+  anchor: string | undefined;
   title: string;
   subTitle: string | undefined;
   background: "default" | "muted";
@@ -322,6 +342,7 @@ type Offers = {
 
 type VideoEmbed = {
   type: "videoEmbed";
+  anchor: string | undefined;
   videoId: string;
   title: string;
   surface: "default" | "muted" | "vivid";

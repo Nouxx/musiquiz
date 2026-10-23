@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { frenchValue, type LocalizedEntry } from "../localized";
+import { anchorField, withAnchor } from "../anchorField";
 
 export const textSlideshowType = defineType({
   name: "textSlideshow",
@@ -55,16 +56,20 @@ export const textSlideshowType = defineType({
       },
       validation: (rule) => rule.required(),
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       title: "textBlock.title",
       images: "images",
     },
     prepare({
+      anchor,
       title,
       images,
     }: {
+      anchor?: string;
       title?: LocalizedEntry[];
       images?: unknown[];
     }) {
@@ -72,7 +77,10 @@ export const textSlideshowType = defineType({
 
       return {
         title: frenchValue(title) ?? "Text Slideshow",
-        subtitle: `Text Slideshow · ${count} image${count === 1 ? "" : "s"}`,
+        subtitle: withAnchor(
+          `Text Slideshow · ${count} image${count === 1 ? "" : "s"}`,
+          anchor,
+        ),
       };
     },
   },

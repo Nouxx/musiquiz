@@ -8,12 +8,13 @@ interface Props {
   badge: string;
   title: string;
   surface?: "default" | "muted";
+  id?: string;
 }
 
-const { widgetId, badge, title, surface = "default" } = Astro.props;
+const { widgetId, badge, title, surface = "default", id } = Astro.props;
 ---
 
-<Section surface={surface === "muted" ? "muted" : "default"} width="wide">
+<Section {id} surface={surface === "muted" ? "muted" : "default"} width="wide">
   <div class="reviews">
     <div class="heading">
       <Badge color="light">{badge}</Badge>

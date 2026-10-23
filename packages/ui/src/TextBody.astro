@@ -5,12 +5,13 @@ import type { RichTextNode } from "./types";
 
 interface Props {
   body: RichTextNode[];
+  id?: string;
 }
 
-const { body } = Astro.props;
+const { body, id } = Astro.props;
 ---
 
-<Section spacing="m">
+<Section {id} spacing="m">
   <div class="text-body">
     <RichText value={body} gap="6" />
   </div>

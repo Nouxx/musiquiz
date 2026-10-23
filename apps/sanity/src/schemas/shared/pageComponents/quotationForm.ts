@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { anchorField, withAnchor } from "../anchorField";
 
 const audienceTitles: Record<string, string> = {
   teamBuilding: "Devis team building",
@@ -34,22 +35,29 @@ export const quotationFormType = defineType({
       to: [{ type: "venue" }],
       validation: (rule) => rule.required(),
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       audience: "audience",
       venueTitle: "venue.title",
     },
     prepare({
+      anchor,
       audience,
       venueTitle,
     }: {
+      anchor?: string;
       audience?: string;
       venueTitle?: string;
     }) {
       return {
         title: (audience && audienceTitles[audience]) ?? "Devis",
-        subtitle: ["Quotation Form", venueTitle].filter(Boolean).join(" · "),
+        subtitle: withAnchor(
+          ["Quotation Form", venueTitle].filter(Boolean).join(" · "),
+          anchor,
+        ),
       };
     },
   },

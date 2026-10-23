@@ -4,6 +4,7 @@ import {
   type LocalizedEntry,
   requiredInEveryLanguage,
 } from "../localized";
+import { anchorField, withAnchor } from "../anchorField";
 
 type LogoMember = { alt?: LocalizedEntry[] };
 
@@ -80,18 +81,22 @@ export const logosType = defineType({
       // this makes the alt un-authorable
       // because internationalizedArrayString (array) is rendered as grid cells as well
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       title: "title",
       layout: "layout",
       logos: "logos",
     },
     prepare({
+      anchor,
       title,
       layout,
       logos,
     }: {
+      anchor?: string;
       title?: LocalizedEntry[];
       layout?: string;
       logos?: unknown[];
@@ -100,7 +105,10 @@ export const logosType = defineType({
 
       return {
         title: frenchValue(title) ?? "Logos",
-        subtitle: `Logos · ${layout ?? "inline"} · ${count} logo${count === 1 ? "" : "s"}`,
+        subtitle: withAnchor(
+          `Logos · ${layout ?? "inline"} · ${count} logo${count === 1 ? "" : "s"}`,
+          anchor,
+        ),
       };
     },
   },

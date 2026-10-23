@@ -12,6 +12,7 @@ interface Props {
   badge: string;
   title: string;
   logos: ImageSource[];
+  id?: string;
 }
 
 const {
@@ -20,6 +21,7 @@ const {
   badge,
   title,
   logos,
+  id,
 } = Astro.props;
 
 /*
@@ -129,23 +131,23 @@ const conditions = fittingConditions();
 // Astro only interpolates custom properties into it, and a media query
 // condition cannot read one (see styles/breakpoints.css). So they are written
 // out here and scoped by hand, through a per-instance id.
-const id = `logos-${crypto.randomUUID().slice(0, 8)}`;
+const stripId = `logos-${crypto.randomUUID().slice(0, 8)}`;
 
 const gateCss = conditions
   .map(
     (condition) => `@media ${condition}{
-  #${id} .track{animation:none;margin-inline-end:calc(-1 * var(--logos-gap))}
-  #${id} .clone{display:none}
-  #${id} .strip{margin-inline:0}
+  #${stripId} .track{animation:none;margin-inline-end:calc(-1 * var(--logos-gap))}
+  #${stripId} .clone{display:none}
+  #${stripId} .strip{margin-inline:0}
 }`,
   )
   .join("\n");
 ---
 
-<Section {surface} spacing="m" width="content">
+<Section {id} {surface} spacing="m" width="content">
   <div
     class:list={["logos", layout]}
-    {id}
+    id={stripId}
     style={{
       "--logos-box-inline": `${box.width}px`,
       "--logos-box-block": `${box.height}px`,

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { getRoutesForLang } from "./getRoutesForLang";
 import {
+  isWholePage,
   toBlogUrls,
   toGlobalUrls,
   toVenueUrls,
@@ -39,6 +40,17 @@ function venueUrls(venues: VenueUrlInput[] = [paris, lyon]) {
     pricesPages: [
       { route: "venueGame", venueSlug: "paris", slug: "blind-test" },
     ],
+    customAnchorPages: [
+      {
+        route: "venueGame",
+        venueSlug: "paris",
+        slug: "blind-test",
+        anchors: [
+          { component: "faq", id: "questions" },
+          { component: "textBody", id: "regles" },
+        ],
+      },
+    ],
     termsVenueSlugs: ["paris"],
   });
 }
@@ -49,6 +61,9 @@ function allUrls() {
       gameSlugs: ["blind-test"],
       eventSlugs: ["seminaire"],
       pricesPages: [],
+      customAnchorPages: [
+        { route: "home", anchors: [{ component: "faq", id: "faq" }] },
+      ],
     }),
     ...venueUrls().flatMap((venue) => venue.urls),
     ...toBlogUrls({ articleSlugs: ["premier-article"] }),
@@ -75,7 +90,7 @@ it("ends every path with a slash, before any anchor", () => {
 
 it("anchors French and English paths alike", () => {
   for (const url of allUrls()) {
-    if (!url.anchor || !url.en) continue;
+    if ((!url.anchor && !url.customAnchor) || !url.en) continue;
     expect(url.fr.split("#", 2)[1]).toBe(url.en.split("#", 2)[1]);
   }
 });
@@ -92,6 +107,8 @@ describe("toVenueUrls", () => {
       "/paris/offrir/#gifting",
       "/paris/jeux/blind-test/",
       "/paris/jeux/blind-test/#prices",
+      "/paris/jeux/blind-test/#questions",
+      "/paris/jeux/blind-test/#regles",
       "/paris/evenements/anniversaire/",
       "/paris/noel/",
       "/cgv/#paris",
@@ -131,6 +148,7 @@ describe("toVenueUrls", () => {
       venueEvents: [],
       venueCustomPages: [],
       pricesPages: [],
+      customAnchorPages: [],
       termsVenueSlugs: [],
     });
 
@@ -144,6 +162,7 @@ describe("toGlobalUrls", () => {
       gameSlugs: ["blind-test", "karaoke"],
       eventSlugs: [],
       pricesPages: [{ route: "game", slug: "karaoke" }],
+      customAnchorPages: [],
     });
 
     expect(
@@ -156,10 +175,58 @@ describe("toGlobalUrls", () => {
       gameSlugs: ["blind-test"],
       eventSlugs: [],
       pricesPages: [{ route: "game", venueSlug: "paris", slug: "blind-test" }],
+      customAnchorPages: [],
     });
 
     expect(urls.some((url) => url.anchor === "prices")).toBe(false);
   });
+
+  it("anchors a CMS block on its page only, in both languages", () => {
+    const urls = toGlobalUrls({
+      gameSlugs: ["blind-test", "karaoke"],
+      eventSlugs: [],
+      pricesPages: [],
+      customAnchorPages: [
+        {
+          route: "game",
+          slug: "karaoke",
+          anchors: [{ component: "faq", id: "questions" }],
+        },
+      ],
+    });
+
+    expect(urls.filter((url) => url.customAnchor)).toEqual([
+      {
+        route: "game",
+        slug: "karaoke",
+        customAnchor: { component: "faq", id: "questions" },
+        fr: "/jeux/karaoke/#questions",
+        en: "/en/games/karaoke/#questions",
+      },
+    ]);
+  });
+});
+
+it("counts only anchor-free urls as whole pages", () => {
+  const urls = toGlobalUrls({
+    gameSlugs: ["karaoke"],
+    eventSlugs: [],
+    pricesPages: [{ route: "game", slug: "karaoke" }],
+    customAnchorPages: [
+      {
+        route: "game",
+        slug: "karaoke",
+        anchors: [{ component: "faq", id: "questions" }],
+      },
+    ],
+  });
+
+  expect(
+    urls
+      .filter((url) => url.route === "game")
+      .filter((url) => isWholePage(url))
+      .map((url) => url.fr),
+  ).toEqual(["/jeux/karaoke/"]);
 });
 
 it("gives blog urls no English path", () => {

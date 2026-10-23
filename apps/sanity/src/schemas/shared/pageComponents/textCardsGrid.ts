@@ -6,6 +6,7 @@ import {
 } from "../localized";
 import { iconMedia } from "../../../components/IconInput";
 import { iconField } from "../iconField";
+import { anchorField, withAnchor } from "../anchorField";
 
 export const keywordCardType = defineType({
   name: "keywordCard",
@@ -86,16 +87,20 @@ export const textCardsGridType = defineType({
       of: [defineArrayMember({ type: "keywordCard" })],
       validation: (rule) => rule.required().min(3).max(6),
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       heading: "heading",
       cards: "cards",
     },
     prepare({
+      anchor,
       heading,
       cards,
     }: {
+      anchor?: string;
       heading?: LocalizedEntry[];
       cards?: unknown[];
     }) {
@@ -103,7 +108,10 @@ export const textCardsGridType = defineType({
 
       return {
         title: frenchValue(heading) ?? "Text Cards Grid",
-        subtitle: `Text Cards Grid · ${count} card${count === 1 ? "" : "s"}`,
+        subtitle: withAnchor(
+          `Text Cards Grid · ${count} card${count === 1 ? "" : "s"}`,
+          anchor,
+        ),
       };
     },
   },

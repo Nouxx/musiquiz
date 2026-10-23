@@ -12,6 +12,7 @@ interface Props {
   background?: "vivid" | "muted";
   cta?: CtaLink;
   cards: CardItem[];
+  id?: string;
 }
 
 const {
@@ -21,6 +22,7 @@ const {
   background = "muted",
   cta,
   cards,
+  id,
 } = Astro.props;
 
 const count = cards.length;
@@ -28,7 +30,7 @@ const size = count <= 3 ? "large" : "small";
 const columns = Math.min(count, 4);
 ---
 
-<Section surface={background} spacing="l">
+<Section {id} surface={background} spacing="l">
   <div
     class:list={["cards-grid", align, background]}
     style={{

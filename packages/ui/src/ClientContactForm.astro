@@ -32,6 +32,7 @@ interface Props {
   mailMaxLength: number;
   phoneMaxLength: number;
   messageMaxLength: number;
+  id?: string;
 }
 
 const {
@@ -58,6 +59,7 @@ const {
   mailMaxLength,
   phoneMaxLength,
   messageMaxLength,
+  id,
 } = Astro.props;
 
 // the section can appear more than once on a page, and a label only points at
@@ -65,7 +67,7 @@ const {
 const uid = crypto.randomUUID().slice(0, 8);
 ---
 
-<Section spacing="m">
+<Section {id} spacing="m">
   <TwoBlocks>
     <div slot="first" class="media">
       <MiniCarousel

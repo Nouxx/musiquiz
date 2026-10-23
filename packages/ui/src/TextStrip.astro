@@ -12,13 +12,14 @@ interface Props {
   cta?: CtaLink;
   ctaTone?: "red" | "blue";
   images: ImageSource[];
+  id?: string;
 }
 
-const { badge, title, body, additionalCtas, cta, ctaTone, images } =
+const { badge, title, body, additionalCtas, cta, ctaTone, images, id } =
   Astro.props;
 ---
 
-<Section spacing="m">
+<Section {id} spacing="m">
   <div class="text-strip">
     <TextBlock
       {badge}

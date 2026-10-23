@@ -44,6 +44,7 @@ interface Props {
   participantsMaxLength: number;
   budgetMaxLength: number;
   messageMaxLength: number;
+  id?: string;
 }
 
 const {
@@ -83,6 +84,7 @@ const {
   participantsMaxLength,
   budgetMaxLength,
   messageMaxLength,
+  id,
 } = Astro.props;
 
 // the section can appear more than once on a page, and a label only points at
@@ -90,7 +92,7 @@ const {
 const uid = crypto.randomUUID().slice(0, 8);
 ---
 
-<Section surface="muted" spacing="m">
+<Section {id} surface="muted" spacing="m">
   <Card border="blue" class="panel">
     <form class="form" data-quotation-form>
       <div class="body">

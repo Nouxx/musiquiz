@@ -5,6 +5,7 @@ import {
   noMissingLanguage,
   requiredInEveryLanguage,
 } from "../localized";
+import { anchorField, withAnchor } from "../anchorField";
 
 type CarouselParent = {
   cta?: { label?: LocalizedEntry[] };
@@ -71,16 +72,20 @@ export const carouselType = defineType({
       // this makes the alt un-authorable
       // because internationalizedArrayString (array) is rendered as grid cells as well
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       title: "title",
       slides: "slides",
     },
     prepare({
+      anchor,
       title,
       slides,
     }: {
+      anchor?: string;
       title?: LocalizedEntry[];
       slides?: unknown[];
     }) {
@@ -88,7 +93,10 @@ export const carouselType = defineType({
 
       return {
         title: frenchValue(title) ?? "Carrousel",
-        subtitle: `Carrousel · ${count} slide${count === 1 ? "" : "s"}`,
+        subtitle: withAnchor(
+          `Carrousel · ${count} slide${count === 1 ? "" : "s"}`,
+          anchor,
+        ),
       };
     },
   },

@@ -4,9 +4,10 @@ import Text from "./primitives/Text.astro";
 export interface Props {
   message: string;
   color?: "red" | "blue";
+  id?: string;
 }
 
-const { message, color = "red" } = Astro.props;
+const { message, color = "red", id } = Astro.props;
 
 /*
  * How many copies to render is a question CSS cannot answer, so the width of
@@ -57,7 +58,7 @@ const durationSeconds = (copiesPerHalf * copyWidth) / SCROLL_SPEED_PX_PER_SEC;
 const copies = Array.from({ length: copiesPerHalf * 2 });
 ---
 
-<div class:list={["banner", color]}>
+<div class:list={["banner", color]} {id}>
   <div
     class="track"
     style={{ "--rolling-banner-duration": `${durationSeconds}s` }}
@@ -79,6 +80,11 @@ const copies = Array.from({ length: copiesPerHalf * 2 });
     overflow: hidden;
     color: var(--banner-text);
     background-image: var(--banner-fill);
+  }
+
+  /* same header offset as Section */
+  .banner[id] {
+    scroll-margin-block-start: var(--space-20);
   }
 
   .banner.red {

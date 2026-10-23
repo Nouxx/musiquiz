@@ -7,6 +7,7 @@ import {
 } from "../localized";
 import { iconMedia } from "../../../components/IconInput";
 import { iconField } from "../iconField";
+import { anchorField, withAnchor } from "../anchorField";
 
 type OfferCardParent = {
   quotation?: boolean;
@@ -340,31 +341,34 @@ export const offersType = defineType({
           return value?.length === 2 ? true : "Exactly two groups.";
         }),
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       title: "title",
       layout: "layout",
       venueTitle: "venue.title",
     },
     prepare({
+      anchor,
       title,
       layout,
       venueTitle,
     }: {
+      anchor?: string;
       title?: LocalizedEntry[];
       layout?: string;
       venueTitle?: string;
     }) {
       return {
         title: frenchValue(title) ?? "Offers",
-        subtitle: [
-          "Offers",
-          layout === "groups" ? "2 groups" : "cards",
-          venueTitle,
-        ]
-          .filter(Boolean)
-          .join(" · "),
+        subtitle: withAnchor(
+          ["Offers", layout === "groups" ? "2 groups" : "cards", venueTitle]
+            .filter(Boolean)
+            .join(" · "),
+          anchor,
+        ),
       };
     },
   },

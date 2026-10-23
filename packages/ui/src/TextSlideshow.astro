@@ -18,6 +18,7 @@ interface Props {
   previousLabel: string;
   nextLabel: string;
   goToSlideLabel: string;
+  id?: string;
 }
 
 const {
@@ -33,12 +34,13 @@ const {
   previousLabel,
   nextLabel,
   goToSlideLabel,
+  id,
 } = Astro.props;
 
 const slideshowFirst = slideshowPosition === "left";
 ---
 
-<Section {surface} spacing="l">
+<Section {id} {surface} spacing="l">
   <TwoBlocks>
     <div
       slot={slideshowFirst ? "second" : "first"}
