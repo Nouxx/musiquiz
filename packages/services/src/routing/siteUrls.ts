@@ -11,8 +11,7 @@ export type SiteUrlRoute = Exclude<keyof typeof frenchRoutes, UnlistedRoute>;
 
 // the article anchor only skips the cover: not worth a link
 export type SiteUrlAnchor =
-  | Exclude<keyof typeof anchors, "article">
-  | "venueTerms";
+  Exclude<keyof typeof anchors, "article"> | "venueTerms";
 
 export type SiteUrl = {
   route: SiteUrlRoute;
