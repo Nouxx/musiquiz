@@ -23,6 +23,7 @@ const service: Parameters<typeof toEventService>[0] = {
   cities: ["Paris"],
   offers: {
     type: "offers",
+    anchor: undefined,
     title: "Nos offres",
     subTitle: undefined,
     background: "default",
