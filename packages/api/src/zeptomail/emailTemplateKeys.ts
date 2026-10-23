@@ -1,9 +1,9 @@
 type EmailTemplateKey = {
-  clientTemplateKey: string;
+  clientTemplateKey?: string;
   internalMailTemplateKey: string;
 };
 
-export const emailTemplateKeys: Record<string, EmailTemplateKey> = {
+export const emailTemplateKeys = {
   clientContact: {
     clientTemplateKey:
       "13ef.34e5f5b7aef4f343.k1.60f89490-a6d3-11f1-a4b9-dad70ff08860.1a062565c59",
@@ -28,4 +28,8 @@ export const emailTemplateKeys: Record<string, EmailTemplateKey> = {
     internalMailTemplateKey:
       "13ef.34e5f5b7aef4f343.k1.675c92d0-aac7-11f1-819f-66e0c45c7bae.1a07c3ec47d",
   },
-};
+  newsletter: {
+    internalMailTemplateKey:
+      "13ef.34e5f5b7aef4f343.k1.432a8f70-cef8-11f1-bfc4-76699466976f.1a1696cf1e7",
+  },
+} satisfies Record<string, EmailTemplateKey>;
