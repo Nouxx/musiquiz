@@ -94,7 +94,7 @@ One post of the blog, written in French only, dated, signed by a Team Member and
 _Avoid_: post, news, article (alone), blog entry
 
 **Article Body**:
-The rich text a Blog Article is written in — paragraphs, two heading levels, bullet lists, bold, links, images and tables under one header row ([ADR 0029](./docs/adr/0029-blog-article-review-and-table.md)). Richer than the site's Rich Text, which stays paragraphs only, and allowed relative links because the blog has no language prefix to skip.
+The rich text a Blog Article is written in — paragraphs, two heading levels, bullet lists, the Rich Text styles, links, images and tables under one header row ([ADR 0029](./docs/adr/0029-blog-article-review-and-table.md)). Richer than the site's Rich Text, which stays paragraphs only, and allowed relative links because the blog has no language prefix to skip.
 _Avoid_: content, post body, rich text (that is the paragraph-only one)
 
 **Article Review**:
@@ -261,7 +261,7 @@ What `@repo/services` returns: content that came out of the CMS, reshaped for th
 _Avoid_: view model, DTO, presenter
 
 **Rich Text**:
-Authored content that is more than one string — paragraphs, bold, links, and nothing else. Sanity stores it as Portable Text and that format stops at `@repo/services`: what the front end receives is a flat list of paragraphs holding spans, each already carrying its own `bold` and `href`. Resolving a span's marks is a join against the block's `markDefs`, done once in services so no UI Component ever learns what a `markDef` is.
+Authored content that is more than one string — paragraphs, line breaks, bold, italic, underline, strikethrough, links, and nothing else ([ADR 0032](./docs/adr/0032-rich-text-line-breaks-and-text-styles.md)). Sanity stores it as Portable Text and that format stops at `@repo/services`: what the front end receives is a flat list of paragraphs holding spans, each already carrying its own styles and `href`, with a line break as a `\n` in its text. Resolving a span's marks is a join against the block's `markDefs`, done once in services so no UI Component ever learns what a `markDef` is.
 _Avoid_: portable text, block content, body, HTML
 
 `@repo/services` returns **CMS content only, never interface copy.** A string the editor did not author — a label, a unit, a derived phrase like "De 4 à 6 joueurs" — belongs to the web app, in `apps/web/src/locales/`, reached through `getT(lang)`. So services hands over the values (`playerCountFrom`, `amount`) and the web app turns them into words. This is why `adaptPageComponent` takes no `lang`: the language decides how content is _selected_ inside a Query Module's projection, and how copy is _written_ in the web app, and nothing in between needs it.

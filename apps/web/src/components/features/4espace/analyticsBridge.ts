@@ -27,8 +27,7 @@ declare global {
       }
     | undefined;
   var forescapeStoreAnalytics:
-    | { triggerEvent: (name: string, order: Order) => void }
-    | undefined;
+    { triggerEvent: (name: string, order: Order) => void } | undefined;
 }
 
 type Ecommerce = Record<string, unknown>;

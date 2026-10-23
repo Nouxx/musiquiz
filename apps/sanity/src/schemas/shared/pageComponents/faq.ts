@@ -20,7 +20,7 @@ export const faqQuestionType = defineType({
       name: "answer",
       title: "Answer",
       description:
-        "Paragraphs, bold and links. The first question of the section is open when the page loads; the others open one at a time.",
+        "Paragraphs, text styles and links. Shift+Enter breaks the line without starting a paragraph. The first question of the section is open when the page loads; the others open one at a time.",
       type: "internationalizedArrayRichText",
       validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),

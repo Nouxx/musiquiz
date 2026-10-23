@@ -11,7 +11,14 @@ const { spans } = Astro.props;
 
 {
   spans.map((span) => {
-    const content = span.bold ? <strong>{span.text}</strong> : span.text;
+    const lines = span.text
+      .split("\n")
+      .map((line, index) => (index > 0 ? [<br />, line] : line));
+
+    const bold = span.bold ? <strong>{lines}</strong> : lines;
+    const italic = span.italic ? <em>{bold}</em> : bold;
+    const underline = span.underline ? <u>{italic}</u> : italic;
+    const content = span.strike ? <s>{underline}</s> : underline;
 
     return span.href ? <Link url={span.href}>{content}</Link> : content;
   })

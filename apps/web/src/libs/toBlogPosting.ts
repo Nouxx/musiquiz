@@ -18,8 +18,7 @@ export function toBlogPosting({
     "title" | "excerpt" | "publishedAt" | "updatedAt" | "readingMinutes"
   > & {
     closesOn:
-      | { kind: "venue"; slug: string }
-      | { kind: "event" | "whereToFindUs" };
+      { kind: "venue"; slug: string } | { kind: "event" | "whereToFindUs" };
     author: Pick<BlogArticlePage["author"], "name" | "jobTitle" | "profileUrl">;
   };
 }) {

@@ -1,6 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
-import { richTextFieldType } from "./shared/richText";
+import { richTextDecorators, richTextFieldType } from "./shared/richText";
 import { pageGroups } from "./shared/seo";
 import { type BodyMember, validateTables } from "./shared/articleBody";
 
@@ -191,7 +191,7 @@ export const blogArticleType = defineType({
           styles: [{ title: "Paragraph", value: "normal" }],
           lists: [],
           marks: {
-            decorators: [{ title: "Bold", value: "strong" }],
+            decorators: richTextDecorators,
             annotations: [],
           },
         }),

@@ -2,18 +2,7 @@ import type { IconName } from "./lib/icons";
 import type { MarkName } from "./lib/marks";
 
 export type SpaceScale =
-  | "1"
-  | "2"
-  | "3"
-  | "4"
-  | "5"
-  | "6"
-  | "8"
-  | "10"
-  | "12"
-  | "16"
-  | "20"
-  | "24";
+  "1" | "2" | "3" | "4" | "5" | "6" | "8" | "10" | "12" | "16" | "20" | "24";
 
 export type NavLink = {
   label: string;
@@ -149,8 +138,12 @@ export type ContactFact = {
 };
 
 export type RichTextSpan = {
+  /** "\n" is a line break inside the paragraph */
   text: string;
   bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  strike?: boolean;
   /** turns the span into a link */
   href?: string;
 };

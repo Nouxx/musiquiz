@@ -148,6 +148,7 @@ export const offerCardType = defineType({
     defineField({
       name: "body",
       title: "Paragraph",
+      description: "Shift+Enter breaks the line without starting a paragraph.",
       type: "internationalizedArrayRichText",
       fieldset: "content",
       hidden: ({ parent }) =>
@@ -199,6 +200,7 @@ export const offerGroupType = defineType({
     defineField({
       name: "body",
       title: "Body",
+      description: "Shift+Enter breaks the line without starting a paragraph.",
       type: "internationalizedArrayRichText",
       validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),

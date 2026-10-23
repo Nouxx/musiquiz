@@ -31,7 +31,7 @@ export const deckCardType = defineType({
       name: "body",
       title: "Body",
       description:
-        "Paragraphs, bold and links. An empty line between two paragraphs is drawn as a real gap, so break the copy up rather than writing one block.",
+        "Paragraphs, text styles and links. An empty line between two paragraphs is drawn as a real gap, so break the copy up rather than writing one block. Shift+Enter breaks the line without starting a paragraph.",
       type: "internationalizedArrayRichText",
       validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),

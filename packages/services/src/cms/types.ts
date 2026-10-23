@@ -18,8 +18,12 @@ export type CmsImage = {
 };
 
 export type RichTextSpan = {
+  /** "\n" is a line break inside the paragraph */
   text: string;
   bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  strike?: boolean;
   /** turns the span into a link */
   href?: string;
 };
