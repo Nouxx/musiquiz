@@ -6,6 +6,8 @@ import {
   type ValidationMessages,
 } from "./formRuntime";
 
+const RETRY_COOLDOWN_MS = 2000;
+
 type State = "submit" | "pending" | "success" | "failure";
 
 function showState({
@@ -98,9 +100,12 @@ class MusiquizNewsletterForm extends HTMLElement {
         showState({ submit, nodes: stateNodes, state: "success" });
         trackLead({ formName: "newsletter", venue: venueSlug });
       } else {
-        // the button stays live so a second click retries
-        submit.disabled = false;
         showState({ submit, nodes: stateNodes, state: "failure" });
+
+        // a cooldown before the retry, so frustrated clicking cannot hammer the worker
+        setTimeout(() => {
+          submit.disabled = false;
+        }, RETRY_COOLDOWN_MS);
       }
     });
   }
