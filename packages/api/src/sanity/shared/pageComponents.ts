@@ -373,6 +373,9 @@ export function pageComponentsProjection({
   return `
     ${field}[]{
       _type,
+      !(_type in ["venuePrices", "gamePrices"]) => {
+        "anchor": coalesce(anchor, null)
+      },
       ${rollingBannerProjection({ lang })},
       ${cardsGridProjection({ lang })},
       ${carouselProjection({ lang })},
@@ -398,8 +401,11 @@ export function pageComponentsProjection({
   `;
 }
 
+const sanityAnchorSchema = z.string().min(1).nullable();
+
 const sanityRollingBannerSchema = z.strictObject({
   _type: z.literal("rollingBanner"),
+  anchor: sanityAnchorSchema,
   message: z.string().min(1),
   color: z.enum(["red", "blue"]),
 });
@@ -416,6 +422,7 @@ export type SanityCard = z.infer<typeof sanityCardSchema>;
 
 const sanityCardsGridSchema = z.strictObject({
   _type: z.literal("cardsGrid"),
+  anchor: sanityAnchorSchema,
   heading: z.string().min(1),
   body: z.string().min(1),
   align: z.enum(["left", "center"]),
@@ -426,6 +433,7 @@ const sanityCardsGridSchema = z.strictObject({
 
 const sanityCarouselSchema = z.strictObject({
   _type: z.literal("carousel"),
+  anchor: sanityAnchorSchema,
   badge: z.string().min(1).nullable(),
   title: z.string().min(1),
   body: z.string().min(1),
@@ -444,6 +452,7 @@ const sanityCarouselSchema = z.strictObject({
 
 const sanityReviewsSchema = z.strictObject({
   _type: z.literal("reviews"),
+  anchor: sanityAnchorSchema,
   widgetId: z.string().min(1),
   badge: z.string().min(1),
   title: z.string().min(1),
@@ -527,6 +536,7 @@ const sanityGamePricesSchema = z.strictObject({
 
 const sanityFindUsSchema = z.strictObject({
   _type: z.literal("findUs"),
+  anchor: sanityAnchorSchema,
   badge: z.string().min(1),
   title: z.string().min(1),
   media: sanityImageSchema,
@@ -543,6 +553,7 @@ const sanityFindUsSchema = z.strictObject({
 
 const sanityContactPanelsSchema = z.strictObject({
   _type: z.literal("contactPanels"),
+  anchor: sanityAnchorSchema,
   media: sanityImageSchema,
   venue: sanityVenueLinksSchema,
   venueTitle: z.string().min(1),
@@ -559,12 +570,14 @@ const sanityContactPanelsSchema = z.strictObject({
 
 const sanityClientContactFormSchema = z.strictObject({
   _type: z.literal("clientContactForm"),
+  anchor: sanityAnchorSchema,
   images: z.array(sanityImageSchema).min(1).max(8),
   venueSlug: z.string().min(1),
 });
 
 const sanityQuotationFormSchema = z.strictObject({
   _type: z.literal("quotationForm"),
+  anchor: sanityAnchorSchema,
   audience: z.enum(["teamBuilding", "musiTeens"]),
   // a venue offering nothing for this audience still takes enquiries
   services: z.array(z.strictObject({ label: z.string().min(1) })),
@@ -573,6 +586,7 @@ const sanityQuotationFormSchema = z.strictObject({
 
 const sanityLogosSchema = z.strictObject({
   _type: z.literal("logos"),
+  anchor: sanityAnchorSchema,
   layout: z.enum(["inline", "stacked"]),
   surface: z.enum(["default", "muted"]),
   badge: z.string().min(1),
@@ -589,6 +603,7 @@ export type SanityFaqQuestion = z.infer<typeof sanityFaqQuestionSchema>;
 
 const sanityFaqSchema = z.strictObject({
   _type: z.literal("faq"),
+  anchor: sanityAnchorSchema,
   title: z.string().min(1),
   questions: z.array(sanityFaqQuestionSchema).min(3).max(8),
   images: z.array(sanityImageSchema).min(6).max(12),
@@ -604,6 +619,7 @@ export type SanityDeckCard = z.infer<typeof sanityDeckCardSchema>;
 
 const sanityCardsScrollerSchema = z.strictObject({
   _type: z.literal("cardsScroller"),
+  anchor: sanityAnchorSchema,
   textBlock: sanityTextBlockSchema,
   cards: z.array(sanityDeckCardSchema).min(2).max(6),
 });
@@ -624,6 +640,7 @@ export type SanityDetailGroup = z.infer<typeof sanityDetailGroupSchema>;
 
 const sanityDetailTabsSchema = z.strictObject({
   _type: z.literal("detailTabs"),
+  anchor: sanityAnchorSchema,
   title: z.string().min(1),
   groups: z.array(sanityDetailGroupSchema).min(1).max(4),
   images: z.array(sanityImageSchema).min(6).max(12),
@@ -631,6 +648,7 @@ const sanityDetailTabsSchema = z.strictObject({
 
 const sanityTextSlideshowSchema = z.strictObject({
   _type: z.literal("textSlideshow"),
+  anchor: sanityAnchorSchema,
   textBlock: sanityTextBlockSchema,
   surface: z.enum(["default", "muted"]),
   slideshowPosition: z.enum(["left", "right"]),
@@ -639,12 +657,14 @@ const sanityTextSlideshowSchema = z.strictObject({
 
 const sanityTextStripSchema = z.strictObject({
   _type: z.literal("textStrip"),
+  anchor: sanityAnchorSchema,
   textBlock: sanityTextBlockSchema,
   images: z.array(sanityImageSchema).min(6).max(12),
 });
 
 const sanityTextBodySchema = z.strictObject({
   _type: z.literal("textBody"),
+  anchor: sanityAnchorSchema,
   body: sanityRichTextSchema,
 });
 
@@ -658,6 +678,7 @@ export type SanityTextCard = z.infer<typeof sanityTextCardSchema>;
 
 const sanityTextCardsSchema = z.strictObject({
   _type: z.literal("textCards"),
+  anchor: sanityAnchorSchema,
   textBlock: sanityTextBlockSchema,
   cards: z.array(sanityTextCardSchema).min(3).max(4),
 });
@@ -672,6 +693,7 @@ export type SanityKeywordCard = z.infer<typeof sanityKeywordCardSchema>;
 
 const sanityTextCardsGridSchema = z.strictObject({
   _type: z.literal("textCardsGrid"),
+  anchor: sanityAnchorSchema,
   heading: z.string().min(1),
   body: z.string().min(1),
   cta: sanityCtaSchema.nullable(),
@@ -716,6 +738,7 @@ export type SanityOfferGroup = z.infer<typeof sanityOfferGroupSchema>;
 
 const sanityOffersSchema = z.strictObject({
   _type: z.literal("offers"),
+  anchor: sanityAnchorSchema,
   title: z.string().min(1),
   subTitle: z.string().min(1).nullable(),
   background: z.enum(["default", "muted"]),
@@ -736,6 +759,7 @@ const sanityOffersSchema = z.strictObject({
 
 const sanityVideoEmbedSchema = z.strictObject({
   _type: z.literal("videoEmbed"),
+  anchor: sanityAnchorSchema,
   videoId: z.string().regex(/^[A-Za-z0-9_-]{11}$/),
   title: z.string().min(1),
   surface: z.enum(["default", "muted", "vivid"]),

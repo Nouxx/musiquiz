@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { requiredInEveryLanguage } from "../localized";
+import { anchorField, withAnchor } from "../anchorField";
 
 const videoIdPattern = /^[A-Za-z0-9_-]{11}$/;
 
@@ -47,15 +48,17 @@ export const videoEmbedType = defineType({
       },
       validation: (rule) => rule.required(),
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       videoId: "videoId",
     },
-    prepare({ videoId }: { videoId?: string }) {
+    prepare({ anchor, videoId }: { anchor?: string; videoId?: string }) {
       return {
         title: "Video Embed",
-        subtitle: videoId,
+        subtitle: withAnchor(videoId, anchor),
       };
     },
   },

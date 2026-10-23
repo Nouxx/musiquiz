@@ -6,11 +6,17 @@ import { getGlobalGameSlugs } from "./getGlobalGameSlugs";
 import { getSiteAnchors } from "./getSiteAnchors";
 
 export async function getGlobalSiteUrls({ config }: { config: SanityConfig }) {
-  const [gameSlugs, eventSlugs, { pricesPages }] = await Promise.all([
-    getGlobalGameSlugs({ config }),
-    getGlobalEventSlugs({ config }),
-    getSiteAnchors({ config }),
-  ]);
+  const [gameSlugs, eventSlugs, { pricesPages, customAnchorPages }] =
+    await Promise.all([
+      getGlobalGameSlugs({ config }),
+      getGlobalEventSlugs({ config }),
+      getSiteAnchors({ config }),
+    ]);
 
-  return toGlobalUrls({ gameSlugs, eventSlugs, pricesPages });
+  return toGlobalUrls({
+    gameSlugs,
+    eventSlugs,
+    pricesPages,
+    customAnchorPages,
+  });
 }

@@ -18,7 +18,7 @@ export async function getVenueSiteUrls({ config }: { config: SanityConfig }) {
     venueGames,
     venueEvents,
     venueCustomPages,
-    { pricesPages, termsVenueSlugs },
+    { pricesPages, customAnchorPages, termsVenueSlugs },
   ] = await Promise.all([
     fetchVenueUrlGuide({ config }),
     getVenueSlugs({ config }),
@@ -44,6 +44,7 @@ export async function getVenueSiteUrls({ config }: { config: SanityConfig }) {
     venueEvents,
     venueCustomPages,
     pricesPages,
+    customAnchorPages,
     termsVenueSlugs,
   });
 }

@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { frenchValue, type LocalizedEntry } from "../localized";
+import { anchorField, withAnchor } from "../anchorField";
 
 export const textStripType = defineType({
   name: "textStrip",
@@ -25,16 +26,20 @@ export const textStripType = defineType({
       // this makes the alt un-authorable
       // because internationalizedArrayString (array) is rendered as grid cells as well
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       title: "textBlock.title",
       images: "images",
     },
     prepare({
+      anchor,
       title,
       images,
     }: {
+      anchor?: string;
       title?: LocalizedEntry[];
       images?: unknown[];
     }) {
@@ -42,7 +47,10 @@ export const textStripType = defineType({
 
       return {
         title: frenchValue(title) ?? "Text Strip",
-        subtitle: `Text Strip · ${count} image${count === 1 ? "" : "s"}`,
+        subtitle: withAnchor(
+          `Text Strip · ${count} image${count === 1 ? "" : "s"}`,
+          anchor,
+        ),
       };
     },
   },

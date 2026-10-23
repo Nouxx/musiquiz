@@ -4,10 +4,20 @@ import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
 
-// counts only the arrays each page renders: a hidden field keeps its old value
+const pricesTypes = `["venuePrices", "gamePrices"]`;
+
+// only the arrays each page renders: a hidden field keeps its old value
+const renderedComponents = `select(
+  _type == "whereToFindUsPage" =>
+    coalesce(componentsBeforeMap, []) + coalesce(componentsAfterMap, []),
+  pageType in ["book", "gift"] =>
+    coalesce(componentsBeforeWidget, []) + coalesce(componentsAfterWidget, []),
+  coalesce(pageComponents, [])
+)`;
+
 function siteAnchorsQuery() {
   return defineQuery(`{
-    "pricesPages": *[_type in [
+    "pages": *[_type in [
       "homepage",
       "whereToFindUsPage",
       "joinTheNetworkPage",
@@ -22,20 +32,17 @@ function siteAnchorsQuery() {
       "pageType": coalesce(pageType, null),
       "venueSlug": coalesce(venue->slug.current, null),
       "slug": coalesce(game->slug.current, event->slug.current, slug.current, null),
-      "hasPrices": count(select(
-        _type == "whereToFindUsPage" =>
-          coalesce(componentsBeforeMap, []) + coalesce(componentsAfterMap, []),
-        pageType in ["book", "gift"] =>
-          coalesce(componentsBeforeWidget, []) + coalesce(componentsAfterWidget, []),
-        coalesce(pageComponents, [])
-      )[_type in ["venuePrices", "gamePrices"]]) > 0
-    }[hasPrices]{ _type, pageType, venueSlug, slug },
+      "hasPrices": count(${renderedComponents}[_type in ${pricesTypes}]) > 0,
+      "anchors": ${renderedComponents}[
+        defined(anchor) && !(_type in ${pricesTypes})
+      ]{ "component": _type, anchor }
+    }[hasPrices || count(anchors) > 0],
     "termsVenueSlugs": *[_type == "venue" && count(terms) > 0].slug.current
   }`);
 }
 
 const sanitySiteAnchorsSchema = z.strictObject({
-  pricesPages: z.array(
+  pages: z.array(
     z.strictObject({
       _type: z.enum([
         "homepage",
@@ -51,6 +58,13 @@ const sanitySiteAnchorsSchema = z.strictObject({
       pageType: z.enum(["home", "book", "gift"]).nullable(),
       venueSlug: z.string().min(1).nullable(),
       slug: z.string().min(1).nullable(),
+      hasPrices: z.boolean(),
+      anchors: z.array(
+        z.strictObject({
+          component: z.string().min(1),
+          anchor: z.string().min(1),
+        }),
+      ),
     }),
   ),
   termsVenueSlugs: z.array(z.string().min(1)),

@@ -13,12 +13,14 @@ interface Props {
   cta?: CtaLink;
   ctaTone?: "red" | "blue";
   cards: TextCardItem[];
+  id?: string;
 }
 
-const { badge, title, body, additionalCtas, cta, ctaTone, cards } = Astro.props;
+const { badge, title, body, additionalCtas, cta, ctaTone, cards, id } =
+  Astro.props;
 ---
 
-<Section surface="vivid" spacing="l">
+<Section {id} surface="vivid" spacing="l">
   <TwoBlocks>
     <div slot="first" class="copy">
       <TextBlock

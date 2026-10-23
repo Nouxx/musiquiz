@@ -14,6 +14,7 @@ interface Props {
   ctaTone?: "red" | "blue";
   cards: DeckCard[];
   nextCardLabel: string;
+  id?: string;
 }
 
 const {
@@ -25,10 +26,11 @@ const {
   ctaTone,
   cards,
   nextCardLabel,
+  id,
 } = Astro.props;
 ---
 
-<Section spacing="l">
+<Section {id} spacing="l">
   <TwoBlocks>
     <div slot="first">
       <TextBlock

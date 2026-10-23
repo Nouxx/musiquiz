@@ -10,6 +10,7 @@ import {
   noMissingLanguage,
   requiredInEveryLanguage,
 } from "../localized";
+import { anchorField, withAnchor } from "../anchorField";
 
 export const cardType = defineType({
   name: "card",
@@ -134,16 +135,20 @@ export const cardsGridType = defineType({
       of: [defineArrayMember({ type: "card" })],
       validation: (rule) => rule.required().min(2).max(8),
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       heading: "heading",
       cards: "cards",
     },
     prepare({
+      anchor,
       heading,
       cards,
     }: {
+      anchor?: string;
       heading?: LocalizedEntry[];
       cards?: unknown[];
     }) {
@@ -151,7 +156,10 @@ export const cardsGridType = defineType({
 
       return {
         title: frenchValue(heading) ?? "Cards Grid",
-        subtitle: `Cards Grid · ${count} card${count === 1 ? "" : "s"}`,
+        subtitle: withAnchor(
+          `Cards Grid · ${count} card${count === 1 ? "" : "s"}`,
+          anchor,
+        ),
       };
     },
   },

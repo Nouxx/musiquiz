@@ -20,12 +20,13 @@ interface Props {
   facts: ContactFact[];
   cta: CtaLink;
   map: { lat: number; lng: number; title: string; apiKey: string };
+  id?: string;
 }
 
-const { media, badge, title, facts, cta, map } = Astro.props;
+const { media, badge, title, facts, cta, map, id } = Astro.props;
 ---
 
-<Section surface="media" width="content">
+<Section {id} surface="media" width="content">
   <RemoteImage slot="media" image={media} variant="cover" />
 
   <TwoBlocks>

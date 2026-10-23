@@ -4,6 +4,7 @@ import {
   type LocalizedEntry,
   requiredInEveryLanguage,
 } from "../localized";
+import { anchorField, withAnchor } from "../anchorField";
 
 export const reviewsType = defineType({
   name: "reviews",
@@ -69,16 +70,18 @@ export const reviewsType = defineType({
       },
       validation: (rule) => rule.required(),
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       title: "title",
       widgetId: "widgetId",
     },
-    prepare({ title }: { title?: LocalizedEntry[] }) {
+    prepare({ anchor, title }: { anchor?: string; title?: LocalizedEntry[] }) {
       return {
         title: frenchValue(title) ?? "Reviews",
-        subtitle: "Reviews",
+        subtitle: withAnchor("Reviews", anchor),
       };
     },
   },

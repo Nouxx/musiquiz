@@ -7,9 +7,10 @@ interface Props {
   videoId: string;
   title: string;
   surface?: "default" | "muted" | "vivid";
+  id?: string;
 }
 
-const { videoId, title, surface = "vivid" } = Astro.props;
+const { videoId, title, surface = "vivid", id } = Astro.props;
 
 // rel=0 scopes the end grid to our own channel; YouTube killed the full opt-out
 // in 2018, and modestbranding in 2023 — the title bar and "Watch on YouTube"
@@ -17,7 +18,7 @@ const { videoId, title, surface = "vivid" } = Astro.props;
 const src = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&playsinline=1`;
 ---
 
-<Section {surface} spacing="l">
+<Section {id} {surface} spacing="l">
   <Card border="thick" class="frame">
     <iframe
       class="player"

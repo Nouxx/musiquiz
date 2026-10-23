@@ -4,6 +4,7 @@ import {
   type LocalizedEntry,
   requiredInEveryLanguage,
 } from "../localized";
+import { anchorField, withAnchor } from "../anchorField";
 
 // the internationalized-array plugin filters on `language`, not on `_key`
 function seed({
@@ -119,25 +120,32 @@ export const contactPanelsType = defineType({
       }),
       validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       title: "quoteTitle",
       venueTitle: "venue.title",
       media: "media",
     },
     prepare({
+      anchor,
       title,
       venueTitle,
       media,
     }: {
+      anchor?: string;
       title?: LocalizedEntry[];
       venueTitle?: string;
       media?: PreviewValue["media"];
     }) {
       return {
         title: frenchValue(title) ?? "Contact Panels",
-        subtitle: ["Contact Panels", venueTitle].filter(Boolean).join(" · "),
+        subtitle: withAnchor(
+          ["Contact Panels", venueTitle].filter(Boolean).join(" · "),
+          anchor,
+        ),
         media,
       };
     },

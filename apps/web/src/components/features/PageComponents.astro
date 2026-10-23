@@ -47,12 +47,17 @@ const t = getT(lang);
     switch (component.type) {
       case "rollingBanner": {
         return (
-          <RollingBanner message={component.message} color={component.color} />
+          <RollingBanner
+            id={component.anchor}
+            message={component.message}
+            color={component.color}
+          />
         );
       }
       case "cardsGrid": {
         return (
           <CardsGrid
+            id={component.anchor}
             heading={component.heading}
             body={component.body}
             align={component.align}
@@ -65,6 +70,7 @@ const t = getT(lang);
       case "carousel": {
         return (
           <Carousel
+            id={component.anchor}
             badge={component.badge}
             title={component.title}
             body={component.body}
@@ -88,6 +94,7 @@ const t = getT(lang);
       case "reviews": {
         return (
           <Reviews
+            id={component.anchor}
             widgetId={component.widgetId}
             badge={component.badge}
             title={component.title}
@@ -114,6 +121,7 @@ const t = getT(lang);
       case "findUs": {
         return (
           <FindUs
+            id={component.anchor}
             media={component.media}
             badge={component.badge}
             title={component.title}
@@ -133,11 +141,14 @@ const t = getT(lang);
       case "contactPanels": {
         const { media, offer, questions } = toContactPanels({ component, t });
 
-        return <ContactPanels {media} {offer} {questions} />;
+        return (
+          <ContactPanels id={component.anchor} {media} {offer} {questions} />
+        );
       }
       case "faq": {
         return (
           <Faq
+            id={component.anchor}
             badge={t("faq.badge")}
             title={component.title}
             questions={component.questions}
@@ -148,6 +159,7 @@ const t = getT(lang);
       case "clientContactForm": {
         return (
           <ClientContactForm
+            id={component.anchor}
             images={component.images}
             badge={t("contactForm.badge")}
             title={t("contactForm.title")}
@@ -175,6 +187,7 @@ const t = getT(lang);
 
         return (
           <QuotationForm
+            id={component.anchor}
             badge={t(`${copy}.badge`)}
             title={t(`${copy}.title`)}
             lastNameLabel={t(`${copy}.lastName`)}
@@ -209,6 +222,7 @@ const t = getT(lang);
       case "logos": {
         return (
           <Logos
+            id={component.anchor}
             layout={component.layout}
             surface={component.surface}
             badge={component.badge}
@@ -220,6 +234,7 @@ const t = getT(lang);
       case "cardsScroller": {
         return (
           <CardsScroller
+            id={component.anchor}
             badge={component.textBlock.badge}
             title={component.textBlock.title}
             body={component.textBlock.body}
@@ -234,6 +249,7 @@ const t = getT(lang);
       case "textSlideshow": {
         return (
           <TextSlideshow
+            id={component.anchor}
             badge={component.textBlock.badge}
             title={component.textBlock.title}
             body={component.textBlock.body}
@@ -252,6 +268,7 @@ const t = getT(lang);
       case "textStrip": {
         return (
           <TextStrip
+            id={component.anchor}
             badge={component.textBlock.badge}
             title={component.textBlock.title}
             body={component.textBlock.body}
@@ -263,11 +280,12 @@ const t = getT(lang);
         );
       }
       case "textBody": {
-        return <TextBody body={component.body} />;
+        return <TextBody id={component.anchor} body={component.body} />;
       }
       case "textCards": {
         return (
           <TextCards
+            id={component.anchor}
             badge={component.textBlock.badge}
             title={component.textBlock.title}
             body={component.textBlock.body}
@@ -281,6 +299,7 @@ const t = getT(lang);
       case "textCardsGrid": {
         return (
           <TextCardsGrid
+            id={component.anchor}
             heading={component.heading}
             body={component.body}
             cta={component.cta}
@@ -289,11 +308,14 @@ const t = getT(lang);
         );
       }
       case "offers": {
-        return <Offers {...toOffers({ component, t, lang })} />;
+        return (
+          <Offers id={component.anchor} {...toOffers({ component, t, lang })} />
+        );
       }
       case "videoEmbed": {
         return (
           <VideoEmbed
+            id={component.anchor}
             videoId={component.videoId}
             title={component.title}
             surface={component.surface}
@@ -303,6 +325,7 @@ const t = getT(lang);
       case "detailTabs": {
         return (
           <DetailTabs
+            id={component.anchor}
             title={component.title}
             groups={component.groups}
             images={component.images}

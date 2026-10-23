@@ -5,6 +5,7 @@ import {
   noMissingLanguage,
   requiredInEveryLanguage,
 } from "../localized";
+import { anchorField, withAnchor } from "../anchorField";
 
 const DETAIL_MARKS = [
   { title: "Le 50/50", value: "50-50" },
@@ -133,18 +134,22 @@ export const detailTabsType = defineType({
       // this makes the alt un-authorable
       // because internationalizedArrayString (array) is rendered as grid cells as well
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       title: "title",
       groups: "groups",
       images: "images",
     },
     prepare({
+      anchor,
       title,
       groups,
       images,
     }: {
+      anchor?: string;
       title?: LocalizedEntry[];
       groups?: unknown[];
       images?: unknown[];
@@ -154,7 +159,10 @@ export const detailTabsType = defineType({
 
       return {
         title: frenchValue(title) ?? "Detail Tabs",
-        subtitle: `Detail Tabs · ${groupCount} group${groupCount === 1 ? "" : "s"} · ${imageCount} image${imageCount === 1 ? "" : "s"}`,
+        subtitle: withAnchor(
+          `Detail Tabs · ${groupCount} group${groupCount === 1 ? "" : "s"} · ${imageCount} image${imageCount === 1 ? "" : "s"}`,
+          anchor,
+        ),
       };
     },
   },

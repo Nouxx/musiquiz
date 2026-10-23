@@ -21,7 +21,7 @@ import {
   useToast,
 } from "@sanity/ui";
 import { useEffect, useState } from "react";
-import { useClient } from "sanity";
+import { useClient, useSchema } from "sanity";
 
 import { dataset, projectId } from "../../environments";
 import { anchorLabels, routeLabels } from "./routeLabels";
@@ -53,6 +53,8 @@ type Load<T> =
 type Row = { id: string; label: string; fr: string; en?: string };
 
 type Section = { id: string; title: string; rows: Row[] };
+
+type TitleOf = (type: string) => string;
 
 function isPublishedId(id: string) {
   return !id.startsWith("drafts.") && !id.startsWith("versions.");
@@ -100,10 +102,13 @@ function loadBlog() {
   return getBlogSiteUrls({ config });
 }
 
-function toRow(url: SiteUrl): Row {
+function toRow(url: SiteUrl, titleOf: TitleOf): Row {
   const parts = [routeLabels[url.route]];
   if (url.slug) parts.push(url.title ?? url.slug);
   if (url.anchor) parts.push(`${anchorLabels[url.anchor]} anchor`);
+  if (url.customAnchor) {
+    parts.push(titleOf(url.customAnchor.component), `#${url.customAnchor.id}`);
+  }
 
   return {
     id: url.fr,
@@ -113,12 +118,12 @@ function toRow(url: SiteUrl): Row {
   };
 }
 
-function toVenueSection(venue: VenueUrls): Section {
+function toVenueSection(venue: VenueUrls, titleOf: TitleOf): Section {
   return {
     id: venue.slug,
     title: venue.name,
     rows: [
-      ...venue.urls.map(toRow),
+      ...venue.urls.map((url) => toRow(url, titleOf)),
       ...venue.partnerLinks.map((link) => ({
         id: `${link.kind}-${link.url}`,
         label:
@@ -238,8 +243,9 @@ function UrlSection({ section }: { section: Section }) {
             </Box>
           </Flex>
         </Card>
-        {section.rows.map((row) => (
-          <UrlRow key={row.id} row={row} />
+        {/* two blocks can share an anchor: the client keeps them unique, not the schema */}
+        {section.rows.map((row, index) => (
+          <UrlRow key={`${index}-${row.id}`} row={row} />
         ))}
       </Card>
     </Stack>
@@ -304,6 +310,10 @@ function Rules() {
           • An anchor (#…) goes after the final /: /lille/reserver/#booking.
         </Text>
         <Text size={1}>
+          • Any block can get its own anchor in its Anchor field. It shows up
+          here once published.
+        </Text>
+        <Text size={1}>
           • English paths start with /en/ and use the English words:
           /en/paris/book/, never /en/paris/reserver/.
         </Text>
@@ -332,6 +342,11 @@ function Rules() {
 
 export function SiteUrlsTool() {
   const client = useClient({ apiVersion: SANITY_API_VERSION });
+  const schema = useSchema();
+
+  function titleOf(type: string) {
+    return schema.get(type)?.title ?? type;
+  }
 
   const [revision, setRevision] = useState(0);
   const [search, setSearch] = useState("");
@@ -378,21 +393,31 @@ export function SiteUrlsTool() {
             load={global}
             search={query}
             toSections={(urls) => [
-              { id: "global", title: "Global pages", rows: urls.map(toRow) },
+              {
+                id: "global",
+                title: "Global pages",
+                rows: urls.map((url) => toRow(url, titleOf)),
+              },
             ]}
           />
           <LoadedSections
             name="venue pages"
             load={venues}
             search={query}
-            toSections={(data) => data.map(toVenueSection)}
+            toSections={(data) =>
+              data.map((venue) => toVenueSection(venue, titleOf))
+            }
           />
           <LoadedSections
             name="blog pages"
             load={blog}
             search={query}
             toSections={(urls) => [
-              { id: "blog", title: "Blog, French only", rows: urls.map(toRow) },
+              {
+                id: "blog",
+                title: "Blog, French only",
+                rows: urls.map((url) => toRow(url, titleOf)),
+              },
             ]}
           />
         </Stack>

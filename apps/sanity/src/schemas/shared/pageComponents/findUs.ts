@@ -4,6 +4,7 @@ import {
   type LocalizedEntry,
   requiredInEveryLanguage,
 } from "../localized";
+import { anchorField, withAnchor } from "../anchorField";
 
 export const findUsType = defineType({
   name: "findUs",
@@ -82,25 +83,32 @@ export const findUsType = defineType({
       fieldset: "contact",
       validation: (rule) => rule.custom(requiredInEveryLanguage()),
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       title: "title",
       venueTitle: "venue.title",
       media: "media",
     },
     prepare({
+      anchor,
       title,
       venueTitle,
       media,
     }: {
+      anchor?: string;
       title?: LocalizedEntry[];
       venueTitle?: string;
       media?: PreviewValue["media"];
     }) {
       return {
         title: frenchValue(title) ?? "Find Us",
-        subtitle: ["Find Us", venueTitle].filter(Boolean).join(" · "),
+        subtitle: withAnchor(
+          ["Find Us", venueTitle].filter(Boolean).join(" · "),
+          anchor,
+        ),
         media,
       };
     },

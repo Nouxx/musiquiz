@@ -4,6 +4,7 @@ import {
   type LocalizedEntry,
   requiredInEveryLanguage,
 } from "../localized";
+import { anchorField, withAnchor } from "../anchorField";
 
 export const faqQuestionType = defineType({
   name: "faqQuestion",
@@ -68,18 +69,22 @@ export const faqType = defineType({
       // this makes the alt un-authorable
       // because internationalizedArrayString (array) is rendered as grid cells as well
     }),
+    anchorField,
   ],
   preview: {
     select: {
+      anchor: "anchor",
       title: "title",
       questions: "questions",
       images: "images",
     },
     prepare({
+      anchor,
       title,
       questions,
       images,
     }: {
+      anchor?: string;
       title?: LocalizedEntry[];
       questions?: unknown[];
       images?: unknown[];
@@ -89,7 +94,10 @@ export const faqType = defineType({
 
       return {
         title: frenchValue(title) ?? "FAQ",
-        subtitle: `FAQ · ${questionCount} question${questionCount === 1 ? "" : "s"} · ${imageCount} image${imageCount === 1 ? "" : "s"}`,
+        subtitle: withAnchor(
+          `FAQ · ${questionCount} question${questionCount === 1 ? "" : "s"} · ${imageCount} image${imageCount === 1 ? "" : "s"}`,
+          anchor,
+        ),
       };
     },
   },

@@ -11,14 +11,15 @@ interface Props {
   groups: DetailGroup[];
   images: ImageSource[];
   chooseGroupLabel: string;
+  id?: string;
 }
 
-const { title, groups, images, chooseGroupLabel } = Astro.props;
+const { title, groups, images, chooseGroupLabel, id } = Astro.props;
 
 const group = `detail-tabs-${crypto.randomUUID()}`;
 ---
 
-<Section surface="muted" spacing="l" width="content">
+<Section {id} surface="muted" spacing="l" width="content">
   <div class="detail-tabs">
     <div class="band">
       <Text as="h2" variant="title-h3">{title}</Text>
