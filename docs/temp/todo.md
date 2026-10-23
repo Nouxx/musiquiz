@@ -1,6 +1,5 @@
 # P0 (top priorities)
 
-- Add anchors in every page components
 - setup carto api key for production (restrict to domain)
 - 4escape todo file
 - 4escape widget
