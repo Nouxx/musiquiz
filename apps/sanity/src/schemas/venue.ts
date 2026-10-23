@@ -3,6 +3,7 @@ import EnvelopeIcon from "@sanity/icons/Envelope";
 import InfoOutlineIcon from "@sanity/icons/InfoOutline";
 import PinIcon from "@sanity/icons/Pin";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { BrevoListIdField } from "../components/BrevoListIdField";
 import { MapPositionInput } from "../components/MapPositionInput";
 import type { StringRule, UrlRule } from "sanity";
 import {
@@ -17,6 +18,7 @@ import { BookIcon } from "@sanity/icons/Book";
 import { ShareIcon } from "@sanity/icons/Share";
 import { CalendarIcon } from "@sanity/icons/Calendar";
 import { TrendUpwardIcon } from "@sanity/icons/TrendUpward";
+import { UsersIcon } from "@sanity/icons/Users";
 import { gtmIdValidation } from "./shared/gtmId";
 import { llmsDescriptionField } from "./shared/llmsDescription";
 
@@ -76,6 +78,7 @@ export const venueType = defineType({
     },
     { name: "booking", title: "Booking", icon: CalendarIcon },
     { name: "contact", title: "Contact", icon: EnvelopeIcon },
+    { name: "newsletter", title: "Newsletter", icon: UsersIcon },
     { name: "location", title: "Location", icon: PinIcon },
     { name: "openHours", title: "Open Hours", icon: ClockIcon },
     { name: "social", title: "Social", icon: ShareIcon },
@@ -296,6 +299,42 @@ export const venueType = defineType({
       of: [defineArrayMember({ type: "email" })],
       group: "contact",
       validation: (rule) => rule.required().min(1).unique(),
+    }),
+    defineField({
+      name: "newsletterProvider",
+      title: "Newsletter provider",
+      description:
+        "Where the footer newsletter sign-ups go. Mail to owners: each sign-up is mailed to the owner emails, to be added by hand.",
+      type: "string",
+      group: "newsletter",
+      options: {
+        list: [
+          { title: "Brevo", value: "brevo" },
+          { title: "Mail to owners (Zoho)", value: "zeptomail" },
+        ],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "zeptomail",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "brevoListId",
+      title: "Brevo list ID",
+      description:
+        "The ID of the list sign-ups join, in this venue's Brevo account under Contacts → Lists.",
+      type: "number",
+      group: "newsletter",
+      components: { field: BrevoListIdField },
+      hidden: ({ document }) => document?.newsletterProvider !== "brevo",
+      validation: (rule) => [
+        rule.custom((value, { document }) =>
+          document?.newsletterProvider === "brevo" && value === undefined
+            ? "Required when Brevo is the provider"
+            : true,
+        ),
+        rule.integer().positive(),
+      ],
     }),
     defineField({
       name: "googleMapsLink",

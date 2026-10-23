@@ -1,6 +1,6 @@
 import { expect, it } from "vitest";
 
-import { newsletterFormBodySchema } from "./newsletter";
+import { newsletterFormBodySchema, pickNewsletterChannel } from "./newsletter";
 
 function buildBody(overrides: Record<string, unknown> = {}) {
   return {
@@ -35,4 +35,39 @@ it("rejects a slug that is not a bare slug", () => {
 
 it("rejects unknown keys", () => {
   expect(accepts({ firstName: "Camille" })).toBe(false);
+});
+
+const mailing = { title: "Paris", ownerMails: ["owner@example.com"] };
+
+it("mails the owners of a venue on zeptomail, key or not", () => {
+  expect(
+    pickNewsletterChannel({
+      venue: { ...mailing, provider: "zeptomail" },
+      venueSlug: "paris",
+      brevoApiKey: "xkeysib-123",
+    }),
+  ).toEqual({ channel: "zeptomail" });
+});
+
+it("signs up to Brevo when the venue is on Brevo and has its key", () => {
+  expect(
+    pickNewsletterChannel({
+      venue: { ...mailing, provider: "brevo", brevoListId: 7 },
+      venueSlug: "paris",
+      brevoApiKey: "xkeysib-123",
+    }),
+  ).toEqual({ channel: "brevo", apiKey: "xkeysib-123", listId: 7 });
+});
+
+it("falls back to the owners and names the secret when the key is missing", () => {
+  const channel = pickNewsletterChannel({
+    venue: { ...mailing, provider: "brevo", brevoListId: 7 },
+    venueSlug: "saint-etienne",
+    brevoApiKey: undefined,
+  });
+
+  expect(channel.channel).toBe("zeptomail");
+  expect("brevoError" in channel && channel.brevoError?.message).toContain(
+    "BREVO_API_KEY_SAINT_ETIENNE",
+  );
 });

@@ -118,6 +118,14 @@ cd apps/worker && npx wrangler secret put ZOHO_API_KEY
 
 `STATIC_DEPLOY_HOOK_URL` follows the same rule, see [Creating the deploy hook](#creating-the-deploy-hook).
 
+`BREVO_API_KEY_<SLUG>` holds one venue's Brevo key, one secret per venue, see [ADR 0033](docs/adr/0033-newsletter-provider-per-venue.md). It is read by name at request time, so it is not in `Env` and needs no typegen. To put a venue's newsletter on Brevo:
+
+1. In the venue's Brevo account, generate an API key, and note the ID of the list sign-ups should join (_Contacts → Lists_).
+2. In the Studio, the venue's _Newsletter_ tab: pick Brevo, fill the list ID, publish. The field's description gives the exact secret name for this venue.
+3. On `musiquiz-worker` in the Cloudflare dashboard, _Settings → Variables and Secrets → Add_, type **Secret**, under that name. Locally, the same line in `apps/worker/.dev.vars`.
+
+Until the secret exists, sign-ups are mailed to the venue's owner emails.
+
 Adding a key means rerunning `pnpm --filter worker typegen`, which writes it into `Env` in `worker-configuration.d.ts`.
 
 `SANITY_AUTH_TOKEN` is the one secret CI holds, as a GitHub repository secret read by `deploy-sanity.yaml`. It is an **organization-level** robot token created in Sanity Manage under the organization's _Settings → API → Tokens_ (org tokens cannot be created from the CLI), and it needs **two** roles:
