@@ -1,21 +1,38 @@
-<form class="newsletter" data-newsletter>
-  <div class="newsletter-fields">
+---
+import Button from "../primitives/Button.astro";
+
+interface Props {
+  submitLabel: string;
+  pendingLabel: string;
+  successMessage: string;
+  failureMessage: string;
+}
+
+const { submitLabel, pendingLabel, successMessage, failureMessage } =
+  Astro.props;
+---
+
+<form class="newsletter" data-newsletter-form>
+  <fieldset class="newsletter-fields" data-fields>
     <slot />
     <div class="newsletter-consent">
       <slot name="consent" />
     </div>
-  </div>
-  <slot name="cta" />
-</form>
+  </fieldset>
 
-<script>
-  // the form is deliberately inert until a subscription endpoint exists.
-  for (const form of document.querySelectorAll("form[data-newsletter]")) {
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-    });
-  }
-</script>
+  <Button type="submit" tone="red" size="m" data-submit>
+    <span data-submit-label>{submitLabel}</span>
+    <span data-pending-label hidden>{pendingLabel}</span>
+  </Button>
+
+  <p class="status failure" role="alert" tabindex="-1" data-failure hidden>
+    {failureMessage}
+  </p>
+
+  <p class="status" role="status" tabindex="-1" data-success hidden>
+    {successMessage}
+  </p>
+</form>
 
 <style>
   .newsletter {
@@ -31,9 +48,24 @@
     flex-direction: column;
     gap: var(--space-3);
     align-self: stretch;
+
+    /* a fieldset carries UA chrome and a min-inline-size of min-content, which
+       would stop the fields shrinking */
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
   }
 
   .newsletter-consent {
     color: var(--color-text-on-brand-muted);
+  }
+
+  .status {
+    font: var(--paragraph-s);
+  }
+
+  .failure {
+    color: var(--color-text-error);
   }
 </style>

@@ -1,35 +1,69 @@
 ---
+import { newsletterFormLimits } from "@repo/services/form/newsletter";
 import FooterColumn from "@repo/ui/footer/FooterColumn";
 import Newsletter from "@repo/ui/footer/Newsletter";
-import Button from "@repo/ui/primitives/Button";
 import Checkbox from "@repo/ui/primitives/Checkbox";
 import TextField from "@repo/ui/primitives/TextField";
+import { toInlineScriptJson } from "@repo/utils/toInlineScriptJson";
+import { SANITY_STUDIO_WORKER_URL } from "astro:env/client";
 
 import { getLang } from "../../../libs/getLang";
 import { getT } from "../../../libs/i18n";
 
+interface Props {
+  venueSlug: string;
+}
+
+const { venueSlug } = Astro.props;
+
 const t = getT(getLang(Astro));
+
+const serializedMessages = toInlineScriptJson({
+  required: t("form.errors.required"),
+  invalidMail: t("form.errors.mail"),
+});
 ---
 
-{
-  /* the form is inert: `Newsletter` swallows the submit until a subscription
-    endpoint exists */
-}
 <FooterColumn heading={t("footer.subscribe")} gap="6">
-  <Newsletter>
-    <TextField
-      id="newsletter-mail"
-      name="mail"
-      type="email"
-      label={t("footer.mailAddress")}
-      placeholder={t("footer.mailPlaceholder")}
-      required
+  <musiquiz-newsletter-form
+    data-worker-url={`${SANITY_STUDIO_WORKER_URL}/form/newsletter`}
+    data-venue-slug={venueSlug}
+  >
+    <Newsletter
+      submitLabel={t("footer.subscribeCta")}
+      pendingLabel={t("footer.newsletterPending")}
+      successMessage={t("footer.newsletterSuccess")}
+      failureMessage={t("footer.newsletterFailure")}
+    >
+      <TextField
+        id="newsletter-mail"
+        name="mail"
+        type="email"
+        autocomplete="email"
+        label={t("footer.mailAddress")}
+        placeholder={t("footer.mailPlaceholder")}
+        maxlength={newsletterFormLimits.mail}
+        required
+      />
+      <Checkbox slot="consent" id="newsletter-consent" name="rgpd" required>
+        {t("footer.newsletterConsent")}
+      </Checkbox>
+    </Newsletter>
+    <script
+      is:inline
+      type="application/json"
+      data-messages
+      set:html={serializedMessages}
     />
-    <Checkbox slot="consent" id="newsletter-consent" name="consent" required>
-      {t("footer.newsletterConsent")}
-    </Checkbox>
-    <Button slot="cta" type="submit" tone="red" size="m">
-      {t("footer.subscribeCta")}
-    </Button>
-  </Newsletter>
+  </musiquiz-newsletter-form>
 </FooterColumn>
+
+<style>
+  musiquiz-newsletter-form {
+    display: contents; /* stops the custom element from creating a box of its own */
+  }
+</style>
+
+<script>
+  import "../../../scripts/newsletterForm";
+</script>

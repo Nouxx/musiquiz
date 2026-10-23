@@ -9,7 +9,7 @@ type Messages = ValidationMessages & {
   counter: string;
 };
 
-export type FormName = "quotation" | "contact" | "franchise";
+export type FormName = "quotation" | "contact" | "franchise" | "newsletter";
 
 type Field = HTMLInputElement | HTMLTextAreaElement;
 
