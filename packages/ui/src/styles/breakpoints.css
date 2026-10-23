@@ -134,6 +134,10 @@
    Both also gate the valley depth (0/120/240 by slot) and, at 88rem only, the
    header tuck. Change either number and those move with it.
 
+   4espace/Widget.astro in apps/web spaces the booking recap below 64rem. Not
+   ours: it is the widget's `lg`, where its recap stops sitting beside the
+   catalog in a gapped grid and stacks under it.
+
    ------------------------------------------------------------
    40rem — team member row
    ------------------------------------------------------------
@@ -148,6 +152,10 @@
    ------------------------------------------------------------
    Used by RemoteImage.astro for `footer-logo` (120px → 160px), in the
    stylesheet and in its `sizes` string. Figma step, no derivation recorded.
+
+   4espace/Widget.astro in apps/web hides the cart button below it. Not ours:
+   the widget's own `isMobile` is `(max-width: 767px)`, so the two flip
+   together.
 
    ------------------------------------------------------------
    45rem — popup logo dropped

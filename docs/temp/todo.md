@@ -1,15 +1,16 @@
 # P0 (top priorities)
 
+- Add anchors in every page components
 - setup carto api key for production (restrict to domain)
 - 4escape todo file
 - 4escape widget
   - CSS: make the cart preview lower
   - Remove red border
 - add apple pay file
+- newsletter integration
 
 # P1 (important)
 
-- Add anchors in every page components
 - Cloudflare Access policy on musiquiz-ssr. It serves drafts
 - Proper style on 404 page
 - Blog: add code block (youtube, instagram...)
@@ -22,6 +23,7 @@
 - Header logo redirects
 - Make Zod errors human readable in the build (optional)
 - Allow horaire fermé
+- Optimize build time (cache images and video)
 
 # P2 (cosmetics)
 
