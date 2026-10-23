@@ -1,7 +1,7 @@
 import {
 	processQuotationForm,
 	quotationFormBodySchema,
-} from "@repo/services/contactForm/quotation";
+} from "@repo/services/form/quotation";
 import { z } from "zod";
 
 // eslint-disable-next-line unicorn/name-replacements -- cloudflare requirements for `env`
