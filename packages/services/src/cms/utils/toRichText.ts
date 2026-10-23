@@ -10,18 +10,22 @@ const STRIKE_DECORATOR = "strike-through";
 // Enter already starts a paragraph, so Shift+Enter gives one break and never a gap: docs/adr/0032
 function toLineBreaks(
   text: string,
-  { first, last }: { first: boolean; last: boolean },
+  { atStart, atEnd }: { atStart: boolean; atEnd: boolean },
 ) {
   const collapsed = text.replaceAll(/\s*\n\s*/g, "\n");
-  const start = first ? collapsed.replace(/^\n/, "") : collapsed;
+  const start = atStart ? collapsed.replace(/^\n/, "") : collapsed;
 
-  return last ? start.replace(/\n$/, "") : start;
+  return atEnd ? start.replace(/\n$/, "") : start;
 }
 
 export function toRichTextSpans({
   children,
   markDefs,
 }: Pick<SanityRichText[number], "children" | "markDefs">): RichTextSpan[] {
+  // empty spans are allowed, so the paragraph's edges are its first and last spans with text
+  const firstText = children.findIndex((child) => child.text.trim());
+  const lastText = children.findLastIndex((child) => child.text.trim());
+
   return children.map((child, index) => {
     const link = markDefs.find((annotation) =>
       child.marks.includes(annotation._key),
@@ -29,8 +33,8 @@ export function toRichTextSpans({
 
     return {
       text: toLineBreaks(child.text, {
-        first: index === 0,
-        last: index === children.length - 1,
+        atStart: firstText === -1 || index <= firstText,
+        atEnd: lastText === -1 || index >= lastText,
       }),
       bold: child.marks.includes(BOLD_DECORATOR) || undefined,
       italic: child.marks.includes(ITALIC_DECORATOR) || undefined,

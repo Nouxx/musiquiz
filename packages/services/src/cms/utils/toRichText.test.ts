@@ -108,3 +108,44 @@ it("drops line breaks at the edges of a paragraph", () => {
     "\nmaintenant",
   ]);
 });
+
+it("drops a leading line break behind an empty first span", () => {
+  const [paragraph] = toRichText([
+    block([
+      { text: "", marks: [] },
+      { text: "\nRéservez", marks: ["strong"] },
+    ]),
+  ]);
+
+  expect(paragraph?.spans[1]).toMatchObject({ text: "Réservez", bold: true });
+});
+
+it("drops a trailing line break ahead of an empty last span", () => {
+  const [paragraph] = toRichText([
+    block([
+      { text: "maintenant\n", marks: ["em"] },
+      { text: " ", marks: [] },
+    ]),
+  ]);
+
+  expect(paragraph?.spans[0]).toMatchObject({
+    text: "maintenant",
+    italic: true,
+  });
+});
+
+it("drops line breaks held by whitespace-only spans at the edges", () => {
+  const [paragraph] = toRichText([
+    block([
+      { text: "\n", marks: [] },
+      { text: "Réservez", marks: [] },
+      { text: " \n", marks: [] },
+    ]),
+  ]);
+
+  expect(paragraph?.spans.map((span) => span.text)).toEqual([
+    "",
+    "Réservez",
+    "",
+  ]);
+});
