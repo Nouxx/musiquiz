@@ -48,12 +48,21 @@ const { widgetId, settings, anchor } = Astro.props;
     min-block-size: 60vh;
   }
 
+  /* the widget's script reads this back to offset its scrolls and only parses
+     `px` or `rem`; registering it resolves the calc() to px */
+  @property --f-top-offset {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 0;
+  }
+
   /* 4escape injects the theme edited in its backoffice as `:root .forescape {}`
      into a style element appended to the head at runtime, so it outranks a single
      class and always lands after this file. Repeating the class buys the
      specificity back. Once `theme` and `widget_css` are emptied on their side,
      one class is enough. */
   .forescape.forescape.forescape {
+    --f-top-offset: calc(var(--size-header) + var(--space-6));
     --f-primary: var(--color-accent);
     --f-primary-hover: var(--red-600);
     --f-secondary: var(--color-surface-muted);
