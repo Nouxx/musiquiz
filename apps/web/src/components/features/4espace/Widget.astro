@@ -91,6 +91,10 @@ const { widgetId, settings, anchor } = Astro.props;
     --f-button-primary-text-color: var(--color-text-on-blue);
     --f-button-primary-border-radius: var(--radius-pill);
     --f-button-primary-border-width: 0;
+    --f-cart-border-color: var(--color-border-blue);
+    --f-cart-text-color: var(--color-text-on-blue);
+    --f-cart-content-bg-color: transparent;
+    --f-cart-content-border-width: 0;
 
     /* the widget draws its own drop shadows, the design system does not */
     --f-button-primary-shadow: none;
@@ -174,6 +178,36 @@ const { widgetId, settings, anchor } = Astro.props;
       linear-gradient(#000 0 0);
     mask-composite: exclude;
     content: "";
+  }
+
+  /* the vendor docks the cart top right, where it covers the header */
+  .forescape.forescape.forescape .f-cart {
+    inset: 50% 0 auto auto;
+    z-index: var(--layer-popup);
+    overflow: hidden;
+    translate: 0 -50%;
+    background-image: var(--color-fill-blue);
+    border-start-start-radius: var(--radius-l);
+    border-end-start-radius: var(--radius-l);
+  }
+
+  .forescape.forescape.forescape .f-cart--empty {
+    display: none;
+  }
+
+  /* 64rem — 4escape side recap, see breakpoints.css. Only its side-by-side
+     grid has a gap, so the stacked recap touches the button above it. */
+  @media (width < 64rem) {
+    .forescape.forescape.forescape .f-page-selection--side {
+      margin-block-start: var(--space-6);
+    }
+  }
+
+  /* 48rem — 4escape mobile, see breakpoints.css */
+  @media (width < 48rem) {
+    .forescape.forescape.forescape .f-cart {
+      display: none;
+    }
   }
 
   /* stylelint-enable selector-class-pattern */
