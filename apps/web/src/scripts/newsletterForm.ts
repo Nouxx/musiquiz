@@ -6,11 +6,11 @@ import {
   type ValidationMessages,
 } from "./formRuntime";
 
-type LabelName = "submit" | "pending" | "success" | "failure";
+type State = "submit" | "pending" | "success" | "failure";
 
-function showLabel(labels: HTMLElement[], name: LabelName) {
-  for (const label of labels) {
-    label.hidden = label.dataset.label !== name;
+function showState(nodes: HTMLElement[], state: State) {
+  for (const node of nodes) {
+    node.hidden = node.dataset.state !== state;
   }
 }
 
@@ -28,7 +28,9 @@ class MusiquizNewsletterForm extends HTMLElement {
     const fields = form.querySelector<HTMLFieldSetElement>("[data-fields]");
     if (!submit || !fields) return;
 
-    const labels = [...submit.querySelectorAll<HTMLElement>("[data-label]")];
+    const stateNodes = [
+      ...submit.querySelectorAll<HTMLElement>("[data-state]"),
+    ];
 
     const inputs = [...form.querySelectorAll<HTMLInputElement>("input[name]")];
 
@@ -67,7 +69,7 @@ class MusiquizNewsletterForm extends HTMLElement {
       const data = new FormData(form);
 
       submit.disabled = true;
-      showLabel(labels, "pending");
+      showState(stateNodes, "pending");
 
       const sent = await postPayload({
         workerUrl,
@@ -81,12 +83,12 @@ class MusiquizNewsletterForm extends HTMLElement {
       if (sent) {
         // a finished form should not be able to send a second copy
         fields.disabled = true;
-        showLabel(labels, "success");
+        showState(stateNodes, "success");
         trackLead({ formName: "newsletter", venue: venueSlug });
       } else {
         // the button stays live so a second click retries
         submit.disabled = false;
-        showLabel(labels, "failure");
+        showState(stateNodes, "failure");
       }
     });
   }

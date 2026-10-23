@@ -1,5 +1,6 @@
 ---
 import Button from "../primitives/Button.astro";
+import Icon from "../primitives/Icon.astro";
 
 interface Props {
   submitLabel: string;
@@ -20,11 +21,22 @@ const { submitLabel, pendingLabel, successLabel, failureLabel } = Astro.props;
   </fieldset>
 
   <Button type="submit" tone="red" size="m" data-submit>
+    <Fragment slot="icon">
+      <span data-button-icon data-state="pending" hidden>
+        <Icon name="hourglass" size="m" />
+      </span>
+      <span data-button-icon data-state="success" hidden>
+        <Icon name="check-circle" size="m" />
+      </span>
+      <span data-button-icon data-state="failure" hidden>
+        <Icon name="cross" size="m" />
+      </span>
+    </Fragment>
     <span aria-live="polite">
-      <span data-label="submit">{submitLabel}</span>
-      <span data-label="pending" hidden>{pendingLabel}</span>
-      <span data-label="success" hidden>{successLabel}</span>
-      <span data-label="failure" hidden>{failureLabel}</span>
+      <span data-state="submit">{submitLabel}</span>
+      <span data-state="pending" hidden>{pendingLabel}</span>
+      <span data-state="success" hidden>{successLabel}</span>
+      <span data-state="failure" hidden>{failureLabel}</span>
     </span>
   </Button>
 </form>
