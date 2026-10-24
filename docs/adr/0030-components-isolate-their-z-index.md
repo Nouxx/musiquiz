@@ -5,7 +5,7 @@ A UI Component that orders its own children with `z-index` sets `isolation: isol
 A `z-index` competes in the nearest ancestor stacking context, not inside the component that declares it. `CardDeck` stacked its cards at 97–100, nothing above them made a stacking context, so they competed with the header (10) and the pop-up (10) and covered both. Any value a component picks for its own needs is a bet against every overlay on the page.
 
 - Isolated roots: `Section` (covers `Logos`, `Carousel` and anything else built on it), `PageCover`, `Card`, `CardDeck`.
-- Layers: `--layer-popup` below `--layer-header`. An open menu is the user's current action; the pop-up is a promotion.
+- Layers: `--layer-popup` below `--layer-toast` below `--layer-header`. An open menu is the user's current action; a toast confirms the action just taken, so it covers the pop-up, which is a promotion. The 4escape add-to-cart alert is the only toast.
 - The mobile menu is a `<dialog>` opened with `showModal()`, so it lives in the top layer and needs no token.
 
 ## Consequences

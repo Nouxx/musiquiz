@@ -1,29 +1,18 @@
 # P0 (top priorities)
 
-- setup carto api key for production (restrict to domain)
-- 4escape todo file
-- 4escape widget
-  - CSS: make the cart preview lower
-  - Remove red border
+- setup carto api key for production (restrict to domain) - BLOCKED
+- 4escape todo file (CSP) - BLOCKED
 - add apple pay file
-- newsletter integration
+- create worker from client account and invite me as admin
 
 # P1 (important)
 
+- Header logo redirects
 - add link to video in carousel to redirect on click
 - Allow horaire fermé
 - Proper style on 404 page
 - Header logo redirects
 - Blog: add code block (youtube, instagram...)
-- Cloudflare Access policy on musiquiz-ssr. It serves drafts
-- Form security: prevent attacks
-  - honey pot
-  - rate limiting by IP
-  - Origin/Referrer check
-- TextBlock: Quand on veut un retour à la ligne, ça marche pas dans le rendu. Comme si l’équivalent de <br> ne fonctionnait pas. On peut aller à la ligne mais en ayant un grand espace (l’équivalent de <p> j’imagine).
-  - On n’a pas de mise en forme dispo à part le bold. Pas d’italique, ni souligné, ni barré (on s’en sert pas tous les jours mais parfois ça peut servir)
-- Make Zod errors human readable in the build (optional)
-- Optimize build time (cache images and video)
 
 # P2 (cosmetics)
 
@@ -49,4 +38,12 @@
   - booking and home in lille
   - try full width
 
-# Questions
+# Optional / Post-rollout
+
+- Make Zod errors human readable in the build (optional)
+- Cloudflare Access policy on musiquiz-ssr. It serves drafts
+- Form security: prevent attacks
+  - honey pot
+  - rate limiting by IP
+  - Origin/Referrer check
+- Optimize build time (cache images and video)

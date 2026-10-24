@@ -167,6 +167,10 @@
    viewport between `--space-4` gutters and the logo is hidden, since the
    design has no mobile pop-up and the text column needs the width.
 
+   4espace/Widget.astro in apps/web narrows the add-to-cart alert's
+   gutters at the same width, so the alert and the pop-up it covers keep
+   one inset.
+
    ------------------------------------------------------------
    280px — Logos heading column ceiling
    ------------------------------------------------------------

@@ -223,6 +223,19 @@ const { widgetId, settings, anchor } = Astro.props;
     display: none;
   }
 
+  /* the add-to-cart alert docks top, over the header. The vendor's `Alert`
+     has no class of its own: this matches its utility classes, and stops
+     matching without a sound if 4escape rewrites them. */
+  .forescape.forescape.forescape .f-fixed.f-top-0.f-h-12 {
+    inset-block: auto calc(var(--space-6) + env(safe-area-inset-bottom));
+    z-index: var(--layer-toast);
+    inline-size: fit-content;
+    max-inline-size: calc(100% - 2 * var(--space-6));
+    block-size: auto;
+    min-block-size: 48px;
+    border-radius: var(--radius-m);
+  }
+
   /* 64rem — 4escape side recap, see breakpoints.css. Only its side-by-side
      grid has a gap, so the stacked recap touches the button above it. */
   @media (width < 64rem) {
@@ -235,6 +248,14 @@ const { widgetId, settings, anchor } = Astro.props;
   @media (width < 48rem) {
     .forescape.forescape.forescape .f-cart {
       display: none;
+    }
+  }
+
+  /* 45rem — popup logo dropped, see breakpoints.css */
+  @media (width < 45rem) {
+    .forescape.forescape.forescape .f-fixed.f-top-0.f-h-12 {
+      inset-block-end: calc(var(--space-4) + env(safe-area-inset-bottom));
+      max-inline-size: calc(100% - 2 * var(--space-4));
     }
   }
 
