@@ -3,6 +3,7 @@ import { imageWithAltType } from "./shared/imageWithAltType";
 import { pageComponentsType } from "./shared/pageComponents";
 import { cardsGridType, cardType } from "./shared/pageComponents/cardsGrid";
 import { carouselType } from "./shared/pageComponents/carousel";
+import { carouselVideoType } from "./shared/pageComponents/carouselVideo";
 import { pageCoverType } from "./shared/pageCover";
 import { videoType } from "./shared/video";
 import { pricesFootnoteType } from "./shared/pricesFootnote";
@@ -106,6 +107,7 @@ export const schemaTypes = [
   cardsGridType,
   cardType,
   carouselType,
+  carouselVideoType,
   reviewsType,
   pricesFootnoteType,
   venuePricesType,

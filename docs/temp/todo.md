@@ -7,7 +7,6 @@
 
 # P1 (important)
 
-- add link to video in carousel to redirect on click
 - Proper style on 404 page
 - Blog: add code block (youtube, instagram...)
 
