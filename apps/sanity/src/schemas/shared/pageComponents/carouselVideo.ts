@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineField, defineType, type PreviewValue } from "sanity";
 import { videoFields } from "../video";
 
 export const carouselVideoType = defineType({
@@ -18,7 +18,7 @@ export const carouselVideoType = defineType({
   ],
   preview: {
     select: { media: "poster", link: "link" },
-    prepare({ media, link }: { media?: unknown; link?: string }) {
+    prepare({ media, link }: { media?: PreviewValue["media"]; link?: string }) {
       return {
         title: "Video",
         subtitle: link ? URL.parse(link)?.hostname : undefined,
