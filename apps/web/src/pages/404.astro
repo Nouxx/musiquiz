@@ -1,85 +1,60 @@
 ---
-import { getAlternatesUrl } from "@repo/services/routing/getAlternatesUrl";
+import { Picture } from "astro:assets";
+import { getHeaderData } from "@repo/services/cms/getHeaderData";
 import { getRoutesForLang } from "@repo/services/routing/getRoutesForLang";
+import PageCover from "@repo/ui/PageCover";
 import Button from "@repo/ui/primitives/Button";
+import RemoteImage from "@repo/ui/primitives/RemoteImage";
 import Text from "@repo/ui/primitives/Text";
 
-import Footer from "../components/features/Footer.astro";
-import Header from "../components/features/Header.astro";
+import cover from "../assets/not-found-cover.jpg";
 import Layout from "../layouts/Layout.astro";
+import { getSanityConfigFromEnvironment } from "../libs/getSanityConfigFromEnvironment";
 import { getT } from "../libs/i18n";
-import { getSite } from "../libs/getSite";
 
 // one page for both languages: Cloudflare serves the nearest file named
 // 404.html, and Astro only names the root one that way (en/404.astro would
 // become en/404/index.html)
-const blocks = (["fr", "en"] as const).map((lang) => {
-  const t = getT(lang);
-  const routes = getRoutesForLang(lang);
-  return {
-    lang,
-    heading: t("notFound.heading"),
-    body: t("notFound.body"),
-    links: [
-      { label: t("notFound.home"), url: routes.home, tone: "red" },
-      {
-        label: t("notFound.whereToFindUs"),
-        url: routes.whereToFindUs,
-        tone: "light",
-      },
-    ] as const,
-  };
-});
+const fr = getT("fr");
+const en = getT("en");
 
-const homeAlternates = getAlternatesUrl(
-  getSite(Astro),
-  (routes) => routes.home,
-);
+const { logo } = await getHeaderData({
+  config: getSanityConfigFromEnvironment(),
+  lang: "fr",
+});
 ---
 
-<Layout title={getT("fr")("notFound.title")} alternates={undefined}>
-  <Header alternates={homeAlternates} />
-
+<Layout title={fr("notFound.title")} alternates={undefined}>
   <main>
-    {
-      blocks.map((block, index) => (
-        <section lang={block.lang}>
-          <Text as={index === 0 ? "h1" : "h2"} variant="title-h2">
-            {block.heading}
-          </Text>
-          <Text as="p">{block.body}</Text>
-          <div class="links">
-            {block.links.map((link) => (
-              <Button as="a" href={link.url} tone={link.tone} size="m">
-                {link.label}
-              </Button>
-            ))}
-          </div>
-        </section>
-      ))
-    }
+    <PageCover>
+      <Picture
+        slot="media"
+        src={cover}
+        alt=""
+        widths={[640, 1024, 1536, 2048]}
+        sizes="100vw"
+        formats={["avif", "webp"]}
+        priority
+      />
+
+      <RemoteImage
+        slot="logo"
+        image={logo}
+        variant="cover-logo"
+        loading="eager"
+      />
+
+      <Text slot="heading" as="h1" variant="title-h1">
+        {fr("notFound.heading")}
+      </Text>
+
+      <Text slot="subheading" variant="paragraph-base">
+        <span lang="en">{en("notFound.heading")}</span>
+      </Text>
+
+      <Button slot="actions" as="a" href={getRoutesForLang("fr").home}>
+        {fr("notFound.home")} · <span lang="en">{en("notFound.home")}</span>
+      </Button>
+    </PageCover>
   </main>
-
-  <Footer alternates={homeAlternates} />
 </Layout>
-
-<style>
-  main {
-    display: grid;
-    gap: var(--space-10);
-    max-width: 60rem;
-    padding: var(--space-10) var(--space-4);
-    margin-inline: auto;
-  }
-
-  section {
-    display: grid;
-    gap: var(--space-4);
-  }
-
-  .links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-</style>
