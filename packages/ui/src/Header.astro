@@ -19,6 +19,8 @@ export const MODAL_ID = "mobile-menu";
 interface Props {
   logo: ImageSource;
   homeUrl: string;
+  /** @example "Accueil Musi'Quiz" */
+  homeLabel: string;
   mobileMenuLogo: ImageSource;
   lang: {
     url: string;
@@ -41,6 +43,7 @@ interface Props {
 const {
   logo,
   homeUrl,
+  homeLabel,
   linksTree,
   cta,
   menuLabel = "Menu",
@@ -58,9 +61,9 @@ const hasSocials = Astro.slots.has("socials");
 
 <header class="header">
   <div class="row">
-    <a class="logo" href={homeUrl}>
+    <a class="logo" href={homeUrl} aria-label={homeLabel}>
       <RemoteImage image={logo} variant="header-logo" loading="eager" />
-      <span class="mark" role="img" aria-label={logo.alt} set:html={logoMark} />
+      <span class="mark" aria-hidden="true" set:html={logoMark} />
     </a>
 
     <div class="bar">

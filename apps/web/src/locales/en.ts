@@ -31,6 +31,7 @@ export const en: EnglishKeys = {
     badge: "FAQ",
   },
   header: {
+    homeLink: "Musi'Quiz home",
     home: "Home",
     concept: "Concept",
     events: "Events",
