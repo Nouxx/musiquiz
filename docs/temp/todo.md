@@ -1,10 +1,7 @@
 # P0 (top priorities)
 
-- setup carto api key for production (restrict to domain)
-- 4escape todo file
-- 4escape widget
-  - CSS: make the cart preview lower
-  - Remove red border
+- setup carto api key for production (restrict to domain) - BLOCKED
+- 4escape todo file (CSP) - BLOCKED
 - add apple pay file
 - newsletter integration
 

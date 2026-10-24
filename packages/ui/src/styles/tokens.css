@@ -175,6 +175,7 @@
 
   /* the only z-indexes in the root stacking context, see docs/adr/0030 */
   --layer-popup: 10;
+  --layer-toast: 15;
   --layer-header: 20;
 
   /* 4.63vw is 80px at 1728px */
