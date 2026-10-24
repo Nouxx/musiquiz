@@ -7,7 +7,6 @@
 
 # P1 (important)
 
-- Header logo redirects
 - add link to video in carousel to redirect on click
 - Allow horaire fermé
 - Proper style on 404 page
