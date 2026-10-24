@@ -410,9 +410,7 @@ export const fr = {
   notFound: {
     title: "Page introuvable",
     heading: "Cette page n'existe pas",
-    body: "Le lien est peut-être ancien, ou l'adresse contient une faute de frappe.",
     home: "Retour à l'accueil",
-    whereToFindUs: "Trouver un centre",
   },
   llmsTxt: {
     venues: "Salles",

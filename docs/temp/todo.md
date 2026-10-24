@@ -7,7 +7,6 @@
 
 # P1 (important)
 
-- Proper style on 404 page
 - Blog: add code block (youtube, instagram...)
 
 # P2 (cosmetics)
