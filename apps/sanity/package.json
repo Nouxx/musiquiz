@@ -11,6 +11,8 @@
     "start": "sanity start",
     "validate": "sanity documents validate -y",
     "test": "vitest run",
+    "lint": "eslint .",
+    "tsc": "tsc",
     "migration:new": "sanity migration create",
     "migration:list": "sanity migration list",
     "migration:run": "sanity migration run",
