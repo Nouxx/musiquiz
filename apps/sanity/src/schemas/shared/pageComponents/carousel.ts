@@ -65,7 +65,7 @@ export const carouselType = defineType({
       type: "array",
       of: [
         defineArrayMember({ type: "imageWithAlt" }),
-        defineArrayMember({ type: "video" }),
+        defineArrayMember({ type: "carouselVideo" }),
       ],
       validation: (rule) => rule.required().min(5).max(12),
       // deliberately NOT `options: { layout: "grid" }`

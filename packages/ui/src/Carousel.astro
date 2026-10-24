@@ -10,7 +10,12 @@ import type { CtaLink, ImageSource, VideoSource } from "./types";
 
 type Slide =
   | { kind: "image"; image: ImageSource }
-  | { kind: "video"; sources: VideoSource[]; poster: ImageSource };
+  | {
+      kind: "video";
+      sources: VideoSource[];
+      poster: ImageSource;
+      link: string | undefined;
+    };
 
 interface Props {
   badge?: string;
@@ -22,6 +27,7 @@ interface Props {
   previousLabel: string;
   nextLabel: string;
   goToSlideLabel: string;
+  openPostLabel: string;
   id?: string;
 }
 
@@ -35,6 +41,7 @@ const {
   previousLabel,
   nextLabel,
   goToSlideLabel,
+  openPostLabel,
   id,
 } = Astro.props;
 
@@ -96,6 +103,17 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
           slide.kind === "image" ? (
             <li>
               <RemoteImage image={slide.image} variant="carousel-media" />
+            </li>
+          ) : slide.link ? (
+            <li class="linked">
+              <RemoteImage image={slide.poster} variant="carousel-media" />
+              <BackgroundVideo sources={slide.sources} />
+              <a
+                href={slide.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={openPostLabel}
+              />
             </li>
           ) : (
             // decorative: the slide does not exist for assistive tech
@@ -236,6 +254,28 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
     block-size: 100%;
   }
 
+  .linked > a {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+  }
+
+  /* inset, the card clips anything outside it */
+  .linked > a:focus-visible {
+    outline-offset: -4px;
+  }
+
+  .linked > :global(picture),
+  .linked > :global(video) {
+    transition: scale 300ms ease-out;
+  }
+
+  .linked:hover > :global(picture),
+  .linked:hover > :global(video) {
+    scale: 1.1;
+  }
+
   /* The travelling valley.
 
      `contain` runs the timeline from "this item's leading edge is at the start
@@ -341,6 +381,11 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
   @media (prefers-reduced-motion: reduce) {
     .track > li {
       animation: none;
+    }
+
+    .linked:hover > :global(picture),
+    .linked:hover > :global(video) {
+      scale: none;
     }
   }
 </style>

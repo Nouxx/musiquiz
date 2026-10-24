@@ -73,7 +73,7 @@ const CAROUSEL_VIDEOS = `(
    coalesce(componentsAfterWidget, []) +
    coalesce(componentsBeforeMap, []) +
    coalesce(componentsAfterMap, [])
- )[_type == "carousel"].slides[_type == "video"]`;
+ )[_type == "carousel"].slides[_type == "carouselVideo"]`;
 
 const QUERY = `*[(pageCover.background == "video" && defined(pageCover.video.file.asset)) || count(${CAROUSEL_VIDEOS}) > 0]{
   _id,

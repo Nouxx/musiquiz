@@ -62,7 +62,11 @@ export function adaptPageComponent({
         ctaTone: data.ctaTone,
         slides: data.slides.map((slide) =>
           slide.kind === "video"
-            ? { kind: "video", ...toCmsVideo(slide.video) }
+            ? {
+                kind: "video",
+                ...toCmsVideo(slide.video),
+                link: slide.link ?? undefined,
+              }
             : { kind: "image", image: toCmsImage(slide.image) },
         ),
       };

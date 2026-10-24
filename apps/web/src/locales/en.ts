@@ -17,6 +17,7 @@ export const en: EnglishKeys = {
     previous: "Previous image",
     next: "Next image",
     goToSlide: "Go to slide",
+    openPost: "View the post (opens in a new tab)",
   },
   prices: {
     book: "Book your activity",
