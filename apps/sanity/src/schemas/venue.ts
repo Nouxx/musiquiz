@@ -3,8 +3,9 @@ import EnvelopeIcon from "@sanity/icons/Envelope";
 import InfoOutlineIcon from "@sanity/icons/InfoOutline";
 import PinIcon from "@sanity/icons/Pin";
 import { defineArrayMember, defineField, defineType } from "sanity";
+import { BrevoListIdField } from "../components/BrevoListIdField";
 import { MapPositionInput } from "../components/MapPositionInput";
-import type { StringRule, UrlRule } from "sanity";
+import type { SlugValue, StringRule, UrlRule } from "sanity";
 import {
   frenchValue,
   type LocalizedEntry,
@@ -17,8 +18,14 @@ import { BookIcon } from "@sanity/icons/Book";
 import { ShareIcon } from "@sanity/icons/Share";
 import { CalendarIcon } from "@sanity/icons/Calendar";
 import { TrendUpwardIcon } from "@sanity/icons/TrendUpward";
+import { UsersIcon } from "@sanity/icons/Users";
 import { gtmIdValidation } from "./shared/gtmId";
 import { llmsDescriptionField } from "./shared/llmsDescription";
+import {
+  isVenueSlug,
+  slugifyVenueTitle,
+  VENUE_SLUG_MAX_LENGTH,
+} from "@repo/utils/venueSlug";
 
 // todo: i18n, "Fermé" is french
 function openingTimeValidation(rule: StringRule) {
@@ -59,6 +66,13 @@ function externalUrlValidation(rule: UrlRule, providerField: ProviderField) {
   });
 }
 
+function venueSlugRule(value?: SlugValue) {
+  const slug = value?.current;
+
+  if (!slug || isVenueSlug(slug)) return true;
+  return `Lowercase letters, digits and single hyphens, starting with a letter, at most ${VENUE_SLUG_MAX_LENGTH} characters. Use the "Generate" button.`;
+}
+
 const SOCIAL_DESCRIPTION =
   "Only if this venue has its own account. Leave empty to show the Musi'Quiz one.";
 
@@ -76,6 +90,7 @@ export const venueType = defineType({
     },
     { name: "booking", title: "Booking", icon: CalendarIcon },
     { name: "contact", title: "Contact", icon: EnvelopeIcon },
+    { name: "newsletter", title: "Newsletter", icon: UsersIcon },
     { name: "location", title: "Location", icon: PinIcon },
     { name: "openHours", title: "Open Hours", icon: ClockIcon },
     { name: "social", title: "Social", icon: ShareIcon },
@@ -102,7 +117,7 @@ export const venueType = defineType({
       group: "general",
       description:
         'How the venue name will appear in a URL. Use the "Generate" button.',
-      validation: (rule) => rule.required(),
+      validation: (rule) => [rule.required(), rule.custom(venueSlugRule)],
       hidden: ({ document }) => !document?.title,
       // once the slug is published, it cant be edited anymore
       readOnly: ({ document }) => {
@@ -111,6 +126,7 @@ export const venueType = defineType({
       },
       options: {
         source: "title",
+        slugify: slugifyVenueTitle,
       },
     }),
     llmsDescriptionField({
@@ -296,6 +312,42 @@ export const venueType = defineType({
       of: [defineArrayMember({ type: "email" })],
       group: "contact",
       validation: (rule) => rule.required().min(1).unique(),
+    }),
+    defineField({
+      name: "newsletterProvider",
+      title: "Newsletter provider",
+      description:
+        "Where the footer newsletter sign-ups go. Mail to owners: each sign-up is mailed to the owner emails, to be added by hand.",
+      type: "string",
+      group: "newsletter",
+      options: {
+        list: [
+          { title: "Brevo", value: "brevo" },
+          { title: "Mail to owners (Zoho)", value: "zeptomail" },
+        ],
+        layout: "radio",
+        direction: "horizontal",
+      },
+      initialValue: "zeptomail",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "brevoListId",
+      title: "Brevo list ID",
+      description:
+        "The ID of the list sign-ups join, in this venue's Brevo account under Contacts → Lists.",
+      type: "number",
+      group: "newsletter",
+      components: { field: BrevoListIdField },
+      hidden: ({ document }) => document?.newsletterProvider !== "brevo",
+      validation: (rule) => [
+        rule.custom((value, { document }) =>
+          document?.newsletterProvider === "brevo" && value === undefined
+            ? "Required when Brevo is the provider"
+            : true,
+        ),
+        rule.integer().positive(),
+      ],
     }),
     defineField({
       name: "googleMapsLink",

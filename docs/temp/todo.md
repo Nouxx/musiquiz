@@ -10,18 +10,19 @@
 
 # P1 (important)
 
-- Cloudflare Access policy on musiquiz-ssr. It serves drafts
+- add link to video in carousel to redirect on click
+- Allow horaire fermé
 - Proper style on 404 page
+- Header logo redirects
 - Blog: add code block (youtube, instagram...)
+- Cloudflare Access policy on musiquiz-ssr. It serves drafts
 - Form security: prevent attacks
   - honey pot
   - rate limiting by IP
   - Origin/Referrer check
 - TextBlock: Quand on veut un retour à la ligne, ça marche pas dans le rendu. Comme si l’équivalent de <br> ne fonctionnait pas. On peut aller à la ligne mais en ayant un grand espace (l’équivalent de <p> j’imagine).
   - On n’a pas de mise en forme dispo à part le bold. Pas d’italique, ni souligné, ni barré (on s’en sert pas tous les jours mais parfois ça peut servir)
-- Header logo redirects
 - Make Zod errors human readable in the build (optional)
-- Allow horaire fermé
 - Optimize build time (cache images and video)
 
 # P2 (cosmetics)
@@ -39,7 +40,7 @@
   - also: the bottom line can have weird display
   - the copyright should be last in this situation
 - Center the pills in "Nos modes de jeux" Lille
-- Rolling banner: parrallax effect and array of string
+- Rolling banner: parallax effect and array of string
 
 ![](./bug_line_footer.png)
 

@@ -4,7 +4,7 @@ import Text from "./Text.astro";
 import Icon from "./Icon.astro";
 import type { IconName } from "../lib/icons";
 
-type Tone = "red" | "blue" | "green" | "light";
+type Tone = "red" | "blue" | "green" | "yellow" | "light";
 
 type Size = "l" | "m" | "s";
 
@@ -41,17 +41,30 @@ const attrs = {
   ...rest,
 } as Record<string, unknown>;
 
+// the slot is for icons the page swaps at runtime: each one is wrapped in an
+// element carrying `data-button-icon`, so the padding follows the visible one
+const hasIconSlot = Astro.slots.has("icon");
+
 const iconSize = size === "l" ? "l" : "m";
 const textVariant = size === "s" ? "title-s" : "title-base";
 ---
 
 <Tag
   {...attrs}
-  class:list={["button", tone, size, icon && iconPosition, className]}
+  class:list={[
+    "button",
+    tone,
+    size,
+    icon && iconPosition,
+    hasIconSlot && `slotted-${iconPosition}`,
+    className,
+  ]}
 >
-  {icon && iconPosition === "leading" && <Icon name={icon} size={iconSize} />}
+  {iconPosition === "leading" && icon && <Icon name={icon} size={iconSize} />}
+  {iconPosition === "leading" && !icon && <slot name="icon" />}
   <Text variant={textVariant}><slot /></Text>
-  {icon && iconPosition === "trailing" && <Icon name={icon} size={iconSize} />}
+  {iconPosition === "trailing" && icon && <Icon name={icon} size={iconSize} />}
+  {iconPosition === "trailing" && !icon && <slot name="icon" />}
 </Tag>
 
 <style>
@@ -158,6 +171,12 @@ const textVariant = size === "s" ? "title-s" : "title-base";
     --button-text: var(--color-text-on-green);
   }
 
+  .yellow {
+    --button-fill: var(--color-fill-yellow);
+    --button-border: var(--color-border-yellow);
+    --button-text: var(--color-text-on-yellow);
+  }
+
   .light {
     --button-fill: var(--color-fill-light);
     --button-border: var(--color-border-light);
@@ -175,21 +194,27 @@ const textVariant = size === "s" ? "title-s" : "title-base";
     padding-inline: var(--space-6);
   }
 
-  .l.trailing {
+  .l.trailing,
+  .l.slotted-trailing:has(> [data-button-icon]:not([hidden])) {
     padding-inline-end: var(--space-6);
   }
 
-  .l.leading {
+  .l.leading,
+  .l.slotted-leading:has(> [data-button-icon]:not([hidden])) {
     padding-inline-start: var(--space-6);
   }
 
   .m.trailing,
-  .s.trailing {
+  .s.trailing,
+  .m.slotted-trailing:has(> [data-button-icon]:not([hidden])),
+  .s.slotted-trailing:has(> [data-button-icon]:not([hidden])) {
     padding-inline-end: var(--space-5);
   }
 
   .m.leading,
-  .s.leading {
+  .s.leading,
+  .m.slotted-leading:has(> [data-button-icon]:not([hidden])),
+  .s.slotted-leading:has(> [data-button-icon]:not([hidden])) {
     padding-inline-start: var(--space-5);
   }
 </style>

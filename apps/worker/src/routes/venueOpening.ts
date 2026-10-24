@@ -1,7 +1,7 @@
 import {
 	processVenueOpeningForm,
 	venueOpeningFormBodySchema,
-} from "@repo/services/contactForm/venueOpening";
+} from "@repo/services/form/venueOpening";
 import { z } from "zod";
 
 // eslint-disable-next-line unicorn/name-replacements -- cloudflare requirements for `env`

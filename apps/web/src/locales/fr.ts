@@ -64,6 +64,9 @@ export const fr = {
     mailAddress: "Adresse mail",
     mailPlaceholder: "Votre adresse mail",
     newsletterConsent: "J'accepte de recevoir les informations de Musi'Quiz",
+    newsletterPending: "Inscription…",
+    newsletterSuccess: "Inscription validée !",
+    newsletterFailure: "Échec, réessayez",
   },
   contactPage: {
     ctaLabel: "Nos coordonnées",

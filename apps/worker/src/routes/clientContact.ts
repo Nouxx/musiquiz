@@ -1,7 +1,7 @@
 import {
 	clientContactFormBodySchema,
 	processClientContactForm,
-} from "@repo/services/contactForm/clientContact";
+} from "@repo/services/form/clientContact";
 import { z } from "zod";
 
 // eslint-disable-next-line unicorn/name-replacements -- cloudflare requirements for `env`

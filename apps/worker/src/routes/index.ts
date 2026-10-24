@@ -1,5 +1,6 @@
 import { clientContactRoute } from "./clientContact";
 import { deploySiteRoute } from "./deploySite";
+import { newsletterRoute } from "./newsletter";
 import { quotationRoute } from "./quotation";
 import { venueOpeningRoute } from "./venueOpening";
 
@@ -10,5 +11,6 @@ export const routes: Record<string, RouteHandler> = {
 	"/form/client-contact": clientContactRoute,
 	"/form/quotation": quotationRoute,
 	"/form/venue-opening": venueOpeningRoute,
+	"/form/newsletter": newsletterRoute,
 	"/deploy/site": deploySiteRoute,
 };

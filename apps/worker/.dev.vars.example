@@ -5,3 +5,7 @@ ZOHO_API_KEY=
 # Workers Builds deploy hook of musiquiz-static, called by the Studio "Deploy" tool
 # prod value lives as a Cloudflare Secret on musiquiz-worker
 STATIC_DEPLOY_HOOK_URL=
+
+# one Brevo API key per venue on Brevo, named after its slug, e.g. BREVO_API_KEY_SAINT_ETIENNE
+# prod values live as Cloudflare Secrets on musiquiz-worker
+# BREVO_API_KEY_PARIS=
