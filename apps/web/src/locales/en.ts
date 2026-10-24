@@ -380,6 +380,7 @@ export const en: EnglishKeys = {
     friday: "Friday",
     saturday: "Saturday",
     sunday: "Sunday",
+    closed: "Closed",
   },
   notFound: {
     title: "Page not found",

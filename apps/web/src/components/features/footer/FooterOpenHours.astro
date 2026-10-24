@@ -1,5 +1,5 @@
 ---
-import type { VenueFooter } from "@repo/services/cms/types";
+import type { DayHours, VenueFooter } from "@repo/services/cms/types";
 import FooterColumn from "@repo/ui/footer/FooterColumn";
 import OpenHours from "@repo/ui/footer/OpenHours";
 
@@ -15,6 +15,10 @@ const { venueTitle, openHours } = Astro.props;
 
 const t = getT(getLang(Astro));
 
+function toHoursLabel(hours: DayHours) {
+  return hours.closed ? t("days.closed") : `${hours.opens} - ${hours.closes}`;
+}
+
 const days = (
   [
     "monday",
@@ -27,7 +31,7 @@ const days = (
   ] as const
 ).map((day) => ({
   label: t(`days.${day}`),
-  hours: openHours[day],
+  hours: toHoursLabel(openHours[day]),
 }));
 ---
 

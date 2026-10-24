@@ -403,6 +403,7 @@ export const fr = {
     friday: "Vendredi",
     saturday: "Samedi",
     sunday: "Dimanche",
+    closed: "Fermé",
   },
   notFound: {
     title: "Page introuvable",

@@ -7,6 +7,10 @@ import { fetchSanityData } from "./fetchData";
 import { addressProjection, sanityAddressSchema } from "./shared/address";
 import { imageProjection, sanityImageSchema } from "./shared/image";
 import {
+  openHoursProjection,
+  sanityOpenHoursSchema,
+} from "./shared/openingHours";
+import {
   pageComponentsProjection,
   sanityPageComponentSchema,
 } from "./shared/pageComponents";
@@ -37,13 +41,7 @@ function venuePageQuery({
         linkedinUrl,
         tiktokUrl,
         youtubeUrl,
-        mondayOpeningHours,
-        tuesdayOpeningHours,
-        wednesdayOpeningHours,
-        thursdayOpeningHours,
-        fridayOpeningHours,
-        saturdayOpeningHours,
-        sundayOpeningHours,
+        "openHours": ${openHoursProjection},
         "priceAmounts": *[_type == "venueGame" && venue._ref == ^._id].prices[].amount,
         "updatedAt": _updatedAt,
       },
@@ -69,13 +67,7 @@ const sanityVenuePageSchema = z.strictObject({
       linkedinUrl: z.url().nullable(),
       tiktokUrl: z.url().nullable(),
       youtubeUrl: z.url().nullable(),
-      mondayOpeningHours: z.string(),
-      tuesdayOpeningHours: z.string(),
-      wednesdayOpeningHours: z.string(),
-      thursdayOpeningHours: z.string(),
-      fridayOpeningHours: z.string(),
-      saturdayOpeningHours: z.string(),
-      sundayOpeningHours: z.string(),
+      openHours: sanityOpenHoursSchema,
       priceAmounts: z.array(z.number()),
       updatedAt: z.string().min(1),
     }),

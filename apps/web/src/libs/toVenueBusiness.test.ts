@@ -113,11 +113,16 @@ it("leaves out what the venue does not have rather than setting it undefined", (
   const bare = toVenueBusiness({
     ...venue,
     description: undefined,
-    business: { ...venue.business, priceRange: undefined },
+    business: { ...venue.business, priceRange: undefined, openingHours: [] },
     prices: undefined,
   });
 
-  for (const key of ["description", "priceRange", "hasOfferCatalog"]) {
+  for (const key of [
+    "description",
+    "priceRange",
+    "hasOfferCatalog",
+    "openingHoursSpecification",
+  ]) {
     expect(bare).not.toHaveProperty(key);
   }
 });

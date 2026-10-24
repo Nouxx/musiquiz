@@ -8,9 +8,7 @@
 # P1 (important)
 
 - add link to video in carousel to redirect on click
-- Allow horaire fermé
 - Proper style on 404 page
-- Header logo redirects
 - Blog: add code block (youtube, instagram...)
 
 # P2 (cosmetics)
