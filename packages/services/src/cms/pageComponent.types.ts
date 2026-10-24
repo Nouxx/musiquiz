@@ -35,7 +35,12 @@ type CardsGrid = {
 
 export type CarouselSlide =
   | { kind: "image"; image: CmsImage }
-  | { kind: "video"; video: CmsVideo; poster: CmsImage };
+  | {
+      kind: "video";
+      video: CmsVideo;
+      poster: CmsImage;
+      link: string | undefined;
+    };
 
 type Carousel = {
   type: "carousel";

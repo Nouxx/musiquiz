@@ -10,6 +10,7 @@ export const fr = {
     previous: "Image précédente",
     next: "Image suivante",
     goToSlide: "Aller à la diapositive",
+    openPost: "Voir la publication (nouvel onglet)",
   },
   prices: {
     book: "Réservez votre activité",

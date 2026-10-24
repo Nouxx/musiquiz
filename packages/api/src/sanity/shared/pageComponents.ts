@@ -157,9 +157,12 @@ function carouselProjection({ lang }: { lang: Lang }) {
       "cta": ${optionalCtaProjection({ field: "cta", lang })},
       "ctaTone": coalesce(ctaTone, "red"),
       "slides": slides[]{
-        "kind": select(_type == "video" => "video", "image"),
-        _type == "video" => { "video": @ ${videoProjection({ lang })} },
-        _type != "video" => { "image": @ ${imageProjection({ lang })} }
+        "kind": select(_type == "carouselVideo" => "video", "image"),
+        _type == "carouselVideo" => {
+          "video": @ ${videoProjection({ lang })},
+          "link": link
+        },
+        _type != "carouselVideo" => { "image": @ ${imageProjection({ lang })} }
       }
     }
   `;
@@ -443,7 +446,11 @@ const sanityCarouselSchema = z.strictObject({
     .array(
       z.discriminatedUnion("kind", [
         z.strictObject({ kind: z.literal("image"), image: sanityImageSchema }),
-        z.strictObject({ kind: z.literal("video"), video: sanityVideoSchema }),
+        z.strictObject({
+          kind: z.literal("video"),
+          video: sanityVideoSchema,
+          link: z.url().nullable(),
+        }),
       ]),
     )
     .min(5)

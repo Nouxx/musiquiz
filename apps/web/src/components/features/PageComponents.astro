@@ -83,11 +83,13 @@ const t = getT(lang);
                     kind: "video",
                     sources: getVideoSources(slide.video, "carousel"),
                     poster: slide.poster,
+                    link: slide.link,
                   },
             )}
             previousLabel={t("carousel.previous")}
             nextLabel={t("carousel.next")}
             goToSlideLabel={t("carousel.goToSlide")}
+            openPostLabel={t("carousel.openPost")}
           />
         );
       }
