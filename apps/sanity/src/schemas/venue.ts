@@ -21,19 +21,59 @@ import { TrendUpwardIcon } from "@sanity/icons/TrendUpward";
 import { UsersIcon } from "@sanity/icons/Users";
 import { gtmIdValidation } from "./shared/gtmId";
 import { llmsDescriptionField } from "./shared/llmsDescription";
+import { openingHoursPattern } from "@repo/utils/openingHours";
 import {
   isVenueSlug,
   slugifyVenueTitle,
   VENUE_SLUG_MAX_LENGTH,
 } from "@repo/utils/venueSlug";
 
-// todo: i18n, "Fermé" is french
-function openingTimeValidation(rule: StringRule) {
+const DAYS = [
+  { name: "monday", title: "Monday" },
+  { name: "tuesday", title: "Tuesday" },
+  { name: "wednesday", title: "Wednesday" },
+  { name: "thursday", title: "Thursday" },
+  { name: "friday", title: "Friday" },
+  { name: "saturday", title: "Saturday" },
+  { name: "sunday", title: "Sunday" },
+] as const;
+
+type Day = (typeof DAYS)[number];
+
+// a hidden field still validates, so a closed day must not check its hours
+function openingHoursValidation(rule: StringRule, day: Day) {
+  return rule.custom((value, { document }) => {
+    if (document?.[`${day.name}Closed`]) return true;
+    if (!value) return "Opening hours are required, or check Closed";
+    if (!openingHoursPattern.test(value)) {
+      return 'Must match the format "HH:mm - HH:mm"';
+    }
+    if (value === "00:00 - 00:00") return "Check Closed instead";
+    return true;
+  });
+}
+
+function dayFields(day: Day) {
   return [
-    rule.required().error("Opening hours are required"),
-    rule
-      .regex(/^(Fermé|([01]\d|2[0-3]):[0-5]\d - ([01]\d|2[0-3]):[0-5]\d)$/)
-      .error('Must match the format "HH:mm - HH:mm" or "Fermé"'),
+    defineField({
+      name: `${day.name}Closed`,
+      title: "Closed",
+      type: "boolean",
+      group: "openHours",
+      fieldset: day.name,
+      initialValue: false,
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: `${day.name}OpeningHours`,
+      title: "Opening hours",
+      description: 'Example: "09:30 - 20:00"',
+      type: "string",
+      group: "openHours",
+      fieldset: day.name,
+      hidden: ({ document }) => document?.[`${day.name}Closed`] === true,
+      validation: (rule) => openingHoursValidation(rule, day),
+    }),
   ];
 }
 
@@ -101,6 +141,7 @@ export const venueType = defineType({
   fieldsets: [
     { name: "booking", title: "Booking" },
     { name: "gifting", title: "Gifting" },
+    ...DAYS.map((day) => ({ name: day.name, title: day.title })),
   ],
   fields: [
     defineField({
@@ -233,62 +274,7 @@ export const venueType = defineType({
       hidden: ({ document }) => document?.giftingProvider !== "external",
       validation: (rule) => externalUrlValidation(rule, "giftingProvider"),
     }),
-    defineField({
-      name: "mondayOpeningHours",
-      title: "Monday opening hours",
-      description: 'Opening hours on Mondays. Example: "09:30 - 20:00"',
-      type: "string",
-      group: "openHours",
-      validation: (rule) => openingTimeValidation(rule),
-    }),
-    defineField({
-      name: "tuesdayOpeningHours",
-      title: "Tuesday opening hours",
-      description: 'Opening hours on Tuesdays. Example: "09:30 - 20:00"',
-      type: "string",
-      group: "openHours",
-      validation: (rule) => openingTimeValidation(rule),
-    }),
-    defineField({
-      name: "wednesdayOpeningHours",
-      title: "Wednesday opening hours",
-      description: 'Opening hours on Wednesdays. Example: "09:30 - 20:00"',
-      type: "string",
-      group: "openHours",
-      validation: (rule) => openingTimeValidation(rule),
-    }),
-    defineField({
-      name: "thursdayOpeningHours",
-      title: "Thursday opening hours",
-      description: 'Opening hours on Thursdays. Example: "09:30 - 20:00"',
-      type: "string",
-      group: "openHours",
-      validation: (rule) => openingTimeValidation(rule),
-    }),
-    defineField({
-      name: "fridayOpeningHours",
-      title: "Friday opening hours",
-      description: 'Opening hours on Fridays. Example: "09:30 - 20:00"',
-      type: "string",
-      group: "openHours",
-      validation: (rule) => openingTimeValidation(rule),
-    }),
-    defineField({
-      name: "saturdayOpeningHours",
-      title: "Saturday opening hours",
-      description: 'Opening hours on Saturdays. Example: "09:30 - 20:00"',
-      type: "string",
-      group: "openHours",
-      validation: (rule) => openingTimeValidation(rule),
-    }),
-    defineField({
-      name: "sundayOpeningHours",
-      title: "Sunday opening hours",
-      description: 'Opening hours on Sundays. Example: "09:30 - 20:00"',
-      type: "string",
-      group: "openHours",
-      validation: (rule) => openingTimeValidation(rule),
-    }),
+    ...DAYS.flatMap(dayFields),
     defineField({
       name: "phone",
       title: "Phone number",

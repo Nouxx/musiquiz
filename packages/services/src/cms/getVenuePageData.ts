@@ -9,6 +9,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 import type { LocalBusiness, VenuePage } from "./types";
 import { adaptPageComponent } from "./utils/adaptPageComponent";
 import { toCmsImage } from "./utils/toCmsImage";
+import { toDayHours } from "./utils/toDayHours";
 import { toOpeningHours } from "./utils/toOpeningHours";
 import { toPageCover } from "./utils/toPageCover";
 import { toSeo } from "./utils/toSeo";
@@ -34,13 +35,13 @@ function adaptBusiness(
       venue.youtubeUrl,
     ].filter((url) => url !== null),
     openingHours: toOpeningHours({
-      Monday: venue.mondayOpeningHours,
-      Tuesday: venue.tuesdayOpeningHours,
-      Wednesday: venue.wednesdayOpeningHours,
-      Thursday: venue.thursdayOpeningHours,
-      Friday: venue.fridayOpeningHours,
-      Saturday: venue.saturdayOpeningHours,
-      Sunday: venue.sundayOpeningHours,
+      Monday: toDayHours(venue.openHours.monday),
+      Tuesday: toDayHours(venue.openHours.tuesday),
+      Wednesday: toDayHours(venue.openHours.wednesday),
+      Thursday: toDayHours(venue.openHours.thursday),
+      Friday: toDayHours(venue.openHours.friday),
+      Saturday: toDayHours(venue.openHours.saturday),
+      Sunday: toDayHours(venue.openHours.sunday),
     }),
     priceRange:
       amounts.length > 0

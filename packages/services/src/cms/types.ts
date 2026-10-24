@@ -130,6 +130,16 @@ export type DayOfWeek =
   | "Saturday"
   | "Sunday";
 
+export type DayHours =
+  | { closed: true }
+  | {
+      closed: false;
+      /** @example "09:30" */
+      opens: string;
+      /** @example "01:00", earlier than `opens` when it closes after midnight */
+      closes: string;
+    };
+
 export type OpeningHours = {
   days: DayOfWeek[];
   /** @example "09:30" */
@@ -470,13 +480,13 @@ export type VenueFooter = {
   newsletter: boolean;
   venueTitle: string;
   openHours: {
-    monday: string;
-    tuesday: string;
-    wednesday: string;
-    thursday: string;
-    friday: string;
-    saturday: string;
-    sunday: string;
+    monday: DayHours;
+    tuesday: DayHours;
+    wednesday: DayHours;
+    thursday: DayHours;
+    friday: DayHours;
+    saturday: DayHours;
+    sunday: DayHours;
   };
   contact: {
     mailLabel: string;

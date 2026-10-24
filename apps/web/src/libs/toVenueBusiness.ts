@@ -99,12 +99,14 @@ export function toVenueBusiness({
     email: business.email,
     hasMap: business.mapUrl,
     sameAs: business.sameAs,
-    openingHoursSpecification: business.openingHours.map((hours) => ({
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: hours.days,
-      opens: hours.opens,
-      closes: hours.closes,
-    })),
+    ...(business.openingHours.length > 0 && {
+      openingHoursSpecification: business.openingHours.map((hours) => ({
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: hours.days,
+        opens: hours.opens,
+        closes: hours.closes,
+      })),
+    }),
     ...(business.priceRange && {
       priceRange: toPriceRange({
         priceRange: business.priceRange,

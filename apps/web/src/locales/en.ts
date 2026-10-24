@@ -31,6 +31,7 @@ export const en: EnglishKeys = {
     badge: "FAQ",
   },
   header: {
+    homeLink: "Musi'Quiz home",
     home: "Home",
     concept: "Concept",
     events: "Events",
@@ -380,6 +381,7 @@ export const en: EnglishKeys = {
     friday: "Friday",
     saturday: "Saturday",
     sunday: "Sunday",
+    closed: "Closed",
   },
   notFound: {
     title: "Page not found",

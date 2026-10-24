@@ -24,6 +24,7 @@ export const fr = {
     badge: "FAQ",
   },
   header: {
+    homeLink: "Accueil Musi'Quiz",
     home: "Accueil",
     concept: "Concept",
     events: "Occasions",
@@ -403,6 +404,7 @@ export const fr = {
     friday: "Vendredi",
     saturday: "Samedi",
     sunday: "Dimanche",
+    closed: "Fermé",
   },
   notFound: {
     title: "Page introuvable",

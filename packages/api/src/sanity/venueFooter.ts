@@ -5,6 +5,10 @@ import { z } from "zod";
 
 import { fetchSanityData } from "./fetchData";
 import { imageProjection, sanityImageSchema } from "./shared/image";
+import {
+  openHoursProjection,
+  sanityOpenHoursSchema,
+} from "./shared/openingHours";
 
 function venueFooterQuery({
   lang,
@@ -25,13 +29,7 @@ function venueFooterQuery({
     },
     "venue": *[_type == "venue" && slug.current == "${venueSlug}"][0]{
       title,
-      mondayOpeningHours,
-      tuesdayOpeningHours,
-      wednesdayOpeningHours,
-      thursdayOpeningHours,
-      fridayOpeningHours,
-      saturdayOpeningHours,
-      sundayOpeningHours,
+      "openHours": ${openHoursProjection},
       mail,
       phone,
       googleMapsLink,
@@ -61,13 +59,7 @@ const sanityVenueFooterSchema = z.strictObject({
   }),
   venue: z.strictObject({
     title: z.string(),
-    fridayOpeningHours: z.string(),
-    mondayOpeningHours: z.string(),
-    saturdayOpeningHours: z.string(),
-    sundayOpeningHours: z.string(),
-    thursdayOpeningHours: z.string(),
-    tuesdayOpeningHours: z.string(),
-    wednesdayOpeningHours: z.string(),
+    openHours: sanityOpenHoursSchema,
     mail: z.email(),
     phone: z.string().min(1),
     googleMapsLink: z.string().nullable(),

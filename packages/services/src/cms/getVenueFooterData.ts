@@ -10,6 +10,7 @@ import type { SanityConfig } from "@repo/utils/sanityConfig";
 import { getRoutesForLang } from "../routing/getRoutesForLang";
 import type { VenueFooter } from "./types";
 import { toCmsImage } from "./utils/toCmsImage";
+import { toDayHours } from "./utils/toDayHours";
 
 function adaptVenueFooter({
   data,
@@ -22,20 +23,7 @@ function adaptVenueFooter({
 }): VenueFooter {
   const { footerLogo, acceptedPaymentMethods } = data.siteSettings;
 
-  const {
-    title,
-    mondayOpeningHours,
-    tuesdayOpeningHours,
-    wednesdayOpeningHours,
-    thursdayOpeningHours,
-    fridayOpeningHours,
-    saturdayOpeningHours,
-    sundayOpeningHours,
-    games,
-    mail,
-    phone,
-    googleMapsLink,
-  } = data.venue;
+  const { title, openHours, games, mail, phone, googleMapsLink } = data.venue;
 
   return {
     logo: toCmsImage(footerLogo),
@@ -50,13 +38,13 @@ function adaptVenueFooter({
     newsletter: true,
     venueTitle: title,
     openHours: {
-      monday: mondayOpeningHours,
-      tuesday: tuesdayOpeningHours,
-      wednesday: wednesdayOpeningHours,
-      thursday: thursdayOpeningHours,
-      friday: fridayOpeningHours,
-      saturday: saturdayOpeningHours,
-      sunday: sundayOpeningHours,
+      monday: toDayHours(openHours.monday),
+      tuesday: toDayHours(openHours.tuesday),
+      wednesday: toDayHours(openHours.wednesday),
+      thursday: toDayHours(openHours.thursday),
+      friday: toDayHours(openHours.friday),
+      saturday: toDayHours(openHours.saturday),
+      sunday: toDayHours(openHours.sunday),
     },
     contact: {
       mailLabel: mail,

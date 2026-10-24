@@ -1,23 +1,21 @@
-import type { DayOfWeek, OpeningHours } from "../types";
+import type { DayHours, DayOfWeek, OpeningHours } from "../types";
 
-const HOURS = /^(\d{2}:\d{2}) - (\d{2}:\d{2})$/;
-
-// a closed day ("Fermé") is left out: that is how schema.org says closed
+// a closed day is left out: that is how schema.org says closed
 export function toOpeningHours(
-  hoursByDay: Record<DayOfWeek, string>,
+  hoursByDay: Record<DayOfWeek, DayHours>,
 ): OpeningHours[] {
   const groups = new Map<string, OpeningHours>();
 
   for (const [day, hours] of Object.entries(hoursByDay)) {
-    const match = HOURS.exec(hours);
-    if (!match) continue;
+    if (hours.closed) continue;
 
-    const [, opens, closes] = match;
-    const group = groups.get(hours);
+    const { opens, closes } = hours;
+    const key = `${opens}-${closes}`;
+    const group = groups.get(key);
     if (group) {
       group.days.push(day as DayOfWeek);
     } else {
-      groups.set(hours, { days: [day as DayOfWeek], opens, closes });
+      groups.set(key, { days: [day as DayOfWeek], opens, closes });
     }
   }
 

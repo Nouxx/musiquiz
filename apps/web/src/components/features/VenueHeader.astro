@@ -102,6 +102,8 @@ const contact = {
 
 <Header
   logo={data.logo}
+  homeUrl={routes.venueHome(venueSlug)}
+  homeLabel={t("header.homeLink")}
   mobileMenuLogo={data.venue.logo}
   {linksTree}
   {cta}
