@@ -52,9 +52,20 @@ const { logo } = await getHeaderData({
         <span lang="en">{en("notFound.heading")}</span>
       </Text>
 
-      <Button slot="actions" as="a" href={getRoutesForLang("fr").home}>
-        {fr("notFound.home")} · <span lang="en">{en("notFound.home")}</span>
-      </Button>
+      <Fragment slot="actions">
+        <Button as="a" href={getRoutesForLang("fr").home}>
+          {fr("notFound.home")}
+        </Button>
+
+        <Button
+          as="a"
+          href={getRoutesForLang("en").home}
+          tone="light"
+          lang="en"
+        >
+          {en("notFound.home")}
+        </Button>
+      </Fragment>
     </PageCover>
   </main>
 </Layout>
