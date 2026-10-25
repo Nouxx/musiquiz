@@ -1,0 +1,25 @@
+<div class="footer-grid">
+  <slot />
+</div>
+
+<style>
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-10) var(--space-12);
+  }
+
+  /* 60rem — footer grid 2x2. see styles/breakpoints.css */
+  @media (width < 60rem) {
+    .footer-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* 30rem — footer grid stacked. see styles/breakpoints.css */
+  @media (width < 30rem) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

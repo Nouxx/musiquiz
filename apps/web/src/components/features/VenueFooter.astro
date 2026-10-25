@@ -3,7 +3,9 @@ import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import { getVenueFooterData } from "@repo/services/cms/getVenueFooterData";
 import Footer from "@repo/ui/Footer";
 import FooterBottom from "@repo/ui/footer/FooterBottom";
+import FooterGrid from "@repo/ui/footer/FooterGrid";
 import FooterSection from "@repo/ui/footer/FooterSection";
+import Flex from "@repo/ui/primitives/Flex";
 import Text from "@repo/ui/primitives/Text";
 
 import { getLang } from "../../libs/getLang";
@@ -44,13 +46,15 @@ const { logo, socials, contact, openHours, games, venueTitle, paymentMethods } =
     <FooterNewsletter {venueSlug} />
   </FooterSection>
 
-  <FooterSection>
+  <FooterGrid>
     <FooterOpenHours {venueTitle} {openHours} />
     <FooterContact {contact} />
-    <FooterVenueGames {games} />
-    <FooterChangeVenue {venueTitle} />
+    <Flex direction="column" gap="10">
+      <FooterVenueGames {games} />
+      <FooterChangeVenue {venueTitle} />
+    </Flex>
     <FooterGeneralInformation {alternates} />
-  </FooterSection>
+  </FooterGrid>
 
   <FooterBottom>
     <!-- todo: use current year -->

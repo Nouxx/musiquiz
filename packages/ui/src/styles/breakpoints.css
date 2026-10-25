@@ -13,12 +13,21 @@
    siblings that must change with it.
 
    ------------------------------------------------------------
-   60rem — footer columns stacked / cover columns stacked
-           / reviews columns stacked / venue prices columns stacked
-           / TwoBlocks split / header collapsed
+   60rem — footer columns stacked / footer grid 2x2
+           / cover columns stacked / reviews columns stacked
+           / venue prices columns stacked / TwoBlocks split
+           / header collapsed
    ------------------------------------------------------------
    Used by footer/FooterColumn.astro and footer/FooterSection.astro.
    Figma step, no derivation recorded.
+
+   footer/FooterGrid.astro drops from four columns to two here. Reused, not
+   derived, but it sets the floor the 30rem step below derives from: at
+   960px, 48px of gutters and three 48px gaps leave four 192px columns.
+
+   FooterColumn's 28rem cap and its full-width rule never bind inside the
+   grid: the widest cell is 432px, just under 60rem in the 2x2 layout.
+   They still drive the wrap of FooterSection's flex row.
 
    Header.astro collapses here too: picked in the browser, not measured.
    The widest row is VenueHeader's in French. The labels are the locale
@@ -137,6 +146,14 @@
    4espace/Widget.astro in apps/web spaces the booking recap below 64rem. Not
    ours: it is the widget's `lg`, where its recap stops sitting beside the
    catalog in a gapped grid and stacks under it.
+
+   ------------------------------------------------------------
+   30rem — footer grid stacked
+   ------------------------------------------------------------
+   Used by footer/FooterGrid.astro: two columns become one. Derived from
+   the 192px floor set at the 60rem step: 48px of gutters + two 192px
+   columns + the 48px gap = 480px = 30rem. Move the gap or the 60rem step
+   and this number moves with them.
 
    ------------------------------------------------------------
    40rem — team member row

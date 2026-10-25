@@ -3,6 +3,7 @@ import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import { getFooterData } from "@repo/services/cms/getFooterData";
 import Footer from "@repo/ui/Footer";
 import FooterBottom from "@repo/ui/footer/FooterBottom";
+import FooterGrid from "@repo/ui/footer/FooterGrid";
 import FooterSection from "@repo/ui/footer/FooterSection";
 import Text from "@repo/ui/primitives/Text";
 
@@ -40,12 +41,12 @@ const { logo, socials, contact, games, paymentMethods } = footerData;
     <FooterSocials {socials} />
   </FooterSection>
 
-  <FooterSection>
+  <FooterGrid>
     <FooterContact {contact} />
     <FooterGames {games} />
     <FooterChooseVenue />
     <FooterGeneralInformation {alternates} />
-  </FooterSection>
+  </FooterGrid>
 
   <FooterBottom>
     <!-- todo: use current year -->
