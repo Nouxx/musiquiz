@@ -11,9 +11,6 @@
 
 # P2 (cosmetics)
 
-- All preview in FR in Studio
-  - French label in first
-- cards image should also be clickable
 - Dev bug in sanity studio: menus disappears
 - Carousel arrows under, not above
 - Footer revamp: make a grid
@@ -38,3 +35,7 @@
   - rate limiting by IP
   - Origin/Referrer check
 - Optimize build time (cache images and video)
+
+# Questions
+
+- "All preview in FR in Studio French label in first", give me an example.
