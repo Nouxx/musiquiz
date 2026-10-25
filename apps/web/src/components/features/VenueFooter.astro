@@ -17,6 +17,7 @@ import FooterGeneralInformation from "./footer/FooterGeneralInformation.astro";
 import FooterLogo from "./footer/FooterLogo.astro";
 import FooterNewsletter from "./footer/FooterNewsletter.astro";
 import FooterOpenHours from "./footer/FooterOpenHours.astro";
+import FooterPaymentMethods from "./footer/FooterPaymentMethods.astro";
 import FooterSocials from "./footer/FooterSocials.astro";
 import FooterVenueGames from "./footer/FooterVenueGames.astro";
 
@@ -59,6 +60,7 @@ const { logo, socials, contact, openHours, games, venueTitle, paymentMethods } =
   <FooterBottom>
     <!-- todo: use current year -->
     <Text slot="left" variant="paragraph-s-sm">© Musi'Quiz 2026</Text>
-    <FooterBottomLinks slot="right" {paymentMethods} />
+    <FooterBottomLinks slot="legal" />
+    <FooterPaymentMethods slot="payments" {paymentMethods} />
   </FooterBottom>
 </Footer>
