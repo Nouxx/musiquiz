@@ -128,50 +128,49 @@ const { address, phone, mail } = contact;
       }
     </ul>
 
-    <div class="bottom">
-      <div class="contact">
-        {
-          address &&
-            (address.url ? (
-              <Link url={address.url} underline={false}>
-                <Text variant="paragraph-s">{address.label}</Text>
-              </Link>
-            ) : (
+    <div class="contact">
+      {
+        address &&
+          (address.url ? (
+            <Link url={address.url} underline={false}>
               <Text variant="paragraph-s">{address.label}</Text>
-            ))
-        }
+            </Link>
+          ) : (
+            <Text variant="paragraph-s">{address.label}</Text>
+          ))
+      }
 
-        <div class="reach">
-          <Link url={phone.url} underline={false}>
-            <Text variant="paragraph-s">{phone.label}</Text>
-          </Link>
-          -
-          <Link url={mail.url} underline={false}>
-            <Text variant="paragraph-s">{mail.label}</Text>
-          </Link>
-        </div>
-      </div>
-
-      <div class="actions">
-        <Button
-          as="a"
-          href={cta.url}
-          {...linkTarget(cta.external)}
-          tone="red"
-          size="l"
-        >
-          {cta.label}
-        </Button>
-
-        {
-          hasSocials && (
-            <ul class="socials">
-              <slot name="socials" />
-            </ul>
-          )
-        }
+      <div class="reach">
+        <Link url={phone.url} underline={false}>
+          <Text variant="paragraph-s">{phone.label}</Text>
+        </Link>
+        -
+        <Link url={mail.url} underline={false}>
+          <Text variant="paragraph-s">{mail.label}</Text>
+        </Link>
       </div>
     </div>
+
+    {/* a direct child of the sheet: sticky only pins inside its parent */}
+    <div class="cta">
+      <Button
+        as="a"
+        href={cta.url}
+        {...linkTarget(cta.external)}
+        tone="red"
+        size="l"
+      >
+        {cta.label}
+      </Button>
+    </div>
+
+    {
+      hasSocials && (
+        <ul class="socials">
+          <slot name="socials" />
+        </ul>
+      )
+    }
   </div>
 </dialog>
 
@@ -196,6 +195,9 @@ const { address, phone, mail } = contact;
     max-block-size: 100dvh;
     padding: 0;
     overflow-y: auto;
+
+    /* keeps focused links clear of the sticky CTA: 46px button + strip padding */
+    scroll-padding-block-end: calc(46px + 2 * var(--space-6));
     color: var(--color-text-on-media);
     background-image: var(--color-surface-vivid-menu);
     border: 0;
@@ -260,18 +262,12 @@ const { address, phone, mail } = contact;
     background-image: none;
   }
 
-  .bottom {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-    align-self: stretch;
-  }
-
   .contact {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
     align-items: center;
+    align-self: stretch;
     text-align: center;
   }
 
@@ -282,12 +278,24 @@ const { address, phone, mail } = contact;
     justify-content: center;
   }
 
-  .actions {
+  /* its padding is the gap around the button, so the resting layout keeps it */
+  .cta {
+    position: sticky;
+    inset-block-end: 0;
     display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-    align-items: center;
     justify-content: center;
+    align-self: stretch;
+    margin-inline: calc(-1 * var(--space-6));
+    padding: var(--space-6);
+
+    /* the gradient behind never moves, so its blur reads as the gradient */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    mask-image: linear-gradient(transparent, #000 var(--space-6));
+  }
+
+  .cta:last-child {
+    margin-block-end: calc(-1 * var(--space-6));
   }
 
   .socials {
