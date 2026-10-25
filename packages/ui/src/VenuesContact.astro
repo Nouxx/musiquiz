@@ -46,4 +46,15 @@ const { id, title, intro, venues } = Astro.props;
       column-gap: var(--space-20);
     }
   }
+
+  /* see docs/adr/0034 */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .grid > :global(li) {
+        animation: rise-in ease-out both;
+        animation-range: var(--rise-range);
+        animation-timeline: view();
+      }
+    }
+  }
 </style>
