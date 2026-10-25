@@ -168,4 +168,22 @@ const columns = Math.min(count, 4);
   .grid li > :global(*) {
     inline-size: 100%;
   }
+
+  /* unguarded, a browser without scroll timelines could leave cards hidden */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .grid li {
+        animation: cards-grid-rise ease-out both;
+        animation-range: entry 0% cover 50%;
+        animation-timeline: view();
+      }
+    }
+  }
+
+  @keyframes cards-grid-rise {
+    from {
+      opacity: 0;
+      translate: 0 15rem;
+    }
+  }
 </style>
