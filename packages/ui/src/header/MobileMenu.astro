@@ -44,9 +44,7 @@ const groups = additionalMobileMenuLink
   ? [...linksTree, additionalMobileMenuLink]
   : linksTree;
 
-const contactLines = [contact.address, contact.phone, contact.mail].filter(
-  (line) => line !== undefined,
-);
+const { address, phone, mail } = contact;
 ---
 
 <dialog
@@ -131,23 +129,28 @@ const contactLines = [contact.address, contact.phone, contact.mail].filter(
     </ul>
 
     <div class="bottom">
-      {
-        contactLines.length > 0 && (
-          <ul class="contact">
-            {contactLines.map((line) => (
-              <li>
-                {line.url ? (
-                  <Link url={line.url} underline={false}>
-                    <Text variant="paragraph-s">{line.label}</Text>
-                  </Link>
-                ) : (
-                  <Text variant="paragraph-s">{line.label}</Text>
-                )}
-              </li>
-            ))}
-          </ul>
-        )
-      }
+      <div class="contact">
+        {
+          address &&
+            (address.url ? (
+              <Link url={address.url} underline={false}>
+                <Text variant="paragraph-s">{address.label}</Text>
+              </Link>
+            ) : (
+              <Text variant="paragraph-s">{address.label}</Text>
+            ))
+        }
+
+        <div class="reach">
+          <Link url={phone.url} underline={false}>
+            <Text variant="paragraph-s">{phone.label}</Text>
+          </Link>
+          -
+          <Link url={mail.url} underline={false}>
+            <Text variant="paragraph-s">{mail.label}</Text>
+          </Link>
+        </div>
+      </div>
 
       <div class="actions">
         <Button
@@ -270,6 +273,13 @@ const contactLines = [contact.address, contact.phone, contact.mail].filter(
     gap: var(--space-1);
     align-items: center;
     text-align: center;
+  }
+
+  .reach {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+    justify-content: center;
   }
 
   .actions {
