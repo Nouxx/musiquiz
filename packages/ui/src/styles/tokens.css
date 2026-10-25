@@ -178,6 +178,10 @@
   --layer-toast: 15;
   --layer-header: 20;
 
+  /* scroll reveal, see docs/adr/0034 */
+  --rise-distance: 10rem;
+  --rise-range: entry 0% cover 50%;
+
   /* 4.63vw is 80px at 1728px */
   --space-gutter-wide: clamp(var(--space-6), 4.63vw, var(--space-20));
 

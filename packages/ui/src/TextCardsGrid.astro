@@ -124,4 +124,15 @@ const { heading, body, cta, cards, id } = Astro.props;
     align-items: center;
     justify-content: space-between;
   }
+
+  /* see docs/adr/0034 */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .card {
+        animation: rise-in ease-out both;
+        animation-range: var(--rise-range);
+        animation-timeline: view();
+      }
+    }
+  }
 </style>

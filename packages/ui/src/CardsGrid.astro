@@ -168,4 +168,15 @@ const columns = Math.min(count, 4);
   .grid li > :global(*) {
     inline-size: 100%;
   }
+
+  /* see docs/adr/0034 */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .grid li {
+        animation: rise-in ease-out both;
+        animation-range: var(--rise-range);
+        animation-timeline: view();
+      }
+    }
+  }
 </style>

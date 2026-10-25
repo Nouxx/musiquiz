@@ -38,4 +38,15 @@ const { title, intro, members, mailAriaLabel } = Astro.props;
     padding: 0;
     list-style: none;
   }
+
+  /* see docs/adr/0034 */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .members > :global(li) {
+        animation: rise-in ease-out both;
+        animation-range: var(--rise-range);
+        animation-timeline: view();
+      }
+    }
+  }
 </style>
