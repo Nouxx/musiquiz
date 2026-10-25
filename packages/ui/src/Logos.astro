@@ -334,14 +334,20 @@ const gateCss = conditions
 
       /* the estimate cannot see a word too long to break; the browser can */
       min-inline-size: min-content;
-      inline-size: calc(var(--logos-heading-inline) + var(--space-10));
-      padding-inline-end: var(--space-10);
+      inline-size: var(--logos-heading-inline);
+
+      /* the strip mask does the fade; this only hides logos under a word that outgrows it */
       background-color: var(--logos-surface);
     }
 
     .inline .strip {
       padding-inline-start: calc(
         var(--logos-heading-inline) + var(--logos-heading-gap)
+      );
+      mask-image: linear-gradient(
+        to right,
+        transparent var(--logos-heading-inline),
+        #000 calc(var(--logos-heading-inline) + var(--logos-heading-gap))
       );
     }
   }

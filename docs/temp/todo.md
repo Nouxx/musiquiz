@@ -11,7 +11,6 @@
 
 # P2 (cosmetics)
 
-- Logo strip: petit fondu en mode horizontal
 - All preview in FR in Studio
   - French label in first
 - cards image should also be clickable
