@@ -26,4 +26,15 @@ const { gap = "10" } = Astro.props;
       grid-auto-columns: 1fr;
     }
   }
+
+  /* see docs/adr/0034 */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .two-blocks > :global(*) {
+        animation: rise-in ease-out both;
+        animation-range: var(--rise-range);
+        animation-timeline: view();
+      }
+    }
+  }
 </style>
