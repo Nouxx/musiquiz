@@ -52,6 +52,7 @@ const { address, phone, mail } = contact;
   data-mobile-menu
   class="mobile-menu"
   aria-label={menuLabel}
+  autofocus
 >
   <div class="top">
     {
@@ -201,6 +202,9 @@ const { address, phone, mail } = contact;
     color: var(--color-text-on-media);
     background-image: var(--color-surface-vivid-menu);
     border: 0;
+
+    /* `autofocus` lands focus on the dialog, not the first link: iOS paints that one as focus-visible after a tap */
+    outline: none;
   }
 
   .top {
