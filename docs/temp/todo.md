@@ -11,8 +11,6 @@
 
 # P2 (cosmetics)
 
-- Dev bug in sanity studio: menus disappears
-- Carousel arrows under, not above
 - Footer revamp: make a grid
   - also: the bottom line can have weird display
   - the copyright should be last in this situation
