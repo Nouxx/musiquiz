@@ -4,7 +4,7 @@ Cards that rise into view do it with a scroll-driven animation: `animation-timel
 
 Each component writes its own rule, inside `@media (prefers-reduced-motion: no-preference)` and `@supports (animation-timeline: view())`. Without the `@supports` guard, a browser with no scroll timelines would hold the cards on the `from` keyframe, so they would stay hidden. Firefox, which only has scroll timelines behind a flag, and reduced-motion users get static cards.
 
-- Applied to: `CardsGrid`, `TextCardsGrid`, `VenuesContact`, `TeamMembers`, and the `TwoBlocks` primitive, so every component built on it reveals its two slots.
+- Applied to: `CardsGrid`, `TextCardsGrid`, `VenuesContact`, `TeamMembers`, `Offers`, and the `TwoBlocks` primitive, so every component built on it reveals its two slots.
 - Not applied to blog components: they are written for crawlers, not readers.
 - Not applied to `Carousel`: it already drives `translate` from its own view timeline.
 - A component whose cards need a different feel overrides the tokens locally rather than changing them for everyone.

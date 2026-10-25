@@ -11,7 +11,6 @@
 
 # P2 (cosmetics)
 
-- enter animation for cards (bottom to top)
 - Stronger liquid glass effect on WhereToFindUs (https://musiquiz-ssr.clement-vnnq.workers.dev/lille Safari is doing it better)
 - Logo strip: petit fondu en mode horizontal
 - All preview in FR in Studio
