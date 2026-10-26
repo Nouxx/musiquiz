@@ -13,9 +13,6 @@
 
 - Rolling banner: parallax effect and array of string
 - make the popup smaller
-- Titles and subTitle for some components (ex: cardsGrid) should have more horizontal space
-  - booking and home in lille
-  - try full width
 
 # Optional / Post-rollout
 
