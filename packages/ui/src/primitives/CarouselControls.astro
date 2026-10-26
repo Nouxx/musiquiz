@@ -14,12 +14,6 @@ interface Props {
    * `one` always reaches every image, so nothing is trimmed.
    */
   slots?: "one" | "band";
-  /**
-   * lifts the arrows out of the row at 88rem so they hang off the sides of the
-   * nearest positioned ancestor. That box owns `--gap` and, with the arrows
-   * gone, is what the dots then centre themselves in.
-   */
-  flank?: boolean;
   previousLabel: string;
   nextLabel: string;
   goToSlideLabel: string;
@@ -31,7 +25,6 @@ const {
   size = "s",
   layout = "centred",
   slots = "one",
-  flank = false,
   previousLabel,
   nextLabel,
   goToSlideLabel,
@@ -40,9 +33,7 @@ const {
 const positions = Array.from({ length: count }, (_, index) => index);
 ---
 
-<div
-  class:list={["controls", `size-${size}`, layout, `slots-${slots}`, { flank }]}
->
+<div class:list={["controls", `size-${size}`, layout, `slots-${slots}`]}>
   <ol class="dots">
     {
       positions.map((index) => (
@@ -147,22 +138,6 @@ const positions = Array.from({ length: count }, (_, index) => index);
   @media (width >= 88rem) {
     .slots-band .dots > li:nth-last-child(-n + 4) {
       display: none;
-    }
-
-    /* the arrows leave the row and hang off whatever positioned box the caller
-       wrapped them in, `--scroll-arrow-size` + `--gap` clear of it, centred on
-       that box's full height */
-    .flank .arrows {
-      position: absolute;
-      inset-block: 0;
-      inset-inline: calc(-1 * (var(--scroll-arrow-size) + var(--gap)));
-      align-items: center;
-      justify-content: space-between;
-      pointer-events: none;
-    }
-
-    .flank .arrows > :global(.scroll-arrow) {
-      pointer-events: auto;
     }
   }
 

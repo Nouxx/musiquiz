@@ -1,19 +1,30 @@
 <div class="footer-bottom">
   <slot name="left" />
-  <ul class="footer-legal">
-    <slot name="right" />
-  </ul>
+  <div class="footer-bottom-end">
+    <ul class="footer-legal">
+      <slot name="legal" />
+    </ul>
+    <slot name="payments" />
+  </div>
 </div>
 
 <style>
+  /* reversed so the copyright drops below the links once the row wraps */
   .footer-bottom {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap-reverse;
     gap: var(--space-3) var(--space-4);
     align-items: center;
     justify-content: space-between;
     color: var(--color-text-on-brand-muted);
     font: var(--paragraph-s);
+  }
+
+  .footer-bottom-end {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+    align-items: center;
   }
 
   .footer-legal {

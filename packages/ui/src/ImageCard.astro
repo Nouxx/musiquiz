@@ -14,7 +14,16 @@ const { size = "large", media, badge, title, body, cta } = Astro.props;
 ---
 
 <Card as="article" border="thin" class="card">
-  <RemoteImage image={media} variant="card-media" />
+  <div class="media">
+    <RemoteImage image={media} variant="card-media" />
+    {
+      cta && (
+        // empty and hidden: the button carries this link for keyboards and
+        // screen readers, and the image keeps its alt outside it
+        <a href={cta.url} class="media-link" tabindex="-1" aria-hidden="true" />
+      )
+    }
+  </div>
 
   <div class="content">
     <div class="stack">
@@ -58,6 +67,15 @@ const { size = "large", media, badge, title, body, cta } = Astro.props;
     block-size: 100%;
     color: var(--color-text);
     background-color: var(--color-surface);
+  }
+
+  .media {
+    position: relative;
+  }
+
+  .media-link {
+    position: absolute;
+    inset: 0;
   }
 
   .content {

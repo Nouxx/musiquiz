@@ -3,7 +3,9 @@ import type { Alternates } from "@repo/services/routing/getAlternatesUrl";
 import { getVenueFooterData } from "@repo/services/cms/getVenueFooterData";
 import Footer from "@repo/ui/Footer";
 import FooterBottom from "@repo/ui/footer/FooterBottom";
+import FooterGrid from "@repo/ui/footer/FooterGrid";
 import FooterSection from "@repo/ui/footer/FooterSection";
+import Flex from "@repo/ui/primitives/Flex";
 import Text from "@repo/ui/primitives/Text";
 
 import { getLang } from "../../libs/getLang";
@@ -15,6 +17,7 @@ import FooterGeneralInformation from "./footer/FooterGeneralInformation.astro";
 import FooterLogo from "./footer/FooterLogo.astro";
 import FooterNewsletter from "./footer/FooterNewsletter.astro";
 import FooterOpenHours from "./footer/FooterOpenHours.astro";
+import FooterPaymentMethods from "./footer/FooterPaymentMethods.astro";
 import FooterSocials from "./footer/FooterSocials.astro";
 import FooterVenueGames from "./footer/FooterVenueGames.astro";
 
@@ -44,17 +47,20 @@ const { logo, socials, contact, openHours, games, venueTitle, paymentMethods } =
     <FooterNewsletter {venueSlug} />
   </FooterSection>
 
-  <FooterSection>
+  <FooterGrid>
     <FooterOpenHours {venueTitle} {openHours} />
     <FooterContact {contact} />
-    <FooterVenueGames {games} />
-    <FooterChangeVenue {venueTitle} />
+    <Flex direction="column" gap="10">
+      <FooterVenueGames {games} />
+      <FooterChangeVenue {venueTitle} />
+    </Flex>
     <FooterGeneralInformation {alternates} />
-  </FooterSection>
+  </FooterGrid>
 
   <FooterBottom>
     <!-- todo: use current year -->
     <Text slot="left" variant="paragraph-s-sm">© Musi'Quiz 2026</Text>
-    <FooterBottomLinks slot="right" {paymentMethods} />
+    <FooterBottomLinks slot="legal" />
+    <FooterPaymentMethods slot="payments" {paymentMethods} />
   </FooterBottom>
 </Footer>

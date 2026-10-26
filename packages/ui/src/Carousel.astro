@@ -76,18 +76,6 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
             </Button>
           )
         }
-
-        <div class="controls-row">
-          <CarouselControls
-            count={slides.length}
-            controls={trackId}
-            slots="band"
-            flank
-            {previousLabel}
-            {nextLabel}
-            {goToSlideLabel}
-          />
-        </div>
       </div>
     </div>
 
@@ -125,6 +113,17 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
         )
       }
     </ul>
+
+    <div class="controls-row">
+      <CarouselControls
+        count={slides.length}
+        controls={trackId}
+        slots="band"
+        {previousLabel}
+        {nextLabel}
+        {goToSlideLabel}
+      />
+    </div>
   </div>
 </Section>
 
@@ -138,8 +137,6 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
 
     /* how far the deepest slot sits below the shallowest */
     --valley-depth: 0px;
-
-    --scroll-arrow-size: 2.25rem;
   }
 
   .header {
@@ -153,8 +150,6 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
   }
 
   .column {
-    /* the containing block the widest band hangs its arrows off */
-    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--space-10);
@@ -184,10 +179,9 @@ const trackId = `carousel-${crypto.randomUUID().slice(0, 8)}`;
   }
 
   /* the row exists so the widest band can hide the controls without reaching
-     into CarouselControls, and so its `inline-size: 100%` has the column to
-     resolve against */
+     into CarouselControls */
   .controls-row {
-    inline-size: 100%;
+    margin-block-start: var(--space-10);
   }
 
   /* ---- track ------------------------------------------------------------ */
