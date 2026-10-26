@@ -11,7 +11,6 @@
 
 # P2 (cosmetics)
 
-- Center the pills in "Nos modes de jeux" Lille
 - Rolling banner: parallax effect and array of string
 - make the popup smaller
 - Titles and subTitle for some components (ex: cardsGrid) should have more horizontal space
