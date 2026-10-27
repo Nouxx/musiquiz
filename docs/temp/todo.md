@@ -11,7 +11,6 @@
 
 # P2 (cosmetics)
 
-- Rolling banner: parallax effect and array of string
 - make the popup smaller
 
 # Optional / Post-rollout
