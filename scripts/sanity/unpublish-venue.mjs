@@ -70,8 +70,10 @@ function changedFields(published, draft) {
 }
 
 async function plan(venueId) {
-  const [venue] = await query(`*[_id == $id]{ _id }`, { id: venueId });
-  if (!venue) return { blocked: ["not published"] };
+  const [venue] = await query(`*[_id == $id && _type == "venue"]{ _id }`, {
+    id: venueId,
+  });
+  if (!venue) return { blocked: ["not a published venue"] };
 
   const { owned, mentions } = await ownedTree(venueId);
   if (mentions.length) return { blocked: mentions };
@@ -107,8 +109,16 @@ async function plan(venueId) {
   const weakens = drafts
     .map((draft) => ({ draft, paths: strongRefPaths(draft, owned) }))
     .filter(({ paths }) => paths.length);
+  const weakenedDrafts = new Set(weakens.map(({ draft }) => draft._id));
 
   const mutations = [
+    // a kept draft discarded since plan() would leave no copy; weakened drafts carry their own guard
+    ...deletes
+      .map(({ id }) => byId.get(`drafts.${id}`))
+      .filter((draft) => !weakenedDrafts.has(draft._id))
+      .map((draft) => ({
+        patch: { id: draft._id, ifRevisionID: draft._rev, set: {} },
+      })),
     ...weakens.map(({ draft, paths }) => ({
       patch: {
         id: draft._id,
