@@ -43,6 +43,9 @@ const WIDEST_VIEWPORT_PX = 3840;
 // and the cheapest insurance here.
 const EXTRA_COPIES = 2;
 
+// how far the strip drifts either way as the banner crosses the viewport
+const PARALLAX_MAX_OFFSET_VW = 10;
+
 // the two values the estimate needs from the token layer, in px:
 // `--title-h5` tops out at 24px, and the gap below is `--space-20`
 const FONT_SIZE_PX = 24;
@@ -55,36 +58,49 @@ const copyWidth = messages.reduce(
 );
 
 // the track is two identical halves and scrolls by exactly one of them, so a
-// half must cover the widest viewport on its own for the loop to look seamless
-const copiesPerHalf = Math.ceil(WIDEST_VIEWPORT_PX / copyWidth) + EXTRA_COPIES;
+// half must cover the widest viewport on its own for the loop to look seamless,
+// plus the full parallax travel
+const coverPx = WIDEST_VIEWPORT_PX * (1 + (2 * PARALLAX_MAX_OFFSET_VW) / 100);
+const copiesPerHalf = Math.ceil(coverPx / copyWidth) + EXTRA_COPIES;
 
 const durationSeconds = (copiesPerHalf * copyWidth) / SCROLL_SPEED_PX_PER_SEC;
 
 const copies = Array.from({ length: copiesPerHalf * 2 });
 ---
 
-<div class:list={["banner", color]} {id}>
-  <div
-    class="track"
-    style={{ "--rolling-banner-duration": `${durationSeconds}s` }}
-  >
-    {
-      copies.map((_, index) =>
-        messages.map((message) => (
-          // every copy says the same thing, so only the first is left readable
-          <span class="message" aria-hidden={index === 0 ? undefined : "true"}>
-            <Text variant="title-h5">{message}</Text>
-          </span>
-        )),
-      )
-    }
+<div
+  class:list={["banner", color]}
+  {id}
+  style={{
+    "--rolling-banner-duration": `${durationSeconds}s`,
+    "--rolling-banner-parallax-offset": `${PARALLAX_MAX_OFFSET_VW}vw`,
+  }}
+>
+  <div class="parallax">
+    <div class="track">
+      {
+        copies.map((_, index) =>
+          messages.map((message) => (
+            // every copy says the same thing, so only the first is left readable
+            <span
+              class="message"
+              aria-hidden={index === 0 ? undefined : "true"}
+            >
+              <Text variant="title-h5">{message}</Text>
+            </span>
+          )),
+        )
+      }
+    </div>
   </div>
 </div>
 
 <style>
   .banner {
     padding-block: var(--space-6);
-    overflow: hidden;
+    /* not `hidden`: that makes the banner a scroll container, and the drift's
+       view() timeline would track it instead of the page */
+    overflow: clip;
     color: var(--banner-text);
     background-image: var(--banner-fill);
   }
@@ -126,6 +142,29 @@ const copies = Array.from({ length: copiesPerHalf * 2 });
   @keyframes scroll {
     to {
       transform: translateX(-50%);
+    }
+  }
+
+  /* see docs/adr/0034 */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .parallax {
+        /* pulled left so the right-most drift never bares the left edge */
+        margin-inline-start: calc(-1 * var(--rolling-banner-parallax-offset));
+        animation: parallax linear both;
+        animation-range: cover;
+        animation-timeline: view();
+      }
+    }
+  }
+
+  @keyframes parallax {
+    from {
+      translate: var(--rolling-banner-parallax-offset);
+    }
+
+    to {
+      translate: calc(-1 * var(--rolling-banner-parallax-offset));
     }
   }
 
