@@ -12,6 +12,10 @@ The three tuning constants all **bias low** deliberately, because the failure mo
 
 **Amended: the technique now has a second call site, and the bias is per-site.** `Logos.astro` estimates its heading column the same way, from the title's character count. There the asymmetry runs the other way — under-estimating renders a column too narrow and breaks the title into a stack of fragments, while over-estimating costs the logo strip a few px before it starts scrolling — so its constant sits _above_ the face's real advance, at 0.5. "Bias low" is a property of this component, not of the technique.
 
+**Amended: a banner holds a list of messages.** An editor now sets one to five messages, scrolled in order. A copy is the whole sequence, not one message, so its estimated width is the sum over the messages of `length × AVG_GLYPH_WIDTH_EM × 24px + 80px gap`. The count, the halves and the duration are derived from that width exactly as before. Every message carries the same 80px gap, the one Figma draws between repeats, so the sequence has no seam of its own and every copy stays the same width.
+
+**Amended: the strip drifts with the scroll.** A scroll-linked offset (ADR 0034) moves the strip `PARALLAX_MAX_OFFSET_VW` either way, so a half must now cover `WIDEST_VIEWPORT_PX × (1 + 2 × PARALLAX_MAX_OFFSET_VW / 100)`, not the viewport alone. The drift is CSS only, so the zero-JS rule below still holds; the scroll-up direction flip some marquees do was dropped because it needs a script.
+
 ## Alternative: measure on the client
 
 The exact version measures the rendered width of one copy in the browser, clones until the track covers the viewport, and recomputes under a `ResizeObserver`. It is correct by construction — no font-metric guesswork, so the speed is exactly the constant and the copy count is exactly right at every width.

@@ -30,7 +30,10 @@ import { venueCustomPageType } from "./venueCustomPage";
 import { globalGameType } from "./globalGame";
 import { globalEventType } from "./globalEvent";
 import { venuePageType } from "./venuePage";
-import { rollingBannerType } from "./shared/pageComponents/rollingBanner";
+import {
+  rollingBannerMessageType,
+  rollingBannerType,
+} from "./shared/pageComponents/rollingBanner";
 import { reviewsType } from "./shared/pageComponents/reviews";
 import { venuePricesType } from "./shared/pageComponents/venuePrices";
 import { gamePricesType } from "./shared/pageComponents/gamePrices";
@@ -104,6 +107,7 @@ export const schemaTypes = [
   videoType,
   ctaType,
   rollingBannerType,
+  rollingBannerMessageType,
   cardsGridType,
   cardType,
   carouselType,

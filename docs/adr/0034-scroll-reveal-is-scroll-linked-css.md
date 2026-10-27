@@ -7,6 +7,7 @@ Each component writes its own rule, inside `@media (prefers-reduced-motion: no-p
 - Applied to: `CardsGrid`, `TextCardsGrid`, `VenuesContact`, `TeamMembers`, `Offers`, and the `TwoBlocks` primitive, so every component built on it reveals its two slots.
 - Not applied to blog components: they are written for crawlers, not readers.
 - Not applied to `Carousel`: it already drives `translate` from its own view timeline.
+- `RollingBanner` uses the same guards for a different effect: its strip drifts `±10vw` horizontally over the `cover` range, on top of its loop. No rise.
 - A component whose cards need a different feel overrides the tokens locally rather than changing them for everyone.
 
 ## Consequences

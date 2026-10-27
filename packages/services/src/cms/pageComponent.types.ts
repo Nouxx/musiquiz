@@ -5,7 +5,7 @@ import type { CmsImage, CmsVideo, RichText, VenueLink } from "./types";
 type RollingBanner = {
   type: "rollingBanner";
   anchor: string | undefined;
-  message: string;
+  messages: string[];
   color: "red" | "blue";
 };
 

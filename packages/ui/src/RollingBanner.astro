@@ -2,24 +2,25 @@
 import Text from "./primitives/Text.astro";
 
 export interface Props {
-  message: string;
+  messages: string[];
   color?: "red" | "blue";
   id?: string;
 }
 
-const { message, color = "red", id } = Astro.props;
+const { messages, color = "red", id } = Astro.props;
 
 /*
- * How many copies to render is a question CSS cannot answer, so the width of
- * one copy is *estimated* here at build time and the count derived from it.
+ * A copy is the whole sequence of messages. How many copies to render is a
+ * question CSS cannot answer, so the width of one copy is *estimated* here at
+ * build time and the count derived from it.
  * The alternative — measuring the real width on the client and cloning — is
  * written up in docs/adr/0008-rolling-banner-fill-strategy.md.
  *
  */
 
 // how fast the strip moves. Only feeds the duration, never the copy count.
-// Deriving the duration from the track width is what keeps a short message and
-// a long one moving at the same visual speed. Pure taste, no sheet says a word
+// Deriving the duration from the track width is what keeps a short copy and a
+// long one moving at the same visual speed. Pure taste, no sheet says a word
 // about motion — tune by eye.
 const SCROLL_SPEED_PX_PER_SEC = 90;
 
@@ -33,8 +34,8 @@ const AVG_GLYPH_WIDTH_EM = 0.45;
 
 // the widest screen the fill has to survive. One half of the track must cover
 // the viewport by itself or the seam shows when the loop restarts, so this sets
-// the copy count. 4K rather than 2560 because copies are text spans — nine of
-// them for the homepage message — and the margin is close to free.
+// the copy count. 4K rather than 2560 because copies are text spans, and the
+// margin is close to free.
 const WIDEST_VIEWPORT_PX = 3840;
 
 // flat margin on top of the ceiling division, for when the glyph estimate
@@ -42,42 +43,64 @@ const WIDEST_VIEWPORT_PX = 3840;
 // and the cheapest insurance here.
 const EXTRA_COPIES = 2;
 
+// how far the strip drifts either way as the banner crosses the viewport
+const PARALLAX_MAX_OFFSET_VW = 10;
+
 // the two values the estimate needs from the token layer, in px:
 // `--title-h5` tops out at 24px, and the gap below is `--space-20`
 const FONT_SIZE_PX = 24;
 const GAP_PX = 80;
 
-const copyWidth = message.length * AVG_GLYPH_WIDTH_EM * FONT_SIZE_PX + GAP_PX;
+const copyWidth = messages.reduce(
+  (width, message) =>
+    width + message.length * AVG_GLYPH_WIDTH_EM * FONT_SIZE_PX + GAP_PX,
+  0,
+);
 
 // the track is two identical halves and scrolls by exactly one of them, so a
-// half must cover the widest viewport on its own for the loop to look seamless
-const copiesPerHalf = Math.ceil(WIDEST_VIEWPORT_PX / copyWidth) + EXTRA_COPIES;
+// half must cover the widest viewport on its own for the loop to look seamless,
+// plus the full parallax travel
+const coverPx = WIDEST_VIEWPORT_PX * (1 + (2 * PARALLAX_MAX_OFFSET_VW) / 100);
+const copiesPerHalf = Math.ceil(coverPx / copyWidth) + EXTRA_COPIES;
 
 const durationSeconds = (copiesPerHalf * copyWidth) / SCROLL_SPEED_PX_PER_SEC;
 
 const copies = Array.from({ length: copiesPerHalf * 2 });
 ---
 
-<div class:list={["banner", color]} {id}>
-  <div
-    class="track"
-    style={{ "--rolling-banner-duration": `${durationSeconds}s` }}
-  >
-    {
-      copies.map((_, index) => (
-        // every copy says the same thing, so only the first is left readable
-        <span class="copy" aria-hidden={index === 0 ? undefined : "true"}>
-          <Text variant="title-h5">{message}</Text>
-        </span>
-      ))
-    }
+<div
+  class:list={["banner", color]}
+  {id}
+  style={{
+    "--rolling-banner-duration": `${durationSeconds}s`,
+    "--rolling-banner-parallax-offset": `${PARALLAX_MAX_OFFSET_VW}vw`,
+  }}
+>
+  <div class="parallax">
+    <div class="track">
+      {
+        copies.map((_, index) =>
+          messages.map((message) => (
+            // every copy says the same thing, so only the first is left readable
+            <span
+              class="message"
+              aria-hidden={index === 0 ? undefined : "true"}
+            >
+              <Text variant="title-h5">{message}</Text>
+            </span>
+          )),
+        )
+      }
+    </div>
   </div>
 </div>
 
 <style>
   .banner {
     padding-block: var(--space-6);
-    overflow: hidden;
+    /* not `hidden`: that makes the banner a scroll container, and the drift's
+       view() timeline would track it instead of the page */
+    overflow: clip;
     color: var(--banner-text);
     background-image: var(--banner-fill);
   }
@@ -108,9 +131,9 @@ const copies = Array.from({ length: copiesPerHalf * 2 });
     animation-play-state: paused;
   }
 
-  .copy {
-    /* the gap lives on the copy, not on the flex container: every copy is then
-       exactly the same width, which is what makes translating by half the
+  .message {
+    /* the gap lives on the message, not on the flex container: every copy is
+       then exactly the same width, which is what makes translating by half the
        track land on an identical frame */
     padding-inline-end: var(--space-20);
     white-space: nowrap;
@@ -119,6 +142,29 @@ const copies = Array.from({ length: copiesPerHalf * 2 });
   @keyframes scroll {
     to {
       transform: translateX(-50%);
+    }
+  }
+
+  /* see docs/adr/0034 */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .parallax {
+        /* pulled left so the right-most drift never bares the left edge */
+        margin-inline-start: calc(-1 * var(--rolling-banner-parallax-offset));
+        animation: parallax linear both;
+        animation-range: cover;
+        animation-timeline: view();
+      }
+    }
+  }
+
+  @keyframes parallax {
+    from {
+      translate: var(--rolling-banner-parallax-offset);
+    }
+
+    to {
+      translate: calc(-1 * var(--rolling-banner-parallax-offset));
     }
   }
 

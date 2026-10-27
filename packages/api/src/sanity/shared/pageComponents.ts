@@ -12,7 +12,7 @@ import { sanityVideoSchema, videoProjection } from "./video";
 function rollingBannerProjection({ lang }: { lang: Lang }) {
   return `
     _type == "rollingBanner" => {
-      "message": message[language == "${lang}"][0].value,
+      "messages": messages[]{ "text": text[language == "${lang}"][0].value },
       "color": coalesce(color, "red")
     }
   `;
@@ -409,7 +409,10 @@ const sanityAnchorSchema = z.string().min(1).nullable();
 const sanityRollingBannerSchema = z.strictObject({
   _type: z.literal("rollingBanner"),
   anchor: sanityAnchorSchema,
-  message: z.string().min(1),
+  messages: z
+    .array(z.strictObject({ text: z.string().min(1) }))
+    .min(1)
+    .max(5),
   color: z.enum(["red", "blue"]),
 });
 
