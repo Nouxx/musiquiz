@@ -1,6 +1,50 @@
-import { defineField, defineType } from "sanity";
-import { noMissingLanguage } from "../localized";
+import { defineArrayMember, defineField, defineType } from "sanity";
+import {
+  eachLanguage,
+  frenchValue,
+  type LocalizedEntry,
+  requiredInEveryLanguage,
+} from "../localized";
 import { anchorField, withAnchor } from "../anchorField";
+
+export const rollingBannerMessageType = defineType({
+  name: "rollingBannerMessage",
+  title: "Message",
+  type: "object",
+  fields: [
+    defineField({
+      name: "text",
+      title: "Text",
+      description: "One short line.",
+      type: "internationalizedArrayString",
+      validation: (rule) => [
+        rule.custom(requiredInEveryLanguage()),
+        rule.custom(
+          eachLanguage((value) => {
+            if (value.length > 70) return "Keep it under 70 characters";
+            if (value.length < 8) return "At least 8 characters";
+            return undefined;
+          }),
+        ),
+        rule
+          .warning()
+          .custom(
+            eachLanguage((value) =>
+              value.length > 55
+                ? "Longer than the line this banner was designed for (55 characters)"
+                : undefined,
+            ),
+          ),
+      ],
+    }),
+  ],
+  preview: {
+    select: { text: "text" },
+    prepare({ text }: { text?: LocalizedEntry[] }) {
+      return { title: frenchValue(text) ?? "Message" };
+    },
+  },
+});
 
 export const rollingBannerType = defineType({
   name: "rollingBanner",
@@ -8,36 +52,18 @@ export const rollingBannerType = defineType({
   type: "object",
   fields: [
     defineField({
-      name: "message",
-      title: "Message",
+      name: "messages",
+      title: "Messages",
       description:
-        "One short line, repeated and scrolled across the red strip. Every copy says the same thing.",
-      type: "internationalizedArrayString",
-      validation: (rule) => [
-        rule.custom(noMissingLanguage),
-        rule.custom((entries?: { value?: string }[]) => {
-          const tooLong = entries?.filter((e) => (e.value?.length ?? 0) > 70);
-          const tooShort = entries?.filter(
-            (e) => e.value && e.value.length < 8,
-          );
-          if (tooLong?.length)
-            return "Keep each translation under 70 characters";
-          if (tooShort?.length) return "At least 8 characters";
-          return true;
-        }),
-        rule
-          .warning()
-          .custom((entries?: { value?: string }[]) =>
-            entries?.some((e) => (e.value?.length ?? 0) > 55)
-              ? "Longer than the line this banner was designed for (55 characters)"
-              : true,
-          ),
-      ],
+        "Scrolled one after the other across the strip, in this order, then repeated.",
+      type: "array",
+      of: [defineArrayMember({ type: "rollingBannerMessage" })],
+      validation: (rule) => rule.required().min(1).max(5),
     }),
     defineField({
       name: "color",
       title: "Color",
-      description: "The color of the strip the message scrolls across.",
+      description: "The color of the strip the messages scroll across.",
       type: "string",
       validation: (rule) => rule.required(),
       initialValue: "red",
@@ -54,11 +80,23 @@ export const rollingBannerType = defineType({
   preview: {
     select: {
       anchor: "anchor",
+      messages: "messages",
     },
-    prepare({ anchor }: { anchor?: string }) {
+    prepare({
+      anchor,
+      messages,
+    }: {
+      anchor?: string;
+      messages?: { text?: LocalizedEntry[] }[];
+    }) {
+      const count = messages?.length ?? 0;
+
       return {
-        title: "Rolling Banner",
-        subtitle: withAnchor(undefined, anchor),
+        title: frenchValue(messages?.[0]?.text) ?? "Rolling Banner",
+        subtitle: withAnchor(
+          `Rolling Banner · ${count} message${count === 1 ? "" : "s"}`,
+          anchor,
+        ),
       };
     },
   },

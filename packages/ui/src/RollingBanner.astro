@@ -2,24 +2,25 @@
 import Text from "./primitives/Text.astro";
 
 export interface Props {
-  message: string;
+  messages: string[];
   color?: "red" | "blue";
   id?: string;
 }
 
-const { message, color = "red", id } = Astro.props;
+const { messages, color = "red", id } = Astro.props;
 
 /*
- * How many copies to render is a question CSS cannot answer, so the width of
- * one copy is *estimated* here at build time and the count derived from it.
+ * A copy is the whole sequence of messages. How many copies to render is a
+ * question CSS cannot answer, so the width of one copy is *estimated* here at
+ * build time and the count derived from it.
  * The alternative — measuring the real width on the client and cloning — is
  * written up in docs/adr/0008-rolling-banner-fill-strategy.md.
  *
  */
 
 // how fast the strip moves. Only feeds the duration, never the copy count.
-// Deriving the duration from the track width is what keeps a short message and
-// a long one moving at the same visual speed. Pure taste, no sheet says a word
+// Deriving the duration from the track width is what keeps a short copy and a
+// long one moving at the same visual speed. Pure taste, no sheet says a word
 // about motion — tune by eye.
 const SCROLL_SPEED_PX_PER_SEC = 90;
 
@@ -33,8 +34,8 @@ const AVG_GLYPH_WIDTH_EM = 0.45;
 
 // the widest screen the fill has to survive. One half of the track must cover
 // the viewport by itself or the seam shows when the loop restarts, so this sets
-// the copy count. 4K rather than 2560 because copies are text spans — nine of
-// them for the homepage message — and the margin is close to free.
+// the copy count. 4K rather than 2560 because copies are text spans, and the
+// margin is close to free.
 const WIDEST_VIEWPORT_PX = 3840;
 
 // flat margin on top of the ceiling division, for when the glyph estimate
@@ -47,7 +48,11 @@ const EXTRA_COPIES = 2;
 const FONT_SIZE_PX = 24;
 const GAP_PX = 80;
 
-const copyWidth = message.length * AVG_GLYPH_WIDTH_EM * FONT_SIZE_PX + GAP_PX;
+const copyWidth = messages.reduce(
+  (width, message) =>
+    width + message.length * AVG_GLYPH_WIDTH_EM * FONT_SIZE_PX + GAP_PX,
+  0,
+);
 
 // the track is two identical halves and scrolls by exactly one of them, so a
 // half must cover the widest viewport on its own for the loop to look seamless
@@ -64,12 +69,14 @@ const copies = Array.from({ length: copiesPerHalf * 2 });
     style={{ "--rolling-banner-duration": `${durationSeconds}s` }}
   >
     {
-      copies.map((_, index) => (
-        // every copy says the same thing, so only the first is left readable
-        <span class="copy" aria-hidden={index === 0 ? undefined : "true"}>
-          <Text variant="title-h5">{message}</Text>
-        </span>
-      ))
+      copies.map((_, index) =>
+        messages.map((message) => (
+          // every copy says the same thing, so only the first is left readable
+          <span class="message" aria-hidden={index === 0 ? undefined : "true"}>
+            <Text variant="title-h5">{message}</Text>
+          </span>
+        )),
+      )
     }
   </div>
 </div>
@@ -108,9 +115,9 @@ const copies = Array.from({ length: copiesPerHalf * 2 });
     animation-play-state: paused;
   }
 
-  .copy {
-    /* the gap lives on the copy, not on the flex container: every copy is then
-       exactly the same width, which is what makes translating by half the
+  .message {
+    /* the gap lives on the message, not on the flex container: every copy is
+       then exactly the same width, which is what makes translating by half the
        track land on an identical frame */
     padding-inline-end: var(--space-20);
     white-space: nowrap;

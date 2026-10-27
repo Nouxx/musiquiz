@@ -162,7 +162,7 @@ A business-oriented component in `apps/web/src/components/features/`. Holds busi
 _Avoid_: business component, smart component, container, block, domain component
 
 **Rolling Banner**:
-A full-bleed strip holding one short message, repeated as many times as the width needs and scrolled horizontally without end. The repetition is a layout mechanic, never content — every copy says the same thing, which is why only the first is readable to assistive tech. How the copy count is decided is [ADR 0008](./docs/adr/0008-rolling-banner-fill-strategy.md).
+A full-bleed strip holding one to five short messages, scrolled one after the other in the editor's order, then repeated as many times as the width needs, horizontally without end. The repetition is a layout mechanic, never content — every copy of the sequence says the same thing, which is why only the first is readable to assistive tech. How the copy count is decided is [ADR 0008](./docs/adr/0008-rolling-banner-fill-strategy.md).
 _Avoid_: marquee, ticker, carousel, news bar
 
 **Cards Grid**:

@@ -33,7 +33,7 @@ export function adaptPageComponent({
       return {
         type: "rollingBanner",
         anchor: data.anchor ?? undefined,
-        message: data.message,
+        messages: data.messages.map(({ text }) => text),
         color: data.color,
       };
     }
