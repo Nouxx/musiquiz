@@ -23,7 +23,10 @@
     "tsc": "pnpm --recursive tsc",
     "test": "pnpm --recursive test",
     "typegen": "pnpm --filter worker typegen",
-    "figma": "node scripts/figma/figma.mjs"
+    "figma": "node scripts/figma/figma.mjs",
+    "sanity:unfinished-venues": "node scripts/sanity/unfinished-venues.mjs",
+    "sanity:strong-refs": "node scripts/sanity/strong-refs.mjs",
+    "sanity:unpublish-venue": "node scripts/sanity/unpublish-venue.mjs"
   },
   "keywords": [],
   "author": "",
