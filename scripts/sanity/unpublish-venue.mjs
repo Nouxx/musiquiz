@@ -24,15 +24,18 @@ async function ownedTree(venueId) {
   while (queue.length) {
     const id = queue.shift();
     const referrers = await query(
-      `*[references($id) && !(_id in path("drafts.**"))]{ _id, _type, "venue": venue._ref }`,
+      `*[references($id) && !(_id in path("drafts.**"))]`,
       { id },
     );
     for (const referrer of referrers) {
       if (owned.has(referrer._id)) continue;
-      if (OWNED_TYPES.includes(referrer._type) && referrer.venue === venueId) {
+      if (
+        OWNED_TYPES.includes(referrer._type) &&
+        referrer.venue?._ref === venueId
+      ) {
         owned.add(referrer._id);
         queue.push(referrer._id);
-      } else {
+      } else if (strongRefPaths(referrer, new Set([id])).length) {
         mentions.push(`${referrer._id} (${referrer._type}) references ${id}`);
       }
     }
@@ -67,6 +70,9 @@ function changedFields(published, draft) {
 }
 
 async function plan(venueId) {
+  const [venue] = await query(`*[_id == $id]{ _id }`, { id: venueId });
+  if (!venue) return { blocked: ["not published"] };
+
   const { owned, mentions } = await ownedTree(venueId);
   if (mentions.length) return { blocked: mentions };
 
@@ -119,7 +125,11 @@ async function plan(venueId) {
       const { _rev, _updatedAt, ...rest } = weakened(published, owned, typeOf);
       return { createIfNotExists: { ...rest, _id: `drafts.${published._id}` } };
     }),
-    ...ids.map((id) => ({ delete: { id } })),
+    // delete takes no ifRevisionID; the empty patch aborts the transaction if a publish landed since plan()
+    ...ids.flatMap((id) => [
+      { patch: { id, ifRevisionID: byId.get(id)._rev, set: {} } },
+      { delete: { id } },
+    ]),
   ];
 
   return { ids, byId, moves, deletes, weakens, drafts, mutations };
@@ -154,7 +164,7 @@ async function verify({ ids, byId, drafts }) {
   return problems;
 }
 
-for (const venueId of venueIds.map(publishedId)) {
+for (const venueId of new Set(venueIds.map(publishedId))) {
   const result = await plan(venueId);
   const slug = result.byId?.get(venueId)?.slug?.current ?? venueId;
 
