@@ -41,6 +41,7 @@ const {
        half the height, so the two render identically */
     border-radius: var(--radius-pill);
     max-width: fit-content;
+    isolation: isolate;
   }
 
   .large {
@@ -99,6 +100,9 @@ const {
   .badge::before {
     position: absolute;
     inset: 0;
+
+    /* below the content: browsers sometimes drop the mask, and a solid ring must not hide it */
+    z-index: -1;
     padding: 1px 1px 3px;
     background-image: var(--badge-border);
     border-radius: inherit;
