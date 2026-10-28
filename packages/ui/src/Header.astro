@@ -209,6 +209,7 @@ const hasSocials = Astro.slots.has("socials");
     padding-block: var(--space-2);
     padding-inline: var(--space-10) var(--space-2);
     border-radius: var(--radius-pill);
+    isolation: isolate;
   }
 
   .logo {
@@ -239,6 +240,9 @@ const hasSocials = Astro.slots.has("socials");
   .row::after {
     position: absolute;
     inset: 0 0 calc(-1 * var(--bar-edge)) 0;
+
+    /* below the content: browsers sometimes drop the mask, and a solid ring must not hide it */
+    z-index: -1;
 
     padding-block-end: var(--bar-edge);
 

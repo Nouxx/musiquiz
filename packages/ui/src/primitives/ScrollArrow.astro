@@ -52,6 +52,9 @@ const { direction, label, controls } = Astro.props;
   .scroll-arrow::before {
     position: absolute;
     inset: 0;
+
+    /* below the content: browsers sometimes drop the mask, and a solid ring must not hide it */
+    z-index: -1;
     padding: 1px; /* the ring's thickness */
     background: var(--color-border-light);
     border-radius: inherit;

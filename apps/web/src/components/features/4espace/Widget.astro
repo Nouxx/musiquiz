@@ -191,6 +191,7 @@ const { widgetId, settings, anchor } = Astro.props;
     font: var(--paragraph-base-sm);
     background-color: var(--color-surface);
     border-radius: var(--radius-l);
+    isolation: isolate;
   }
 
   .forescape.forescape.forescape
@@ -198,6 +199,9 @@ const { widgetId, settings, anchor } = Astro.props;
     .f-radiogroup-option-label::before {
     position: absolute;
     inset: 0;
+
+    /* below the content: browsers sometimes drop the mask, and a solid ring must not hide it */
+    z-index: -1;
     padding: 2px;
     background: var(--selected-ring);
     border-radius: inherit;
