@@ -3,7 +3,6 @@
 - setup carto api key for production (restrict to domain) - BLOCKED
 - 4escape todo file (CSP) - BLOCKED
 - add apple pay file
-- create worker from client account and invite me as admin
 
 # P1 (important)
 
