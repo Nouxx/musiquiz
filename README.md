@@ -4,12 +4,14 @@ musiquizlejeu.fr
 
 ## Deployment
 
-The site ships as **two Cloudflare Workers** built from the same `apps/web` source. They differ in how they render, and that is what their names say:
+The project runs on **three Cloudflare Workers**. Two serve the site, built from the same `apps/web` source. They differ in how they render, and that is what their names say:
 
 | Worker            | Astro `output` | Content                           | Bindings                                      |
 | ----------------- | -------------- | --------------------------------- | --------------------------------------------- |
 | `musiquiz-static` | `static`       | published, baked in at build time | assets only                                   |
 | `musiquiz-ssr`    | `server`       | drafts, fetched per request       | assets, `SESSION` KV, `SANITY_API_READ_TOKEN` |
+
+The third, `musiquiz-worker`, is the site's backend: forms and the Studio Deploy tool, see [The `musiquiz-worker` API](#the-musiquiz-worker-api).
 
 ### One flag drives both builds
 
@@ -30,6 +32,31 @@ The wrangler environment names match the worker names, so there is one vocabular
 
 - `deploy:static` passes `--env static` against `wrangler.jsonc`, which still has its `env` blocks to select from.
 - `deploy:ssr` passes **no** `--env`. It deploys `dist/ssr/server/wrangler.json`, which the adapter already resolved for `CLOUDFLARE_ENV=ssr`. Adding `--env ssr` there makes wrangler append the env name a second time and deploy a worker called `musiquiz-ssr-ssr`.
+
+### The `musiquiz-worker` API
+
+`apps/worker` is a plain Worker, no framework. Every route is a `POST` with a JSON body, listed in `src/routes/index.ts`:
+
+| Route                  | Called by                  | Does                                                                                                      |
+| ---------------------- | -------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `/form/client-contact` | the site's contact form    | mails the venue owners, and a confirmation to the sender                                                  |
+| `/form/quotation`      | the site's quotation form  | same, with the template pair of the audience                                                              |
+| `/form/venue-opening`  | the site's franchise form  | scores the lead, mails Musiquiz, and a confirmation to the applicant                                      |
+| `/form/newsletter`     | the footer newsletter form | adds a Brevo contact, or mails the owners, see [ADR 0033](docs/adr/0033-newsletter-provider-per-venue.md) |
+| `/deploy/site`         | the Studio Deploy tab      | rebuilds `musiquiz-static`, see [Publishing content](#publishing-content-the-studio-deploy-tool)          |
+
+Every mail goes through ZeptoMail, authenticated with `ZOHO_API_KEY`. The form logic lives in `@repo/services/form`; a route only parses the body and passes in the secrets.
+
+Both callers reach the worker through `SANITY_STUDIO_WORKER_URL` in the root `.env`. Point it at the local worker in `.env.local` to test against `wrangler dev`.
+
+CORS allows only the origins in `ALLOWED_ORIGINS` (`src/index.ts`): the two site workers, the Studio, and their local dev ports. A new origin, like the production domain, must be added there, or browsers block the forms.
+
+```sh
+pnpm deploy:worker # → musiquiz-worker
+pnpm --filter worker typegen # after adding a var or secret, regenerates Env
+```
+
+`pnpm dev` runs it with `wrangler dev` alongside the site. Its secrets come from `apps/worker/.dev.vars`, see [Secrets and env vars](#secrets-and-env-vars).
 
 ### What Cloudflare builds on a push
 
