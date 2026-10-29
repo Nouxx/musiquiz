@@ -86,7 +86,10 @@ const textVariant = size === "s" ? "title-s" : "title-base";
     /* a pill because at 46px tall (button) the radius already exceeds half the
        height. Useful if the button has 2 lines of text */
     border-radius: var(--radius-pill);
-    box-shadow: 0 var(--lift) 0 var(--button-border);
+    /* the ring is an inset shadow, not a masked layer: browsers sometimes drop masks */
+    box-shadow:
+      inset 0 0 0 1px var(--button-ring, var(--button-border)),
+      0 var(--lift) 0 var(--button-border);
     transform: translateY(calc(2px - var(--lift)));
 
     transition:
@@ -128,14 +131,17 @@ const textVariant = size === "s" ? "title-s" : "title-base";
     transition-duration: 0s;
   }
 
-  .button::before {
+  /* a shadow cannot hold a gradient, so this ring still needs the mask */
+  .light:active::before,
+  .light[aria-pressed="true"]::before,
+  .light:has(input:checked)::before {
     position: absolute;
     inset: 0;
 
     /* below the content: browsers sometimes drop the mask, and a solid ring must not hide it */
     z-index: -1;
     padding: 1px; /* the ring's thickness */
-    background: var(--button-border);
+    background: var(--color-border-brand);
     border-radius: inherit;
     mask:
       linear-gradient(#000 0 0) content-box,
@@ -144,10 +150,11 @@ const textVariant = size === "s" ? "title-s" : "title-base";
     content: "";
   }
 
-  .light:active::before,
-  .light[aria-pressed="true"]::before,
-  .light:has(input:checked)::before {
-    background: var(--color-border-brand);
+  /* the shadow ring would fringe the gradient ring's antialiased edge */
+  .light:active,
+  .light[aria-pressed="true"],
+  .light:has(input:checked) {
+    --button-ring: transparent;
   }
 
   /* Contrast: white on `--gradient-red` measures 4.35:1 at #d92363 and only

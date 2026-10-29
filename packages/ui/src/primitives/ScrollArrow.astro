@@ -41,28 +41,15 @@ const { direction, label, controls } = Astro.props;
     background-color: var(--color-fill-muted);
     border: none;
     border-radius: var(--radius-pill);
-    box-shadow: 0 var(--lift) 0 var(--color-border-light);
+    /* the ring is an inset shadow, not a masked layer: browsers sometimes drop masks */
+    box-shadow:
+      inset 0 0 0 1px var(--color-border-light),
+      0 var(--lift) 0 var(--color-border-light);
     cursor: pointer;
     transform: translateY(calc(2px - var(--lift)));
     transition:
       transform 120ms ease-out,
       box-shadow 120ms ease-out;
-  }
-
-  .scroll-arrow::before {
-    position: absolute;
-    inset: 0;
-
-    /* below the content: browsers sometimes drop the mask, and a solid ring must not hide it */
-    z-index: -1;
-    padding: 1px; /* the ring's thickness */
-    background: var(--color-border-light);
-    border-radius: inherit;
-    mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    mask-composite: exclude;
-    content: "";
   }
 
   .scroll-arrow:hover,
