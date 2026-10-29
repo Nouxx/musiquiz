@@ -3,6 +3,7 @@
   "name": "musiquiz",
   "account_id": "a98829785d9ad4b7960ca91370b92848",
   "compatibility_date": "2026-06-23",
+  "preview_urls": false,
   "env": {
     // triggered by CLOUDFLARE_ENV at build time
     // https://developers.cloudflare.com/workers/wrangler/environments/
@@ -16,6 +17,9 @@
     },
     "ssr": {
       "name": "musiquiz-ssr",
+      "observability": {
+        "enabled": true
+      },
       // @astrojs/cloudflare injects an id-less SESSION binding unless one is
       // declared here, which would force wrangler to provision a namespace at
       // deploy time — it cannot in a non-interactive CI runner
