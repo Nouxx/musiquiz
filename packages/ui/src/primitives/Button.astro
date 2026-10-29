@@ -88,7 +88,7 @@ const textVariant = size === "s" ? "title-s" : "title-base";
     border-radius: var(--radius-pill);
     /* the ring is an inset shadow, not a masked layer: browsers sometimes drop masks */
     box-shadow:
-      inset 0 0 0 1px var(--button-border),
+      inset 0 0 0 1px var(--button-ring, var(--button-border)),
       0 var(--lift) 0 var(--button-border);
     transform: translateY(calc(2px - var(--lift)));
 
@@ -148,6 +148,13 @@ const textVariant = size === "s" ? "title-s" : "title-base";
       linear-gradient(#000 0 0);
     mask-composite: exclude;
     content: "";
+  }
+
+  /* the shadow ring would fringe the gradient ring's antialiased edge */
+  .light:active,
+  .light[aria-pressed="true"],
+  .light:has(input:checked) {
+    --button-ring: transparent;
   }
 
   /* Contrast: white on `--gradient-red` measures 4.35:1 at #d92363 and only
