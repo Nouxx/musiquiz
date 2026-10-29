@@ -1,6 +1,7 @@
 {
   // base config, never deployed on its own — every deploy targets an env below
   "name": "musiquiz",
+  "account_id": "a98829785d9ad4b7960ca91370b92848",
   "compatibility_date": "2026-06-23",
   "env": {
     // triggered by CLOUDFLARE_ENV at build time
@@ -17,11 +18,11 @@
       "name": "musiquiz-ssr",
       // @astrojs/cloudflare injects an id-less SESSION binding unless one is
       // declared here, which would force wrangler to provision a namespace at
-      // deploy time — it cannot in the non-interactive Workers Builds runner
+      // deploy time — it cannot in a non-interactive CI runner
       "kv_namespaces": [
         {
           "binding": "SESSION",
-          "id": "aed9998536da48c49b958849250e02e0"
+          "id": "d4454eae843640eabf44e3d5a8c45f45"
         }
       ]
     }

@@ -33,20 +33,41 @@ The wrangler environment names match the worker names, so there is one vocabular
 
 ### What Cloudflare builds on a push
 
-Both workers use **Cloudflare Workers Builds**, connected to this repo's `main` branch. Configure each trigger in the dashboard as:
+Every worker lives on the client's Cloudflare account, pinned by `account_id` in both `wrangler.jsonc`, so a local `wrangler deploy` cannot land on another account. The workers deploy from two systems ([ADR 0035](./docs/adr/0035-deploy-split-actions-and-workers-builds.md)):
 
-| Field          | `musiquiz-ssr`        | `musiquiz-static`        |
-| -------------- | --------------------- | ------------------------ |
-| Branch         | `main`                | `main`                   |
-| Root directory | `/`                   | `/`                      |
-| Build command  | `pnpm build:web:ssr`  | `pnpm build:web:static`  |
-| Deploy command | `pnpm deploy:web:ssr` | `pnpm deploy:web:static` |
+| Worker            | Deployed by                                             | On                                       |
+| ----------------- | ------------------------------------------------------- | ---------------------------------------- |
+| `musiquiz-ssr`    | GitHub Actions, `.github/workflows/deploy-workers.yaml` | push to `main`, or a manual run          |
+| `musiquiz-worker` | GitHub Actions, `.github/workflows/deploy-workers.yaml` | push to `main`, or a manual run          |
+| `musiquiz-static` | Cloudflare Workers Builds                               | push to `main`, or the Studio Deploy tab |
+
+`deploy-workers.yaml` runs one job per worker, in parallel, with no path filter and no checks: a failed build deploys nothing, and `ci.yaml` already gates pull requests. A manual run takes a `target` (`all`, `ssr` or `worker`). Its secrets are GitHub repository secrets:
+
+| Secret                 | Used by                                                                                                                       |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `CLOUDFLARE_API_TOKEN` | both deploys. Account-owned token on the client account: Workers Scripts Edit, Workers KV Storage Edit, Account Settings Read |
+| `CARTO_API_KEY`        | the `musiquiz-ssr` build                                                                                                      |
+
+`musiquiz-static` stays on Workers Builds because the Studio Deploy tab needs its **deploy hook**. Configure its trigger in the dashboard as:
+
+| Field          | `musiquiz-static`        |
+| -------------- | ------------------------ |
+| Branch         | `main`                   |
+| Root directory | `/`                      |
+| Build command  | `pnpm build:web:static`  |
+| Deploy command | `pnpm deploy:web:static` |
+
+Until this repo moves to a GitHub organization, `musiquiz-static` has no trigger: the Cloudflare GitHub app on the repo's current owner is bound to another Cloudflare account. Deploy it by hand meanwhile, logged into the client account:
+
+```sh
+SITE_URL=https://musiquiz.co pnpm build:web:static && pnpm deploy:web:static
+```
+
+`SITE_URL` is forced because a local `.env.local` points it at `localhost`, which would end up in every canonical URL and the sitemap.
 
 `deploy:static` also pings [IndexNow](https://www.indexnow.org/) with every sitemap URL once `wrangler deploy` succeeds (`apps/web/scripts/submitIndexNow.js`). A failed ping only warns.
 
 Those commands are deliberately bare script names. Every decision they expand to — env flags, adapter, worker name, bindings, output directory — lives in `apps/web/package.json` and `apps/web/wrangler.jsonc`, so changing any of it is a commit, not a dashboard visit. Only renaming a script requires touching Cloudflare.
-
-`.github/workflows/ci.yaml` deploys nothing — it is a pre-merge gate (format, lint, typecheck, build) that runs on pull requests and holds no secrets. Workers Builds is used for the web deploy instead of an Actions deploy because it exposes a **deploy hook URL** that can be called to rebuild, with no GitHub token to mint, store or rotate.
 
 ### Publishing content: the Studio "Deploy" tool
 
@@ -57,7 +78,7 @@ The button calls `POST /deploy/site` on `musiquiz-worker`, which:
 1. checks the editor's Sanity token against `/users/me` and requires the `administrator`, `editor` or `developer` role,
 2. calls the `musiquiz-static` deploy hook, held as the `STATIC_DEPLOY_HOOK_URL` secret.
 
-Build minutes used this month show on the [Workers & Pages overview](https://dash.cloudflare.com/4902ffc906976b879e21dc844b6832e0/workers-and-pages); the Deploy tab links there. Cloudflare has no API for them.
+Build minutes used this month show on the [Workers & Pages overview](https://dash.cloudflare.com/a98829785d9ad4b7960ca91370b92848/workers-and-pages); the Deploy tab links there. Cloudflare has no API for them.
 
 The hook URL never reaches the Studio: anything in a `SANITY_STUDIO_*` var ships in its public bundle. The Studio uses `loginMethod: "token"`, because a cookie session leaves the client with no token to forward.
 
@@ -94,7 +115,7 @@ So a burst of clicks costs at most one extra build. That build is wanted: conten
 
 ## The Studio deploys from GitHub Actions
 
-`.github/workflows/deploy-sanity.yaml` deploys the new Sanity Studio version on every push to `main`. The web workers and the Studio therefore deploy from two independent systems triggered by the same push: they run in parallel, neither knows about the other, and one failing leaves the other deployed. There is nothing to roll back because there is nothing joining them.
+`.github/workflows/deploy-sanity.yaml` deploys the new Sanity Studio version on every push to `main`. The workers and the Studio therefore deploy from independent workflows triggered by the same push: they run in parallel, neither knows about the other, and one failing leaves the other deployed. There is nothing to roll back because there is nothing joining them.
 
 ### Deploying the Studio by hand
 
@@ -128,7 +149,7 @@ Until the secret exists, sign-ups are mailed to the venue's owner emails.
 
 Adding a key means rerunning `pnpm --filter worker typegen`, which writes it into `Env` in `worker-configuration.d.ts`.
 
-`SANITY_AUTH_TOKEN` is the one secret CI holds, as a GitHub repository secret read by `deploy-sanity.yaml`. It is an **organization-level** robot token created in Sanity Manage under the organization's _Settings → API → Tokens_ (org tokens cannot be created from the CLI), and it needs **two** roles:
+`SANITY_AUTH_TOKEN` is a GitHub repository secret read by `deploy-sanity.yaml`. It is an **organization-level** robot token created in Sanity Manage under the organization's _Settings → API → Tokens_ (org tokens cannot be created from the CLI), and it needs **two** roles:
 
 | Role                   | Manage label    | Grants                                               |
 | ---------------------- | --------------- | ---------------------------------------------------- |
@@ -142,16 +163,16 @@ Secrets do **not** carry across a worker rename — a renamed worker is a new wo
 `CARTO_API_KEY` removes the "API key required" watermark from the CARTO basemap tiles drawn by `TileMap`. It is public, not a secret: the client reads it from `astro:env/client`, so it is inlined into the HTML of every page with a map. CARTO restricts it by `Referer` instead. It is required at build time (`optional: false` in `astro.config.mjs`) and is not needed at runtime, so it lives in:
 
 - `.env.local` for local dev
-- a Cloudflare **build variable**, not a Secret, on both `musiquiz-static` and `musiquiz-ssr`; without it the build fails
+- a Cloudflare **build variable**, not a Secret, on `musiquiz-static`, and a GitHub repository secret for the `musiquiz-ssr` build; without it the build fails
 
 To create or rotate the key, fill in the form at: https://carto.com/basemaps/apikey.
 
-| Field                                   | Value                                                                                                      |
-| --------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Organisation                            | Musiquiz                                                                                                   |
-| Commercial                              | Yes                                                                                                        |
-| What are you building?                  | A website promoting our entertainment business                                                             |
-| Restrict to specific websites (Referer) | Yes, `musiquiz.co`, `musiquiz-ssr.clement-vnnq.workers.dev` and `musiquiz-static.clement-vnnq.workers.dev` |
+| Field                                   | Value                                                                                                  |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Organisation                            | Musiquiz                                                                                               |
+| Commercial                              | Yes                                                                                                    |
+| What are you building?                  | A website promoting our entertainment business                                                         |
+| Restrict to specific websites (Referer) | Yes, `musiquiz.co`, `musiquiz-ssr.lionel-a98.workers.dev` and `musiquiz-static.lionel-a98.workers.dev` |
 
 Accept the terms and submit. The key arrives by email.
 
@@ -176,7 +197,7 @@ Each venue's Place ID is the `googlePlaceId` field in the Studio. Look it up wit
 
 ### The `SESSION` KV namespace is pinned on purpose
 
-`env.ssr` in `wrangler.jsonc` declares `SESSION` with an explicit namespace id. `@astrojs/cloudflare` would otherwise inject the binding without one, which forces `wrangler deploy` to provision a namespace at deploy time — something the non-interactive Workers Builds runner cannot be relied on to do.
+`env.ssr` in `wrangler.jsonc` declares `SESSION` with an explicit namespace id. `@astrojs/cloudflare` would otherwise inject the binding without one, which forces `wrangler deploy` to provision a namespace at deploy time — something a non-interactive CI runner cannot be relied on to do.
 
 ### TO DO:
 

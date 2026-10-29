@@ -2,6 +2,7 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "musiquiz-worker",
+	"account_id": "a98829785d9ad4b7960ca91370b92848",
 	"main": "src/index.ts",
 	"compatibility_date": "2026-08-31",
 	"observability": {
