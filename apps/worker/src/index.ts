@@ -3,8 +3,8 @@ import { routes } from "./routes";
 const ALLOWED_ORIGINS = new Set([
 	"http://localhost:4321",
 	"http://localhost:4322",
-	"https://musiquiz-static.clement-vnnq.workers.dev",
-	"https://musiquiz-ssr.clement-vnnq.workers.dev",
+	"https://musiquiz-static.lionel-a98.workers.dev",
+	"https://musiquiz-ssr.lionel-a98.workers.dev",
 	"http://localhost:3333",
 	"https://musiquiz.sanity.studio",
 ]);

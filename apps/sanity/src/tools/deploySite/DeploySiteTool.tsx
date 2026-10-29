@@ -8,7 +8,7 @@ import { workerUrl } from "../../environments";
 
 // the build minutes usage sits on this overview, it has no page of its own
 const BUILD_USAGE_URL =
-  "https://dash.cloudflare.com/4902ffc906976b879e21dc844b6832e0/workers-and-pages";
+  "https://dash.cloudflare.com/a98829785d9ad4b7960ca91370b92848/workers-and-pages";
 
 type DeployState =
   | { status: "idle" }
